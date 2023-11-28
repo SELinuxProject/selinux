@@ -2019,7 +2019,7 @@ static int debug_requirements(link_state_t * state, policydb_t * p)
 	memset(&req, 0, sizeof(req));
 
 	for (cur = p->global; cur != NULL; cur = cur->next) {
-		if (cur->enabled != NULL)
+		if (cur->enabled != NULL || cur->branch_list == NULL)
 			continue;
 
 		ret = is_decl_requires_met(state, cur->branch_list, &req);
@@ -2142,6 +2142,11 @@ static int enable_avrules(link_state_t * state, policydb_t * pol)
 	/* 1) enable all of the non-else blocks */
 	for (block = pol->global; block != NULL; block = block->next) {
 		block->enabled = block->branch_list;
+		if (!block->enabled) {
+			ERR(state->handle, "Global block has no avrules!");
+			ret = SEPOL_ERR;
+			goto out;
+		}
 		block->enabled->enabled = 1;
 		for (decl = block->branch_list->next; decl != NULL;
 		     decl = decl->next)
