@@ -87,15 +87,15 @@ void sepol_indent(FILE *out, int indent);
 __attribute__ ((format(printf, 2, 3)))
 void sepol_printf(FILE *out, const char *fmt, ...);
 
-__attribute__ ((format(printf, 1, 3)))
-char *create_str(const char *fmt, int num, ...);
+__attribute__ ((format(printf, 1, 2)))
+char *create_str(const char *fmt, ...);
 
 int strs_init(struct strs **strs, size_t size);
 void strs_destroy(struct strs **strs);
 void strs_free_all(struct strs *strs);
 int strs_add(struct strs *strs, char *s);
-__attribute__ ((format(printf, 2, 4)))
-int strs_create_and_add(struct strs *strs, const char *fmt, int num, ...);
+__attribute__ ((format(printf, 2, 3)))
+int strs_create_and_add(struct strs *strs, const char *fmt, ...);
 char *strs_remove_last(struct strs *strs);
 int strs_add_at_index(struct strs *strs, char *s, size_t index);
 char *strs_read_at_index(struct strs *strs, size_t index);

@@ -45,7 +45,7 @@ static char *cond_expr_to_str(struct policydb *pdb, struct cond_expr *expr)
 	for (curr = expr; curr != NULL; curr = curr->next) {
 		if (curr->expr_type == COND_BOOL) {
 			char *val1 = pdb->p_bool_val_to_name[curr->boolean - 1];
-			new_val = create_str("%s", 1, val1);
+			new_val = create_str("%s", val1);
 		} else {
 			const char *op;
 			uint32_t num_params;
@@ -79,10 +79,10 @@ static char *cond_expr_to_str(struct policydb *pdb, struct cond_expr *expr)
 				goto exit;
 			}
 			if (num_params == 2) {
-				new_val = create_str("(%s %s %s)", 3, op, val1, val2);
+				new_val = create_str("(%s %s %s)", op, val1, val2);
 				free(val2);
 			} else {
-				new_val = create_str("(%s %s)", 2, op, val1);
+				new_val = create_str("(%s %s)", op, val1);
 			}
 			free(val1);
 		}
@@ -178,7 +178,7 @@ static char *constraint_expr_to_str(struct policydb *pdb, struct constraint_expr
 			}
 
 			if (curr->expr_type == CEXPR_ATTR) {
-				new_val = create_str("(%s %s %s)", 3, op, attr1, attr2);
+				new_val = create_str("(%s %s %s)", op, attr1, attr2);
 			} else {
 				char *names = NULL;
 				if (curr->attr & CEXPR_TYPE) {
@@ -197,9 +197,9 @@ static char *constraint_expr_to_str(struct policydb *pdb, struct constraint_expr
 					}
 				}
 				if (strchr(names, ' ')) {
-					new_val = create_str("(%s %s (%s))", 3, op, attr1, names);
+					new_val = create_str("(%s %s (%s))", op, attr1, names);
 				} else {
-					new_val = create_str("(%s %s %s)", 3, op, attr1, names);
+					new_val = create_str("(%s %s %s)", op, attr1, names);
 				}
 				free(names);
 			}
@@ -232,10 +232,10 @@ static char *constraint_expr_to_str(struct policydb *pdb, struct constraint_expr
 			}
 
 			if (num_params == 2) {
-				new_val = create_str("(%s %s %s)", 3, op, val1, val2);
+				new_val = create_str("(%s %s %s)", op, val1, val2);
 				free(val2);
 			} else {
-				new_val = create_str("(%s %s)", 2, op, val1);
+				new_val = create_str("(%s %s)", op, val1);
 			}
 			free(val1);
 		}
@@ -306,7 +306,7 @@ static int class_constraint_rules_to_strs(struct policydb *pdb, char *classkey,
 			strs = non_mls_list;
 		}
 
-		rc = strs_create_and_add(strs, "(%s (%s (%s)) %s)", 4, key_word, classkey, perms+1, expr);
+		rc = strs_create_and_add(strs, "(%s (%s (%s)) %s)", key_word, classkey, perms+1, expr);
 		free(expr);
 		if (rc != 0) {
 			goto exit;
@@ -346,7 +346,7 @@ static int class_validatetrans_rules_to_strs(struct policydb *pdb, char *classke
 			strs = non_mls_list;
 		}
 
-		rc = strs_create_and_add(strs, "(%s %s %s)", 3, key_word, classkey, expr);
+		rc = strs_create_and_add(strs, "(%s %s %s)", key_word, classkey, expr);
 		free(expr);
 		if (rc != 0) {
 			goto exit;
@@ -1203,7 +1203,7 @@ static int write_polcap_rules_to_cil(FILE *out, struct policydb *pdb)
 			goto exit;
 		}
 
-		rc = strs_create_and_add(strs, "(policycap %s)", 1, name);
+		rc = strs_create_and_add(strs, "(policycap %s)", name);
 		if (rc != 0) {
 			goto exit;
 		}
@@ -1321,7 +1321,7 @@ static int map_boolean_to_strs(char *key, void *data, void *args)
 
 	value = boolean->state ? "true" : "false";
 
-	return strs_create_and_add(strs, "(boolean %s %s)", 2, key, value);
+	return strs_create_and_add(strs, "(boolean %s %s)", key, value);
 }
 
 static int write_boolean_decl_rules_to_cil(FILE *out, struct policydb *pdb)
@@ -1562,7 +1562,7 @@ static int write_type_attribute_sets_to_cil(FILE *out, struct policydb *pdb)
 		}
 
 		rc = strs_create_and_add(strs, "(typeattributeset %s (%s))",
-					 2, name, types);
+					 name, types);
 		free(types);
 		if (rc != 0) {
 			goto exit;
@@ -1770,7 +1770,7 @@ static char *avtab_node_to_str(struct policydb *pdb, avtab_key_t *key, avtab_dat
 			ERR(NULL, "Failed to generate permission string");
 			goto exit;
 		}
-		rule = create_str("(%s %s %s (%s (%s)))", 5,
+		rule = create_str("(%s %s %s (%s (%s)))",
 				  flavor, src, tgt, class, perms+1);
 	} else if (key->specified & AVTAB_XPERMS) {
 		perms = xperms_to_str(datum->xperms);
@@ -1779,13 +1779,13 @@ static char *avtab_node_to_str(struct policydb *pdb, avtab_key_t *key, avtab_dat
 			goto exit;
 		}
 
-		rule = create_str("(%s %s %s (%s %s (%s)))", 6,
+		rule = create_str("(%s %s %s (%s %s (%s)))",
 				  flavor, src, tgt, "ioctl", class, perms);
 		free(perms);
 	} else {
 		new = pdb->p_type_val_to_name[data - 1];
 
-		rule = create_str("(%s %s %s %s %s)", 5, flavor, src, tgt, class, new);
+		rule = create_str("(%s %s %s %s %s)", flavor, src, tgt, class, new);
 	}
 
 	if (!rule) {
@@ -1907,7 +1907,7 @@ static int map_filename_trans_to_str(hashtab_key_t key, void *data, void *arg)
 			src = pdb->p_type_val_to_name[bit];
 			rc = strs_create_and_add(strs,
 						 "(typetransition %s %s %s \"%s\" %s)",
-						 5, src, tgt, class, filename, new);
+						 src, tgt, class, filename, new);
 			if (rc)
 				return rc;
 		}
@@ -1960,10 +1960,10 @@ static char *level_to_str(struct policydb *pdb, struct mls_level *level)
 
 	if (!ebitmap_is_empty(cats)) {
 		cats_str = cats_ebitmap_to_str(cats, pdb->p_cat_val_to_name);
-		level_str = create_str("(%s %s)", 2, sens_str, cats_str);
+		level_str = create_str("(%s %s)", sens_str, cats_str);
 		free(cats_str);
 	} else {
-		level_str = create_str("(%s)", 1, sens_str);
+		level_str = create_str("(%s)", sens_str);
 	}
 
 	return level_str;
@@ -1985,7 +1985,7 @@ static char *range_to_str(struct policydb *pdb, mls_range_t *range)
 		goto exit;
 	}
 
-	range_str = create_str("(%s %s)", 2, low, high);
+	range_str = create_str("(%s %s)", low, high);
 
 exit:
 	free(low);
@@ -2018,7 +2018,7 @@ static int map_range_trans_to_str(hashtab_key_t key, void *data, void *arg)
 		goto exit;
 	}
 
-	rc = strs_create_and_add(strs, "(rangetransition %s %s %s %s)", 4,
+	rc = strs_create_and_add(strs, "(rangetransition %s %s %s %s)",
 				 src, tgt, class, range);
 	free(range);
 	if (rc != 0) {
@@ -2345,7 +2345,7 @@ static int write_role_transition_rules_to_cil(FILE *out, struct policydb *pdb)
 		class = pdb->p_class_val_to_name[curr->tclass - 1];
 		new = pdb->p_role_val_to_name[curr->new_role - 1];
 
-		rc = strs_create_and_add(strs, "(roletransition %s %s %s %s)", 4,
+		rc = strs_create_and_add(strs, "(roletransition %s %s %s %s)",
 					 role, type, class, new);
 		if (rc != 0) {
 			goto exit;
@@ -2384,7 +2384,7 @@ static int write_role_allow_rules_to_cil(FILE *out, struct policydb *pdb)
 		role = pdb->p_role_val_to_name[curr->role - 1];
 		new =  pdb->p_role_val_to_name[curr->new_role - 1];
 
-		rc = strs_create_and_add(strs, "(roleallow %s %s)", 2, role, new);
+		rc = strs_create_and_add(strs, "(roleallow %s %s)", role, new);
 		if (rc != 0) {
 			goto exit;
 		}
@@ -2559,13 +2559,13 @@ static char *context_to_str(struct policydb *pdb, struct context_struct *con)
 	if (pdb->mls) {
 		range = range_to_str(pdb, &con->range);
 	} else {
-		range = create_str("(%s %s)", 2, DEFAULT_LEVEL, DEFAULT_LEVEL);
+		range = create_str("(%s %s)", DEFAULT_LEVEL, DEFAULT_LEVEL);
 	}
 	if (!range) {
 		goto exit;
 	}
 
-	ctx = create_str("(%s %s %s %s)", 4, user, role, type, range);
+	ctx = create_str("(%s %s %s %s)", user, role, type, range);
 	free(range);
 
 exit:
@@ -2602,7 +2602,7 @@ static int write_sid_context_rules_to_cil(FILE *out, struct policydb *pdb, const
 			goto exit;
 		}
 
-		rule = create_str("(sidcontext %s %s)", 2, sid, ctx);
+		rule = create_str("(sidcontext %s %s)", sid, ctx);
 		free(ctx);
 		if (!rule) {
 			rc = -1;
@@ -2724,10 +2724,10 @@ static int write_genfscon_rules_to_cil(FILE *out, struct policydb *pdb)
 			}
 
 			if (file_type) {
-				rc = strs_create_and_add(strs, "(genfscon %s \"%s\" %s %s)", 4,
+				rc = strs_create_and_add(strs, "(genfscon %s \"%s\" %s %s)",
 										 fstype, name, file_type, ctx);
 			} else {
-				rc = strs_create_and_add(strs, "(genfscon %s \"%s\" %s)", 3,
+				rc = strs_create_and_add(strs, "(genfscon %s \"%s\" %s)",
 										 fstype, name, ctx);
 			}
 			free(ctx);
