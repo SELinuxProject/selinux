@@ -824,10 +824,6 @@ static int read_policy(char *filename, policydb_t * policy, int verbose)
 		package->policy = NULL;
 		sepol_module_package_free(package);
 	} else {
-		if (policydb_init(policy)) {
-			fprintf(stderr, "%s:  Out of memory!\n", __FUNCTION__);
-			exit(1);
-		}
 		retval = policydb_read(policy, &f, verbose);
 	}
 	fclose(in_fp);
@@ -856,9 +852,15 @@ static void link_module(policydb_t * base, FILE * out_fp, int verbose)
 		return;
 	}
 
+	if (policydb_init(mods)) {
+		fprintf(stderr, "Out of memory!\n");
+		exit(1);
+	}
+
 	/* read the binary policy */
 	if (verbose)
 		fprintf(out_fp, "Reading module...\n");
+	policydb_set_target_platform(mods, base->target_platform);
 	if (read_policy(module_name, mods, verbose)) {
 		fprintf(stderr,
 			"%s:  error(s) encountered while loading policy\n",
