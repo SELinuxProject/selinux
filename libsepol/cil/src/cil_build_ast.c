@@ -4197,6 +4197,7 @@ int cil_gen_filecon(struct cil_db *db, struct cil_tree_node *parse_current, stru
 exit:
 	cil_tree_log(parse_current, CIL_ERR, "Bad filecon declaration");
 	cil_destroy_filecon(filecon);
+	cil_clear_node(ast_node);
 	return rc;
 }
 
