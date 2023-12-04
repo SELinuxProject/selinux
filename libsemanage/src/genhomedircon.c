@@ -149,7 +149,7 @@ static int ignore_setup(char *ignoredirs) {
 
 	tok = strtok(ignoredirs, ";");
 	while(tok) {
-		ptr = calloc(sizeof(ignoredir_t),1);
+		ptr = calloc(1, sizeof(ignoredir_t));
 		if (!ptr)
 			goto err;
 		ptr->dir = strdup(tok);
