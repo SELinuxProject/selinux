@@ -15,7 +15,7 @@ pp: $(PP_OBJS)
 	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c -o $@ $^
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $^
 
 install: all
 	-mkdir -p $(DESTDIR)$(HLLDIR)

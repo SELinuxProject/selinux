@@ -53,7 +53,7 @@ $(LIBA):  $(OBJS)
 	$(RANLIB) $@
 
 $(LIBSO): $(LOBJS) $(LIBMAP)
-	$(CC) $(CFLAGS) $(LDFLAGS) -shared -o $@ $(LOBJS) -Wl,$(LD_SONAME_FLAGS)
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -shared -o $@ $(LOBJS) -Wl,$(LD_SONAME_FLAGS)
 	ln -sf $@ $(TARGET) 
 
 $(LIBPC): $(LIBPC).in ../VERSION
@@ -68,10 +68,10 @@ endif
 
 ifneq ($(DISABLE_CIL),y)
 $(CILDIR)/src/cil_lexer.o: $(CILDIR)/src/cil_lexer.c
-	$(CC) $(filter-out -Werror, $(CFLAGS)) -fPIC -c -o $@ $<
+	$(CC) $(filter-out -Werror, $(CPPFLAGS) $(CFLAGS)) -fPIC -c -o $@ $<
 
 $(CILDIR)/src/cil_lexer.lo: $(CILDIR)/src/cil_lexer.c
-	$(CC) $(filter-out -Werror, $(CFLAGS)) -fPIC -DSHARED -c -o $@ $<
+	$(CC) $(filter-out -Werror, $(CPPFLAGS) $(CFLAGS)) -fPIC -DSHARED -c -o $@ $<
 
 $(CILDIR)/src/cil_lexer.c: $(CILDIR)/src/cil_lexer.l
 	$(LEX) -o $@ $<
@@ -79,10 +79,10 @@ $(CILDIR)/src/cil_lexer.c: $(CILDIR)/src/cil_lexer.l
 endif
 
 %.o:  %.c 
-	$(CC) $(CFLAGS) -fPIC -c -o $@ $<
+	$(CC) $(CPPFLAGS) $(CFLAGS) -fPIC -c -o $@ $<
 
 %.lo:  %.c
-	$(CC) $(CFLAGS) -fPIC -DSHARED -c -o $@ $<
+	$(CC) $(CPPFLAGS) $(CFLAGS) -fPIC -DSHARED -c -o $@ $<
 
 install: all
 	test -d $(DESTDIR)$(LIBDIR) || install -m 755 -d $(DESTDIR)$(LIBDIR)
