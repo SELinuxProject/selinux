@@ -1,4 +1,4 @@
-#!/usr/bin/python3 -Es
+#!/usr/bin/python3 -EsI
 try:
     from subprocess import getstatusoutput
 except ImportError:

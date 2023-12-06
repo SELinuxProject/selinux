@@ -1,4 +1,4 @@
-#!/usr/bin/python3 -Es
+#!/usr/bin/python3 -EsI
 #
 # system-config-selinux.py - GUI for SELinux Config tool in system-config-selinux
 #
@@ -31,6 +31,8 @@ except RuntimeError as e:
     print("system-config-selinux:", e)
     print("This is a graphical application and requires DISPLAY to be set.")
     sys.exit(1)
+
+sys.path.append('/usr/share/system-config-selinux')
 
 from gi.repository import GObject
 import statusPage
@@ -65,8 +67,6 @@ except:
         __builtin__.__dict__['_'] = unicode
 
 version = "1.0"
-
-sys.path.append('/usr/share/system-config-selinux')
 
 
 ##

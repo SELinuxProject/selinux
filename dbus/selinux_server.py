@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python3 -EsI
 
 import dbus
 import dbus.service
