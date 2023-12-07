@@ -33,9 +33,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 
-static policydb_t policydb;
-
-static struct command {
+static const struct command {
 	enum {
 		EOL    = 0,
 		HEADER = 1,
@@ -50,19 +48,19 @@ static struct command {
 	{CMD,       '2',  "display conditional AVTAB (entirely)"},
 	{CMD,       '3',  "display conditional AVTAB (only ENABLED rules)"},
 	{CMD,       '4',  "display conditional AVTAB (only DISABLED rules)"},
-	{CMD,       '5',  "display conditional bools"},
+	{CMD,       '5',  "display booleans"},
 	{CMD,       '6',  "display conditional expressions"},
 	{CMD|NOOPT, '7',  "change a boolean value"},
 	{CMD,       '8',  "display role transitions"},
 	{HEADER, 0, ""},
 	{CMD,       'c',  "display policy capabilities"},
-	{CMD,       'b',  "display booleans"},
 	{CMD,       'C',  "display classes"},
+	{CMD,       'u',  "display users"},
 	{CMD,       'r',  "display roles"},
 	{CMD,       't',  "display types"},
 	{CMD,       'a',  "display type attributes"},
 	{CMD,       'p',  "display the list of permissive types"},
-	{CMD,       'u',  "display unknown handling setting"},
+	{CMD,       'U',  "display unknown handling setting"},
 	{CMD,       'F',  "display filename_trans rules"},
 	{HEADER, 0, ""},
 	{CMD|NOOPT, 'f',  "set output file"},
@@ -234,17 +232,6 @@ static int display_avtab(avtab_t * a, uint32_t what, policydb_t * p, FILE * fp)
 	return 0;
 }
 
-static int display_bools(policydb_t * p, FILE * fp)
-{
-	unsigned int i;
-
-	for (i = 0; i < p->p_bools.nprim; i++) {
-		fprintf(fp, "%s : %d\n", p->p_bool_val_to_name[i],
-			p->bool_val_to_struct[i]->state);
-	}
-	return 0;
-}
-
 static void display_expr(policydb_t * p, cond_expr_t * exp, FILE * fp)
 {
 
@@ -313,6 +300,8 @@ static int display_handle_unknown(policydb_t * p, FILE * out_fp)
 		fprintf(out_fp, "Deny unknown classes and permissions\n");
 	else if (p->handle_unknown == REJECT_UNKNOWN)
 		fprintf(out_fp, "Reject unknown classes and permissions\n");
+	else
+		fprintf(out_fp, "<INVALID SETTING!>\n");
 	return 0;
 }
 
@@ -334,7 +323,7 @@ static int display_booleans(policydb_t * p, FILE *fp)
 {
 	uint32_t i;
 
-	fprintf(fp, "booleans:\n");
+	fprintf(fp, "booleans (#%u):\n", p->p_bools.table->nel);
 	for (i = 0; i < p->p_bools.nprim; i++) {
 		fprintf(fp, "\t%s : %d\n", p->p_bool_val_to_name[i],
 			p->bool_val_to_struct[i]->state);
@@ -364,7 +353,7 @@ static int display_classes(policydb_t * p, FILE *fp)
 {
 	uint32_t i;
 
-	fprintf(fp, "classes:\n");
+	fprintf(fp, "classes (#%u):\n", p->p_classes.table->nel);
 	for (i = 0; i < p->p_classes.nprim; i++) {
 		if (!p->p_class_val_to_name[i])
 			continue;
@@ -386,7 +375,7 @@ static void display_permissive(policydb_t *p, FILE *fp)
 	ebitmap_node_t *node;
 	unsigned int i;
 
-	fprintf(fp, "permissive sids:\n");
+	fprintf(fp, "permissive sids (#%u):\n", ebitmap_cardinality(&p->permissive_map));
 	ebitmap_for_each_positive_bit(&p->permissive_map, node, i) {
 		fprintf(fp, "\t");
 		display_id(p, fp, SYM_TYPES, i - 1, "");
@@ -394,11 +383,25 @@ static void display_permissive(policydb_t *p, FILE *fp)
 	}
 }
 
+static int display_users(policydb_t * p, FILE *fp)
+{
+	uint32_t i;
+
+	fprintf(fp, "users (#%u):\n", p->p_users.table->nel);
+	for (i = 0; i < p->p_users.nprim; i++) {
+		if (!p->p_user_val_to_name[i])
+			continue;
+
+		fprintf(fp, "\t%s\n", p->p_user_val_to_name[i]);
+	}
+	return 0;
+}
+
 static int display_roles(policydb_t * p, FILE *fp)
 {
 	uint32_t i;
 
-	fprintf(fp, "roles:\n");
+	fprintf(fp, "roles (#%u):\n", p->p_roles.table->nel);
 	for (i = 0; i < p->p_roles.nprim; i++) {
 		if (!p->p_role_val_to_name[i])
 			continue;
@@ -412,7 +415,7 @@ static int display_types(policydb_t * p, FILE *fp)
 {
 	uint32_t i;
 
-	fprintf(fp, "types:\n");
+	fprintf(fp, "types (out of #%u):\n", p->p_types.table->nel);
 	for (i = 0; i < p->p_types.nprim; i++) {
 		if (!p->p_type_val_to_name[i])
 			continue;
@@ -429,7 +432,7 @@ static int display_attributes(policydb_t * p, FILE *fp)
 {
 	uint32_t i;
 
-	fprintf(fp, "attributes:\n");
+	fprintf(fp, "attributes (out of #%u):\n", p->p_types.table->nel);
 	for (i = 0; i < p->p_types.nprim; i++) {
 		if (!p->p_type_val_to_name[i])
 			continue;
@@ -522,6 +525,7 @@ int main(int argc, char **argv)
 	char *name;
 	int state;
 	struct policy_file pf;
+	policydb_t policydb;
 
 	if (argc < 2 || strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0)
 		usage(argv[0]);
@@ -617,7 +621,7 @@ int main(int argc, char **argv)
 				      &policydb, out_fp);
 			break;
 		case '5':
-			display_bools(&policydb, out_fp);
+			display_booleans(&policydb, out_fp);
 			break;
 		case '6':
 			display_cond_expressions(&policydb, out_fp);
@@ -659,9 +663,6 @@ int main(int argc, char **argv)
 		case 'a':
 			display_attributes(&policydb, out_fp);
 			break;
-		case 'b':
-			display_booleans(&policydb, out_fp);
-			break;
 		case 'c':
 			display_policycaps(&policydb, out_fp);
 			break;
@@ -678,6 +679,8 @@ int main(int argc, char **argv)
 			display_types(&policydb, out_fp);
 			break;
 		case 'u':
+			display_users(&policydb, out_fp);
+			break;
 		case 'U':
 			display_handle_unknown(&policydb, out_fp);
 			break;
