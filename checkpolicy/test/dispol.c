@@ -91,12 +91,11 @@ static __attribute__((__noreturn__)) void usage(const char *progname)
 static int render_access_mask(uint32_t mask, avtab_key_t * key, policydb_t * p,
 		       FILE * fp)
 {
-	char *perm;
+	char *perm = sepol_av_to_string(p, key->target_class, mask);
 	fprintf(fp, "{");
-	perm = sepol_av_to_string(p, key->target_class, mask);
-	if (perm)
-		fprintf(fp, "%s ", perm);
+	fprintf(fp, "%s ", perm ?: "<format-failure>");
 	fprintf(fp, "}");
+	free(perm);
 	return 0;
 }
 

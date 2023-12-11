@@ -292,6 +292,11 @@ static int class_constraint_rules_to_strs(struct policydb *pdb, char *classkey,
 		}
 
 		perms = sepol_av_to_string(pdb, class->s.value, curr->permissions);
+		if (!perms) {
+			ERR(NULL, "Failed to generate permission string");
+			rc = -1;
+			goto exit;
+		}
 		if (strchr(perms, ' ')) {
 			perm_prefix = "{ ";
 			perm_suffix = " }";
@@ -311,6 +316,7 @@ static int class_constraint_rules_to_strs(struct policydb *pdb, char *classkey,
 					 flavor, classkey,
 					 perm_prefix, perms+1, perm_suffix,
 					 expr);
+		free(perms);
 		free(expr);
 		if (rc != 0) {
 			goto exit;
@@ -1682,7 +1688,7 @@ static char *avtab_node_to_str(struct policydb *pdb, avtab_key_t *key, avtab_dat
 {
 	uint32_t data = datum->data;
 	type_datum_t *type;
-	const char *flavor, *src, *tgt, *class, *perms, *new;
+	const char *flavor, *src, *tgt, *class, *new;
 	char *rule = NULL, *permstring;
 
 	switch (0xFFF & key->specified) {
@@ -1730,13 +1736,14 @@ static char *avtab_node_to_str(struct policydb *pdb, avtab_key_t *key, avtab_dat
 	class = pdb->p_class_val_to_name[key->target_class - 1];
 
 	if (key->specified & AVTAB_AV) {
-		perms = sepol_av_to_string(pdb, key->target_class, data);
-		if (perms == NULL) {
+		permstring = sepol_av_to_string(pdb, key->target_class, data);
+		if (permstring == NULL) {
 			ERR(NULL, "Failed to generate permission string");
 			goto exit;
 		}
 		rule = create_str("%s %s %s:%s { %s };",
-				  flavor, src, tgt, class, perms+1);
+				  flavor, src, tgt, class, permstring+1);
+		free(permstring);
 	} else if (key->specified & AVTAB_XPERMS) {
 		permstring = sepol_extended_perms_to_string(datum->xperms);
 		if (permstring == NULL) {
