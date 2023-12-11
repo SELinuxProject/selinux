@@ -92,8 +92,10 @@ send_request(int fd, uint32_t function, const char *data1, const char *data2)
 	ssize_t count, expected;
 	unsigned int i;
 
-	if (fd < 0)
+	if (fd < 0) {
+		errno = EINVAL;
 		return -1;
+	}
 
 	if (!data1)
 		data1 = "";
@@ -123,8 +125,12 @@ send_request(int fd, uint32_t function, const char *data1, const char *data2)
 
 	while (((count = sendmsg(fd, &msgh, MSG_NOSIGNAL)) < 0)
 	       && (errno == EINTR)) ;
-	if (count < 0 || count != expected)
+	if (count < 0)
 		return -1;
+	if (count != expected) {
+		errno = EBADMSG;
+		return -1;
+	}
 
 	return 0;
 }
@@ -140,8 +146,10 @@ receive_response(int fd, uint32_t function, char **outdata, int32_t * ret_val)
 	struct iovec resp_data;
 	ssize_t count;
 
-	if (fd < 0)
+	if (fd < 0) {
+		errno = EINVAL;
 		return -1;
+	}
 
 	resp_hdr[0].iov_base = &func;
 	resp_hdr[0].iov_len = sizeof(func);
@@ -151,11 +159,17 @@ receive_response(int fd, uint32_t function, char **outdata, int32_t * ret_val)
 	resp_hdr[2].iov_len = sizeof(*ret_val);
 
 	while (((count = readv(fd, resp_hdr, 3)) < 0) && (errno == EINTR)) ;
+	if (count < 0) {
+		return -1;
+	}
+
 	if (count != (sizeof(func) + sizeof(data_size) + sizeof(*ret_val))) {
+		errno = EBADMSG;
 		return -1;
 	}
 
 	if (func != function || !data_size || data_size > MAX_DATA_BUF) {
+		errno = EBADMSG;
 		return -1;
 	}
 
@@ -172,6 +186,8 @@ receive_response(int fd, uint32_t function, char **outdata, int32_t * ret_val)
 	if (count < 0 || (uint32_t) count != data_size ||
 	    data[data_size - 1] != '\0') {
 		free(data);
+		if (count >= 0)
+			errno = EBADMSG;
 		return -1;
 	}
 	*outdata = data;
