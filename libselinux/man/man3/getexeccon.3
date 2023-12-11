@@ -11,9 +11,9 @@ rpm_execcon \- run a helper for rpm in an appropriate security context
 .sp
 .BI "int getexeccon_raw(char **" context );
 .sp
-.BI "int setexeccon(char *" context );
+.BI "int setexeccon(const char *" context );
 .sp
-.BI "int setexeccon_raw(char *" context );
+.BI "int setexeccon_raw(const char *" context );
 .sp
 .BI "int setexecfilecon(const char *" filename ", const char *" fallback_type );
 .sp

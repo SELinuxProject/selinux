@@ -7,37 +7,37 @@ the SELinux policy database in the kernel
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
 .sp
-.BI "int security_compute_av(char *" scon ", char *" tcon ", security_class_t "tclass ", access_vector_t "requested ", struct av_decision *" avd );
+.BI "int security_compute_av(const char *" scon ", const char *" tcon ", security_class_t "tclass ", access_vector_t "requested ", struct av_decision *" avd );
 .sp
-.BI "int security_compute_av_raw(char *" scon ", char *" tcon ", security_class_t "tclass ", access_vector_t "requested ", struct av_decision *" avd );
+.BI "int security_compute_av_raw(const char *" scon ", const char *" tcon ", security_class_t "tclass ", access_vector_t "requested ", struct av_decision *" avd );
 .sp
-.BI "int security_compute_av_flags(char *" scon ", char *" tcon ", security_class_t "tclass ", access_vector_t "requested ", struct av_decision *" avd );
+.BI "int security_compute_av_flags(const char *" scon ", const char *" tcon ", security_class_t "tclass ", access_vector_t "requested ", struct av_decision *" avd );
 .sp
-.BI "int security_compute_av_flags_raw(char *" scon ", char *" tcon ", security_class_t "tclass ", access_vector_t "requested ", struct av_decision *" avd );
+.BI "int security_compute_av_flags_raw(const char *" scon ", const char *" tcon ", security_class_t "tclass ", access_vector_t "requested ", struct av_decision *" avd );
 .sp
-.BI "int security_compute_create(char *" scon ", char *" tcon ", security_class_t "tclass ", char **" newcon );
+.BI "int security_compute_create(const char *" scon ", const char *" tcon ", security_class_t "tclass ", char **" newcon );
 .sp
-.BI "int security_compute_create_raw(char *" scon ", char *" tcon ", security_class_t "tclass ", char **" newcon );
+.BI "int security_compute_create_raw(const char *" scon ", const char *" tcon ", security_class_t "tclass ", char **" newcon );
 .sp
-.BI "int security_compute_create_name(char *" scon ", char *" tcon ", security_class_t "tclass ", const char *" objname ", char **" newcon );
+.BI "int security_compute_create_name(const char *" scon ", const char *" tcon ", security_class_t "tclass ", const char *" objname ", char **" newcon );
 .sp
-.BI "int security_compute_create_name_raw(char *" scon ", char *" tcon ", security_class_t "tclass ", const char *" objname ", char **" newcon );
+.BI "int security_compute_create_name_raw(const char *" scon ", const char *" tcon ", security_class_t "tclass ", const char *" objname ", char **" newcon );
 .sp
-.BI "int security_compute_relabel(char *" scon ", char *" tcon ", security_class_t "tclass ", char **" newcon );
+.BI "int security_compute_relabel(const char *" scon ", const char *" tcon ", security_class_t "tclass ", char **" newcon );
 .sp
-.BI "int security_compute_relabel_raw(char *" scon ", char *" tcon ", security_class_t "tclass ", char **" newcon );
+.BI "int security_compute_relabel_raw(const char *" scon ", const char *" tcon ", security_class_t "tclass ", char **" newcon );
 .sp
-.BI "int security_compute_member(char *" scon ", char *" tcon ", security_class_t "tclass ", char **" newcon );
+.BI "int security_compute_member(const char *" scon ", const char *" tcon ", security_class_t "tclass ", char **" newcon );
 .sp
-.BI "int security_compute_member_raw(char *" scon ", char *" tcon ", security_class_t "tclass ", char **" newcon );
+.BI "int security_compute_member_raw(const char *" scon ", const char *" tcon ", security_class_t "tclass ", char **" newcon );
 .sp
-.BI "int security_compute_user(char *" scon ", const char *" username ", char ***" con );
+.BI "int security_compute_user(const char *" scon ", const char *" username ", char ***" con );
 .sp
-.BI "int security_compute_user_raw(char *" scon ", const char *" username ", char ***" con );
+.BI "int security_compute_user_raw(const char *" scon ", const char *" username ", char ***" con );
 .sp
-.BI "int security_validatetrans(char *" scon ", const char *" tcon ", security_class_t "tclass ", char *" newcon );
+.BI "int security_validatetrans(const char *" scon ", const char *" tcon ", security_class_t "tclass ", const char *" newcon );
 .sp
-.BI "int security_validatetrans_raw(char *" scon ", const char *" tcon ", security_class_t "tclass ", char *" newcon );
+.BI "int security_validatetrans_raw(const char *" scon ", const char *" tcon ", security_class_t "tclass ", const char *" newcon );
 .sp
 .BI "int security_get_initial_context(const char *" name ", char **" con );
 .sp
