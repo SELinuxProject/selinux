@@ -1344,6 +1344,8 @@ bad:
 
 static int validate_scope_index(sepol_handle_t *handle, const scope_index_t *scope_index, validate_t flavors[])
 {
+	if (!ebitmap_is_empty(&scope_index->scope[SYM_COMMONS]))
+		goto bad;
 	if (validate_ebitmap(&scope_index->p_classes_scope, &flavors[SYM_CLASSES]))
 		goto bad;
 	if (validate_ebitmap(&scope_index->p_roles_scope, &flavors[SYM_ROLES]))
