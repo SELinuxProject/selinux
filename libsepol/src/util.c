@@ -126,7 +126,7 @@ char *sepol_av_to_string(policydb_t * policydbp, uint32_t tclass,
 
 #define next_bit_in_range(i, p) (((i) + 1 < sizeof(p)*8) && xperm_test(((i) + 1), p))
 
-char *sepol_extended_perms_to_string(avtab_extended_perms_t *xperms)
+char *sepol_extended_perms_to_string(const avtab_extended_perms_t *xperms)
 {
 	uint16_t value;
 	uint16_t low_bit;
@@ -142,8 +142,7 @@ char *sepol_extended_perms_to_string(avtab_extended_perms_t *xperms)
 		return NULL;
 
 retry:
-	size *= 2;
-	if (size == 0)
+	if (__builtin_mul_overflow(size, 2, &size))
 		goto err;
 	p = realloc(buffer, size);
 	if (!p)
