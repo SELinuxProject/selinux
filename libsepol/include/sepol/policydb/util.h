@@ -40,7 +40,7 @@ char *sepol_extended_perms_to_string(avtab_extended_perms_t *xperms);
  * The tokenize function may be used to
  * replace sscanf
  */
-extern int tokenize(char *line_buf, char delim, int num_args, ...);
+extern int tokenize(const char *line_buf, char delim, int num_args, ...);
 
 #ifdef __cplusplus
 }
