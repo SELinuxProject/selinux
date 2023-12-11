@@ -44,7 +44,7 @@ int add_i_to_a(uint32_t i, uint32_t * cnt, uint32_t ** a)
 {
 	uint32_t *new;
 
-	if (cnt == NULL || a == NULL)
+	if (cnt == NULL || *cnt == UINT32_MAX || a == NULL)
 		return -1;
 
 	/* FIX ME: This is not very elegant! We use an array that we
