@@ -89,7 +89,9 @@ then executes the specified filename with the provided argument and
 environment arrays.
 .
 .SH "RETURN VALUE"
-On error \-1 is returned.
+On failure, \-1 is returned and
+.I errno
+is  set appropriately.
 
 On success
 .BR getexeccon (),
