@@ -1,0 +1,46 @@
+.TH UNSETFILES "1" "December 2023" "Security Enhanced Linux"
+.SH NAME
+unsetfiles \- Remove SELinux file security contexts.
+.SH SYNOPSIS
+.B unsetfiles
+.RB [ \-hnrvx ]
+.IR pathname \ ...
+
+.SH DESCRIPTION
+.P
+This program removes the SELinux file security contexts of files.  It can help
+cleaning extended file attributes after disabling SELinux.
+.P
+.B unsetfiles
+will only work on SELinux disabled systems, since removing file security
+contexts is not supported by SELinux.
+
+.SH OPTIONS
+.TP
+.B \-h
+Show usage information and exit.
+.TP
+.B \-n
+Do not actually remove any SELinux file security contexts.
+.TP
+.B \-r
+Remove SELinux file security contexts recursive.
+.TP
+.B \-v
+Be verbose about performed actions.
+.TP
+.B \-x
+Do not cross filesystem boundaries.
+
+.SH ARGUMENTS
+.TP
+.IR pathname \ ...
+One or more path names to operate on.
+
+.SH SEE ALSO
+.BR restorecon (8),
+.BR setfiles (8)
+
+.SH AUTHORS
+.nf
+Christian Göttsche (cgzones@googlemail.com)
