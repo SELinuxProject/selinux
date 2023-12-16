@@ -177,6 +177,7 @@ static void close(struct selabel_handle *rec)
 		free(spec->key);
 		free(spec->lr.ctx_raw);
 		free(spec->lr.ctx_trans);
+		__pthread_mutex_destroy(&spec->lr.lock);
 	}
 
 	if (spec_arr)

@@ -661,6 +661,7 @@ static int insert_spec(const struct selabel_handle *rec, struct saved_data *data
 			.lr.ctx_trans = NULL,
 			.lr.lineno = lineno,
 			.lr.validated = false,
+			.lr.lock = PTHREAD_MUTEX_INITIALIZER,
 		};
 
 		data->num_specs++;
@@ -794,6 +795,7 @@ static int insert_spec(const struct selabel_handle *rec, struct saved_data *data
 			.lr.ctx_trans = NULL,
 			.lr.lineno = lineno,
 			.lr.validated = false,
+			.lr.lock = PTHREAD_MUTEX_INITIALIZER,
 		};
 
 		data->num_specs++;
@@ -818,6 +820,7 @@ static inline void free_spec_node(struct spec_node *node)
 
 		free(lspec->lr.ctx_raw);
 		free(lspec->lr.ctx_trans);
+		__pthread_mutex_destroy(&lspec->lr.lock);
 
 		if (lspec->from_mmap)
 			continue;
@@ -832,6 +835,7 @@ static inline void free_spec_node(struct spec_node *node)
 
 		free(rspec->lr.ctx_raw);
 		free(rspec->lr.ctx_trans);
+		__pthread_mutex_destroy(&rspec->lr.lock);
 		regex_data_free(rspec->regex);
 		__pthread_mutex_destroy(&rspec->regex_lock);
 

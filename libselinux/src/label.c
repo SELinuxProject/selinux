@@ -124,18 +124,32 @@ static inline int selabel_is_validate_set(const struct selinux_opt *opts,
 
 int selabel_validate(struct selabel_lookup_rec *contexts)
 {
-	int rc = 0;
+	bool validated;
+	int rc;
 
-	if (contexts->validated)
-		goto out;
+	validated = __atomic_load_n(&contexts->validated, __ATOMIC_ACQUIRE);
+	if (validated)
+		return 0;
+
+	__pthread_mutex_lock(&contexts->lock);
+
+	/* Check if another thread validated the context while we waited on the mutex */
+	validated = __atomic_load_n(&contexts->validated, __ATOMIC_ACQUIRE);
+	if (validated) {
+		__pthread_mutex_unlock(&contexts->lock);
+		return 0;
+	}
 
 	rc = selinux_validate(&contexts->ctx_raw);
-	if (rc < 0)
-		goto out;
+	if (rc == 0)
+		__atomic_store_n(&contexts->validated, true, __ATOMIC_RELEASE);
 
-	contexts->validated = true;
-out:
-	return rc;
+	__pthread_mutex_unlock(&contexts->lock);
+
+	if (rc < 0)
+		return -1;
+
+	return 0;
 }
 
 /* Public API helpers */
@@ -143,11 +157,35 @@ static int selabel_fini(const struct selabel_handle *rec,
 			    struct selabel_lookup_rec *lr,
 			    bool translating)
 {
+	char *ctx_trans;
+	int rc;
+
 	if (compat_validate(rec, lr, rec->spec_file, lr->lineno))
 		return -1;
 
-	if (translating && !lr->ctx_trans &&
-	    selinux_raw_to_trans_context(lr->ctx_raw, &lr->ctx_trans))
+	if (!translating)
+		return 0;
+
+	ctx_trans = __atomic_load_n(&lr->ctx_trans, __ATOMIC_ACQUIRE);
+	if (ctx_trans)
+		return 0;
+
+	__pthread_mutex_lock(&lr->lock);
+
+	/* Check if another thread translated the context while we waited on the mutex */
+	ctx_trans = __atomic_load_n(&lr->ctx_trans, __ATOMIC_ACQUIRE);
+	if (ctx_trans) {
+		__pthread_mutex_unlock(&lr->lock);
+		return 0;
+	}
+
+	rc = selinux_raw_to_trans_context(lr->ctx_raw, &ctx_trans);
+	if (rc == 0)
+		__atomic_store_n(&lr->ctx_trans, ctx_trans, __ATOMIC_RELEASE);
+
+	__pthread_mutex_unlock(&lr->lock);
+
+	if (rc)
 		return -1;
 
 	return 0;
