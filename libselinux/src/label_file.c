@@ -175,6 +175,7 @@ static int merge_mmap_spec_nodes(struct spec_node *restrict dest, struct spec_no
 			for (uint32_t i = 0; i < source->literal_specs_num; i++) {
 				source->literal_specs[i].lr.ctx_raw = NULL;
 				source->literal_specs[i].lr.ctx_trans = NULL;
+				__pthread_mutex_destroy(&source->literal_specs[i].lr.lock);
 			}
 
 		} else {
@@ -214,9 +215,10 @@ static int merge_mmap_spec_nodes(struct spec_node *restrict dest, struct spec_no
 			for (uint32_t i = 0; i < source->regex_specs_num; i++) {
 				source->regex_specs[i].lr.ctx_raw = NULL;
 				source->regex_specs[i].lr.ctx_trans = NULL;
+				__pthread_mutex_destroy(&source->regex_specs[i].lr.lock);
 				source->regex_specs[i].regex = NULL;
 				source->regex_specs[i].regex_compiled = false;
-				__pthread_mutex_init(&source->regex_specs[i].regex_lock, NULL);
+				__pthread_mutex_destroy(&source->regex_specs[i].regex_lock);
 			}
 		} else {
 			assert(dest->regex_specs == NULL);
