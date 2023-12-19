@@ -77,8 +77,8 @@ int process_glob(char *name, struct restore_opts *opts, size_t nthreads,
 		 long unsigned *skipped_errors)
 {
 	glob_t globbuf;
-	size_t i = 0;
-	int len, rc, errors;
+	size_t i, len;
+	int rc, errors;
 
 	memset(&globbuf, 0, sizeof(globbuf));
 
@@ -88,10 +88,10 @@ int process_glob(char *name, struct restore_opts *opts, size_t nthreads,
 		return errors;
 
 	for (i = 0; i < globbuf.gl_pathc; i++) {
-		len = strlen(globbuf.gl_pathv[i]) - 2;
-		if (len > 0 && strcmp(&globbuf.gl_pathv[i][len--], "/.") == 0)
+		len = strlen(globbuf.gl_pathv[i]);
+		if (len > 2 && strcmp(&globbuf.gl_pathv[i][len - 2], "/.") == 0)
 			continue;
-		if (len > 0 && strcmp(&globbuf.gl_pathv[i][len], "/..") == 0)
+		if (len > 3 && strcmp(&globbuf.gl_pathv[i][len - 3], "/..") == 0)
 			continue;
 		rc = selinux_restorecon_parallel(globbuf.gl_pathv[i],
 						 opts->restorecon_flags,
