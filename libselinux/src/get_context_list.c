@@ -7,7 +7,9 @@
 #include <string.h>
 #include <ctype.h>
 #include <pwd.h>
+
 #include "selinux_internal.h"
+#include "callbacks.h"
 #include "context_internal.h"
 #include "get_context_list_internal.h"
 
@@ -224,7 +226,7 @@ static int get_context_user(FILE * fp,
 
 		/* Check whether a new context is valid */
 		if (SIZE_MAX - user_len < strlen(start) + 2) {
-			fprintf(stderr, "%s: one of partial contexts is too big\n", __FUNCTION__);
+			selinux_log(SELINUX_ERROR, "%s: one of partial contexts is too big\n", __FUNCTION__);
 			errno = EINVAL;
 			rc = -1;
 			goto out;
@@ -245,7 +247,7 @@ static int get_context_user(FILE * fp,
 				rc = -1;
 				goto out;
 			}
-			fprintf(stderr,
+			selinux_log(SELINUX_ERROR,
 				"%s: can't create a context from %s, skipping\n",
 				__FUNCTION__, usercon_str);
 			free(usercon_str);
@@ -439,7 +441,7 @@ int get_ordered_context_list(const char *user,
 
 		fclose(fp);
 		if (rc < 0 && errno != ENOENT) {
-			fprintf(stderr,
+			selinux_log(SELINUX_ERROR,
 				"%s:  error in processing configuration file %s\n",
 				__FUNCTION__, fname);
 			/* Fall through, try global config */
@@ -452,7 +454,7 @@ int get_ordered_context_list(const char *user,
 		rc = get_context_user(fp, fromcon, user, &reachable, &nreachable);
 		fclose(fp);
 		if (rc < 0 && errno != ENOENT) {
-			fprintf(stderr,
+			selinux_log(SELINUX_ERROR,
 				"%s:  error in processing configuration file %s\n",
 				__FUNCTION__, selinux_default_context_path());
 			/* Fall through */

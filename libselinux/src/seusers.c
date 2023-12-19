@@ -8,7 +8,9 @@
 #include <errno.h>
 #include <selinux/selinux.h>
 #include <selinux/context.h>
+
 #include "selinux_internal.h"
+#include "callbacks.h"
 
 /* Process line from seusers.conf and split into its fields.
    Returns 0 on success, -1 on comments, and -2 on error. */
@@ -197,8 +199,8 @@ int getseuserbyname(const char *name, char **r_seuser, char **r_level)
 		if (rc == -1)
 			continue;	/* comment, skip */
 		if (rc == -2) {
-			fprintf(stderr, "%s:  error on line %lu, skipping...\n",
-				selinux_usersconf_path(), lineno);
+			selinux_log(SELINUX_ERROR, "%s:  error on line %lu, skipping...\n",
+						   selinux_usersconf_path(), lineno);
 			continue;
 		}
 
