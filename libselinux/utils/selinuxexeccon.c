@@ -45,6 +45,7 @@ int main(int argc, char **argv)
 		con = strdup(argv[2]);
 		if (security_check_context(con)) {
 			fprintf(stderr, "%s:  invalid from context '%s'\n", argv[0], con);
+			free(con);
 			return -1;
 		}
 	}

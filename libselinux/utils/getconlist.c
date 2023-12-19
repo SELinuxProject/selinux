@@ -19,8 +19,9 @@ static __attribute__ ((__noreturn__)) void usage(const char *name, const char *d
 
 int main(int argc, char **argv)
 {
-	char **list, *cur_context = NULL;
-	char *user = NULL, *level = NULL;
+	char **list;
+	const char *cur_context, *user;
+	char *cur_con = NULL, *level = NULL;
 	int ret, i, opt;
 
 	while ((opt = getopt(argc, argv, "l:")) > 0) {
@@ -54,11 +55,12 @@ int main(int argc, char **argv)
 
 	/* If a context wasn't passed, use the current context. */
 	if (((argc - optind) < 2)) {
-		if (getcon(&cur_context) < 0) {
+		if (getcon(&cur_con) < 0) {
 			fprintf(stderr, "Couldn't get current context:  %s\n", strerror(errno));
 			free(level);
 			return 2;
 		}
+		cur_context = cur_con;
 	} else {
 		cur_context = argv[optind + 1];
 		if (security_check_context(cur_context) != 0) {
@@ -82,10 +84,12 @@ int main(int argc, char **argv)
 	} else {
 		fprintf(stderr, "get_ordered_context_list%s failure: %d(%s)\n",
 			level ? "_with_level" : "", errno, strerror(errno));
+		free(cur_con);
 		free(level);
 		return 4;
 	}
 
+	free(cur_con);
 	free(level);
 
 	return 0;
