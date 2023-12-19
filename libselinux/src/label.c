@@ -62,7 +62,7 @@ static inline struct selabel_digest *selabel_is_digest_set
 
 	while (n--) {
 		if (opts[n].type == SELABEL_OPT_DIGEST &&
-					    opts[n].value == (char *)1) {
+					    !!opts[n].value) {
 			digest = calloc(1, sizeof(*digest));
 			if (!digest)
 				goto err;
