@@ -99,7 +99,7 @@ int require_seusers  = 0;
 
 static gid_t get_default_gid(const char *name) {
 	struct passwd pwstorage, *pwent = NULL;
-	gid_t gid = -1;
+	gid_t gid = (gid_t)-1;
 	/* Allocate space for the getpwnam_r buffer */
 	char *rbuf = NULL;
 	long rbuflen = sysconf(_SC_GETPW_R_SIZE_MAX);

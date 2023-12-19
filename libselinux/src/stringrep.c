@@ -337,13 +337,15 @@ void print_access_vector(security_class_t tclass, access_vector_t av)
 
 	printf(" {");
 
-	while (av) {
+	for (;;) {
 		if (av & bit) {
 			permstr = security_av_perm_to_string(tclass, bit);
 			if (!permstr)
 				break;
 			printf(" %s", permstr);
 			av &= ~bit;
+			if (!av)
+				break;
 		}
 		bit <<= 1;
 	}

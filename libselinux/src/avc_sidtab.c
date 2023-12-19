@@ -13,6 +13,7 @@
 #include "avc_sidtab.h"
 #include "avc_internal.h"
 
+ignore_unsigned_overflow_
 static inline unsigned sidtab_hash(const char * key)
 {
 	unsigned int hash = 5381;

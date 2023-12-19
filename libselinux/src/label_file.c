@@ -68,7 +68,7 @@ static int find_stem_from_file(struct saved_data *data, const char *key)
 /*
  * hash calculation and key comparison of hash table
  */
-
+ignore_unsigned_overflow_
 static unsigned int symhash(hashtab_t h, const_hashtab_key_t key)
 {
 	const struct chkdups_key *k = (const struct chkdups_key *)key;
@@ -801,7 +801,8 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 	int status = -1, baseonly = 0;
 
 	/* Process arguments */
-	while (n--)
+	while (n) {
+		n--;
 		switch(opts[n].type) {
 		case SELABEL_OPT_PATH:
 			path = opts[n].value;
@@ -820,6 +821,7 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 			errno = EINVAL;
 			return -1;
 		}
+	}
 
 #if !defined(BUILD_HOST) && !defined(ANDROID)
 	char subs_file[PATH_MAX + 1];

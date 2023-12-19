@@ -263,7 +263,8 @@ db_init(const struct selinux_opt *opts, unsigned nopts,
 	 *   the default one. If RDBMS is not SE-PostgreSQL, it may need to
 	 *   specify an explicit specfile for database objects.
 	 */
-	while (nopts--) {
+	while (nopts) {
+		nopts--;
 		switch (opts[nopts].type) {
 		case SELABEL_OPT_PATH:
 			path = opts[nopts].value;

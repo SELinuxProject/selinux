@@ -60,7 +60,8 @@ static inline struct selabel_digest *selabel_is_digest_set
 {
 	struct selabel_digest *digest = NULL;
 
-	while (n--) {
+	while (n) {
+		n--;
 		if (opts[n].type == SELABEL_OPT_DIGEST &&
 					    !!opts[n].value) {
 			digest = calloc(1, sizeof(*digest));
@@ -112,9 +113,11 @@ static void selabel_digest_fini(struct selabel_digest *ptr)
 static inline int selabel_is_validate_set(const struct selinux_opt *opts,
 					  unsigned n)
 {
-	while (n--)
+	while (n) {
+		n--;
 		if (opts[n].type == SELABEL_OPT_VALIDATE)
 			return !!opts[n].value;
+	}
 
 	return 0;
 }

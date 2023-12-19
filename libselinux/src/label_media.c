@@ -80,7 +80,8 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 	struct stat sb;
 
 	/* Process arguments */
-	while (n--)
+	while (n) {
+		n--;
 		switch(opts[n].type) {
 		case SELABEL_OPT_PATH:
 			path = opts[n].value;
@@ -93,6 +94,7 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 			errno = EINVAL;
 			return -1;
 		}
+}
 
 	/* Open the specification file. */
 	if (!path)
