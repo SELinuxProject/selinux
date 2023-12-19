@@ -268,6 +268,14 @@ db_init(const struct selinux_opt *opts, unsigned nopts,
 		case SELABEL_OPT_PATH:
 			path = opts[nopts].value;
 			break;
+		case SELABEL_OPT_UNUSED:
+		case SELABEL_OPT_VALIDATE:
+		case SELABEL_OPT_DIGEST:
+			break;
+		default:
+			free(catalog);
+			errno = EINVAL;
+			return NULL;
 		}
 	}
 

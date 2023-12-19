@@ -157,6 +157,13 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 		case SELABEL_OPT_PATH:
 			path = opts[n].value;
 			break;
+		case SELABEL_OPT_UNUSED:
+		case SELABEL_OPT_VALIDATE:
+		case SELABEL_OPT_DIGEST:
+			break;
+		default:
+			errno = EINVAL;
+			return -1;
 		}
 
 	if (!path)
