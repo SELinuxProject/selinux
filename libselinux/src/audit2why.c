@@ -148,7 +148,7 @@ static int check_booleans(struct boolean_t **bools)
 		sepol_bool_free(boolean);
 
 	if (fcnt > 0) {
-		*bools = calloc(sizeof(struct boolean_t), fcnt + 1);
+		*bools = calloc(fcnt + 1, sizeof(struct boolean_t));
 		if (!*bools) {
 			PyErr_SetString( PyExc_MemoryError, "Out of memory\n");
 			free(foundlist);
@@ -226,7 +226,7 @@ static int __policy_init(const char *init_path)
 		return 1;
 	}
 
-	avc = calloc(sizeof(struct avc_t), 1);
+	avc = calloc(1, sizeof(struct avc_t));
 	if (!avc) {
 		PyErr_SetString( PyExc_MemoryError, "Out of memory\n");
 		fclose(fp);
