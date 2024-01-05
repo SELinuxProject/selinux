@@ -811,7 +811,7 @@ static int write_sensitivity_rules_to_conf(FILE *out, struct policydb *pdb)
 	num = strs_num_items(strs);
 
 	if (num > 0) {
-		sens_alias_map = calloc(sizeof(*sens_alias_map), pdb->p_levels.nprim);
+		sens_alias_map = calloc(pdb->p_levels.nprim, sizeof(*sens_alias_map));
 		if (!sens_alias_map) {
 			rc = -1;
 			goto exit;
@@ -942,7 +942,7 @@ static int write_category_rules_to_conf(FILE *out, struct policydb *pdb)
 	num = strs_num_items(strs);
 
 	if (num > 0) {
-		cat_alias_map = calloc(sizeof(*cat_alias_map), pdb->p_cats.nprim);
+		cat_alias_map = calloc(pdb->p_cats.nprim, sizeof(*cat_alias_map));
 		if (!cat_alias_map) {
 			rc = -1;
 			goto exit;
@@ -2106,7 +2106,7 @@ static int write_cond_nodes_to_conf(FILE *out, struct policydb *pdb)
 		return 0;
 	}
 
-	cond_data = calloc(sizeof(struct cond_data), num);
+	cond_data = calloc(num, sizeof(struct cond_data));
 	if (!cond_data) {
 		rc = -1;
 		goto exit;

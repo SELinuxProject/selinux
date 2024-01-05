@@ -575,7 +575,7 @@ static int sort_ocontext_data(struct ocontext **ocons, int (*cmp)(const void *, 
 		return 0;
 	}
 
-	data = calloc(sizeof(*data), num);
+	data = calloc(num, sizeof(*data));
 	if (!data) {
 		ERR(NULL, "Out of memory");
 		return -1;
