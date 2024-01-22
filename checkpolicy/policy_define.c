@@ -4244,7 +4244,7 @@ int define_user(void)
 
 	while ((id = queue_remove(id_queue))) {
 		if (set_user_roles(&usrdatum->roles, id))
-			continue;
+			return -1;
 	}
 
 	if (mlspol) {
