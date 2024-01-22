@@ -75,7 +75,7 @@ static void print_error_msg(int ret, uint32_t symbol_type)
 		yyerror2("Could not declare %s here", flavor_str[symbol_type]);
 		break;
 	default:
-		yyerror("Unknown error");
+		yyerror2("Unknown error %d", ret);
 	}
 }
 
@@ -86,7 +86,7 @@ int define_policy(int pass, int module_header_given)
 	if (module_header_given) {
 		if (policydbp->policy_type != POLICY_MOD) {
 			yyerror
-			    ("Module specification found while not building a policy module.\n");
+			    ("Module specification found while not building a policy module.");
 			return -1;
 		}
 
@@ -111,7 +111,7 @@ int define_policy(int pass, int module_header_given)
 	} else {
 		if (policydbp->policy_type == POLICY_MOD) {
 			yyerror
-			    ("Building a policy module, but no module specification found.\n");
+			    ("Building a policy module, but no module specification found.");
 			return -1;
 		}
 	}
