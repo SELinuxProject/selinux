@@ -106,4 +106,8 @@ int begin_optional_else(int pass);
  * return -1. */
 int end_avrule_block(int pass);
 
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+void module_compiler_reset(void);
+#endif
+
 #endif

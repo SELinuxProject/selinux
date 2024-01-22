@@ -70,3 +70,17 @@ $CC $CFLAGS -c -o binpolicy-fuzzer.o libsepol/fuzz/binpolicy-fuzzer.c
 $CXX $CXXFLAGS $LIB_FUZZING_ENGINE binpolicy-fuzzer.o "$DESTDIR/usr/lib/libsepol.a" -o "$OUT/binpolicy-fuzzer"
 
 zip -j "$OUT/binpolicy-fuzzer_seed_corpus.zip" libsepol/fuzz/policy.bin
+
+## checkpolicy fuzzer ##
+
+make -C checkpolicy clean
+make -C checkpolicy V=1 -j"$(nproc)" checkobjects
+# CFLAGS, CXXFLAGS and LIB_FUZZING_ENGINE have to be split to be accepted by
+# the compiler/linker so they shouldn't be quoted
+# shellcheck disable=SC2086
+$CC $CFLAGS -Icheckpolicy/ -c -o checkpolicy-fuzzer.o checkpolicy/fuzz/checkpolicy-fuzzer.c
+# shellcheck disable=SC2086
+$CXX $CXXFLAGS $LIB_FUZZING_ENGINE checkpolicy-fuzzer.o checkpolicy/*.o "$DESTDIR/usr/lib/libsepol.a" -o "$OUT/checkpolicy-fuzzer"
+
+zip -j "$OUT/checkpolicy-fuzzer_seed_corpus.zip" checkpolicy/fuzz/min_pol.mls.conf
+cp checkpolicy/fuzz/checkpolicy-fuzzer.dict "$OUT/"
