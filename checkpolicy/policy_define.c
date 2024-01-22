@@ -342,6 +342,7 @@ static int read_classes(ebitmap_t *e_classes)
 	while ((id = queue_remove(id_queue))) {
 		if (!is_id_in_scope(SYM_CLASSES, id)) {
 			yyerror2("class %s is not within scope", id);
+			free(id);
 			return -1;
 		}
 		cladatum = hashtab_search(policydbp->p_classes.table, id);
@@ -373,15 +374,18 @@ int define_default_user(int which)
 	while ((id = queue_remove(id_queue))) {
 		if (!is_id_in_scope(SYM_CLASSES, id)) {
 			yyerror2("class %s is not within scope", id);
+			free(id);
 			return -1;
 		}
 		cladatum = hashtab_search(policydbp->p_classes.table, id);
 		if (!cladatum) {
 			yyerror2("unknown class %s", id);
+			free(id);
 			return -1;
 		}
 		if (cladatum->default_user && cladatum->default_user != which) {
 			yyerror2("conflicting default user information for class %s", id);
+			free(id);
 			return -1;
 		}
 		cladatum->default_user = which;
@@ -405,15 +409,18 @@ int define_default_role(int which)
 	while ((id = queue_remove(id_queue))) {
 		if (!is_id_in_scope(SYM_CLASSES, id)) {
 			yyerror2("class %s is not within scope", id);
+			free(id);
 			return -1;
 		}
 		cladatum = hashtab_search(policydbp->p_classes.table, id);
 		if (!cladatum) {
 			yyerror2("unknown class %s", id);
+			free(id);
 			return -1;
 		}
 		if (cladatum->default_role && cladatum->default_role != which) {
 			yyerror2("conflicting default role information for class %s", id);
+			free(id);
 			return -1;
 		}
 		cladatum->default_role = which;
@@ -437,15 +444,18 @@ int define_default_type(int which)
 	while ((id = queue_remove(id_queue))) {
 		if (!is_id_in_scope(SYM_CLASSES, id)) {
 			yyerror2("class %s is not within scope", id);
+			free(id);
 			return -1;
 		}
 		cladatum = hashtab_search(policydbp->p_classes.table, id);
 		if (!cladatum) {
 			yyerror2("unknown class %s", id);
+			free(id);
 			return -1;
 		}
 		if (cladatum->default_type && cladatum->default_type != which) {
 			yyerror2("conflicting default type information for class %s", id);
+			free(id);
 			return -1;
 		}
 		cladatum->default_type = which;
@@ -469,15 +479,18 @@ int define_default_range(int which)
 	while ((id = queue_remove(id_queue))) {
 		if (!is_id_in_scope(SYM_CLASSES, id)) {
 			yyerror2("class %s is not within scope", id);
+			free(id);
 			return -1;
 		}
 		cladatum = hashtab_search(policydbp->p_classes.table, id);
 		if (!cladatum) {
 			yyerror2("unknown class %s", id);
+			free(id);
 			return -1;
 		}
 		if (cladatum->default_range && cladatum->default_range != which) {
 			yyerror2("conflicting default range information for class %s", id);
+			free(id);
 			return -1;
 		}
 		cladatum->default_range = which;
@@ -508,6 +521,7 @@ int define_common_perms(void)
 	comdatum = hashtab_search(policydbp->p_commons.table, id);
 	if (comdatum) {
 		yyerror2("duplicate declaration for common %s\n", id);
+		free(id);
 		return -1;
 	}
 	comdatum = (common_datum_t *) malloc(sizeof(common_datum_t));
@@ -770,12 +784,14 @@ int define_sens(void)
 	while ((id = queue_remove(id_queue))) {
 		if (id_has_dot(id)) {
 			yyerror("sensitivity aliases may not contain periods");
-			goto bad_alias;
+			free(id);
+			return -1;
 		}
 		aliasdatum = (level_datum_t *) malloc(sizeof(level_datum_t));
 		if (!aliasdatum) {
 			yyerror("out of memory");
-			goto bad_alias;
+			free(id);
+			return -1;
 		}
 		level_datum_init(aliasdatum);
 		aliasdatum->isalias = TRUE;
@@ -940,12 +956,14 @@ int define_category(void)
 	while ((id = queue_remove(id_queue))) {
 		if (id_has_dot(id)) {
 			yyerror("category aliases may not contain periods");
-			goto bad_alias;
+			free(id);
+			return -1;
 		}
 		aliasdatum = (cat_datum_t *) malloc(sizeof(cat_datum_t));
 		if (!aliasdatum) {
 			yyerror("out of memory");
-			goto bad_alias;
+			free(id);
+			return -1;
 		}
 		cat_datum_init(aliasdatum);
 		aliasdatum->isalias = TRUE;
@@ -3722,6 +3740,7 @@ uintptr_t define_cexpr(uint32_t expr_type, uintptr_t arg1, uintptr_t arg2)
 				if (!is_id_in_scope(SYM_USERS, id)) {
 					yyerror2("user %s is not within scope",
 						 id);
+					free(id);
 					constraint_expr_destroy(expr);
 					return 0;
 				}
@@ -3733,6 +3752,7 @@ uintptr_t define_cexpr(uint32_t expr_type, uintptr_t arg1, uintptr_t arg2)
 								    id);
 				if (!user) {
 					yyerror2("unknown user %s", id);
+					free(id);
 					constraint_expr_destroy(expr);
 					return 0;
 				}
@@ -3742,6 +3762,7 @@ uintptr_t define_cexpr(uint32_t expr_type, uintptr_t arg1, uintptr_t arg2)
 					yyerror2("role %s is not within scope",
 						 id);
 					constraint_expr_destroy(expr);
+					free(id);
 					return 0;
 				}
 				role =
@@ -3753,6 +3774,7 @@ uintptr_t define_cexpr(uint32_t expr_type, uintptr_t arg1, uintptr_t arg2)
 				if (!role) {
 					yyerror2("unknown role %s", id);
 					constraint_expr_destroy(expr);
+					free(id);
 					return 0;
 				}
 				val = role->s.value;
@@ -3765,11 +3787,13 @@ uintptr_t define_cexpr(uint32_t expr_type, uintptr_t arg1, uintptr_t arg2)
 			} else {
 				yyerror("invalid constraint expression");
 				constraint_expr_destroy(expr);
+				free(id);
 				return 0;
 			}
 			if (ebitmap_set_bit(&expr->names, val - 1, TRUE)) {
 				yyerror("out of memory");
 				ebitmap_destroy(&expr->names);
+				free(id);
 				constraint_expr_destroy(expr);
 				return 0;
 			}
