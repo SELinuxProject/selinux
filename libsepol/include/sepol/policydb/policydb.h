@@ -218,6 +218,7 @@ typedef struct level_datum {
 	mls_level_t *level;	/* sensitivity and associated categories */
 	unsigned char isalias;	/* is this sensitivity an alias for another? */
 	unsigned char defined;
+	unsigned char copy;	/* whether the level is a non-owned copy (compile time only) */
 } level_datum_t;
 
 /* Category attributes */

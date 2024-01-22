@@ -623,6 +623,9 @@ static int validate_level_datum(__attribute__ ((unused)) hashtab_key_t k, hashta
 	level_datum_t *level = d;
 	validate_t *flavors = args;
 
+	if (level->copy)
+		return -1;
+
 	return validate_mls_level(level->level, &flavors[SYM_LEVELS], &flavors[SYM_CATS]);
 }
 
