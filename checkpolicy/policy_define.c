@@ -1399,7 +1399,7 @@ int define_typeattribute(void)
 	return 0;
 }
 
-static int define_typebounds_helper(char *bounds_id, char *type_id)
+static int define_typebounds_helper(const char *bounds_id, const char *type_id)
 {
 	type_datum_t *bounds, *type;
 
@@ -1482,15 +1482,26 @@ int define_type(int alias)
 		 * old name based hierarchy.
 		 */
 		if ((id = queue_remove(id_queue))) {
-			char *bounds, *delim;
+			const char *delim;
 
-			if ((delim = strrchr(id, '.'))
-			    && (bounds = strdup(id))) {
+			if ((delim = strrchr(id, '.'))) {
+				int ret;
+				char *bounds = strdup(id);
+				if (!bounds) {
+					yyerror("out of memory");
+					free(id);
+					return -1;
+				}
+
 				bounds[(size_t)(delim - id)] = '\0';
 
-				if (define_typebounds_helper(bounds, id))
-					return -1;
+				ret = define_typebounds_helper(bounds, id);
 				free(bounds);
+				if (ret) {
+					free(id);
+					return -1;
+				}
+
 			}
 			free(id);
 		}
