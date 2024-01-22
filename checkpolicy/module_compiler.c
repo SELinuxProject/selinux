@@ -234,6 +234,7 @@ static int role_implicit_bounds(hashtab_t roles_tab,
 	if (!bounds) {
 		yyerror2("role %s doesn't exist, is implicit bounds of %s",
 			 bounds_id, role_id);
+		free(bounds_id);
 		return -1;
 	}
 
@@ -243,6 +244,7 @@ static int role_implicit_bounds(hashtab_t roles_tab,
 		yyerror2("role %s has inconsistent bounds %s/%s",
 			 role_id, bounds_id,
 			 policydbp->p_role_val_to_name[role->bounds - 1]);
+		free(bounds_id);
 		return -1;
 	}
 	free(bounds_id);
@@ -479,6 +481,7 @@ static int user_implicit_bounds(hashtab_t users_tab,
 	if (!bounds) {
 		yyerror2("user %s doesn't exist, is implicit bounds of %s",
 			 bounds_id, user_id);
+		free(bounds_id);
 		return -1;
 	}
 
@@ -488,6 +491,7 @@ static int user_implicit_bounds(hashtab_t users_tab,
 		yyerror2("user %s has inconsistent bounds %s/%s",
 			 user_id, bounds_id,
 			 policydbp->p_role_val_to_name[user->bounds - 1]);
+		free(bounds_id);
 		return -1;
 	}
 	free(bounds_id);
