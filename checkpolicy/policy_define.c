@@ -756,6 +756,7 @@ int define_sens(void)
 	}
 	level_datum_init(datum);
 	datum->isalias = FALSE;
+	datum->copy = FALSE;
 	datum->level = level;
 
 	ret = declare_symbol(SYM_LEVELS, id, datum, &value, &value);
@@ -795,6 +796,7 @@ int define_sens(void)
 		}
 		level_datum_init(aliasdatum);
 		aliasdatum->isalias = TRUE;
+		aliasdatum->copy = TRUE;
 		aliasdatum->level = level;
 
 		ret = declare_symbol(SYM_LEVELS, id, aliasdatum, NULL, &value);
@@ -1035,6 +1037,7 @@ static int clone_level(hashtab_key_t key __attribute__ ((unused)), hashtab_datum
 			return -1;
 		}
 		levdatum->level = newlevel;
+		levdatum->copy = FALSE;
 	}
 	return 0;
 }
