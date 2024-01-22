@@ -2544,6 +2544,8 @@ static int define_te_avtab_helper(int which, avrule_t ** rule)
 	int add = 1, ret = 0;
 	int suppress = 0;
 
+	ebitmap_init(&tclasses);
+
 	avrule = (avrule_t *) malloc(sizeof(avrule_t));
 	if (!avrule) {
 		yyerror("memory error");
@@ -2607,7 +2609,6 @@ static int define_te_avtab_helper(int which, avrule_t ** rule)
 		}
 	}
 
-	ebitmap_init(&tclasses);
 	ret = read_classes(&tclasses);
 	if (ret)
 		goto out;
@@ -2693,8 +2694,6 @@ static int define_te_avtab_helper(int which, avrule_t ** rule)
 		free(id);
 	}
 
-	ebitmap_destroy(&tclasses);
-
 	avrule->perms = perms;
 	*rule = avrule;
 
@@ -2703,6 +2702,9 @@ static int define_te_avtab_helper(int which, avrule_t ** rule)
 		avrule_destroy(avrule);
 		free(avrule);
 	}
+
+	ebitmap_destroy(&tclasses);
+
 	return ret;
 
 }
