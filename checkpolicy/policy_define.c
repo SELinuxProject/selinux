@@ -44,7 +44,6 @@
 #define IPPROTO_SCTP 132
 #endif
 #include <arpa/inet.h>
-#include <stdlib.h>
 #include <limits.h>
 #include <inttypes.h>
 #include <ctype.h>
@@ -1093,7 +1092,7 @@ int define_level(void)
 
 	while ((id = queue_remove(id_queue))) {
 		cat_datum_t *cdatum;
-		int range_start, range_end, i;
+		uint32_t range_start, range_end, i;
 
 		if (id_has_dot(id)) {
 			char *id_start = id;
@@ -1929,7 +1928,7 @@ error:
 	return -1;
 }
 
-static int avrule_merge_ioctls(struct av_ioctl_range_list **rangehead)
+static void avrule_merge_ioctls(struct av_ioctl_range_list **rangehead)
 {
 	struct av_ioctl_range_list *r, *tmp;
 	r = *rangehead;
@@ -1946,7 +1945,6 @@ static int avrule_merge_ioctls(struct av_ioctl_range_list **rangehead)
 		}
 		r = r->next;
 	}
-	return 0;
 }
 
 static int avrule_read_ioctls(struct av_ioctl_range_list **rangehead)
@@ -2067,8 +2065,7 @@ static int avrule_ioctl_ranges(struct av_ioctl_range_list **rangelist)
 	/* sort and merge the input ioctls */
 	if (avrule_sort_ioctls(&rangehead))
 		return -1;
-	if (avrule_merge_ioctls(&rangehead))
-		return -1;
+	avrule_merge_ioctls(&rangehead);
 	/* flip ranges if these are omitted */
 	if (omit) {
 		if (avrule_omit_ioctls(&rangehead))
@@ -3851,7 +3848,7 @@ uintptr_t define_cexpr(uint32_t expr_type, uintptr_t arg1, uintptr_t arg2)
 	return 0;
 }
 
-int define_conditional(cond_expr_t * expr, avrule_t * t, avrule_t * f)
+int define_conditional(cond_expr_t * expr, avrule_t * t_list, avrule_t * f_list)
 {
 	cond_expr_t *e;
 	int depth, booleans, tunables;
@@ -3863,15 +3860,15 @@ int define_conditional(cond_expr_t * expr, avrule_t * t, avrule_t * f)
 		yyerror("illegal conditional expression");
 		return -1;
 	}
-	if (!t) {
-		if (!f) {
+	if (!t_list) {
+		if (!f_list) {
 			/* empty is fine, destroy expression and return */
 			cond_expr_destroy(expr);
 			return 0;
 		}
 		/* Invert */
-		t = f;
-		f = 0;
+		t_list = f_list;
+		f_list = NULL;
 		expr = define_cond_expr(COND_NOT, expr, 0);
 		if (!expr) {
 			yyerror("unable to invert conditional expression");
@@ -3937,8 +3934,8 @@ int define_conditional(cond_expr_t * expr, avrule_t * t, avrule_t * f)
 	/*  use tmp conditional node to partially build new node */
 	memset(&cn, 0, sizeof(cn));
 	cn.expr = expr;
-	cn.avtrue_list = t;
-	cn.avfalse_list = f;
+	cn.avtrue_list = t_list;
+	cn.avfalse_list = f_list;
 
 	/* normalize/precompute expression */
 	if (cond_normalize_expr(policydbp, &cn) < 0) {
@@ -4114,7 +4111,7 @@ static int set_user_roles(role_set_t * set, char *id)
 static int parse_categories(char *id, level_datum_t * levdatum, ebitmap_t * cats)
 {
 	cat_datum_t *cdatum;
-	int range_start, range_end, i;
+	uint32_t range_start, range_end, i;
 
 	if (id_has_dot(id)) {
 		char *id_start = id;
@@ -5524,7 +5521,7 @@ static int define_genfs_context_helper(char *fstype, int has_type)
 	class_datum_t *cladatum;
 	char *type = NULL;
 	const char *sclass;
-	int len, len2;
+	size_t len, len2;
 
 	if (policydbp->target_platform != SEPOL_TARGET_SELINUX) {
 		yyerror("genfs not supported for target");
