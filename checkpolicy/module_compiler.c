@@ -284,9 +284,8 @@ static int create_role(uint32_t scope, unsigned char isattr, role_datum_t **role
 		ret = require_symbol(SYM_ROLES, id, datum, &value, &value);
 	}
 
-	datum->s.value = value;
-
 	if (ret == 0) {
+		datum->s.value = value;
 		*role = datum;
 		*key = strdup(id);
 		if (*key == NULL) {
@@ -303,6 +302,7 @@ static int create_role(uint32_t scope, unsigned char isattr, role_datum_t **role
 			free(datum);
 			return -1;
 		}
+		datum->s.value = value;
 		*role = datum;
 		*key = id;
 	} else {
@@ -529,9 +529,8 @@ static int create_user(uint32_t scope, user_datum_t **user, char **key)
 		ret = require_symbol(SYM_USERS, id, datum, &value, &value);
 	}
 
-	datum->s.value = value;
-
 	if (ret == 0) {
+		datum->s.value = value;
 		*user = datum;
 		*key = strdup(id);
 		if (*key == NULL) {
@@ -539,6 +538,7 @@ static int create_user(uint32_t scope, user_datum_t **user, char **key)
 			return -1;
 		}
 	} else if (ret == 1) {
+		datum->s.value = value;
 		*user = datum;
 		*key = id;
 	} else {
