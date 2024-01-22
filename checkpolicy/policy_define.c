@@ -3428,20 +3428,22 @@ int define_constraint(constraint_expr_t * expr)
 		return 0;
 	}
 
+	ebitmap_init(&classmap);
+
 	depth = -1;
 	for (e = expr; e; e = e->next) {
 		switch (e->expr_type) {
 		case CEXPR_NOT:
 			if (depth < 0) {
 				yyerror("illegal constraint expression");
-				return -1;
+				goto bad;
 			}
 			break;
 		case CEXPR_AND:
 		case CEXPR_OR:
 			if (depth < 1) {
 				yyerror("illegal constraint expression");
-				return -1;
+				goto bad;
 			}
 			depth--;
 			break;
@@ -3449,51 +3451,48 @@ int define_constraint(constraint_expr_t * expr)
 		case CEXPR_NAMES:
 			if (e->attr & CEXPR_XTARGET) {
 				yyerror("illegal constraint expression");
-				return -1;	/* only for validatetrans rules */
+				goto bad;	/* only for validatetrans rules */
 			}
 			if (depth == (CEXPR_MAXDEPTH - 1)) {
 				yyerror("constraint expression is too deep");
-				return -1;
+				goto bad;
 			}
 			depth++;
 			break;
 		default:
 			yyerror("illegal constraint expression");
-			return -1;
+			goto bad;
 		}
 	}
 	if (depth != 0) {
 		yyerror("illegal constraint expression");
-		return -1;
+		goto bad;
 	}
 
-	ebitmap_init(&classmap);
 	while ((id = queue_remove(id_queue))) {
 		if (!is_id_in_scope(SYM_CLASSES, id)) {
 			yyerror2("class %s is not within scope", id);
 			free(id);
-			return -1;
+			goto bad;
 		}
 		cladatum =
 		    (class_datum_t *) hashtab_search(policydbp->p_classes.table,
 						     (hashtab_key_t) id);
 		if (!cladatum) {
 			yyerror2("class %s is not defined", id);
-			ebitmap_destroy(&classmap);
 			free(id);
-			return -1;
+			goto bad;
 		}
 		if (ebitmap_set_bit(&classmap, cladatum->s.value - 1, TRUE)) {
 			yyerror("out of memory");
-			ebitmap_destroy(&classmap);
 			free(id);
-			return -1;
+			goto bad;
 		}
 		node = malloc(sizeof(struct constraint_node));
 		if (!node) {
 			yyerror("out of memory");
 			free(node);
-			return -1;
+			goto bad;
 		}
 		memset(node, 0, sizeof(constraint_node_t));
 		if (useexpr) {
@@ -3505,7 +3504,7 @@ int define_constraint(constraint_expr_t * expr)
 		if (!node->expr) {
 			yyerror("out of memory");
 			free(node);
-			return -1;
+			goto bad;
 		}
 		node->permissions = 0;
 
@@ -3557,8 +3556,7 @@ int define_constraint(constraint_expr_t * expr)
 					yyerror2("permission %s is not"
 						 " defined for class %s", id, policydbp->p_class_val_to_name[i]);
 					free(id);
-					ebitmap_destroy(&classmap);
-					return -1;
+					goto bad;
 				}
 			}
 			node->permissions |= (UINT32_C(1) << (perdatum->s.value - 1));
@@ -3569,6 +3567,13 @@ int define_constraint(constraint_expr_t * expr)
 	ebitmap_destroy(&classmap);
 
 	return 0;
+
+bad:
+	ebitmap_destroy(&classmap);
+	if (useexpr)
+		constraint_expr_destroy(expr);
+
+	return -1;
 }
 
 int define_validatetrans(constraint_expr_t * expr)
@@ -3587,20 +3592,22 @@ int define_validatetrans(constraint_expr_t * expr)
 		return 0;
 	}
 
+	ebitmap_init(&classmap);
+
 	depth = -1;
 	for (e = expr; e; e = e->next) {
 		switch (e->expr_type) {
 		case CEXPR_NOT:
 			if (depth < 0) {
 				yyerror("illegal validatetrans expression");
-				return -1;
+				goto bad;
 			}
 			break;
 		case CEXPR_AND:
 		case CEXPR_OR:
 			if (depth < 1) {
 				yyerror("illegal validatetrans expression");
-				return -1;
+				goto bad;
 			}
 			depth--;
 			break;
@@ -3608,47 +3615,45 @@ int define_validatetrans(constraint_expr_t * expr)
 		case CEXPR_NAMES:
 			if (depth == (CEXPR_MAXDEPTH - 1)) {
 				yyerror("validatetrans expression is too deep");
-				return -1;
+				goto bad;
 			}
 			depth++;
 			break;
 		default:
 			yyerror("illegal validatetrans expression");
-			return -1;
+			goto bad;
 		}
 	}
 	if (depth != 0) {
 		yyerror("illegal validatetrans expression");
-		return -1;
+		goto bad;
 	}
 
-	ebitmap_init(&classmap);
 	while ((id = queue_remove(id_queue))) {
 		if (!is_id_in_scope(SYM_CLASSES, id)) {
 			yyerror2("class %s is not within scope", id);
 			free(id);
-			return -1;
+			goto bad;
 		}
 		cladatum =
 		    (class_datum_t *) hashtab_search(policydbp->p_classes.table,
 						     (hashtab_key_t) id);
 		if (!cladatum) {
 			yyerror2("class %s is not defined", id);
-			ebitmap_destroy(&classmap);
 			free(id);
-			return -1;
+			goto bad;
 		}
 		if (ebitmap_set_bit(&classmap, (cladatum->s.value - 1), TRUE)) {
 			yyerror("out of memory");
-			ebitmap_destroy(&classmap);
 			free(id);
-			return -1;
+			goto bad;
 		}
 
 		node = malloc(sizeof(struct constraint_node));
 		if (!node) {
 			yyerror("out of memory");
-			return -1;
+			free(id);
+			goto bad;
 		}
 		memset(node, 0, sizeof(constraint_node_t));
 		if (useexpr) {
@@ -3668,6 +3673,13 @@ int define_validatetrans(constraint_expr_t * expr)
 	ebitmap_destroy(&classmap);
 
 	return 0;
+
+bad:
+	ebitmap_destroy(&classmap);
+	if (useexpr)
+		constraint_expr_destroy(expr);
+
+	return -1;
 }
 
 uintptr_t define_cexpr(uint32_t expr_type, uintptr_t arg1, uintptr_t arg2)
