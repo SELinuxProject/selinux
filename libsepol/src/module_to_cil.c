@@ -2397,7 +2397,7 @@ static int boolean_to_cil(int indent, struct policydb *UNUSED(pdb), struct avrul
 
 static int sens_to_cil(int indent, struct policydb *pdb, struct avrule_block *UNUSED(block), struct stack *UNUSED(decl_stack), char *key, void *datum, int scope)
 {
-	struct level_datum *level = datum;
+	level_datum_t *level = datum;
 
 	if (scope == SCOPE_DECL) {
 		if (!level->isalias) {
