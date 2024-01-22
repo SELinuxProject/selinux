@@ -1492,3 +1492,14 @@ static void pop_stack(void)
 	free(stack_top);
 	stack_top = parent;
 }
+
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+void module_compiler_reset(void)
+{
+	while (stack_top)
+		pop_stack();
+
+	last_block = NULL;
+	next_decl_id = 1;
+}
+#endif

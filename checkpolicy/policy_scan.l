@@ -312,6 +312,7 @@ GLBLUB				{ return(GLBLUB); }
 %%
 int yyerror(const char *msg)
 {
+#ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
 	if (source_file[0])
 		fprintf(stderr, "%s:%lu:",
 			source_file, source_lineno);
@@ -322,6 +323,10 @@ int yyerror(const char *msg)
 			yytext,
 			policydb_lineno,
 			linebuf[0], linebuf[1]);
+#else
+	(void)msg;
+#endif
+
 	policydb_errors++;
 	return -1;
 }
@@ -331,6 +336,7 @@ int yywarn(const char *msg)
 	if (werror)
 		return yyerror(msg);
 
+#ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
 	if (source_file[0])
 		fprintf(stderr, "%s:%lu:",
 			source_file, source_lineno);
@@ -341,6 +347,8 @@ int yywarn(const char *msg)
 			yytext,
 			policydb_lineno,
 			linebuf[0], linebuf[1]);
+#endif
+
 	return 0;
 }
 
