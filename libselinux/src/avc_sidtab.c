@@ -4,6 +4,7 @@
  * Author : Eamon Walsh, <ewalsh@epoch.ncsc.mil>
  */
 #include <errno.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -50,6 +51,11 @@ int sidtab_insert(struct sidtab *s, const char * ctx)
 	struct sidtab_node *newnode;
 	char * newctx;
 
+	if (s->nel >= UINT_MAX - 1) {
+		rc = -1;
+		goto out;
+	}
+
 	newnode = (struct sidtab_node *)avc_malloc(sizeof(*newnode));
 	if (!newnode) {
 		rc = -1;
@@ -65,9 +71,8 @@ int sidtab_insert(struct sidtab *s, const char * ctx)
 	hvalue = sidtab_hash(newctx);
 	newnode->next = s->htable[hvalue];
 	newnode->sid_s.ctx = newctx;
-	newnode->sid_s.refcnt = 1;	/* unused */
+	newnode->sid_s.id = ++s->nel;
 	s->htable[hvalue] = newnode;
-	s->nel++;
       out:
 	return rc;
 }

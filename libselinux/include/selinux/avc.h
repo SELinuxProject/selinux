@@ -20,7 +20,7 @@ extern "C" {
  */
 struct security_id {
 	char * ctx;
-	unsigned int refcnt;
+	unsigned int id;
 };
 typedef struct security_id *security_id_t;
 
