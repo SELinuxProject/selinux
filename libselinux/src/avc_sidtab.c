@@ -45,7 +45,8 @@ int sidtab_init(struct sidtab *s)
 
 int sidtab_insert(struct sidtab *s, const char * ctx)
 {
-	int hvalue, rc = 0;
+	unsigned hvalue;
+	int rc = 0;
 	struct sidtab_node *newnode;
 	char * newctx;
 
@@ -75,7 +76,8 @@ int
 sidtab_context_to_sid(struct sidtab *s,
 		      const char * ctx, security_id_t * sid)
 {
-	int hvalue, rc = 0;
+	unsigned hvalue;
+	int rc = 0;
 	struct sidtab_node *cur;
 
 	*sid = NULL;
@@ -98,10 +100,10 @@ sidtab_context_to_sid(struct sidtab *s,
 	return rc;
 }
 
-void sidtab_sid_stats(struct sidtab *s, char *buf, int buflen)
+void sidtab_sid_stats(const struct sidtab *s, char *buf, size_t buflen)
 {
-	int i, chain_len, slots_used, max_chain_len;
-	struct sidtab_node *cur;
+	size_t i, chain_len, slots_used, max_chain_len;
+	const struct sidtab_node *cur;
 
 	slots_used = 0;
 	max_chain_len = 0;
@@ -121,8 +123,8 @@ void sidtab_sid_stats(struct sidtab *s, char *buf, int buflen)
 	}
 
 	snprintf(buf, buflen,
-		 "%s:  %u SID entries and %d/%d buckets used, longest "
-		 "chain length %d\n", avc_prefix, s->nel, slots_used,
+		 "%s:  %u SID entries and %zu/%d buckets used, longest "
+		 "chain length %zu\n", avc_prefix, s->nel, slots_used,
 		 SIDTAB_SIZE, max_chain_len);
 }
 
