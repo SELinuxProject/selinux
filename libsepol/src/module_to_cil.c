@@ -1681,7 +1681,7 @@ static int class_perm_cmp(const void *a, const void *b)
 	const struct class_perm_datum *aa = a;
 	const struct class_perm_datum *bb = b;
 
-	return aa->val - bb->val;
+	return spaceship_cmp(aa->val, bb->val);
 }
 
 static int common_to_cil(char *key, void *data, void *UNUSED(arg))
