@@ -2653,7 +2653,7 @@ class fcontextRecords(semanageRecords):
     def customized(self):
         l = []
         fcon_dict = self.get_all(True)
-        for k in sorted(fcon_dict.keys()):
+        for k in fcon_dict.keys():
             if fcon_dict[k]:
                 if fcon_dict[k][3]:
                     l.append("-a -f %s -t %s -r '%s' '%s'" % (file_type_str_to_option[k[1]], fcon_dict[k][2], fcon_dict[k][3], k[0]))
@@ -2670,7 +2670,12 @@ class fcontextRecords(semanageRecords):
         if len(fcon_dict) != 0:
             if heading:
                 print("%-50s %-18s %s\n" % (_("SELinux fcontext"), _("type"), _("Context")))
-            for k in sorted(fcon_dict.keys()):
+            # do not sort local customizations since they are evaluated based on the order they where added in
+            if locallist:
+                fkeys = fcon_dict.keys()
+            else:
+                fkeys = sorted(fcon_dict.keys())
+            for k in fkeys:
                 if fcon_dict[k]:
                     if is_mls_enabled:
                         print("%-50s %-18s %s:%s:%s:%s " % (k[0], k[1], fcon_dict[k][0], fcon_dict[k][1], fcon_dict[k][2], translate(fcon_dict[k][3], False)))

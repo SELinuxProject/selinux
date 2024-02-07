@@ -133,7 +133,11 @@ class fcontextPage(semanagePage):
         self.fcontext = seobject.fcontextRecords()
         self.store.clear()
         fcon_dict = self.fcontext.get_all(self.local)
-        for k in sorted(fcon_dict.keys()):
+        if self.local:
+            fkeys = fcon_dict.keys()
+        else:
+            fkeys = sorted(fcon_dict.keys())
+        for k in fkeys:
             if not self.match(fcon_dict, k, filter):
                 continue
             iter = self.store.append()
