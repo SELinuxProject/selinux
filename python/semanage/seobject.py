@@ -557,11 +557,6 @@ class loginRecords(semanageRecords):
         if rc < 0:
             raise ValueError(_("Could not create a key for %s") % name)
 
-        (rc, exists) = semanage_seuser_exists(self.sh, k)
-        if rc < 0:
-            raise ValueError(_("Could not check if login mapping for %s is defined") % name)
-        if exists:
-            raise ValueError(_("Login mapping for %s is already defined") % name)
         if name[0] == '%':
             try:
                 grp.getgrnam(name[1:])
@@ -600,10 +595,28 @@ class loginRecords(semanageRecords):
     def add(self, name, sename, serange):
         try:
             self.begin()
-            self.__add(name, sename, serange)
+            # Add a new mapping, or modify an existing one
+            if self.__exists(name):
+                print(_("Login mapping for %s is already defined, modifying instead") % name)
+                self.__modify(name, sename, serange)
+            else:
+                self.__add(name, sename, serange)
             self.commit()
         except ValueError as error:
             raise error
+
+    # check if login mapping for given user exists
+    def __exists(self, name):
+        (rc, k) = semanage_seuser_key_create(self.sh, name)
+        if rc < 0:
+            raise ValueError(_("Could not create a key for %s") % name)
+
+        (rc, exists) = semanage_seuser_exists(self.sh, k)
+        if rc < 0:
+            raise ValueError(_("Could not check if login mapping for %s is defined") % name)
+        semanage_seuser_key_free(k)
+
+        return exists
 
     def __modify(self, name, sename="", serange=""):
         rec, self.oldsename, self.oldserange = selinux.getseuserbyname(name)
@@ -821,12 +834,6 @@ class seluserRecords(semanageRecords):
         if rc < 0:
             raise ValueError(_("Could not create a key for %s") % name)
 
-        (rc, exists) = semanage_user_exists(self.sh, k)
-        if rc < 0:
-            raise ValueError(_("Could not check if SELinux user %s is defined") % name)
-        if exists:
-            raise ValueError(_("SELinux user %s is already defined") % name)
-
         (rc, u) = semanage_user_create(self.sh)
         if rc < 0:
             raise ValueError(_("Could not create SELinux user for %s") % name)
@@ -866,11 +873,27 @@ class seluserRecords(semanageRecords):
     def add(self, name, roles, selevel, serange, prefix):
         try:
             self.begin()
-            self.__add(name, roles, selevel, serange, prefix)
+            if self.__exists(name):
+                print(_("SELinux user %s is already defined, modifying instead") % name)
+                self.__modify(name, roles, selevel, serange, prefix)
+            else:
+                self.__add(name, roles, selevel, serange, prefix)
             self.commit()
         except ValueError as error:
             self.mylog.commit(0)
             raise error
+
+    def __exists(self, name):
+        (rc, k) = semanage_user_key_create(self.sh, name)
+        if rc < 0:
+            raise ValueError(_("Could not create a key for %s") % name)
+
+        (rc, exists) = semanage_user_exists(self.sh, k)
+        if rc < 0:
+            raise ValueError(_("Could not check if SELinux user %s is defined") % name)
+        semanage_user_key_free(k)
+
+        return exists
 
     def __modify(self, name, roles=[], selevel="", serange="", prefix=""):
         oldserole = ""
@@ -1103,12 +1126,6 @@ class portRecords(semanageRecords):
 
         (k, proto_d, low, high) = self.__genkey(port, proto)
 
-        (rc, exists) = semanage_port_exists(self.sh, k)
-        if rc < 0:
-            raise ValueError(_("Could not check if port {proto}/{port} is defined").format(proto=proto, port=port))
-        if exists:
-            raise ValueError(_("Port {proto}/{port} already defined").format(proto=proto, port=port))
-
         (rc, p) = semanage_port_create(self.sh)
         if rc < 0:
             raise ValueError(_("Could not create port for {proto}/{port}").format(proto=proto, port=port))
@@ -1152,8 +1169,22 @@ class portRecords(semanageRecords):
 
     def add(self, port, proto, serange, type):
         self.begin()
-        self.__add(port, proto, serange, type)
+        if self.__exists(port, proto):
+            print(_("Port {proto}/{port} already defined, modifying instead").format(proto=proto, port=port))
+            self.__modify(port, proto, serange, type)
+        else:
+            self.__add(port, proto, serange, type)
         self.commit()
+
+    def __exists(self, port, proto):
+        (k, proto_d, low, high) = self.__genkey(port, proto)
+
+        (rc, exists) = semanage_port_exists(self.sh, k)
+        if rc < 0:
+            raise ValueError(_("Could not check if port {proto}/{port} is defined").format(proto=proto, port=port))
+        semanage_port_key_free(k)
+
+        return exists
 
     def __modify(self, port, proto, serange, setype):
         if serange == "" and setype == "":
@@ -1377,12 +1408,6 @@ class ibpkeyRecords(semanageRecords):
 
         (k, subnet_prefix, low, high) = self.__genkey(pkey, subnet_prefix)
 
-        (rc, exists) = semanage_ibpkey_exists(self.sh, k)
-        if rc < 0:
-            raise ValueError(_("Could not check if ibpkey {subnet_prefix}/{pkey} is defined").formnat(subnet_prefix=subnet_prefix, pkey=pkey))
-        if exists:
-            raise ValueError(_("ibpkey {subnet_prefix}/{pkey} already defined").format(subnet_prefix=subnet_prefix, pkey=pkey))
-
         (rc, p) = semanage_ibpkey_create(self.sh)
         if rc < 0:
             raise ValueError(_("Could not create ibpkey for {subnet_prefix}/{pkey}").format(subnet_prefix=subnet_prefix, pkey=pkey))
@@ -1424,8 +1449,22 @@ class ibpkeyRecords(semanageRecords):
 
     def add(self, pkey, subnet_prefix, serange, type):
         self.begin()
-        self.__add(pkey, subnet_prefix, serange, type)
+        if self.__exists(pkey, subnet_prefix):
+            print(_("ibpkey {subnet_prefix}/{pkey} already defined, modifying instead").format(subnet_prefix=subnet_prefix, pkey=pkey))
+            self.__modify(pkey, subnet_prefix, serange, type)
+        else:
+            self.__add(pkey, subnet_prefix, serange, type)
         self.commit()
+
+    def __exists(self, pkey, subnet_prefix):
+        (k, subnet_prefix, low, high) = self.__genkey(pkey, subnet_prefix)
+
+        (rc, exists) = semanage_ibpkey_exists(self.sh, k)
+        if rc < 0:
+            raise ValueError(_("Could not check if ibpkey {subnet_prefix}/{pkey} is defined").formnat(subnet_prefix=subnet_prefix, pkey=pkey))
+        semanage_ibpkey_key_free(k)
+
+        return exists
 
     def __modify(self, pkey, subnet_prefix, serange, setype):
         if serange == "" and setype == "":
@@ -1631,12 +1670,6 @@ class ibendportRecords(semanageRecords):
             raise ValueError(_("Type %s is invalid, must be an ibendport type") % type)
         (k, ibendport, port) = self.__genkey(ibendport, ibdev_name)
 
-        (rc, exists) = semanage_ibendport_exists(self.sh, k)
-        if rc < 0:
-            raise ValueError(_("Could not check if ibendport {ibdev_name}/{port} is defined").format(ibdev_name=ibdev_name, port=port))
-        if exists:
-            raise ValueError(_("ibendport {ibdev_name}/{port} already defined").format(ibdev_name=ibdev_name, port=port))
-
         (rc, p) = semanage_ibendport_create(self.sh)
         if rc < 0:
             raise ValueError(_("Could not create ibendport for {ibdev_name}/{port}").format(ibdev_name=ibdev_name, port=port))
@@ -1678,8 +1711,22 @@ class ibendportRecords(semanageRecords):
 
     def add(self, ibendport, ibdev_name, serange, type):
         self.begin()
-        self.__add(ibendport, ibdev_name, serange, type)
+        if self.__exists(ibendport, ibdev_name):
+            print(_("ibendport {ibdev_name}/{port} already defined, modifying instead").format(ibdev_name=ibdev_name, port=port))
+            self.__modify(ibendport, ibdev_name, serange, type)
+        else:
+            self.__add(ibendport, ibdev_name, serange, type)
         self.commit()
+
+    def __exists(self, ibendport, ibdev_name):
+        (k, ibendport, port) = self.__genkey(ibendport, ibdev_name)
+
+        (rc, exists) = semanage_ibendport_exists(self.sh, k)
+        if rc < 0:
+            raise ValueError(_("Could not check if ibendport {ibdev_name}/{port} is defined").format(ibdev_name=ibdev_name, port=port))
+        semanage_ibendport_key_free(k)
+
+        return exists
 
     def __modify(self, ibendport, ibdev_name, serange, setype):
         if serange == "" and setype == "":
@@ -1902,12 +1949,6 @@ class nodeRecords(semanageRecords):
         if rc < 0:
             raise ValueError(_("Could not create key for %s") % addr)
 
-        (rc, exists) = semanage_node_exists(self.sh, k)
-        if rc < 0:
-            raise ValueError(_("Could not check if addr %s is defined") % addr)
-        if exists:
-            raise ValueError(_("Addr %s already defined") % addr)
-
         (rc, node) = semanage_node_create(self.sh)
         if rc < 0:
             raise ValueError(_("Could not create addr for %s") % addr)
@@ -1955,8 +1996,26 @@ class nodeRecords(semanageRecords):
 
     def add(self, addr, mask, proto, serange, ctype):
         self.begin()
-        self.__add(addr, mask, proto, serange, ctype)
+        if self.__exists(addr, mask, proto):
+            print(_("Addr %s already defined, modifying instead") % addr)
+            self.__modify(addr, mask, proto, serange, ctype)
+        else:
+            self.__add(addr, mask, proto, serange, ctype)
         self.commit()
+
+    def __exists(self, addr, mask, proto):
+        addr, mask, proto, audit_proto = self.validate(addr, mask, proto)
+
+        (rc, k) = semanage_node_key_create(self.sh, addr, mask, proto)
+        if rc < 0:
+            raise ValueError(_("Could not create key for %s") % addr)
+
+        (rc, exists) = semanage_node_exists(self.sh, k)
+        if rc < 0:
+            raise ValueError(_("Could not check if addr %s is defined") % addr)
+        semanage_node_key_free(k)
+
+        return exists
 
     def __modify(self, addr, mask, proto, serange, setype):
         addr, mask, proto, audit_proto = self.validate(addr, mask, proto)
@@ -2111,12 +2170,6 @@ class interfaceRecords(semanageRecords):
         if rc < 0:
             raise ValueError(_("Could not create key for %s") % interface)
 
-        (rc, exists) = semanage_iface_exists(self.sh, k)
-        if rc < 0:
-            raise ValueError(_("Could not check if interface %s is defined") % interface)
-        if exists:
-            raise ValueError(_("Interface %s already defined") % interface)
-
         (rc, iface) = semanage_iface_create(self.sh)
         if rc < 0:
             raise ValueError(_("Could not create interface for %s") % interface)
@@ -2163,8 +2216,24 @@ class interfaceRecords(semanageRecords):
 
     def add(self, interface, serange, ctype):
         self.begin()
-        self.__add(interface, serange, ctype)
+        if self.__exists(interface):
+            print(_("Interface %s already defined, modifying instead") % interface)
+            self.__modify(interface, serange, ctype)
+        else:
+            self.__add(interface, serange, ctype)
         self.commit()
+
+    def __exists(self, interface):
+        (rc, k) = semanage_iface_key_create(self.sh, interface)
+        if rc < 0:
+            raise ValueError(_("Could not create key for %s") % interface)
+
+        (rc, exists) = semanage_iface_exists(self.sh, k)
+        if rc < 0:
+            raise ValueError(_("Could not check if interface %s is defined") % interface)
+        semanage_iface_key_free(k)
+
+        return exists
 
     def __modify(self, interface, serange, setype):
         if serange == "" and setype == "":
@@ -2353,7 +2422,13 @@ class fcontextRecords(semanageRecords):
             raise ValueError(_("Substitute %s is not valid. Substitute is not allowed to end with '/'") % substitute)
 
         if target in self.equiv.keys():
-            raise ValueError(_("Equivalence class for %s already exists") % target)
+            print(_("Equivalence class for %s already exists, modifying instead") % target)
+            self.equiv[target] = substitute
+            self.equal_ind = True
+            self.mylog.log_change("resrc=fcontext op=modify-equal %s %s" % (audit.audit_encode_nv_string("sglob", target, 0), audit.audit_encode_nv_string("tglob", substitute, 0)))
+            self.commit()
+            return
+
         self.validate(target)
 
         for fdict in (self.equiv, self.equiv_dist):
@@ -2429,18 +2504,6 @@ class fcontextRecords(semanageRecords):
         if rc < 0:
             raise ValueError(_("Could not create key for %s") % target)
 
-        (rc, exists) = semanage_fcontext_exists(self.sh, k)
-        if rc < 0:
-            raise ValueError(_("Could not check if file context for %s is defined") % target)
-
-        if not exists:
-            (rc, exists) = semanage_fcontext_exists_local(self.sh, k)
-            if rc < 0:
-                raise ValueError(_("Could not check if file context for %s is defined") % target)
-
-        if exists:
-            raise ValueError(_("File context for %s already defined") % target)
-
         (rc, fcontext) = semanage_fcontext_create(self.sh)
         if rc < 0:
             raise ValueError(_("Could not create file context for %s") % target)
@@ -2479,8 +2542,29 @@ class fcontextRecords(semanageRecords):
 
     def add(self, target, type, ftype="", serange="", seuser="system_u"):
         self.begin()
-        self.__add(target, type, ftype, serange, seuser)
+        if self.__exists(target, ftype):
+            print(_("File context for %s already defined, modifying instead") % target)
+            self.__modify(target, type, ftype, serange, seuser)
+        else:
+            self.__add(target, type, ftype, serange, seuser)
         self.commit()
+
+    def __exists(self, target, ftype):
+        (rc, k) = semanage_fcontext_key_create(self.sh, target, file_types[ftype])
+        if rc < 0:
+            raise ValueError(_("Could not create key for %s") % target)
+
+        (rc, exists) = semanage_fcontext_exists(self.sh, k)
+        if rc < 0:
+            raise ValueError(_("Could not check if file context for %s is defined") % target)
+
+        if not exists:
+            (rc, exists) = semanage_fcontext_exists_local(self.sh, k)
+            if rc < 0:
+                raise ValueError(_("Could not check if file context for %s is defined") % target)
+        semanage_fcontext_key_free(k)
+
+        return exists
 
     def __modify(self, target, setype, ftype, serange, seuser):
         if serange == "" and setype == "" and seuser == "":

@@ -322,7 +322,7 @@ def handleFcontext(args):
             OBJECT.add(args.file_spec, args.type, args.ftype, args.range, args.seuser)
     if args.action == "modify":
         if args.equal:
-            OBJECT.add_equal(args.file_spec, args.equal)
+            OBJECT.modify_equal(args.file_spec, args.equal)
         else:
             OBJECT.modify(args.file_spec, args.type, args.ftype, args.range, args.seuser)
     if args.action == "delete":
