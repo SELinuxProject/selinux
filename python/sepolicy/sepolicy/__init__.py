@@ -1140,6 +1140,9 @@ def get_all_allow_rules():
 def get_all_bool_rules():
     global all_bool_rules
     if not all_bool_rules:
+        global _pol
+        if not _pol:
+            init_policy()
         q = TERuleQuery(_pol, boolean=".*", boolean_regex=True,
                                 ruletype=[ALLOW, DONTAUDIT])
         all_bool_rules = [_setools_rule_to_dict(x) for x in q.results()]
