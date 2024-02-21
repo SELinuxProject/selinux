@@ -770,6 +770,7 @@ int define_sens(void)
 	level_datum_init(datum);
 	datum->isalias = FALSE;
 	datum->level = level;
+	datum->notdefined = TRUE;
 
 	ret = declare_symbol(SYM_LEVELS, id, datum, &value, &value);
 	switch (ret) {
@@ -809,6 +810,7 @@ int define_sens(void)
 		level_datum_init(aliasdatum);
 		aliasdatum->isalias = TRUE;
 		aliasdatum->level = level;
+		aliasdatum->notdefined = TRUE;
 
 		ret = declare_symbol(SYM_LEVELS, id, aliasdatum, NULL, &value);
 		switch (ret) {
@@ -1037,9 +1039,10 @@ static int clone_level(hashtab_key_t key __attribute__ ((unused)), hashtab_datum
 	mls_level_t *level = (mls_level_t *) arg, *newlevel;
 
 	if (levdatum->level == level) {
-		levdatum->defined = 1;
-		if (!levdatum->isalias)
+		if (!levdatum->isalias) {
+			levdatum->notdefined = FALSE;
 			return 0;
+		}
 		newlevel = (mls_level_t *) malloc(sizeof(mls_level_t));
 		if (!newlevel)
 			return -1;
@@ -1048,6 +1051,7 @@ static int clone_level(hashtab_key_t key __attribute__ ((unused)), hashtab_datum
 			return -1;
 		}
 		levdatum->level = newlevel;
+		levdatum->notdefined = FALSE;
 	}
 	return 0;
 }
@@ -1087,8 +1091,6 @@ int define_level(void)
 		return -1;
 	}
 	free(id);
-
-	levdatum->defined = 1;
 
 	while ((id = queue_remove(id_queue))) {
 		cat_datum_t *cdatum;

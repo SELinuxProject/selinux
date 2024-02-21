@@ -618,12 +618,37 @@ static int validate_mls_level(const mls_level_t *level, const validate_t *sens, 
 	return -1;
 }
 
-static int validate_level_datum(__attribute__ ((unused)) hashtab_key_t k, hashtab_datum_t d, void *args)
+static int validate_level_datum(sepol_handle_t *handle, const level_datum_t *level, validate_t flavors[], const policydb_t *p)
 {
-	level_datum_t *level = d;
-	validate_t *flavors = args;
+	if (level->notdefined != 0)
+		goto bad;
 
-	return validate_mls_level(level->level, &flavors[SYM_LEVELS], &flavors[SYM_CATS]);
+	if (validate_mls_level(level->level, &flavors[SYM_LEVELS], &flavors[SYM_CATS]))
+		goto bad;
+
+	if (level->isalias) {
+		const mls_level_t *l1 = level->level;
+		const mls_level_t *l2;
+		const level_datum_t *actual = (level_datum_t *) hashtab_search(p->p_levels.table, p->p_sens_val_to_name[l1->sens - 1]);
+		if (!actual)
+			goto bad;
+		l2 = actual->level;
+		if (!ebitmap_cmp(&l1->cat, &l2->cat))
+			goto bad;
+	}
+
+	return 0;
+
+	bad:
+	ERR(handle, "Invalid level datum");
+	return -1;
+}
+
+static int validate_level_datum_wrapper(__attribute__ ((unused)) hashtab_key_t k, hashtab_datum_t d, void *args)
+{
+	map_arg_t *margs = args;
+
+	return validate_level_datum(margs->handle, d, margs->flavors, margs->policy);
 }
 
 static int validate_mls_range(const mls_range_t *range, const validate_t *sens, const validate_t *cats)
@@ -774,7 +799,7 @@ static int validate_datum_array_entries(sepol_handle_t *handle, const policydb_t
 	if (hashtab_map(p->p_users.table, validate_user_datum_wrapper, &margs))
 		goto bad;
 
-	if (p->mls && hashtab_map(p->p_levels.table, validate_level_datum, flavors))
+	if (p->mls && hashtab_map(p->p_levels.table, validate_level_datum_wrapper, &margs))
 		goto bad;
 
 	if (hashtab_map(p->p_cats.table, validate_datum, &flavors[SYM_CATS]))
