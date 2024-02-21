@@ -771,6 +771,10 @@ def get_init_entrypoint(transtype):
     return entrypoints
 
 def get_init_entrypoints_str():
+    global _pol
+    if not _pol:
+        init_policy()
+
     q = TERuleQuery(_pol,
                     ruletype=["type_transition"],
                     source="init_t",
@@ -849,6 +853,10 @@ def get_user_types():
 
 
 def get_all_role_allows():
+    global _pol
+    if not _pol:
+        init_policy()
+
     global role_allows
     if role_allows:
         return role_allows
@@ -1138,6 +1146,10 @@ def get_all_allow_rules():
     return all_allow_rules
 
 def get_all_bool_rules():
+    global _pol
+    if not _pol:
+        init_policy()
+
     global all_bool_rules
     if not all_bool_rules:
         q = TERuleQuery(_pol, boolean=".*", boolean_regex=True,
