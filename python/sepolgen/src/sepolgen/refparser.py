@@ -418,19 +418,41 @@ def p_tunable_policy(p):
         collect(p[12], x, val=False)
     p[0] = [x]
 
-def p_ifelse(p):
-    '''ifelse : IFELSE OPAREN TICK IDENTIFIER SQUOTE COMMA COMMA TICK IDENTIFIER SQUOTE COMMA TICK interface_stmts SQUOTE CPAREN optional_semi
-              | IFELSE OPAREN TICK IDENTIFIER SQUOTE COMMA TICK IDENTIFIER SQUOTE COMMA TICK interface_stmts SQUOTE COMMA TICK interface_stmts SQUOTE CPAREN optional_semi
-              | IFELSE OPAREN TICK IDENTIFIER SQUOTE COMMA TICK SQUOTE COMMA TICK interface_stmts SQUOTE COMMA TICK interface_stmts SQUOTE CPAREN optional_semi
+def p_ifelse_compare_value(p):
+    '''ifelse_compare_value : TICK IDENTIFIER SQUOTE
+                            | TICK TRUE       SQUOTE
+                            | TICK FALSE      SQUOTE
+                            | TICK            SQUOTE
+                            | empty
     '''
-#    x = refpolicy.IfDef(p[4])
-#    v = True
-#    collect(p[8], x, val=v)
-#    if len(p) > 12:
-#        collect(p[12], x, val=False)
-#    p[0] = [x]
-    pass
+    if len(p) == 4:
+        p[0] = p[2]
+    else:
+        p[0] = None
 
+def p_ifelse_section(p):
+    '''ifelse_section : TICK IDENTIFIER SQUOTE COMMA ifelse_compare_value COMMA TICK interface_stmts SQUOTE
+    '''
+    x = refpolicy.IfElse(p[2])
+    collect(p[8], x, val=True)
+    p[0] = [x]
+
+def p_ifelse_sections(p):
+    '''ifelse_sections : ifelse_sections COMMA ifelse_section
+                       | ifelse_section
+    '''
+    if len(p) == 4:
+        p[0] = p[1] + p[3]
+    else:
+        p[0] = p[1]
+
+def p_ifelse(p):
+    '''ifelse : IFELSE OPAREN ifelse_sections COMMA TICK interface_stmts SQUOTE CPAREN optional_semi
+    '''
+    x = refpolicy.IfElse(p[3])
+    collect(p[3], x, val=True)
+    collect(p[6], x, val=False)
+    p[0] = [x]
 
 def p_ifdef(p):
     '''ifdef : IFDEF OPAREN TICK IDENTIFIER SQUOTE COMMA TICK statements SQUOTE CPAREN optional_semi
@@ -460,6 +482,7 @@ def p_interface_call(p):
 def p_interface_call_param(p):
     '''interface_call_param : IDENTIFIER
                             | IDENTIFIER MINUS IDENTIFIER
+                            | MINUS IDENTIFIER
                             | nested_id_set
                             | TRUE
                             | FALSE
@@ -469,6 +492,8 @@ def p_interface_call_param(p):
     # List means set, non-list identifier
     if len(p) == 2:
         p[0] = p[1]
+    elif len(p) == 3:
+        p[0] = "-" + p[2]
     else:
         p[0] = [p[1], "-" + p[3]]
 
@@ -558,6 +583,8 @@ def p_requires(p):
                 | requires require
                 | ifdef
                 | requires ifdef
+                | ifelse
+                | requires ifelse
     '''
     pass
 
@@ -609,12 +636,17 @@ def p_initial_sid(p):
     p[0] = s
 
 def p_genfscon(p):
-    '''genfscon : GENFSCON IDENTIFIER PATH context'''
-    
+    '''genfscon : GENFSCON IDENTIFIER PATH context
+                | GENFSCON IDENTIFIER PATH MINUS IDENTIFIER context
+                | GENFSCON IDENTIFIER PATH MINUS MINUS context
+    '''
     g = refpolicy.GenfsCon()
     g.filesystem = p[2]
     g.path = p[3]
-    g.context = p[4]
+    if len(p) == 5:
+        g.context = p[4]
+    else:
+        g.context = p[6]
 
     p[0] = g
 
@@ -848,11 +880,19 @@ def p_bool(p):
     p[0] = b
 
 def p_gen_tunable(p):
-    '''gen_tunable : GEN_TUNABLE OPAREN TICK IDENTIFIER SQUOTE COMMA TRUE CPAREN
+    '''gen_tunable : GEN_TUNABLE OPAREN IDENTIFIER COMMA TRUE CPAREN
+                   | GEN_TUNABLE OPAREN IDENTIFIER COMMA FALSE CPAREN
+                   | GEN_TUNABLE OPAREN TICK IDENTIFIER SQUOTE COMMA TRUE CPAREN
                    | GEN_TUNABLE OPAREN TICK IDENTIFIER SQUOTE COMMA FALSE CPAREN'''
     b = refpolicy.Bool()
-    b.name = p[4]
-    if p[7] == "true":
+    if len(p) == 7:
+        id_pos = 3
+        state_pos = 5
+    else:
+        id_pos = 4
+        state_pos = 7
+    b.name = p[id_pos]
+    if p[state_pos] == "true":
         b.state = True
     else:
         b.state = False

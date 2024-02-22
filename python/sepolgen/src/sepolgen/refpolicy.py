@@ -899,6 +899,14 @@ class IfDef(Node):
     def to_string(self):
         return "[Ifdef name: %s]" % self.name
 
+class IfElse(Node):
+    def __init__(self, name="", parent=None):
+        Node.__init__(self, parent)
+        self.name = name
+
+    def to_string(self):
+        return "[Ifelse name: %s]" % self.name
+
 class InterfaceCall(Leaf):
     def __init__(self, ifname="", parent=None):
         Leaf.__init__(self, parent)
