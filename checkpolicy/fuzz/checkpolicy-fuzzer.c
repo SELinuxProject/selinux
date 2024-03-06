@@ -135,7 +135,7 @@ static int check_level(hashtab_key_t key, hashtab_datum_t datum, void *arg __att
 	const level_datum_t *levdatum = (level_datum_t *) datum;
 
 	// TODO: drop member defined if proven to be always set
-	if (!levdatum->isalias && !levdatum->defined) {
+	if (!levdatum->isalias && levdatum->notdefined) {
 		fprintf(stderr,
 			"Error:  sensitivity %s was not used in a level definition!\n",
 			key);
