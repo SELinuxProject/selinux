@@ -302,6 +302,12 @@ static int class_constraint_rules_to_strs(struct policydb *pdb, char *classkey,
 			rc = -1;
 			goto exit;
 		}
+		if (*perms == '\0') {
+			ERR(NULL, "No permisisons in permission string");
+			free(perms);
+			rc = -1;
+			goto exit;
+		}
 
 		if (is_mls) {
 			key_word = "mlsconstrain";
@@ -1773,6 +1779,11 @@ static char *avtab_node_to_str(struct policydb *pdb, avtab_key_t *key, avtab_dat
 		perms = sepol_av_to_string(pdb, key->target_class, data);
 		if (perms == NULL) {
 			ERR(NULL, "Failed to generate permission string");
+			goto exit;
+		}
+		if (*perms == '\0') {
+			ERR(NULL, "No permisisons in permission string");
+			free(perms);
 			goto exit;
 		}
 		rule = create_str("(%s %s %s (%s (%s)))",

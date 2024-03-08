@@ -593,6 +593,12 @@ static int avrule_to_cil(int indent, struct policydb *pdb, uint32_t type, const 
 				rc = -1;
 				goto exit;
 			}
+			if (*perms == '\0') {
+				ERR(NULL, "No permissions in permission string");
+				free(perms);
+				rc = -1;
+				goto exit;
+			}
 			cil_println(indent, "(%s %s %s (%s (%s)))",
 					rule, src, tgt,
 					pdb->p_class_val_to_name[classperm->tclass - 1],
@@ -1970,6 +1976,12 @@ static int constraints_to_cil(int indent, struct policydb *pdb, char *classkey, 
 			perms = sepol_av_to_string(pdb, class->s.value, node->permissions);
 			if (perms == NULL) {
 				ERR(NULL, "Failed to generate permission string");
+				rc = -1;
+				goto exit;
+			}
+			if (*perms == '\0') {
+				ERR(NULL, "No permissions in permission string");
+				free(perms);
 				rc = -1;
 				goto exit;
 			}
