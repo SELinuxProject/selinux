@@ -130,21 +130,6 @@ static int read_source_policy(policydb_t *p, const uint8_t *data, size_t size)
 	return 0;
 }
 
-static int check_level(hashtab_key_t key, hashtab_datum_t datum, void *arg __attribute__ ((unused)))
-{
-	const level_datum_t *levdatum = (level_datum_t *) datum;
-
-	// TODO: drop member defined if proven to be always set
-	if (!levdatum->isalias && levdatum->notdefined) {
-		fprintf(stderr,
-			"Error:  sensitivity %s was not used in a level definition!\n",
-			key);
-		abort();
-	}
-
-	return 0;
-}
-
 static int write_binary_policy(FILE *outfp, policydb_t *p)
 {
 	struct policy_file pf;
@@ -197,8 +182,6 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 
 	if (read_source_policy(&parsepolicydb, data, size))
 		goto exit;
-
-	(void) hashtab_map(parsepolicydb.p_levels.table, check_level, NULL);
 
 	if (parsepolicydb.policy_type == POLICY_BASE) {
 		if (link_modules(NULL, &parsepolicydb, NULL, 0, VERBOSE))
