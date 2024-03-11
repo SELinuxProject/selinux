@@ -147,15 +147,28 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 	policydb_t *finalpolicydb;
 	sidtab_t sidtab = {};
 	FILE *devnull = NULL;
-	int mls, policyvers;
+	int mls, platform, policyvers;
 
 	sepol_debug(VERBOSE);
 
-	/* Take the first byte whether to parse as MLS policy
-	* and the second byte as policy version. */
-	if (size < 2)
+	/*
+	 * Take the first byte whether to generate a SELinux or Xen policy,
+	 * the second byte whether to parse as MLS policy,
+	 * and the second byte as policy version.
+	 */
+	if (size < 3)
 		return 0;
 	switch (data[0]) {
+	case 'S':
+		platform = SEPOL_TARGET_SELINUX;
+		break;
+	case 'X':
+		platform = SEPOL_TARGET_XEN;
+		break;
+	default:
+		return 0;
+	}
+	switch (data[1]) {
 	case '0':
 		mls = 0;
 		break;
@@ -166,11 +179,11 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 		return 0;
 	}
 	static_assert(0x7F - 'A' >= POLICYDB_VERSION_MAX, "Max policy version should be representable");
-	policyvers = data[1] - 'A';
+	policyvers = data[2] - 'A';
 	if (policyvers < POLICYDB_VERSION_MIN || policyvers > POLICYDB_VERSION_MAX)
 		return 0;
-	data += 2;
-	size -= 2;
+	data += 3;
+	size -= 3;
 
 	if (policydb_init(&parsepolicydb))
 		goto exit;
@@ -178,7 +191,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 	parsepolicydb.policy_type = POLICY_BASE;
 	parsepolicydb.mls = mls;
 	parsepolicydb.handle_unknown = DENY_UNKNOWN;
-	policydb_set_target_platform(&parsepolicydb, SEPOL_TARGET_SELINUX);
+	policydb_set_target_platform(&parsepolicydb, platform);
 
 	if (read_source_policy(&parsepolicydb, data, size))
 		goto exit;
@@ -198,15 +211,17 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 
 		kernpolicydb.policyvers = policyvers;
 
-		assert(kernpolicydb.policy_type    == POLICY_KERN);
-		assert(kernpolicydb.handle_unknown == SEPOL_DENY_UNKNOWN);
-		assert(kernpolicydb.mls            == mls);
+		assert(kernpolicydb.policy_type     == POLICY_KERN);
+		assert(kernpolicydb.handle_unknown  == SEPOL_DENY_UNKNOWN);
+		assert(kernpolicydb.mls             == mls);
+		assert(kernpolicydb.target_platform == platform);
 
 		finalpolicydb = &kernpolicydb;
 	} else {
-		assert(parsepolicydb.policy_type    == POLICY_MOD);
-		assert(parsepolicydb.handle_unknown == SEPOL_DENY_UNKNOWN);
-		assert(parsepolicydb.mls            == mls);
+		assert(parsepolicydb.policy_type     == POLICY_MOD);
+		assert(parsepolicydb.handle_unknown  == SEPOL_DENY_UNKNOWN);
+		assert(parsepolicydb.mls             == mls);
+		assert(parsepolicydb.target_platform == platform);
 
 		finalpolicydb = &parsepolicydb;
 	}
