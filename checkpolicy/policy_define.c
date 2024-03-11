@@ -1038,7 +1038,7 @@ static int clone_level(hashtab_key_t key __attribute__ ((unused)), hashtab_datum
 	level_datum_t *levdatum = (level_datum_t *) datum;
 	mls_level_t *level = (mls_level_t *) arg, *newlevel;
 
-	if (levdatum->level == level) {
+	if (levdatum->notdefined && levdatum->level == level) {
 		if (!levdatum->isalias) {
 			levdatum->notdefined = FALSE;
 			return 0;
