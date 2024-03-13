@@ -71,8 +71,8 @@ int main(int argc, char **argv)
 	struct selabel_handle *hnd;
 	struct selinux_opt selabel_option[] = {
 		{ SELABEL_OPT_PATH, file },
-		{ SELABEL_OPT_BASEONLY, baseonly },
-		{ SELABEL_OPT_DIGEST, digest }
+		{ SELABEL_OPT_DIGEST, digest },
+		{ SELABEL_OPT_BASEONLY, baseonly }
 	};
 
 	if (argc < 3)
@@ -119,10 +119,10 @@ int main(int argc, char **argv)
 	memset(cmd_buf, 0, sizeof(cmd_buf));
 
 	selabel_option[0].value = file;
-	selabel_option[1].value = baseonly;
-	selabel_option[2].value = digest;
+	selabel_option[1].value = digest;
+	selabel_option[2].value = baseonly;
 
-	hnd = selabel_open(backend, selabel_option, 3);
+	hnd = selabel_open(backend, selabel_option, backend == SELABEL_CTX_FILE ? 3 : 2);
 	if (!hnd) {
 		switch (errno) {
 		case EOVERFLOW:
