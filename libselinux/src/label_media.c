@@ -167,6 +167,9 @@ static void close(struct selabel_handle *rec)
 	struct spec *spec, *spec_arr = data->spec_arr;
 	unsigned int i;
 
+	if (!data)
+		return;
+
 	for (i = 0; i < data->nspec; i++) {
 		spec = &spec_arr[i];
 		free(spec->key);
