@@ -6,8 +6,6 @@
 #include <selinux/selinux.h>
 #include <selinux/label.h>
 
-static size_t digest_len;
-
 static __attribute__ ((__noreturn__)) void usage(const char *progname)
 {
 	fprintf(stderr,
@@ -25,11 +23,11 @@ static __attribute__ ((__noreturn__)) void usage(const char *progname)
 	exit(1);
 }
 
-static int run_check_digest(char *cmd, char *selabel_digest)
+static int run_check_digest(const char *cmd, const char *selabel_digest, size_t digest_len)
 {
 	FILE *fp;
 	char files_digest[128];
-	char *files_ptr;
+	const char *files_ptr;
 	int rc = 0;
 
 	fp = popen(cmd, "r");
@@ -64,7 +62,7 @@ int main(int argc, char **argv)
 	char *baseonly = NULL, *file = NULL, *digest = (char *)1;
 	char **specfiles = NULL;
 	unsigned char *sha1_digest = NULL;
-	size_t i, num_specfiles;
+	size_t digest_len, i, num_specfiles;
 
 	char cmd_buf[4096];
 	char *cmd_ptr;
@@ -181,7 +179,7 @@ int main(int argc, char **argv)
 		sprintf(cmd_ptr, "| /usr/bin/openssl dgst -sha1 -hex");
 
 		if (validate)
-			rc = run_check_digest(cmd_buf, sha1_buf);
+			rc = run_check_digest(cmd_buf, sha1_buf, digest_len);
 	}
 
 	free(sha1_buf);
