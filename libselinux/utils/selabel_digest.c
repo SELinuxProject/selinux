@@ -11,7 +11,7 @@ static size_t digest_len;
 static __attribute__ ((__noreturn__)) void usage(const char *progname)
 {
 	fprintf(stderr,
-		"usage: %s -b backend [-d] [-v] [-B] [-i] [-f file]\n\n"
+		"usage: %s -b backend [-v] [-B] [-i] [-f file]\n\n"
 		"Where:\n\t"
 		"-b  The backend - \"file\", \"media\", \"x\", \"db\" or "
 			"\"prop\"\n\t"
