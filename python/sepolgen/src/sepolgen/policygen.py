@@ -86,6 +86,8 @@ class PolicyGenerator:
         self.xperms = False
 
         self.domains = None
+        self.gen_cil = False
+        self.comment_start = '#'
     def set_gen_refpol(self, if_set=None, perm_maps=None):
         """Set whether reference policy interfaces are generated.
 
@@ -127,6 +129,13 @@ class PolicyGenerator:
         are generated.
         """
         self.xperms = xperms
+
+    def set_gen_cil(self, gen_cil):
+        self.gen_cil = gen_cil
+        if gen_cil:
+            self.comment_start = ';'
+        else:
+            self.comment_start = '#'
 
     def __set_module_style(self):
         if self.ifgen:
@@ -173,26 +182,27 @@ class PolicyGenerator:
             rule.comment = str(refpolicy.Comment(explain_access(av, verbosity=self.explain)))
 
         if av.type == audit2why.ALLOW:
-            rule.comment += "\n#!!!! This avc is allowed in the current policy"
+            rule.comment += "\n%s!!!! This avc is allowed in the current policy" % self.comment_start
 
             if av.xperms:
-                rule.comment += "\n#!!!! This av rule may have been overridden by an extended permission av rule"
+                rule.comment += "\n%s!!!! This av rule may have been overridden by an extended permission av rule" % self.comment_start
 
         if av.type == audit2why.DONTAUDIT:
-            rule.comment += "\n#!!!! This avc has a dontaudit rule in the current policy"
+            rule.comment += "\n%s!!!! This avc has a dontaudit rule in the current policy" % self.comment_start
 
         if av.type == audit2why.BOOLEAN:
             if len(av.data) > 1:
-                rule.comment += "\n#!!!! This avc can be allowed using one of the these booleans:\n#     %s" % ", ".join([x[0] for x in av.data])
+                rule.comment += "\n%s!!!! This avc can be allowed using one of the these booleans:\n%s     %s" % (self.comment_start, self.comment_start, ", ".join([x[0] for x in av.data]))
             else:
-                rule.comment += "\n#!!!! This avc can be allowed using the boolean '%s'" % av.data[0][0]
+                rule.comment += "\n%s!!!! This avc can be allowed using the boolean '%s'" % (self.comment_start, av.data[0][0])
 
         if av.type == audit2why.CONSTRAINT:
-            rule.comment += "\n#!!!! This avc is a constraint violation.  You would need to modify the attributes of either the source or target types to allow this access."
-            rule.comment += "\n#Constraint rule: "
-            rule.comment += "\n#\t" + av.data[0]
+            rule.comment += "\n%s!!!! This avc is a constraint violation.  You would need to modify the attributes of either the source or target types to allow this access." % self.comment_start
+            rule.comment += "\n%sConstraint rule: " % self.comment_start
+            rule.comment += "\n%s\t" % self.comment_start + av.data[0]
             for reason in av.data[1:]:
-                rule.comment += "\n#\tPossible cause is the source %s and target %s are different." % reason
+                rule.comment += "\n%s" % self.comment_start
+                rule.comment += "\tPossible cause is the source %s and target %s are different." % reason
 
         try:
             if ( av.type == audit2why.TERULE and
@@ -206,9 +216,9 @@ class PolicyGenerator:
                     if i not in self.domains:
                         types.append(i)
                 if len(types) == 1:
-                    rule.comment += "\n#!!!! The source type '%s' can write to a '%s' of the following type:\n# %s\n" % ( av.src_type, av.obj_class, ", ".join(types))
+                    rule.comment += "\n%s!!!! The source type '%s' can write to a '%s' of the following type:\n%s %s\n" % (self.comment_start, av.src_type, av.obj_class, self.comment_start, ", ".join(types))
                 elif len(types) >= 1:
-                    rule.comment += "\n#!!!! The source type '%s' can write to a '%s' of the following types:\n# %s\n" % ( av.src_type, av.obj_class, ", ".join(types))
+                    rule.comment += "\n%s!!!! The source type '%s' can write to a '%s' of the following types:\n%s %s\n" % (self.comment_start, av.src_type, av.obj_class, self.comment_start, ", ".join(types))
         except:
             pass
 
