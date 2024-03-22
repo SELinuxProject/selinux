@@ -320,6 +320,16 @@ GLBLUB				{ return(GLBLUB); }
 int yyerror(const char *msg)
 {
 #ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+	const char *token;
+	char buf[8];
+
+	if (isprint((unsigned char)yytext[0])) {
+		token = yytext;
+	} else {
+		snprintf(buf, sizeof(buf), "%#x", yytext[0]);
+		token = buf;
+	}
+
 	if (source_file[0])
 		fprintf(stderr, "%s:%lu:",
 			source_file, source_lineno);
@@ -327,7 +337,7 @@ int yyerror(const char *msg)
 		fprintf(stderr, "(unknown source)::");
 	fprintf(stderr, "ERROR '%s' at token '%s' on line %lu:\n%s\n%s\n",
 			msg,
-			yytext,
+			token,
 			policydb_lineno,
 			linebuf[0], linebuf[1]);
 #else
