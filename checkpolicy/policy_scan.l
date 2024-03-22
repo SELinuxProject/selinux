@@ -308,7 +308,14 @@ GLBLUB				{ return(GLBLUB); }
 "]" |
 "~" |
 "*"				{ return(yytext[0]); } 
-.                               { yyerror("unrecognized character"); return YYerror; }
+.                               { yyerror("unrecognized character");
+/* Available since bison 3.6, avoids duplicate error message */
+#ifdef YYerror
+				  return YYerror;
+#else
+				  return INVALID_CHAR;
+#endif
+				}
 %%
 int yyerror(const char *msg)
 {

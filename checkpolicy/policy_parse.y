@@ -153,6 +153,7 @@ typedef int (* require_func_t)(int pass);
 %token FILESYSTEM
 %token DEFAULT_USER DEFAULT_ROLE DEFAULT_TYPE DEFAULT_RANGE
 %token LOW_HIGH LOW HIGH GLBLUB
+%token INVALID_CHAR
 
 %left OR
 %left XOR
