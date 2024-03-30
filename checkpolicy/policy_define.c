@@ -1426,7 +1426,7 @@ static int define_typebounds_helper(const char *bounds_id, const char *type_id)
 
 	bounds = hashtab_search(policydbp->p_types.table, bounds_id);
 	if (!bounds || bounds->flavor == TYPE_ATTRIB) {
-		yyerror2("hoge unknown type %s", bounds_id);
+		yyerror2("type %s is not declared", bounds_id);
 		return -1;
 	}
 
