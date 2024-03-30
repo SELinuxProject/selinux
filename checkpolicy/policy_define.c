@@ -1477,8 +1477,12 @@ int define_typebounds(void)
 	}
 
 	while ((id = queue_remove(id_queue))) {
-		if (define_typebounds_helper(bounds, id))
+		if (define_typebounds_helper(bounds, id)) {
+			free(bounds);
+			free(id);
 			return -1;
+		}
+
 		free(id);
 	}
 	free(bounds);
