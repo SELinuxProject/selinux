@@ -1842,6 +1842,9 @@ static int __cil_verify_perms(struct cil_class *class, struct cil_list *perms, s
 				int count2 = 0;
 				cil_list_init(&perm_list, CIL_MAP_PERM);
 				cil_symtab_map(&class->perms, __add_perm_to_list, perm_list);
+				if (class->common != NULL) {
+					cil_symtab_map(&class->common->perms, __add_perm_to_list, perm_list);
+				}
 				cil_list_for_each(j, perm_list) {
 					count2++;
 					struct cil_perm *perm = j->data;
