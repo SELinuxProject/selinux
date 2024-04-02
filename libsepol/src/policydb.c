@@ -1126,7 +1126,7 @@ static int cat_index(hashtab_key_t key, hashtab_datum_t datum, void *datap)
 	return 0;
 }
 
-static int (*index_f[SYM_NUM]) (hashtab_key_t key, hashtab_datum_t datum,
+static int (*const index_f[SYM_NUM]) (hashtab_key_t key, hashtab_datum_t datum,
 				void *datap) = {
 common_index, class_index, role_index, type_index, user_index,
 	    cond_index_bool, sens_index, cat_index,};
@@ -1409,7 +1409,7 @@ static int cat_destroy(hashtab_key_t key, hashtab_datum_t datum, void *p
 	return 0;
 }
 
-static int (*destroy_f[SYM_NUM]) (hashtab_key_t key, hashtab_datum_t datum,
+static int (*const destroy_f[SYM_NUM]) (hashtab_key_t key, hashtab_datum_t datum,
 				  void *datap) = {
 common_destroy, class_destroy, role_destroy, type_destroy, user_destroy,
 	    cond_destroy_bool, sens_destroy, cat_destroy,};
@@ -3410,7 +3410,7 @@ static int cat_read(policydb_t * p
 	return -1;
 }
 
-static int (*read_f[SYM_NUM]) (policydb_t * p, hashtab_t h,
+static int (*const read_f[SYM_NUM]) (policydb_t * p, hashtab_t h,
 			       struct policy_file * fp) = {
 common_read, class_read, role_read, type_read, user_read,
 	    cond_read_bool, sens_read, cat_read,};
