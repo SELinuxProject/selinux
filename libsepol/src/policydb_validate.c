@@ -876,12 +876,65 @@ static int validate_xperms(const avtab_extended_perms_t *xperms)
 bad:
 	return -1;
 }
+
+static int perm_match(__attribute__ ((unused)) hashtab_key_t key, hashtab_datum_t datum, void *data)
+{
+	const uint32_t *v = data;
+	const perm_datum_t *perdatum = datum;
+
+	return *v == perdatum->s.value;
+}
+
+static int validate_access_vector(sepol_handle_t *handle, const policydb_t *p, sepol_security_class_t tclass,
+				  sepol_access_vector_t av)
+{
+	const class_datum_t *cladatum = p->class_val_to_struct[tclass - 1];
+	uint32_t i;
+
+	/*
+	 * Check that at least one permission bit is valid.
+	 * Older compilers might set invalid bits for the wildcard permission.
+	 */
+	for (i = 0; i < cladatum->permissions.nprim; i++) {
+		if (av & (UINT32_C(1) << i)) {
+			uint32_t v = i + 1;
+			int rc;
+
+			rc = hashtab_map(cladatum->permissions.table, perm_match, &v);
+			if (rc == 1)
+				goto good;
+
+			if (cladatum->comdatum) {
+				rc = hashtab_map(cladatum->comdatum->permissions.table, perm_match, &v);
+				if (rc == 1)
+					goto good;
+			}
+		}
+	}
+
+	ERR(handle, "Invalid access vector");
+	return -1;
+
+good:
+	return 0;
+}
+
 static int validate_avtab_key_and_datum(avtab_key_t *k, avtab_datum_t *d, void *args)
 {
 	map_arg_t *margs = args;
 
 	if (validate_avtab_key(k, 0, margs->policy, margs->flavors))
 		return -1;
+
+	if (k->specified & AVTAB_AV) {
+		uint32_t data = d->data;
+
+		if ((0xFFF & k->specified) == AVTAB_AUDITDENY)
+			data = ~data;
+
+		if (validate_access_vector(margs->handle, margs->policy, k->target_class, data))
+			return -1;
+	}
 
 	if ((k->specified & AVTAB_TYPE) && validate_simpletype(d->data, margs->policy, margs->flavors))
 		return -1;
@@ -915,6 +968,15 @@ static int validate_cond_av_list(sepol_handle_t *handle, const cond_av_list_t *c
 
 			if (validate_avtab_key(key, 1, p, flavors))
 				goto bad;
+			if (key->specified & AVTAB_AV) {
+				uint32_t data = datum->data;
+
+				if ((0xFFF & key->specified) == AVTAB_AUDITDENY)
+					data = ~data;
+
+				if (validate_access_vector(handle, p, key->target_class, data))
+					goto bad;
+			}
 			if ((key->specified & AVTAB_TYPE) && validate_simpletype(datum->data, p, flavors))
 				goto bad;
 		}
