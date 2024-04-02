@@ -41,6 +41,21 @@ int werror = 0;
 int yyerror(const char *msg);
 int yywarn(const char *msg);
 
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+/*
+ * Version that does not exit, like yy_fatal_error(),
+ * since fuzz targets must not call exit().
+ */
+#include <setjmp.h>
+extern jmp_buf fuzzing_pre_parse_stack_state;
+void yyfatal(const char *msg)
+{
+	yyerror(msg);
+	longjmp(fuzzing_pre_parse_stack_state, 1);
+}
+#define YY_FATAL_ERROR(msg) yyfatal(msg)
+#endif
+
 void set_source_file(const char *name);
 
 char source_file[PATH_MAX];

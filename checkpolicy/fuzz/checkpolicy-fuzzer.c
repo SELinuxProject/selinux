@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <setjmp.h>
 #include <unistd.h>
 #include <sys/mman.h>
 
@@ -30,6 +31,7 @@ extern void yyrestart(FILE *);
 extern int yylex_destroy(void);
 extern void set_source_file(const char *name);
 
+jmp_buf fuzzing_pre_parse_stack_state;
 
 // Set to 1 for verbose libsepol logging
 #define VERBOSE 0
@@ -98,6 +100,13 @@ static int read_source_policy(policydb_t *p, const uint8_t *data, size_t size)
 	mlspol = p->mls;
 
 	init_parser(1);
+
+	if (!setjmp(fuzzing_pre_parse_stack_state)) {
+		queue_destroy(id_queue);
+		fclose(yyin);
+		yylex_destroy();
+		return -1;
+	}
 
 	rc = yyparse();
 	// TODO: drop global variable policydb_errors if proven to be redundant
