@@ -21,14 +21,8 @@
 #include "queue.h"
 #include "module_compiler.h"
 
-union stack_item_u {
-	avrule_block_t *avrule;
-	cond_list_t *cond_list;
-};
-
 typedef struct scope_stack {
-	union stack_item_u u;
-	int type;		/* for above union: 1 = avrule block, 2 = conditional */
+	int type;		/* 1 = avrule block, 2 = conditional */
 	avrule_decl_t *decl;	/* if in an avrule block, which
 				 * declaration is current */
 	avrule_t *last_avrule;
@@ -1464,12 +1458,12 @@ static int push_stack(int stack_type, ...)
 	va_start(ap, stack_type);
 	switch (s->type = stack_type) {
 	case 1:{
-			s->u.avrule = va_arg(ap, avrule_block_t *);
+			va_arg(ap, avrule_block_t *);
 			s->decl = va_arg(ap, avrule_decl_t *);
 			break;
 		}
 	case 2:{
-			s->u.cond_list = va_arg(ap, cond_list_t *);
+			va_arg(ap, cond_list_t *);
 			break;
 		}
 	default:
