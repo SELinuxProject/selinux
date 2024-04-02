@@ -34,7 +34,7 @@ typedef struct scope_stack {
 	avrule_t *last_avrule;
 	int in_else;		/* if in an avrule block, within ELSE branch */
 	int require_given;	/* 1 if this block had at least one require */
-	struct scope_stack *parent, *child;
+	struct scope_stack *parent;
 } scope_stack_t;
 
 extern policydb_t *policydbp;
@@ -1478,7 +1478,6 @@ static int push_stack(int stack_type, ...)
 	}
 	va_end(ap);
 	s->parent = stack_top;
-	s->child = NULL;
 	stack_top = s;
 	return 0;
 }
@@ -1490,9 +1489,6 @@ static void pop_stack(void)
 	scope_stack_t *parent;
 	assert(stack_top != NULL);
 	parent = stack_top->parent;
-	if (parent != NULL) {
-		parent->child = NULL;
-	}
 	free(stack_top);
 	stack_top = parent;
 }
