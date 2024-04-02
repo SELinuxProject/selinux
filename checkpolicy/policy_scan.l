@@ -22,6 +22,7 @@
 
 %{
 #include <sys/types.h>
+#include <ctype.h>
 #include <limits.h>
 #include <stdint.h>
 #include <string.h>
