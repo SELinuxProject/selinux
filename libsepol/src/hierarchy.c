@@ -443,12 +443,15 @@ static void bounds_report(sepol_handle_t *handle, policydb_t *p, uint32_t child,
 	    p->p_type_val_to_name[child - 1],
 	    p->p_type_val_to_name[parent - 1]);
 	for (; cur; cur = cur->next) {
+		char *permstr = sepol_av_to_string(p, cur->key.target_class, cur->datum.data);
+
 		ERR(handle, "    %s %s : %s { %s }",
 		    p->p_type_val_to_name[cur->key.source_type - 1],
 		    p->p_type_val_to_name[cur->key.target_type - 1],
 		    p->p_class_val_to_name[cur->key.target_class - 1],
-		    sepol_av_to_string(p, cur->key.target_class,
-				       cur->datum.data));
+		    permstr ?: "<format-failure>");
+
+		free(permstr);
 	}
 }
 

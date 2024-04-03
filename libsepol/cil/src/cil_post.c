@@ -52,6 +52,8 @@
 #define GEN_REQUIRE_ATTR "cil_gen_require" /* Also in libsepol/src/module_to_cil.c */
 #define TYPEATTR_INFIX "_typeattr_"        /* Also in libsepol/src/module_to_cil.c */
 
+#define spaceship_cmp(a, b) (((a) > (b)) - ((a) < (b)))
+
 struct fc_data {
 	unsigned int meta;
 	size_t stem_len;
@@ -263,8 +265,8 @@ int cil_post_ibpkeycon_compare(const void *a, const void *b)
 	if (rc)
 		return rc;
 
-	rc = (aibpkeycon->pkey_high - aibpkeycon->pkey_low)
-		- (bibpkeycon->pkey_high - bibpkeycon->pkey_low);
+	rc = spaceship_cmp(aibpkeycon->pkey_high - aibpkeycon->pkey_low,
+		bibpkeycon->pkey_high - bibpkeycon->pkey_low);
 	if (rc == 0) {
 		if (aibpkeycon->pkey_low < bibpkeycon->pkey_low)
 			rc = -1;
@@ -281,8 +283,8 @@ int cil_post_portcon_compare(const void *a, const void *b)
 	struct cil_portcon *aportcon = *(struct cil_portcon**)a;
 	struct cil_portcon *bportcon = *(struct cil_portcon**)b;
 
-	rc = (aportcon->port_high - aportcon->port_low) 
-		- (bportcon->port_high - bportcon->port_low);
+	rc = spaceship_cmp(aportcon->port_high - aportcon->port_low,
+		bportcon->port_high - bportcon->port_low);
 	if (rc == 0) {
 		if (aportcon->port_low < bportcon->port_low) {
 			rc = -1;
@@ -394,8 +396,8 @@ static int cil_post_iomemcon_compare(const void *a, const void *b)
 	struct cil_iomemcon *aiomemcon = *(struct cil_iomemcon**)a;
 	struct cil_iomemcon *biomemcon = *(struct cil_iomemcon**)b;
 
-	rc = (aiomemcon->iomem_high - aiomemcon->iomem_low) 
-		- (biomemcon->iomem_high - biomemcon->iomem_low);
+	rc = spaceship_cmp(aiomemcon->iomem_high - aiomemcon->iomem_low,
+		biomemcon->iomem_high - biomemcon->iomem_low);
 	if (rc == 0) {
 		if (aiomemcon->iomem_low < biomemcon->iomem_low) {
 			rc = -1;
@@ -413,8 +415,8 @@ static int cil_post_ioportcon_compare(const void *a, const void *b)
 	struct cil_ioportcon *aioportcon = *(struct cil_ioportcon**)a;
 	struct cil_ioportcon *bioportcon = *(struct cil_ioportcon**)b;
 
-	rc = (aioportcon->ioport_high - aioportcon->ioport_low) 
-		- (bioportcon->ioport_high - bioportcon->ioport_low);
+	rc = spaceship_cmp(aioportcon->ioport_high - aioportcon->ioport_low,
+		bioportcon->ioport_high - bioportcon->ioport_low);
 	if (rc == 0) {
 		if (aioportcon->ioport_low < bioportcon->ioport_low) {
 			rc = -1;

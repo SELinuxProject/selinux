@@ -904,6 +904,9 @@ static void closef(struct selabel_handle *rec)
 	struct stem *stem;
 	unsigned int i;
 
+	if (!data)
+		return;
+
 	selabel_subs_fini(data->subs);
 	selabel_subs_fini(data->dist_subs);
 

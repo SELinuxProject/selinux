@@ -593,10 +593,17 @@ static int avrule_to_cil(int indent, struct policydb *pdb, uint32_t type, const 
 				rc = -1;
 				goto exit;
 			}
+			if (*perms == '\0') {
+				ERR(NULL, "No permissions in permission string");
+				free(perms);
+				rc = -1;
+				goto exit;
+			}
 			cil_println(indent, "(%s %s %s (%s (%s)))",
 					rule, src, tgt,
 					pdb->p_class_val_to_name[classperm->tclass - 1],
 					perms + 1);
+			free(perms);
 		} else {
 			cil_println(indent, "(%s %s %s %s %s)",
 					rule, src, tgt,
@@ -1680,7 +1687,7 @@ static int class_perm_cmp(const void *a, const void *b)
 	const struct class_perm_datum *aa = a;
 	const struct class_perm_datum *bb = b;
 
-	return aa->val - bb->val;
+	return spaceship_cmp(aa->val, bb->val);
 }
 
 static int common_to_cil(char *key, void *data, void *UNUSED(arg))
@@ -1967,7 +1974,19 @@ static int constraints_to_cil(int indent, struct policydb *pdb, char *classkey, 
 
 		if (is_constraint) {
 			perms = sepol_av_to_string(pdb, class->s.value, node->permissions);
+			if (perms == NULL) {
+				ERR(NULL, "Failed to generate permission string");
+				rc = -1;
+				goto exit;
+			}
+			if (*perms == '\0') {
+				ERR(NULL, "No permissions in permission string");
+				free(perms);
+				rc = -1;
+				goto exit;
+			}
 			cil_println(indent, "(%sconstrain (%s (%s)) %s)", mls, classkey, perms + 1, expr);
+			free(perms);
 		} else {
 			cil_println(indent, "(%svalidatetrans %s %s)", mls, classkey, expr);
 		}
@@ -2390,7 +2409,7 @@ static int boolean_to_cil(int indent, struct policydb *UNUSED(pdb), struct avrul
 
 static int sens_to_cil(int indent, struct policydb *pdb, struct avrule_block *UNUSED(block), struct stack *UNUSED(decl_stack), char *key, void *datum, int scope)
 {
-	struct level_datum *level = datum;
+	level_datum_t *level = datum;
 
 	if (scope == SCOPE_DECL) {
 		if (!level->isalias) {

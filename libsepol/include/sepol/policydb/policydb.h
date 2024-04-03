@@ -217,7 +217,7 @@ typedef struct user_datum {
 typedef struct level_datum {
 	mls_level_t *level;	/* sensitivity and associated categories */
 	unsigned char isalias;	/* is this sensitivity an alias for another? */
-	unsigned char defined;
+	unsigned char notdefined; /* Only set to non-zero in checkpolicy */
 } level_datum_t;
 
 /* Category attributes */

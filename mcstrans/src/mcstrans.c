@@ -952,9 +952,13 @@ find_in_hashtable(const char *range, domain_t *domain, context_map_node_t **tabl
 	return trans;
 }
 
+#define spaceship_cmp(a, b) (((a) > (b)) - ((a) < (b)))
+
 static int
 string_size(const void *p1, const void *p2) {
-	return strlen(*(char **)p2) - strlen(*(char **)p1);
+	size_t len1 = strlen(*(const char *const *)p2);
+	size_t len2 = strlen(*(const char *const *)p1);
+	return spaceship_cmp(len1, len2);
 }
 
 static int
@@ -965,7 +969,7 @@ word_size(const void *p1, const void *p2) {
 	int w2_len=strlen(w2->text);
 	if (w1_len == w2_len)
 		return strcmp(w1->text, w2->text);
-	return (w2_len - w1_len);
+	return spaceship_cmp(w2_len, w1_len);
 }
 
 static void

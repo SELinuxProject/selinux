@@ -178,6 +178,9 @@ db_close(struct selabel_handle *rec)
 	spec_t	       *spec;
 	unsigned int	i;
 
+	if (!catalog)
+		return;
+
 	for (i = 0; i < catalog->nspec; i++) {
 		spec = &catalog->specs[i];
 		free(spec->key);

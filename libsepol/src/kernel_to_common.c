@@ -503,7 +503,7 @@ static int ibendport_data_cmp(const void *a, const void *b)
 	if (rc)
 		return rc;
 
-	return (*aa)->u.ibendport.port - (*bb)->u.ibendport.port;
+	return spaceship_cmp((*aa)->u.ibendport.port, (*bb)->u.ibendport.port);
 }
 
 static int pirq_data_cmp(const void *a, const void *b)

@@ -907,7 +907,6 @@ static int cil_sensalias_to_policydb(policydb_t *pdb, struct cil_alias *cil_alia
 		goto exit;
 	}
 	sepol_alias->level = mls_level;
-	sepol_alias->defined = 1;
 	sepol_alias->isalias = 1;
 
 	return SEPOL_OK;
@@ -3162,8 +3161,6 @@ int cil_sepol_level_define(policydb_t *pdb, struct cil_sens *cil_sens)
 			}
 		}
 	}
-
-	sepol_level->defined = 1;
 
 	return SEPOL_OK;
 

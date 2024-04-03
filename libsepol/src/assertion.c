@@ -48,26 +48,30 @@ static void report_failure(sepol_handle_t *handle, policydb_t *p, const avrule_t
 			   unsigned int stype, unsigned int ttype,
 			   const class_perm_node_t *curperm, uint32_t perms)
 {
+	char *permstr = sepol_av_to_string(p, curperm->tclass, perms);
+
 	if (avrule->source_filename) {
 		ERR(handle, "neverallow on line %lu of %s (or line %lu of %s) violated by allow %s %s:%s {%s };",
 		    avrule->source_line, avrule->source_filename, avrule->line, policy_name(p),
 		    p->p_type_val_to_name[stype],
 		    p->p_type_val_to_name[ttype],
 		    p->p_class_val_to_name[curperm->tclass - 1],
-		    sepol_av_to_string(p, curperm->tclass, perms));
+		    permstr ?: "<format-failure>");
 	} else if (avrule->line) {
 		ERR(handle, "neverallow on line %lu violated by allow %s %s:%s {%s };",
 		    avrule->line, p->p_type_val_to_name[stype],
 		    p->p_type_val_to_name[ttype],
 		    p->p_class_val_to_name[curperm->tclass - 1],
-		    sepol_av_to_string(p, curperm->tclass, perms));
+		    permstr ?: "<format-failure>");
 	} else {
 		ERR(handle, "neverallow violated by allow %s %s:%s {%s };",
 		    p->p_type_val_to_name[stype],
 		    p->p_type_val_to_name[ttype],
 		    p->p_class_val_to_name[curperm->tclass - 1],
-		    sepol_av_to_string(p, curperm->tclass, perms));
+		    permstr ?: "<format-failure>");
 	}
+
+	free(permstr);
 }
 
 static int match_any_class_permissions(class_perm_node_t *cp, uint32_t class, uint32_t data)
@@ -200,13 +204,17 @@ static int report_assertion_extended_permissions(sepol_handle_t *handle,
 
 	/* failure on the regular permissions */
 	if (!found_xperm) {
+		char *permstr = sepol_av_to_string(p, curperm->tclass, perms);
+
 		ERR(handle, "neverallowxperm on line %lu of %s (or line %lu of %s) violated by\n"
 				"allow %s %s:%s {%s };",
 				avrule->source_line, avrule->source_filename, avrule->line, policy_name(p),
 				p->p_type_val_to_name[stype],
 				p->p_type_val_to_name[ttype],
 				p->p_class_val_to_name[curperm->tclass - 1],
-				sepol_av_to_string(p, curperm->tclass, perms));
+				permstr ?: "<format-failure>");
+
+		free(permstr);
 		errors++;
 
 	}

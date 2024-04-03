@@ -370,10 +370,9 @@ static int check_level(hashtab_key_t key, hashtab_datum_t datum, void *arg __att
 {
 	level_datum_t *levdatum = (level_datum_t *) datum;
 
-	if (!levdatum->isalias && !levdatum->defined) {
-		fprintf(stderr,
-			"Error:  sensitivity %s was not used in a level definition!\n",
-			key);
+	if (!levdatum->isalias && levdatum->notdefined) {
+		fprintf(stderr, "Error:  sensitivity %s was not used in a level definition!\n",
+				key);
 		return -1;
 	}
 	return 0;

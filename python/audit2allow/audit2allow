@@ -75,6 +75,7 @@ class AuditToPolicy:
                           help="generate policy with dontaudit rules")
         parser.add_option("-R", "--reference", action="store_true", dest="refpolicy",
                           default=True, help="generate refpolicy style output")
+        parser.add_option("-C", "--cil", action="store_true", dest="cil", help="generate CIL output")
 
         parser.add_option("-N", "--noreference", action="store_false", dest="refpolicy",
                           default=False, help="do not generate refpolicy style output")
@@ -114,13 +115,16 @@ class AuditToPolicy:
                 sys.stderr.write('error: module names must begin with a letter, optionally followed by letters, numbers, "-", "_", "."\n')
                 sys.exit(2)
 
-        # Make -M and -o conflict
+        # Make -M and -o or -C conflict
         if options.module_package:
             if options.output:
                 sys.stderr.write("error: --module-package conflicts with --output\n")
                 sys.exit(2)
             if options.module:
                 sys.stderr.write("error: --module-package conflicts with --module\n")
+                sys.exit(2)
+            if options.cil:
+                sys.stderr.write("error: --module-package conflicts with --cil\n")
                 sys.exit(2)
 
         self.__options = options
@@ -341,12 +345,20 @@ semodule -i {packagename}
         if self.__options.requires:
             g.set_gen_requires(True)
 
+        # CIL output
+        if self.__options.cil:
+            g.set_gen_cil(True)
+
         # Generate the policy
         g.add_access(self.__avs)
         g.add_role_types(self.__role_types)
 
         # Output
         writer = output.ModuleWriter()
+
+        # CIL output
+        if self.__options.cil:
+            writer.set_gen_cil(True)
 
         # Module package
         if self.__options.module_package:

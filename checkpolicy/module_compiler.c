@@ -75,7 +75,7 @@ static void print_error_msg(int ret, uint32_t symbol_type)
 		yyerror2("Could not declare %s here", flavor_str[symbol_type]);
 		break;
 	default:
-		yyerror("Unknown error");
+		yyerror2("Unknown error %d", ret);
 	}
 }
 
@@ -86,7 +86,7 @@ int define_policy(int pass, int module_header_given)
 	if (module_header_given) {
 		if (policydbp->policy_type != POLICY_MOD) {
 			yyerror
-			    ("Module specification found while not building a policy module.\n");
+			    ("Module specification found while not building a policy module.");
 			return -1;
 		}
 
@@ -111,7 +111,7 @@ int define_policy(int pass, int module_header_given)
 	} else {
 		if (policydbp->policy_type == POLICY_MOD) {
 			yyerror
-			    ("Building a policy module, but no module specification found.\n");
+			    ("Building a policy module, but no module specification found.");
 			return -1;
 		}
 	}
@@ -234,6 +234,7 @@ static int role_implicit_bounds(hashtab_t roles_tab,
 	if (!bounds) {
 		yyerror2("role %s doesn't exist, is implicit bounds of %s",
 			 bounds_id, role_id);
+		free(bounds_id);
 		return -1;
 	}
 
@@ -243,6 +244,7 @@ static int role_implicit_bounds(hashtab_t roles_tab,
 		yyerror2("role %s has inconsistent bounds %s/%s",
 			 role_id, bounds_id,
 			 policydbp->p_role_val_to_name[role->bounds - 1]);
+		free(bounds_id);
 		return -1;
 	}
 	free(bounds_id);
@@ -282,9 +284,8 @@ static int create_role(uint32_t scope, unsigned char isattr, role_datum_t **role
 		ret = require_symbol(SYM_ROLES, id, datum, &value, &value);
 	}
 
-	datum->s.value = value;
-
 	if (ret == 0) {
+		datum->s.value = value;
 		*role = datum;
 		*key = strdup(id);
 		if (*key == NULL) {
@@ -301,6 +302,7 @@ static int create_role(uint32_t scope, unsigned char isattr, role_datum_t **role
 			free(datum);
 			return -1;
 		}
+		datum->s.value = value;
 		*role = datum;
 		*key = id;
 	} else {
@@ -479,6 +481,7 @@ static int user_implicit_bounds(hashtab_t users_tab,
 	if (!bounds) {
 		yyerror2("user %s doesn't exist, is implicit bounds of %s",
 			 bounds_id, user_id);
+		free(bounds_id);
 		return -1;
 	}
 
@@ -488,6 +491,7 @@ static int user_implicit_bounds(hashtab_t users_tab,
 		yyerror2("user %s has inconsistent bounds %s/%s",
 			 user_id, bounds_id,
 			 policydbp->p_role_val_to_name[user->bounds - 1]);
+		free(bounds_id);
 		return -1;
 	}
 	free(bounds_id);
@@ -525,9 +529,8 @@ static int create_user(uint32_t scope, user_datum_t **user, char **key)
 		ret = require_symbol(SYM_USERS, id, datum, &value, &value);
 	}
 
-	datum->s.value = value;
-
 	if (ret == 0) {
+		datum->s.value = value;
 		*user = datum;
 		*key = strdup(id);
 		if (*key == NULL) {
@@ -535,6 +538,7 @@ static int create_user(uint32_t scope, user_datum_t **user, char **key)
 			return -1;
 		}
 	} else if (ret == 1) {
+		datum->s.value = value;
 		*user = datum;
 		*key = id;
 	} else {
@@ -1492,3 +1496,14 @@ static void pop_stack(void)
 	free(stack_top);
 	stack_top = parent;
 }
+
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+void module_compiler_reset(void)
+{
+	while (stack_top)
+		pop_stack();
+
+	last_block = NULL;
+	next_decl_id = 1;
+}
+#endif

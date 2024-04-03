@@ -53,6 +53,7 @@ class PolicyBase:
     def __init__(self, parent=None):
         self.parent = None
         self.comment = None
+        self.gen_cil = False
 
 class Node(PolicyBase):
     """Base class objects produced from parsing the reference policy.
@@ -150,6 +151,8 @@ class Node(PolicyBase):
     def to_string(self):
         return ""
 
+    def set_gen_cil(self, gen_cil):
+        self.gen_cil = gen_cil
 
 class Leaf(PolicyBase):
     def __init__(self, parent=None):
@@ -167,6 +170,8 @@ class Leaf(PolicyBase):
     def to_string(self):
         return ""
 
+    def set_gen_cil(self, gen_cil):
+        self.gen_cil = gen_cil
 
 
 # Utility functions
@@ -413,6 +418,16 @@ class XpermSet():
 
         return "%s{ %s }" % (compl, " ".join(vals))
 
+    def to_string_cil(self):
+        if not self.ranges:
+            return ""
+
+        compl = ("not (", ")") if self.complement else ("", "")
+
+        vals = map(lambda x: hex(x[0]) if x[0] == x[1] else "(range %s %s)" % (hex(x[0]), hex(x[1]), ), self.ranges)
+
+        return "(%s%s%s)" % (compl[0], " ".join(vals), compl[1])
+
 # Basic statements
 
 class TypeAttribute(Leaf):
@@ -426,7 +441,14 @@ class TypeAttribute(Leaf):
         self.attributes = IdSet()
 
     def to_string(self):
-        return "typeattribute %s %s;" % (self.type, self.attributes.to_comma_str())
+        if self.gen_cil:
+            s = ""
+            for a in self.attributes:
+                s += "(typeattribute %s)\n" % a
+                s += "(typeattributeset %s %s)\n" % (a, self.type)
+            return s
+        else:
+            return "typeattribute %s %s;" % (self.type, self.attributes.to_comma_str())
 
 class RoleAttribute(Leaf):
     """SElinux roleattribute statement.
@@ -439,7 +461,14 @@ class RoleAttribute(Leaf):
         self.roleattributes = IdSet()
 
     def to_string(self):
-        return "roleattribute %s %s;" % (self.role, self.roleattributes.to_comma_str())
+        if self.gen_cil:
+            s = ""
+            for a in self.roleattributes:
+                s += "(roleattribute %s)\n" % a
+                s += "(roleattributeset %s %s)\n" % (a, self.type)
+            return s
+        else:
+            return "roleattribute %s %s;" % (self.role, self.roleattributes.to_comma_str())
 
 
 class Role(Leaf):
@@ -449,10 +478,16 @@ class Role(Leaf):
         self.types = IdSet()
 
     def to_string(self):
-        s = ""
-        for t in self.types:
-            s += "role %s types %s;\n" % (self.role, t)
-        return s
+        if self.gen_cil:
+            s = "(role %s)\n" % self.role
+            for t in self.types:
+                s += "(roletype %s %s)\n" % (self.role, t)
+            return s
+        else:
+            s = ""
+            for t in self.types:
+                s += "role %s types %s;\n" % (self.role, t)
+            return s
 
 class Type(Leaf):
     def __init__(self, name="", parent=None):
@@ -462,12 +497,20 @@ class Type(Leaf):
         self.aliases = IdSet()
 
     def to_string(self):
-        s = "type %s" % self.name
-        if len(self.aliases) > 0:
-            s = s + "alias %s" % self.aliases.to_space_str()
-        if len(self.attributes) > 0:
-            s = s + ", %s" % self.attributes.to_comma_str()
-        return s + ";"
+        if self.gen_cil:
+            s = "(type %s)\n" % self.name
+            for a in self.aliases:
+                s += "(typealiasactual %s %s)\n" % (a, self.name)
+            for a in self.attributes:
+                s += "(typeattributeset %s %s)\n" % (a, self.name)
+            return s
+        else:
+            s = "type %s" % self.name
+            if len(self.aliases) > 0:
+                s = s + "alias %s" % self.aliases.to_space_str()
+            if len(self.attributes) > 0:
+                s = s + ", %s" % self.attributes.to_comma_str()
+            return s + ";"
 
 class TypeAlias(Leaf):
     def __init__(self, parent=None):
@@ -476,7 +519,14 @@ class TypeAlias(Leaf):
         self.aliases = IdSet()
 
     def to_string(self):
-        return "typealias %s alias %s;" % (self.type, self.aliases.to_space_str())
+        if self.gen_cil:
+            s = ""
+            for a in self.aliases:
+                s += "(typealias %s)\n" % a
+                s += "(typealiasactual %s %s)\n" % (a, self.type)
+            return s
+        else:
+            return "typealias %s alias %s;" % (self.type, self.aliases.to_space_str())
 
 class Attribute(Leaf):
     def __init__(self, name="", parent=None):
@@ -484,7 +534,10 @@ class Attribute(Leaf):
         self.name = name
 
     def to_string(self):
-        return "attribute %s;" % self.name
+        if self.gen_cil:
+            return "attribute %s;" % self.name
+        else:
+            return "(typeattribute %s)" % self.name
 
 class Attribute_Role(Leaf):
     def __init__(self, name="", parent=None):
@@ -492,7 +545,10 @@ class Attribute_Role(Leaf):
         self.name = name
 
     def to_string(self):
-        return "attribute_role %s;" % self.name
+        if self.gen_cil:
+            return "(roleattribute %s)" % self.name
+        else:
+            return "attribute_role %s;" % self.name
 
 
 # Classes representing rules
@@ -555,11 +611,21 @@ class AVRule(Leaf):
         that is a valid policy language representation (assuming
         that the types, object class, etc. are valie).
         """
-        return "%s %s %s:%s %s;" % (self.__rule_type_str(),
-                                     self.src_types.to_space_str(),
-                                     self.tgt_types.to_space_str(),
-                                     self.obj_classes.to_space_str(),
-                                     self.perms.to_space_str())
+        if self.gen_cil:
+            s = ""
+            for src in self.src_types:
+                for tgt in self.tgt_types:
+                    for obj in self.obj_classes:
+                        s += "(%s %s %s (%s (%s)))" % (self.__rule_type_str(),
+                                                       src, tgt, obj,
+                                                       " ".join(self.perms))
+            return s
+        else:
+            return "%s %s %s:%s %s;" % (self.__rule_type_str(),
+                                        self.src_types.to_space_str(),
+                                        self.tgt_types.to_space_str(),
+                                        self.obj_classes.to_space_str(),
+                                        self.perms.to_space_str())
 
 class AVExtRule(Leaf):
     """Extended permission access vector rule.
@@ -597,6 +663,16 @@ class AVExtRule(Leaf):
         elif self.rule_type == self.NEVERALLOWXPERM:
             return "neverallowxperm"
 
+    def __rule_type_str_cil(self):
+        if self.rule_type == self.ALLOWXPERM:
+            return "allowx"
+        elif self.rule_type == self.DONTAUDITXPERM:
+            return "dontauditx"
+        elif self.rule_type == self.AUDITALLOWXPERM:
+            return "auditallowx"
+        elif self.rule_type == self.NEVERALLOWXPERM:
+            return "neverallowx"
+
     def from_av(self, av, op):
         self.src_types.add(av.src_type)
         if av.src_type == av.tgt_type:
@@ -612,12 +688,25 @@ class AVExtRule(Leaf):
         a valid policy language representation (assuming that
         the types, object class, etc. are valid).
         """
-        return "%s %s %s:%s %s %s;" % (self.__rule_type_str(),
-                                     self.src_types.to_space_str(),
-                                     self.tgt_types.to_space_str(),
-                                     self.obj_classes.to_space_str(),
-                                     self.operation,
-                                     self.xperms.to_string())
+        if self.gen_cil:
+            s = ""
+            for src in self.src_types:
+                for tgt in self.tgt_types:
+                    for obj in self.obj_classes:
+                        s += "(%s %s %s (%s %s %s))" % (self.__rule_type_str_cil(),
+                                                        src, tgt,
+                                                        self.operation,
+                                                        obj,
+                                                        self.xperms.to_string_cil())
+            return s
+        else:
+            return "%s %s %s:%s %s %s;" % (self.__rule_type_str(),
+                                           self.src_types.to_space_str(),
+                                           self.tgt_types.to_space_str(),
+                                           self.obj_classes.to_space_str(),
+                                           self.operation,
+                                           self.xperms.to_string())
+
 
 class TypeRule(Leaf):
     """SELinux type rules.
@@ -630,6 +719,7 @@ class TypeRule(Leaf):
     TYPE_CHANGE = 1
     TYPE_MEMBER = 2
 
+    # NB. Filename type transitions are not generated by audit2allow.
     def __init__(self, parent=None):
         Leaf.__init__(self, parent)
         self.src_types = IdSet()
@@ -646,12 +736,28 @@ class TypeRule(Leaf):
         else:
             return "type_member"
 
+    def __rule_type_str_cil(self):
+        if self.rule_type == self.TYPE_TRANSITION:
+            return "typetransition"
+        elif self.rule_type == self.TYPE_CHANGE:
+            return "typechange"
+        else:
+            return "typemember"
+
     def to_string(self):
-        return "%s %s %s:%s %s;" % (self.__rule_type_str(),
-                                     self.src_types.to_space_str(),
-                                     self.tgt_types.to_space_str(),
-                                     self.obj_classes.to_space_str(),
-                                     self.dest_type)
+        if self.gen_cil:
+            return "(%s %s %s %s %s)" % (self.__rule_type_str_cil(),
+                                         self.src_types.to_space_str(),
+                                         self.tgt_types.to_space_str(),
+                                         self.obj_classes.to_space_str(),
+                                         self.dest_type)
+        else:
+            return "%s %s %s:%s %s;" % (self.__rule_type_str(),
+                                        self.src_types.to_space_str(),
+                                        self.tgt_types.to_space_str(),
+                                        self.obj_classes.to_space_str(),
+                                        self.dest_type)
+
 class TypeBound(Leaf):
     """SElinux typebound statement.
 
@@ -663,8 +769,13 @@ class TypeBound(Leaf):
         self.tgt_types = IdSet()
 
     def to_string(self):
-        return "typebounds %s %s;" % (self.type, self.tgt_types.to_comma_str())
-
+        if self.gen_cil:
+            s = ""
+            for t in self.tgt_types:
+                s += "(typebounds %s %s)" % (self.type, t)
+            return s
+        else:
+            return "typebounds %s %s;" % (self.type, self.tgt_types.to_comma_str())
 
 class RoleAllow(Leaf):
     def __init__(self, parent=None):
@@ -673,8 +784,15 @@ class RoleAllow(Leaf):
         self.tgt_roles = IdSet()
 
     def to_string(self):
-        return "allow %s %s;" % (self.src_roles.to_comma_str(),
-                                 self.tgt_roles.to_comma_str())
+        if self.gen_cil:
+            s = ""
+            for src in self.src_roles:
+                for tgt in self.tgt_roles:
+                    s += "(roleallow %s %s)" % (src, tgt)
+            return s
+        else:
+            return "allow %s %s;" % (self.src_roles.to_comma_str(),
+                                     self.tgt_roles.to_comma_str())
 
 class RoleType(Leaf):
     def __init__(self, parent=None):
@@ -685,7 +803,10 @@ class RoleType(Leaf):
     def to_string(self):
         s = ""
         for t in self.types:
-            s += "role %s types %s;\n" % (self.role, t)
+            if self.gen_cil:
+                s += "(roletype %s %s)\n" % (self.role, t)
+            else:
+                s += "role %s types %s;\n" % (self.role, t)
         return s
 
 class ModuleDeclaration(Leaf):
@@ -696,10 +817,13 @@ class ModuleDeclaration(Leaf):
         self.refpolicy = False
 
     def to_string(self):
-        if self.refpolicy:
-            return "policy_module(%s, %s)" % (self.name, self.version)
+        if self.gen_cil:
+            return ""
         else:
-            return "module %s %s;" % (self.name, self.version)
+            if self.refpolicy:
+                return "policy_module(%s, %s)" % (self.name, self.version)
+            else:
+                return "module %s %s;" % (self.name, self.version)
 
 class Conditional(Node):
     def __init__(self, parent=None):
@@ -729,7 +853,10 @@ class InitialSid(Leaf):
         self.context = None
 
     def to_string(self):
-        return "sid %s %s" % (self.name, str(self.context))
+        if self.gen_cil:
+            return "(sid %s %s)" % (self.name, str(self.context))
+        else:
+            return "sid %s %s" % (self.name, str(self.context))
 
 class GenfsCon(Leaf):
     def __init__(self, parent=None):
@@ -739,7 +866,10 @@ class GenfsCon(Leaf):
         self.context = None
 
     def to_string(self):
-        return "genfscon %s %s %s" % (self.filesystem, self.path, str(self.context))
+        if self.gen_cil:
+            return "(genfscon %s %s %s)" % (self.filesystem, self.path, str(self.context))
+        else:
+            return "genfscon %s %s %s" % (self.filesystem, self.path, str(self.context))
 
 class FilesystemUse(Leaf):
     XATTR = 1
@@ -754,14 +884,24 @@ class FilesystemUse(Leaf):
 
     def to_string(self):
         s = ""
-        if self.type == self.XATTR:
-            s = "fs_use_xattr "
-        elif self.type == self.TRANS:
-            s = "fs_use_trans "
-        elif self.type == self.TASK:
-            s = "fs_use_task "
+        if self.gen_cil:
+            if self.type == self.XATTR:
+                s = "fsuse xattr "
+            elif self.type == self.TRANS:
+                s = "fsuse trans "
+            elif self.type == self.TASK:
+                s = "fsuse task "
 
-        return "%s %s %s;" % (s, self.filesystem, str(self.context))
+            return "(%s %s %s)" % (s, self.filesystem, str(self.context))
+        else:
+            if self.type == self.XATTR:
+                s = "fs_use_xattr "
+            elif self.type == self.TRANS:
+                s = "fs_use_trans "
+            elif self.type == self.TASK:
+                s = "fs_use_task "
+
+            return "%s %s %s;" % (s, self.filesystem, str(self.context))
 
 class PortCon(Leaf):
     def __init__(self, parent=None):
@@ -771,7 +911,10 @@ class PortCon(Leaf):
         self.context = None
 
     def to_string(self):
-        return "portcon %s %s %s" % (self.port_type, self.port_number, str(self.context))
+        if self.gen_cil:
+            return "(portcon %s %s %s)" % (self.port_type, self.port_number, str(self.context))
+        else:
+            return "portcon %s %s %s" % (self.port_type, self.port_number, str(self.context))
 
 class NodeCon(Leaf):
     def __init__(self, parent=None):
@@ -781,7 +924,10 @@ class NodeCon(Leaf):
         self.context = None
 
     def to_string(self):
-        return "nodecon %s %s %s" % (self.start, self.end, str(self.context))
+        if self.gen_cil:
+            return "(nodecon %s %s %s)" % (self.start, self.end, str(self.context))
+        else:
+            return "nodecon %s %s %s" % (self.start, self.end, str(self.context))
 
 class NetifCon(Leaf):
     def __init__(self, parent=None):
@@ -791,8 +937,13 @@ class NetifCon(Leaf):
         self.packet_context = None
 
     def to_string(self):
-        return "netifcon %s %s %s" % (self.interface, str(self.interface_context),
-                                   str(self.packet_context))
+        if self.gen_cil:
+            return "(netifcon %s %s %s)" % (self.interface, str(self.interface_context),
+                                            str(self.packet_context))
+        else:
+            return "netifcon %s %s %s" % (self.interface, str(self.interface_context),
+                                          str(self.packet_context))
+
 class PirqCon(Leaf):
     def __init__(self, parent=None):
         Leaf.__init__(self, parent)
@@ -800,7 +951,10 @@ class PirqCon(Leaf):
         self.context = None
 
     def to_string(self):
-        return "pirqcon %s %s" % (self.pirq_number, str(self.context))
+        if self.gen_cil:
+            return "(pirqcon %s %s)" % (self.pirq_number, str(self.context))
+        else:
+            return "pirqcon %s %s" % (self.pirq_number, str(self.context))
 
 class IomemCon(Leaf):
     def __init__(self, parent=None):
@@ -809,7 +963,10 @@ class IomemCon(Leaf):
         self.context = None
 
     def to_string(self):
-        return "iomemcon %s %s" % (self.device_mem, str(self.context))
+        if self.gen_cil:
+            return "(iomemcon %s %s)" % (self.device_mem, str(self.context))
+        else:
+            return "iomemcon %s %s" % (self.device_mem, str(self.context))
 
 class IoportCon(Leaf):
     def __init__(self, parent=None):
@@ -818,7 +975,10 @@ class IoportCon(Leaf):
         self.context = None
 
     def to_string(self):
-        return "ioportcon %s %s" % (self.ioport, str(self.context))
+        if self.gen_cil:
+            return "(ioportcon %s %s)" % (self.ioport, str(self.context))
+        else:
+            return "ioportcon %s %s" % (self.ioport, str(self.context))
 
 class PciDeviceCon(Leaf):
     def __init__(self, parent=None):
@@ -827,7 +987,10 @@ class PciDeviceCon(Leaf):
         self.context = None
 
     def to_string(self):
-        return "pcidevicecon %s %s" % (self.device, str(self.context))
+        if self.gen_cil:
+            return "(pcidevicecon %s %s)" % (self.device, str(self.context))
+        else:
+            return "pcidevicecon %s %s" % (self.device, str(self.context))
 
 class DeviceTreeCon(Leaf):
     def __init__(self, parent=None):
@@ -836,7 +999,10 @@ class DeviceTreeCon(Leaf):
         self.context = None
 
     def to_string(self):
-        return "devicetreecon %s %s" % (self.path, str(self.context))
+        if self.gen_cil:
+            return "(devicetreecon %s %s)" % (self.path, str(self.context))
+        else:
+            return "devicetreecon %s %s" % (self.path, str(self.context))
 
 # Reference policy specific types
 
@@ -898,6 +1064,14 @@ class IfDef(Node):
 
     def to_string(self):
         return "[Ifdef name: %s]" % self.name
+
+class IfElse(Node):
+    def __init__(self, name="", parent=None):
+        Node.__init__(self, parent)
+        self.name = name
+
+    def to_string(self):
+        return "[Ifelse name: %s]" % self.name
 
 class InterfaceCall(Leaf):
     def __init__(self, ifname="", parent=None):
@@ -993,25 +1167,33 @@ class Require(Leaf):
 
     def to_string(self):
         s = []
-        s.append("require {")
-        for type in self.types:
-            s.append("\ttype %s;" % type)
-        for obj_class, perms in self.obj_classes.items():
-            s.append("\tclass %s %s;" % (obj_class, perms.to_space_str()))
-        for role in self.roles:
-            s.append("\trole %s;" % role)
-        for bool in self.data:
-            s.append("\tbool %s;" % bool)
-        for user in self.users:
-            s.append("\tuser %s;" % user)
-        s.append("}")
+        if self.gen_cil:
+            # Can't require classes, perms, booleans, users
+            for type in self.types:
+                s.append("(typeattributeset cil_gen_require %s)" % type)
+            for role in self.roles:
+                s.append("(roleattributeset cil_gen_require %s)" % role)
 
-        # Handle empty requires
-        if len(s) == 2:
-            return ""
+            return "\n".join(s)
+        else:
+            s.append("require {")
+            for type in self.types:
+                s.append("\ttype %s;" % type)
+            for obj_class, perms in self.obj_classes.items():
+                s.append("\tclass %s %s;" % (obj_class, perms.to_space_str()))
+            for role in self.roles:
+                s.append("\trole %s;" % role)
+            for bool in self.data:
+                s.append("\tbool %s;" % bool)
+            for user in self.users:
+                s.append("\tuser %s;" % user)
+            s.append("}")
 
-        return "\n".join(s)
+            # Handle empty requires
+            if len(s) == 2:
+                return ""
 
+            return "\n".join(s)
 
 class ObjPermSet:
     def __init__(self, name):
@@ -1044,7 +1226,10 @@ class Comment:
         else:
             out = []
             for line in self.lines:
-                out.append("#" + line)
+                if self.gen_cil:
+                    out.append(";" + line)
+                else:
+                    out.append("#" + line)
             return "\n".join(out)
 
     def merge(self, other):
@@ -1056,4 +1241,5 @@ class Comment:
     def __str__(self):
         return self.to_string()
 
-
+    def set_gen_cil(self, gen_cil):
+        self.gen_cil = gen_cil

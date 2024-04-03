@@ -32,7 +32,7 @@
 
 struct val_to_name {
 	unsigned int val;
-	char *name;
+	const char *name;
 };
 
 /* Add an unsigned integer to a dynamically reallocated array.  *cnt
@@ -82,20 +82,27 @@ static int perm_name(hashtab_key_t key, hashtab_datum_t datum, void *data)
 	return 0;
 }
 
-char *sepol_av_to_string(policydb_t * policydbp, uint32_t tclass,
+char *sepol_av_to_string(const policydb_t *policydbp, sepol_security_class_t tclass,
 			 sepol_access_vector_t av)
 {
 	struct val_to_name v;
-	static char avbuf[1024];
-	class_datum_t *cladatum;
-	char *perm = NULL, *p;
-	unsigned int i;
+	const class_datum_t *cladatum = policydbp->class_val_to_struct[tclass - 1];
+	uint32_t i;
 	int rc;
-	int avlen = 0, len;
+	char *buffer = NULL, *p;
+	int len;
+	size_t remaining, size = 64;
 
-	memset(avbuf, 0, sizeof avbuf);
-	cladatum = policydbp->class_val_to_struct[tclass - 1];
-	p = avbuf;
+retry:
+	if (__builtin_mul_overflow(size, 2, &size))
+		goto err;
+	p = realloc(buffer, size);
+	if (!p)
+		goto err;
+	*p = '\0'; /* Just in case there are no permissions */
+	buffer = p;
+	remaining = size;
+
 	for (i = 0; i < cladatum->permissions.nprim; i++) {
 		if (av & (UINT32_C(1) << i)) {
 			v.val = i + 1;
@@ -106,22 +113,23 @@ char *sepol_av_to_string(policydb_t * policydbp, uint32_t tclass,
 						 permissions.table, perm_name,
 						 &v);
 			}
-			if (rc)
-				perm = v.name;
-			if (perm) {
-				len =
-				    snprintf(p, sizeof(avbuf) - avlen, " %s",
-					     perm);
-				if (len < 0
-				    || (size_t) len >= (sizeof(avbuf) - avlen))
-					return NULL;
+			if (rc == 1) {
+				len = snprintf(p, remaining, " %s", v.name);
+				if (len < 0)
+					goto err;
+				if ((size_t) len >= remaining)
+					goto retry;
 				p += len;
-				avlen += len;
+				remaining -= len;
 			}
 		}
 	}
 
-	return avbuf;
+	return buffer;
+
+err:
+	free(buffer);
+	return NULL;
 }
 
 #define next_bit_in_range(i, p) (((i) + 1 < sizeof(p)*8) && xperm_test(((i) + 1), p))
