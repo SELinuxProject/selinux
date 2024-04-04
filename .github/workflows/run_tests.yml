@@ -15,7 +15,8 @@ jobs:
           - {python: '3.12', ruby: '3.3', other: 'test-debug'}
           - {python: '3.12', ruby: '3.3', other: 'linker-bfd'}
           - {python: '3.12', ruby: '3.3', other: 'linker-gold'}
-          # Test several Python versions with the latest Ruby version
+          - {python: '3.12', ruby: '3.3', other: 'pcre2-dlsym'}
+         # Test several Python versions with the latest Ruby version
           - {python: '3.11', ruby: '3.3'}
           - {python: '3.10', ruby: '3.3'}
           - {python: '3.9', ruby: '3.3'}
@@ -88,6 +89,8 @@ jobs:
             CC="$CC -fuse-ld=bfd"
         elif [ "${{ matrix.python-ruby-version.other }}" = "linker-gold" ] ; then
             CC="$CC -fuse-ld=gold"
+        elif [ "${{ matrix.python-ruby-version.other }}" = "pcre2-dlsym" ] ; then
+            echo "USE_PCRE2_DLSYM=y" >> $GITHUB_ENV
         fi
         # https://bugs.ruby-lang.org/issues/18616
         # https://github.com/llvm/llvm-project/issues/49958

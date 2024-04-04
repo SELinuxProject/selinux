@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "regex.h"
+#include "regex_dlsym.h"
 #include "label_file.h"
 #include "selinux_internal.h"
 
@@ -81,6 +82,9 @@ int regex_prepare_data(struct regex_data **regex, char const *pattern_string,
 {
 	memset(errordata, 0, sizeof(struct regex_error_data));
 
+	if (regex_pcre2_load() < 0)
+		return -1;
+
 	*regex = regex_data_create();
 	if (!(*regex))
 		return -1;
@@ -110,7 +114,12 @@ err:
 char const *regex_version(void)
 {
 	static char version_buf[256];
-	size_t len = pcre2_config(PCRE2_CONFIG_VERSION, NULL);
+	size_t len;
+
+	if (regex_pcre2_load() < 0)
+		return NULL;
+
+	len = pcre2_config(PCRE2_CONFIG_VERSION, NULL);
 	if (len <= 0 || len > sizeof(version_buf))
 		return NULL;
 
@@ -125,6 +134,10 @@ int regex_load_mmap(struct mmap_area *mmap_area, struct regex_data **regex,
 	uint32_t entry_len;
 
 	*regex_compiled = false;
+
+	if (regex_pcre2_load() < 0)
+		return -1;
+
 	rc = next_entry(&entry_len, mmap_area, sizeof(uint32_t));
 	if (rc < 0)
 		return -1;
@@ -178,6 +191,9 @@ int regex_writef(const struct regex_data *regex, FILE *fp, int do_write_precompr
 	uint32_t to_write = 0;
 	PCRE2_UCHAR *bytes = NULL;
 
+	if (regex_pcre2_load() < 0)
+		return -1;
+
 	if (do_write_precompregex) {
 		/* encode the pattern for serialization */
 		rc = pcre2_serialize_encode((const pcre2_code **)&regex->regex,
@@ -212,6 +228,9 @@ out:
 
 void regex_data_free(struct regex_data *regex)
 {
+	if (regex_pcre2_load() < 0)
+		return;
+
 	if (regex) {
 		if (regex->regex)
 			pcre2_code_free(regex->regex);
@@ -230,6 +249,10 @@ int regex_match(struct regex_data *regex, char const *subject, int partial)
 {
 	int rc;
 	pcre2_match_data *match_data;
+
+	if (regex_pcre2_load() < 0)
+		return REGEX_ERROR;
+
 	__pthread_mutex_lock(&regex->match_mutex);
 
 #ifdef AGGRESSIVE_FREE_AFTER_REGEX_MATCH
@@ -279,6 +302,10 @@ int regex_cmp(const struct regex_data *regex1, const struct regex_data *regex2)
 {
 	int rc;
 	size_t len1, len2;
+
+	if (regex_pcre2_load() < 0)
+		return SELABEL_INCOMPARABLE;
+
 	rc = pcre2_pattern_info(regex1->regex, PCRE2_INFO_SIZE, &len1);
 	assert(rc == 0);
 	rc = pcre2_pattern_info(regex2->regex, PCRE2_INFO_SIZE, &len2);
@@ -546,6 +573,11 @@ void regex_format_error(struct regex_error_data const *error_data, char *buffer,
 	size_t pos = 0;
 	if (!buffer || !buf_size)
 		return;
+#ifdef USE_PCRE2
+	rc = regex_pcre2_load();
+	if (rc < 0)
+		return;
+#endif
 	rc = snprintf(buffer, buf_size, "REGEX back-end error: ");
 	if (rc < 0)
 		/*
