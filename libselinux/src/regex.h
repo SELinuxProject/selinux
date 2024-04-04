@@ -56,11 +56,6 @@ char const *regex_arch_string(void) ;
  */
 char const *regex_version(void) ;
 /**
- * This constructor function allocates a buffer for a regex_data structure.
- * The buffer is being initialized with zeroes.
- */
-struct regex_data *regex_data_create(void) ;
-/**
  * This complementary destructor function frees the a given regex_data buffer.
  * It also frees any non NULL member pointers with the appropriate pcreX_X_free
  * function. For PCRE this function respects the extra_owned field and frees
@@ -120,7 +115,7 @@ int regex_load_mmap(struct mmap_area *map_area,
  * @arg do_write_precompregex If non-zero precompiled patterns are written to
  *			      the output file (ignored by PCRE1 back-end).
  */
-int regex_writef(struct regex_data *regex, FILE *fp,
+int regex_writef(const struct regex_data *regex, FILE *fp,
 		 int do_write_precompregex) ;
 /**
  * This function applies a precompiled pattern to a subject string and
@@ -149,7 +144,7 @@ int regex_match(struct regex_data *regex, char const *subject,
  *                       the same
  * @retval SELABEL_INCOMPARABLE otherwise
  */
-int regex_cmp(struct regex_data *regex1, struct regex_data *regex2) ;
+int regex_cmp(const struct regex_data *regex1, const struct regex_data *regex2) ;
 /**
  * This function takes the error data returned by regex_prepare_data and turns
  * it in to a human readable error message.

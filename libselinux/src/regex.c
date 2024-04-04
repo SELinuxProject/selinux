@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "regex.h"
+#include "regex_dlsym.h"
 #include "label_file.h"
 #include "selinux_internal.h"
 
@@ -28,6 +29,12 @@
 #define __BYTE_ORDER__ __BYTE_ORDER
 
 #endif
+
+/**
+ * This constructor function allocates a buffer for a regex_data structure.
+ * The buffer is being initialized with zeroes.
+ */
+static struct regex_data *regex_data_create(void);
 
 #ifdef USE_PCRE2
 char const *regex_arch_string(void)
@@ -75,6 +82,9 @@ int regex_prepare_data(struct regex_data **regex, char const *pattern_string,
 {
 	memset(errordata, 0, sizeof(struct regex_error_data));
 
+	if (regex_pcre2_load() < 0)
+		return -1;
+
 	*regex = regex_data_create();
 	if (!(*regex))
 		return -1;
@@ -104,7 +114,12 @@ err:
 char const *regex_version(void)
 {
 	static char version_buf[256];
-	size_t len = pcre2_config(PCRE2_CONFIG_VERSION, NULL);
+	size_t len;
+
+	if (regex_pcre2_load() < 0)
+		return NULL;
+
+	len = pcre2_config(PCRE2_CONFIG_VERSION, NULL);
 	if (len <= 0 || len > sizeof(version_buf))
 		return NULL;
 
@@ -119,6 +134,10 @@ int regex_load_mmap(struct mmap_area *mmap_area, struct regex_data **regex,
 	uint32_t entry_len;
 
 	*regex_compiled = false;
+
+	if (regex_pcre2_load() < 0)
+		return -1;
+
 	rc = next_entry(&entry_len, mmap_area, sizeof(uint32_t));
 	if (rc < 0)
 		return -1;
@@ -164,13 +183,16 @@ err:
 	return -1;
 }
 
-int regex_writef(struct regex_data *regex, FILE *fp, int do_write_precompregex)
+int regex_writef(const struct regex_data *regex, FILE *fp, int do_write_precompregex)
 {
 	int rc = 0;
 	size_t len;
 	PCRE2_SIZE serialized_size;
 	uint32_t to_write = 0;
 	PCRE2_UCHAR *bytes = NULL;
+
+	if (regex_pcre2_load() < 0)
+		return -1;
 
 	if (do_write_precompregex) {
 		/* encode the pattern for serialization */
@@ -206,6 +228,9 @@ out:
 
 void regex_data_free(struct regex_data *regex)
 {
+	if (regex_pcre2_load() < 0)
+		return;
+
 	if (regex) {
 		if (regex->regex)
 			pcre2_code_free(regex->regex);
@@ -224,6 +249,10 @@ int regex_match(struct regex_data *regex, char const *subject, int partial)
 {
 	int rc;
 	pcre2_match_data *match_data;
+
+	if (regex_pcre2_load() < 0)
+		return REGEX_ERROR;
+
 	__pthread_mutex_lock(&regex->match_mutex);
 
 #ifdef AGGRESSIVE_FREE_AFTER_REGEX_MATCH
@@ -269,10 +298,14 @@ int regex_match(struct regex_data *regex, char const *subject, int partial)
  * Preferably, this function would be replaced with an algorithm that computes
  * the equivalence of the automatons systematically.
  */
-int regex_cmp(struct regex_data *regex1, struct regex_data *regex2)
+int regex_cmp(const struct regex_data *regex1, const struct regex_data *regex2)
 {
 	int rc;
 	size_t len1, len2;
+
+	if (regex_pcre2_load() < 0)
+		return SELABEL_INCOMPARABLE;
+
 	rc = pcre2_pattern_info(regex1->regex, PCRE2_INFO_SIZE, &len1);
 	assert(rc == 0);
 	rc = pcre2_pattern_info(regex2->regex, PCRE2_INFO_SIZE, &len2);
@@ -283,7 +316,7 @@ int regex_cmp(struct regex_data *regex1, struct regex_data *regex2)
 	return SELABEL_EQUAL;
 }
 
-struct regex_data *regex_data_create(void)
+static struct regex_data *regex_data_create(void)
 {
 	struct regex_data *regex_data =
 		(struct regex_data *)calloc(1, sizeof(struct regex_data));
@@ -407,7 +440,7 @@ err:
 	return -1;
 }
 
-static inline pcre_extra *get_pcre_extra(struct regex_data *regex)
+static inline const pcre_extra *get_pcre_extra(const struct regex_data *regex)
 {
 	if (!regex) return NULL;
 	if (regex->owned) {
@@ -419,14 +452,14 @@ static inline pcre_extra *get_pcre_extra(struct regex_data *regex)
 	}
 }
 
-int regex_writef(struct regex_data *regex, FILE *fp,
+int regex_writef(const struct regex_data *regex, FILE *fp,
 		 int do_write_precompregex __attribute__((unused)))
 {
 	int rc;
 	size_t len;
 	uint32_t to_write;
 	size_t size;
-	pcre_extra *sd = get_pcre_extra(regex);
+	const pcre_extra *sd = get_pcre_extra(regex);
 
 	/* determine the size of the pcre data in bytes */
 	rc = pcre_fullinfo(regex->regex, NULL, PCRE_INFO_SIZE, &size);
@@ -510,7 +543,7 @@ int regex_match(struct regex_data *regex, char const *subject, int partial)
  * Preferably, this function would be replaced with an algorithm that computes
  * the equivalence of the automatons systematically.
  */
-int regex_cmp(struct regex_data *regex1, struct regex_data *regex2)
+int regex_cmp(const struct regex_data *regex1, const struct regex_data *regex2)
 {
 	int rc;
 	size_t len1, len2;
@@ -524,7 +557,7 @@ int regex_cmp(struct regex_data *regex1, struct regex_data *regex2)
 	return SELABEL_EQUAL;
 }
 
-struct regex_data *regex_data_create(void)
+static struct regex_data *regex_data_create(void)
 {
 	return (struct regex_data *)calloc(1, sizeof(struct regex_data));
 }
@@ -540,6 +573,11 @@ void regex_format_error(struct regex_error_data const *error_data, char *buffer,
 	size_t pos = 0;
 	if (!buffer || !buf_size)
 		return;
+#ifdef USE_PCRE2
+	rc = regex_pcre2_load();
+	if (rc < 0)
+		return;
+#endif
 	rc = snprintf(buffer, buf_size, "REGEX back-end error: ");
 	if (rc < 0)
 		/*
