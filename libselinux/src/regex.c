@@ -29,6 +29,12 @@
 
 #endif
 
+/**
+ * This constructor function allocates a buffer for a regex_data structure.
+ * The buffer is being initialized with zeroes.
+ */
+static struct regex_data *regex_data_create(void);
+
 #ifdef USE_PCRE2
 char const *regex_arch_string(void)
 {
@@ -283,7 +289,7 @@ int regex_cmp(const struct regex_data *regex1, const struct regex_data *regex2)
 	return SELABEL_EQUAL;
 }
 
-struct regex_data *regex_data_create(void)
+static struct regex_data *regex_data_create(void)
 {
 	struct regex_data *regex_data =
 		(struct regex_data *)calloc(1, sizeof(struct regex_data));
@@ -524,7 +530,7 @@ int regex_cmp(const struct regex_data *regex1, const struct regex_data *regex2)
 	return SELABEL_EQUAL;
 }
 
-struct regex_data *regex_data_create(void)
+static struct regex_data *regex_data_create(void)
 {
 	return (struct regex_data *)calloc(1, sizeof(struct regex_data));
 }
