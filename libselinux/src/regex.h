@@ -120,7 +120,7 @@ int regex_load_mmap(struct mmap_area *map_area,
  * @arg do_write_precompregex If non-zero precompiled patterns are written to
  *			      the output file (ignored by PCRE1 back-end).
  */
-int regex_writef(struct regex_data *regex, FILE *fp,
+int regex_writef(const struct regex_data *regex, FILE *fp,
 		 int do_write_precompregex) ;
 /**
  * This function applies a precompiled pattern to a subject string and
@@ -149,7 +149,7 @@ int regex_match(struct regex_data *regex, char const *subject,
  *                       the same
  * @retval SELABEL_INCOMPARABLE otherwise
  */
-int regex_cmp(struct regex_data *regex1, struct regex_data *regex2) ;
+int regex_cmp(const struct regex_data *regex1, const struct regex_data *regex2) ;
 /**
  * This function takes the error data returned by regex_prepare_data and turns
  * it in to a human readable error message.
