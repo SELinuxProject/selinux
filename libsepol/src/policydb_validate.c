@@ -22,6 +22,7 @@ typedef struct map_arg {
 	validate_t *flavors;
 	sepol_handle_t *handle;
 	const policydb_t *policy;
+	int conditional;
 } map_arg_t;
 
 typedef struct perm_arg {
@@ -837,7 +838,7 @@ static int validate_datum(__attribute__ ((unused))hashtab_key_t k, hashtab_datum
 
 static int validate_datum_array_entries(sepol_handle_t *handle, const policydb_t *p, validate_t flavors[])
 {
-	map_arg_t margs = { flavors, handle, p };
+	map_arg_t margs = { flavors, handle, p, 0 };
 
 	if (hashtab_map(p->p_commons.table, validate_common_datum_wrapper, &margs))
 		goto bad;
@@ -903,7 +904,7 @@ static int validate_avtab_key(const avtab_key_t *key, int conditional, const pol
 	case AVTAB_XPERMS_DONTAUDIT:
 		if (p->target_platform != SEPOL_TARGET_SELINUX)
 			goto bad;
-		if (conditional)
+		if (conditional && !policydb_has_cond_xperms_feature(p))
 			goto bad;
 		break;
 	default:
@@ -956,7 +957,7 @@ static int validate_avtab_key_and_datum(avtab_key_t *k, avtab_datum_t *d, void *
 {
 	map_arg_t *margs = args;
 
-	if (validate_avtab_key(k, 0, margs->policy, margs->flavors))
+	if (validate_avtab_key(k, margs->conditional, margs->policy, margs->flavors))
 		return -1;
 
 	if (k->specified & AVTAB_AV) {
@@ -972,15 +973,23 @@ static int validate_avtab_key_and_datum(avtab_key_t *k, avtab_datum_t *d, void *
 	if ((k->specified & AVTAB_TYPE) && validate_simpletype(d->data, margs->policy, margs->flavors))
 		return -1;
 
-	if ((k->specified & AVTAB_XPERMS) && validate_xperms(d->xperms))
-		return -1;
+	if (k->specified & AVTAB_XPERMS) {
+		uint32_t data = d->data;
+
+		/* checkpolicy does not touch data for xperms, CIL sets it. */
+		if (data != 0 && validate_access_vector(margs->handle, margs->policy, k->target_class, data))
+			return -1;
+
+		if (validate_xperms(d->xperms))
+			return -1;
+	}
 
 	return 0;
 }
 
 static int validate_avtab(sepol_handle_t *handle, const avtab_t *avtab, const policydb_t *p, validate_t flavors[])
 {
-	map_arg_t margs = { flavors, handle, p };
+	map_arg_t margs = { flavors, handle, p, 0 };
 
 	if (avtab_map(avtab, validate_avtab_key_and_datum, &margs)) {
 		ERR(handle, "Invalid avtab");
@@ -992,28 +1001,13 @@ static int validate_avtab(sepol_handle_t *handle, const avtab_t *avtab, const po
 
 static int validate_cond_av_list(sepol_handle_t *handle, const cond_av_list_t *cond_av, const policydb_t *p, validate_t flavors[])
 {
-	const struct avtab_node *avtab_ptr;
+	struct avtab_node *avtab_ptr;
+	map_arg_t margs = { flavors, handle, p, 1 };
 
-	for (; cond_av; cond_av = cond_av->next) {
-		for (avtab_ptr = cond_av->node; avtab_ptr; avtab_ptr = avtab_ptr->next) {
-			const avtab_key_t *key = &avtab_ptr->key;
-			const avtab_datum_t *datum = &avtab_ptr->datum;
-
-			if (validate_avtab_key(key, 1, p, flavors))
+	for (; cond_av; cond_av = cond_av->next)
+		for (avtab_ptr = cond_av->node; avtab_ptr; avtab_ptr = avtab_ptr->next)
+			if (validate_avtab_key_and_datum(&avtab_ptr->key, &avtab_ptr->datum, &margs))
 				goto bad;
-			if (key->specified & AVTAB_AV) {
-				uint32_t data = datum->data;
-
-				if ((0xFFF & key->specified) == AVTAB_AUDITDENY)
-					data = ~data;
-
-				if (validate_access_vector(handle, p, key->target_class, data))
-					goto bad;
-			}
-			if ((key->specified & AVTAB_TYPE) && validate_simpletype(datum->data, p, flavors))
-				goto bad;
-		}
-	}
 
 	return 0;
 
@@ -1046,7 +1040,7 @@ static int validate_avrules(sepol_handle_t *handle, const avrule_t *avrule, int 
 		case AVRULE_XPERMS_AUDITALLOW:
 		case AVRULE_XPERMS_DONTAUDIT:
 		case AVRULE_XPERMS_NEVERALLOW:
-			if (conditional)
+			if (conditional && !policydb_has_cond_xperms_feature(p))
 				goto bad;
 			break;
 		default:
@@ -1278,7 +1272,7 @@ bad:
 
 static int validate_filename_trans_hashtab(sepol_handle_t *handle, const policydb_t *p, validate_t flavors[])
 {
-	map_arg_t margs = { flavors, handle, p };
+	map_arg_t margs = { flavors, handle, p, 0 };
 
 	if (hashtab_map(p->filename_trans, validate_filename_trans, &margs)) {
 		ERR(handle, "Invalid filename trans");
@@ -1631,7 +1625,7 @@ bad:
 
 static int validate_range_transitions(sepol_handle_t *handle, const policydb_t *p, validate_t flavors[])
 {
-	map_arg_t margs = { flavors, handle, p };
+	map_arg_t margs = { flavors, handle, p, 0 };
 
 	if (hashtab_map(p->range_tr, validate_range_transition, &margs)) {
 		ERR(handle, "Invalid range transition");
