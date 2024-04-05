@@ -74,6 +74,7 @@ typedef int (* require_func_t)(int pass);
 
 %type <ptr> cond_expr cond_expr_prim cond_pol_list cond_else
 %type <ptr> cond_allow_def cond_auditallow_def cond_auditdeny_def cond_dontaudit_def
+%type <ptr> cond_xperm_allow_def cond_xperm_auditallow_def cond_xperm_dontaudit_def
 %type <ptr> cond_transition_def cond_te_avtab_def cond_rule_def
 %type <valptr> cexpr cexpr_prim op role_mls_op
 %type <val> ipv4_addr_def number
@@ -432,6 +433,12 @@ cond_te_avtab_def	: cond_allow_def
 			  { $$ = $1; }
 			| cond_dontaudit_def
 			  { $$ = $1; }
+			| cond_xperm_allow_def
+			  { $$ = $1; }
+			| cond_xperm_auditallow_def
+			  { $$ = $1; }
+			| cond_xperm_dontaudit_def
+			  { $$ = $1; }
 			;
 cond_allow_def		: ALLOW names names ':' names names  ';'
 			{ $$ = define_cond_te_avtab(AVRULE_ALLOWED) ;
@@ -449,7 +456,18 @@ cond_dontaudit_def	: DONTAUDIT names names ':' names names ';'
 			{ $$ = define_cond_te_avtab(AVRULE_DONTAUDIT);
                           if ($$ == COND_ERR) YYABORT; }
 		        ;
-			;
+cond_xperm_allow_def		: ALLOWXPERM names names ':' names identifier xperms ';'
+				{ $$ = define_cond_te_avtab_extended_perms(AVRULE_XPERMS_ALLOWED) ;
+				  if ($$ == COND_ERR) YYABORT; }
+				;
+cond_xperm_auditallow_def	: AUDITALLOWXPERM names names ':' names identifier xperms ';'
+				{ $$ = define_cond_te_avtab_extended_perms(AVRULE_XPERMS_AUDITALLOW) ;
+				  if ($$ == COND_ERR) YYABORT; }
+				;
+cond_xperm_dontaudit_def	: DONTAUDITXPERM names names ':' names identifier xperms ';'
+				{ $$ = define_cond_te_avtab_extended_perms(AVRULE_XPERMS_DONTAUDIT) ;
+				  if ($$ == COND_ERR) YYABORT; }
+				;
 transition_def		: TYPE_TRANSITION  names names ':' names identifier filename ';'
 			{if (define_filename_trans()) YYABORT; }
 			| TYPE_TRANSITION names names ':' names identifier ';'

@@ -15,6 +15,7 @@
 avrule_t *define_cond_compute_type(int which);
 avrule_t *define_cond_pol_list(avrule_t *avlist, avrule_t *sl);
 avrule_t *define_cond_te_avtab(int which);
+avrule_t *define_cond_te_avtab_extended_perms(int which);
 avrule_t *define_cond_filename_trans(void);
 cond_expr_t *define_cond_expr(uint32_t expr_type, void *arg1, void* arg2);
 int define_attrib(void);
