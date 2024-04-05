@@ -49,7 +49,6 @@
 #include <sepol/policydb/hierarchy.h>
 #include <sepol/policydb/polcaps.h>
 #include "queue.h"
-#include "checkpolicy.h"
 #include "module_compiler.h"
 #include "policy_define.h"
 

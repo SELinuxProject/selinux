@@ -89,7 +89,6 @@
 #include <sepol/policydb/link.h>
 
 #include "queue.h"
-#include "checkpolicy.h"
 #include "parse_util.h"
 
 static policydb_t policydb;
@@ -102,8 +101,6 @@ extern int werror;
 static int handle_unknown = SEPOL_DENY_UNKNOWN;
 static const char *txtfile = "policy.conf";
 static const char *binfile = "policy";
-
-unsigned int policyvers = 0;
 
 static __attribute__((__noreturn__)) void usage(const char *progname)
 {
@@ -395,6 +392,7 @@ int main(int argc, char **argv)
 	unsigned int binary = 0, debug = 0, sort = 0, cil = 0, conf = 0, optimize = 0, disable_neverallow = 0;
 	struct val_to_name v;
 	int ret, ch, fd, target = SEPOL_TARGET_SELINUX;
+	unsigned int policyvers = 0;
 	unsigned int nel, uret;
 	struct stat sb;
 	void *map;
@@ -613,6 +611,7 @@ int main(int argc, char **argv)
 		/* Let sepol know if we are dealing with MLS support */
 		parse_policy.mls = mlspol;
 		parse_policy.handle_unknown = handle_unknown;
+		parse_policy.policyvers = policyvers ? policyvers : POLICYDB_VERSION_MAX;
 
 		policydbp = &parse_policy;
 
@@ -637,11 +636,10 @@ int main(int argc, char **argv)
 				fprintf(stderr, "Error while expanding policy\n");
 				exit(1);
 			}
+			policydb.policyvers = policyvers ? policyvers : POLICYDB_VERSION_MAX;
 			policydb_destroy(policydbp);
 			policydbp = &policydb;
 		}
-
-		policydbp->policyvers = policyvers ? policyvers : POLICYDB_VERSION_MAX;
 	}
 
 	if (policydb_load_isids(&policydb, &sidtab))
