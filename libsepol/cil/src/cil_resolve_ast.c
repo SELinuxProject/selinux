@@ -3848,9 +3848,11 @@ static int __cil_resolve_ast_node_helper(struct cil_tree_node *node, uint32_t *f
 			node->flavor != CIL_CONDBLOCK &&
 			node->flavor != CIL_AVRULE &&
 			node->flavor != CIL_TYPE_RULE &&
-			node->flavor != CIL_NAMETYPETRANSITION) {
+			node->flavor != CIL_NAMETYPETRANSITION &&
+			((args->db->policy_version < POLICYDB_VERSION_COND_XPERMS) ||
+			 (node->flavor != CIL_AVRULEX))) {
 			rc = SEPOL_ERR;
-		} else if (node->flavor == CIL_AVRULE) {
+		} else if (node->flavor == CIL_AVRULE || node->flavor == CIL_AVRULEX) {
 			struct cil_avrule *rule = node->data;
 			if (rule->rule_kind == CIL_AVRULE_NEVERALLOW) {
 				rc = SEPOL_ERR;
