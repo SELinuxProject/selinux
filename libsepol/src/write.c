@@ -2252,8 +2252,10 @@ int policydb_write(policydb_t * p, struct policy_file *fp)
 	info = policydb_lookup_compat(p->policyvers, p->policy_type,
 					p->target_platform);
 	if (!info) {
-		ERR(fp->handle, "compatibility lookup failed for policy "
-		    "version %d", p->policyvers);
+		ERR(fp->handle, "compatibility lookup failed for %s%s policy version %d",
+		    p->target_platform == SEPOL_TARGET_SELINUX ? "selinux" : "xen",
+		    p->policy_type == POLICY_KERN ? "" : " module",
+		    p->policyvers);
 		return POLICYDB_ERROR;
 	}
 
