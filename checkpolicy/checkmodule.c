@@ -43,7 +43,7 @@ static int handle_unknown = SEPOL_DENY_UNKNOWN;
 static const char *txtfile = "policy.conf";
 static const char *binfile = "policy";
 
-unsigned int policy_type = POLICY_BASE;
+static unsigned int policy_type = POLICY_BASE;
 unsigned int policyvers = MOD_POLICYDB_VERSION_MAX;
 
 static int read_binary_policy(policydb_t * p, const char *file, const char *progname)
