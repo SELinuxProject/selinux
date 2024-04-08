@@ -200,6 +200,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 	parsepolicydb.policy_type = POLICY_BASE;
 	parsepolicydb.mls = mls;
 	parsepolicydb.handle_unknown = DENY_UNKNOWN;
+	parsepolicydb.policyvers = policyvers;
 	policydb_set_target_platform(&parsepolicydb, platform);
 
 	if (read_source_policy(&parsepolicydb, data, size))

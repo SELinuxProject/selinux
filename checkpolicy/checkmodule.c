@@ -31,7 +31,6 @@
 #include <sepol/policydb/sidtab.h>
 
 #include "queue.h"
-#include "checkpolicy.h"
 #include "parse_util.h"
 
 static sidtab_t sidtab;
@@ -42,9 +41,6 @@ extern int werror;
 static int handle_unknown = SEPOL_DENY_UNKNOWN;
 static const char *txtfile = "policy.conf";
 static const char *binfile = "policy";
-
-static unsigned int policy_type = POLICY_BASE;
-unsigned int policyvers = MOD_POLICYDB_VERSION_MAX;
 
 static int read_binary_policy(policydb_t * p, const char *file, const char *progname)
 {
@@ -107,7 +103,7 @@ static int read_binary_policy(policydb_t * p, const char *file, const char *prog
 	return 0;
 }
 
-static int write_binary_policy(policydb_t * p, FILE *outfp)
+static int write_binary_policy(policydb_t * p, FILE *outfp, unsigned int policy_type, unsigned int policyvers)
 {
 	struct policy_file pf;
 
@@ -150,6 +146,8 @@ int main(int argc, char **argv)
 {
 	const char *file = txtfile, *outfile = NULL;
 	unsigned int binary = 0, cil = 0, disable_neverallow = 0;
+	unsigned int policy_type = POLICY_BASE;
+	unsigned int policyvers = MOD_POLICYDB_VERSION_MAX;
 	int ch;
 	int show_version = 0;
 	policydb_t modpolicydb;
@@ -279,6 +277,7 @@ int main(int argc, char **argv)
 		modpolicydb.policy_type = policy_type;
 		modpolicydb.mls = mlspol;
 		modpolicydb.handle_unknown = handle_unknown;
+		modpolicydb.policyvers = policyvers;
 
 		if (read_source_policy(&modpolicydb, file, argv[0]) == -1) {
 			exit(1);
@@ -343,7 +342,7 @@ int main(int argc, char **argv)
 		}
 
 		if (!cil) {
-			if (write_binary_policy(&modpolicydb, outfp) != 0) {
+			if (write_binary_policy(&modpolicydb, outfp, policy_type, policyvers) != 0) {
 				fprintf(stderr, "%s:  error writing %s\n", argv[0], outfile);
 				exit(1);
 			}
