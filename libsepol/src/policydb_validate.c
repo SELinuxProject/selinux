@@ -11,6 +11,7 @@
 
 #define bool_xor(a, b) (!(a) != !(b))
 #define bool_xnor(a, b) (!bool_xor(a, b))
+#define PERMISSION_MASK(nprim) ((nprim) == PERM_SYMTAB_SIZE ? (~UINT32_C(0)) : ((UINT32_C(1) << (nprim)) - 1))
 
 typedef struct validate {
 	uint32_t nprim;
@@ -22,6 +23,12 @@ typedef struct map_arg {
 	sepol_handle_t *handle;
 	const policydb_t *policy;
 } map_arg_t;
+
+typedef struct perm_arg {
+	uint32_t visited;
+	const uint32_t nprim;
+	const uint32_t inherited_nprim;
+} perm_arg_t;
 
 static int create_gap_ebitmap(char **val_to_name, uint32_t nprim, ebitmap_t *gaps)
 {
@@ -227,17 +234,21 @@ bad:
 	return -1;
 }
 
-static int validate_constraint_nodes(sepol_handle_t *handle, unsigned int nperms, const constraint_node_t *cons, validate_t flavors[])
+static int validate_constraint_nodes(sepol_handle_t *handle, uint32_t nperms, const constraint_node_t *cons, validate_t flavors[])
 {
 	const constraint_expr_t *cexp;
+	const int is_validatetrans = (nperms == UINT32_MAX);
 	int depth;
 
+	if (cons && nperms == 0)
+		goto bad;
+
 	for (; cons; cons = cons->next) {
-		if (nperms == 0 && cons->permissions != 0)
+		if (is_validatetrans && cons->permissions != 0)
 			goto bad;
-		if (nperms > 0 && cons->permissions == 0)
+		if (!is_validatetrans && cons->permissions == 0)
 			goto bad;
-		if (nperms > 0 && nperms != PERM_SYMTAB_SIZE && cons->permissions >= (UINT32_C(1) << nperms))
+		if (!is_validatetrans && nperms != PERM_SYMTAB_SIZE && cons->permissions >= (UINT32_C(1) << nperms))
 			goto bad;
 
 		if (!cons->expr)
@@ -251,7 +262,7 @@ static int validate_constraint_nodes(sepol_handle_t *handle, unsigned int nperms
 					goto bad;
 				depth++;
 
-				if (cexp->attr & CEXPR_XTARGET && nperms != 0)
+				if (cexp->attr & CEXPR_XTARGET && !is_validatetrans)
 					goto bad;
 				if (!(cexp->attr & CEXPR_TYPE)) {
 					if (validate_empty_type_set(cexp->type_names))
@@ -366,11 +377,49 @@ bad:
 	return -1;
 }
 
+static int perm_visit(__attribute__((__unused__)) hashtab_key_t k, hashtab_datum_t d, void *args)
+{
+	perm_arg_t *pargs = args;
+	const perm_datum_t *perdatum = d;
+
+	if (!value_isvalid(perdatum->s.value, pargs->nprim))
+		return -1;
+
+	if (pargs->inherited_nprim != 0 && value_isvalid(perdatum->s.value, pargs->inherited_nprim))
+		return -1;
+
+	if ((UINT32_C(1) << (perdatum->s.value - 1)) & pargs->visited)
+		return -1;
+
+	pargs->visited |= (UINT32_C(1) << (perdatum->s.value - 1));
+	return 0;
+}
+
+static int validate_permission_symtab(sepol_handle_t *handle, const symtab_t *permissions, uint32_t inherited_nprim)
+{
+	/* Check each entry has a different valid value and is not overriding an inherited one */
+
+	perm_arg_t pargs = { .visited = 0, .nprim = permissions->nprim, .inherited_nprim = inherited_nprim };
+
+	if (hashtab_map(permissions->table, perm_visit, &pargs))
+		goto bad;
+
+	return 0;
+
+bad:
+	ERR(handle, "Invalid permission table");
+	return -1;
+}
+
 static int validate_common_datum(sepol_handle_t *handle, const common_datum_t *common, validate_t flavors[])
 {
 	if (validate_value(common->s.value, &flavors[SYM_COMMONS]))
 		goto bad;
-	if (common->permissions.table->nel == 0 || common->permissions.nprim > PERM_SYMTAB_SIZE)
+	if (common->permissions.nprim == 0 || common->permissions.nprim > PERM_SYMTAB_SIZE)
+		goto bad;
+	if (common->permissions.nprim != common->permissions.table->nel)
+		goto bad;
+	if (validate_permission_symtab(handle, &common->permissions, 0))
 		goto bad;
 
 	return 0;
@@ -393,11 +442,17 @@ static int validate_class_datum(sepol_handle_t *handle, const class_datum_t *cla
 		goto bad;
 	if (class->comdatum && validate_common_datum(handle, class->comdatum, flavors))
 		goto bad;
-	if (class->permissions.nprim > PERM_SYMTAB_SIZE)
+	/* empty classes are permitted */
+	if (class->permissions.nprim > PERM_SYMTAB_SIZE || class->permissions.table->nel > PERM_SYMTAB_SIZE)
+		goto bad;
+	if (class->permissions.nprim !=
+	    (class->permissions.table->nel + (class->comdatum ? class->comdatum->permissions.table->nel : 0)))
+		goto bad;
+	if (validate_permission_symtab(handle, &class->permissions, class->comdatum ? class->comdatum->permissions.nprim : 0))
 		goto bad;
 	if (validate_constraint_nodes(handle, class->permissions.nprim, class->constraints, flavors))
 		goto bad;
-	if (validate_constraint_nodes(handle, 0, class->validatetrans, flavors))
+	if (validate_constraint_nodes(handle, UINT32_MAX, class->validatetrans, flavors))
 		goto bad;
 
 	switch (class->default_user) {
@@ -877,46 +932,23 @@ bad:
 	return -1;
 }
 
-static int perm_match(__attribute__ ((unused)) hashtab_key_t key, hashtab_datum_t datum, void *data)
-{
-	const uint32_t *v = data;
-	const perm_datum_t *perdatum = datum;
-
-	return *v == perdatum->s.value;
-}
-
 static int validate_access_vector(sepol_handle_t *handle, const policydb_t *p, sepol_security_class_t tclass,
 				  sepol_access_vector_t av)
 {
 	const class_datum_t *cladatum = p->class_val_to_struct[tclass - 1];
-	uint32_t i;
 
 	/*
 	 * Check that at least one permission bit is valid.
 	 * Older compilers might set invalid bits for the wildcard permission.
 	 */
-	for (i = 0; i < cladatum->permissions.nprim; i++) {
-		if (av & (UINT32_C(1) << i)) {
-			uint32_t v = i + 1;
-			int rc;
+	if (!(av & PERMISSION_MASK(cladatum->permissions.nprim)))
+		goto bad;
 
-			rc = hashtab_map(cladatum->permissions.table, perm_match, &v);
-			if (rc == 1)
-				goto good;
+	return 0;
 
-			if (cladatum->comdatum) {
-				rc = hashtab_map(cladatum->comdatum->permissions.table, perm_match, &v);
-				if (rc == 1)
-					goto good;
-			}
-		}
-	}
-
+bad:
 	ERR(handle, "Invalid access vector");
 	return -1;
-
-good:
-	return 0;
 }
 
 static int validate_avtab_key_and_datum(avtab_key_t *k, avtab_datum_t *d, void *args)
