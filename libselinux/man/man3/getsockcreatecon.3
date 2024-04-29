@@ -9,9 +9,9 @@ getsockcreatecon, setsockcreatecon \- get or set the SELinux security context us
 .sp
 .BI "int getsockcreatecon_raw(char **" con );
 .sp
-.BI "int setsockcreatecon(char *" context );
+.BI "int setsockcreatecon(const char *" context );
 .sp
-.BI "int setsockcreatecon_raw(char *" context );
+.BI "int setsockcreatecon_raw(const char *" context );
 .
 .SH "DESCRIPTION"
 .BR getsockcreatecon ()

@@ -9,9 +9,9 @@ getfscreatecon, setfscreatecon \- get or set the SELinux security context used f
 .sp
 .BI "int getfscreatecon_raw(char **" con );
 .sp
-.BI "int setfscreatecon(char *" context );
+.BI "int setfscreatecon(const char *" context );
 .sp
-.BI "int setfscreatecon_raw(char *" context );
+.BI "int setfscreatecon_raw(const char *" context );
 .
 .SH "DESCRIPTION"
 .BR getfscreatecon ()

@@ -10,7 +10,7 @@ avc_context_to_sid, avc_sid_to_context, avc_get_initial_sid \- obtain and manipu
 .br
 .B #include <selinux/avc.h>
 .sp
-.BI "int avc_context_to_sid(char *" ctx ", security_id_t *" sid ");"
+.BI "int avc_context_to_sid(const char *" ctx ", security_id_t *" sid ");"
 .sp
 .BI "int avc_sid_to_context(security_id_t " sid ", char **" ctx ");"
 .sp
