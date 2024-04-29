@@ -477,6 +477,7 @@ add_constraint(char op, char *raw, char *tok) {
 		}
 		if (asprintf(&constraint->text, "%s%c%s", raw, op, tok) < 0) {
 			log_error("asprintf failed %s", strerror(errno));
+			free(constraint);
 			return -1;
 		}
 		constraint->op = op;
