@@ -191,11 +191,13 @@ finish:
 static void close(struct selabel_handle *rec)
 {
 	struct saved_data *data = (struct saved_data *)rec->data;
-	struct spec *spec, *spec_arr = data->spec_arr;
+	struct spec *spec, *spec_arr;
 	unsigned int i;
 
 	if (!data)
 		return;
+
+	spec_arr = data->spec_arr;
 
 	for (i = 0; i < data->nspec; i++) {
 		spec = &spec_arr[i];
