@@ -443,7 +443,11 @@ extern void selinux_flush_class_cache(void);
 /* Set the function used by matchpathcon_init when displaying
    errors about the file_contexts configuration.  If not set,
    then this defaults to fprintf(stderr, fmt, ...). */
-extern void set_matchpathcon_printf(void (*f) (const char *fmt, ...));
+extern void set_matchpathcon_printf(void
+#ifdef __GNUC__
+   __attribute__ ((format(printf, 1, 2)))
+#endif
+   (*f) (const char *fmt, ...));
 
 /* Set the function used by matchpathcon_init when checking the
    validity of a context in the file contexts configuration.  If not set,
