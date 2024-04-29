@@ -413,7 +413,7 @@ struct security_class_mapping {
  * starting at 1, and have one security_class_mapping structure entry
  * per define.
  */
-extern int selinux_set_mapping(struct security_class_mapping *map);
+extern int selinux_set_mapping(const struct security_class_mapping *map);
 
 /* Common helpers */
 
