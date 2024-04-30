@@ -904,6 +904,7 @@ static int cil_sensalias_to_policydb(policydb_t *pdb, struct cil_alias *cil_alia
 
 	rc = mls_level_cpy(mls_level, sepol_level->level);
 	if (rc != SEPOL_OK) {
+		free(mls_level);
 		goto exit;
 	}
 	sepol_alias->level = mls_level;
