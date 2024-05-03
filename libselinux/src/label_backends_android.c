@@ -91,7 +91,7 @@ static int process_line(struct selabel_handle *rec,
 	unsigned int nspec = data->nspec;
 	const char *errbuf = NULL;
 
-	items = read_spec_entries(line_buf, &errbuf, 2, &prop, &context);
+	items = read_spec_entries(line_buf, strlen(line_buf), &errbuf, 2, &prop, &context);
 	if (items < 0) {
 		if (errbuf) {
 			selinux_log(SELINUX_ERROR,
