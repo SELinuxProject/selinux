@@ -1077,6 +1077,10 @@ static int validate_avrules(sepol_handle_t *handle, const avrule_t *avrule, int 
 		switch(avrule->flags) {
 		case 0:
 		case RULE_SELF:
+			if (p->policyvers != POLICY_KERN &&
+			    p->policyvers < MOD_POLICYDB_VERSION_SELF_TYPETRANS &&
+			    (avrule->specified & AVRULE_TYPE))
+				goto bad;
 			break;
 		case RULE_NOTSELF:
 			switch(avrule->specified) {
@@ -1503,8 +1507,16 @@ static int validate_filename_trans_rules(sepol_handle_t *handle, const filename_
 			goto bad;
 
 		/* currently only the RULE_SELF flag can be set */
-		if ((filename_trans->flags & ~RULE_SELF) != 0)
+		switch (filename_trans->flags) {
+		case 0:
+			break;
+		case RULE_SELF:
+			if (p->policyvers != POLICY_KERN && p->policyvers < MOD_POLICYDB_VERSION_SELF_TYPETRANS)
+				goto bad;
+			break;
+		default:
 			goto bad;
+		}
 	}
 
 	return 0;
