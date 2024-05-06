@@ -1103,8 +1103,10 @@ static int class_write(hashtab_key_t key, hashtab_datum_t datum, void *ptr)
 		buf[1] = cpu_to_le32(cladatum->default_role);
 		if (!glblub_version && default_range == DEFAULT_GLBLUB) {
 			WARN(fp->handle,
-			     "class %s default_range set to GLBLUB but policy version is %d (%d required), discarding",
-			     p->p_class_val_to_name[cladatum->s.value - 1], p->policyvers,
+			     "class %s default_range set to GLBLUB but %spolicy version is %d (%d required), discarding",
+			     p->p_class_val_to_name[cladatum->s.value - 1],
+			     p->policy_type == POLICY_KERN ? "" : "module ",
+			     p->policyvers,
 			     p->policy_type == POLICY_KERN? POLICYDB_VERSION_GLBLUB:MOD_POLICYDB_VERSION_GLBLUB);
 			default_range = 0;
 		}
@@ -2219,7 +2221,8 @@ int policydb_write(policydb_t * p, struct policy_file *fp)
 		    p->policy_type == POLICY_BASE) ||
 		    (p->policyvers < MOD_POLICYDB_VERSION_MLS &&
 		    p->policy_type == POLICY_MOD)) {
-			ERR(fp->handle, "policy version %d cannot support MLS",
+			ERR(fp->handle, "%spolicy version %d cannot support MLS",
+			    p->policy_type == POLICY_KERN ? "" : "module ",
 			    p->policyvers);
 			return POLICYDB_ERROR;
 		}
