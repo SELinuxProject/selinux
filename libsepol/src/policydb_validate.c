@@ -1787,10 +1787,8 @@ int policydb_validate(sepol_handle_t *handle, const policydb_t *p)
 	if (validate_range_transitions(handle, p, flavors))
 		goto bad;
 
-	if (p->policyvers >= POLICYDB_VERSION_AVTAB) {
-		if (validate_typeattr_map(handle, p, flavors))
-			goto bad;
-	}
+	if (validate_typeattr_map(handle, p, flavors))
+		goto bad;
 
 	validate_array_destroy(flavors);
 
