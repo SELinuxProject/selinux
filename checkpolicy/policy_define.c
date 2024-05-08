@@ -5292,7 +5292,7 @@ int define_ipv4_node_context(void)
 
 	free(id);
 
-	if (mask.s_addr != 0 && ((~mask.s_addr + 1) & ~mask.s_addr) != 0) {
+	if (mask.s_addr != 0 && ((~be32toh(mask.s_addr) + 1) & ~be32toh(mask.s_addr)) != 0) {
 		yywarn("ipv4 mask is not contiguous");
 	}
 
