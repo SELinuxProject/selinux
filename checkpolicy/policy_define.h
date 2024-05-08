@@ -68,6 +68,7 @@ int define_type(int alias);
 int define_user(void);
 int define_validatetrans(constraint_expr_t *expr);
 int expand_attrib(void);
+int define_disjoint_attributes(void);
 int insert_id(const char *id,int push);
 int insert_separator(int push);
 uintptr_t define_cexpr(uint32_t expr_type, uintptr_t arg1, uintptr_t arg2);

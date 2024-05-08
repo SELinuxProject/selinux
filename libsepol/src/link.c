@@ -1857,6 +1857,45 @@ static int scope_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	return -1;
 }
 
+static int copy_disjoint_attributes(link_state_t * state, const policy_module_t *module)
+{
+	const disjoint_attributes_rule_t *dattr_rule;
+	disjoint_attributes_rule_t *list = NULL;
+
+	for (dattr_rule = module->policy->disjoint_attributes; dattr_rule; dattr_rule = dattr_rule->next) {
+		disjoint_attributes_rule_t *new_dattr;
+
+		new_dattr = malloc(sizeof(disjoint_attributes_rule_t));
+		if (!new_dattr) {
+			ERR(state->handle, "Out of memory!");
+			return -1;
+		}
+
+		disjoint_attributes_rule_init(new_dattr);
+
+		if (ebitmap_convert(&dattr_rule->attrs, &new_dattr->attrs, module->map[SYM_TYPES])) {
+			ebitmap_destroy(&new_dattr->attrs);
+			free(new_dattr);
+			ERR(state->handle, "Out of memory!");
+			return -1;
+		}
+
+		if (list)
+			list->next = new_dattr;
+		else {
+			if (state->base->disjoint_attributes) {
+				disjoint_attributes_rule_t *d;
+				for (d = state->base->disjoint_attributes; d->next; d = d->next) {}
+				d->next = new_dattr;
+			} else
+				state->base->disjoint_attributes = new_dattr;
+		}
+		list = new_dattr;
+	}
+
+	return 0;
+}
+
 /* Copy a module over to a base, remapping all values within.  After
  * all identifiers and rules are done, copy the scoping information.
  * This is when it checks for duplicate declarations. */
@@ -1889,6 +1928,11 @@ static int copy_module(link_state_t * state, policy_module_t * module)
 		     state)) {
 			return -1;
 		}
+	}
+
+	ret = copy_disjoint_attributes(state, module);
+	if (ret) {
+		return ret;
 	}
 
 	return 0;

@@ -1252,6 +1252,72 @@ exit:
 	return rc;
 }
 
+int define_disjoint_attributes(void)
+{
+	char *id = NULL;
+	disjoint_attributes_rule_t *dattr = NULL;
+	int rc = -1;
+
+	if (pass == 1) {
+		while ((id = queue_remove(id_queue)))
+			free(id);
+		return 0;
+	}
+
+	dattr = malloc(sizeof(disjoint_attributes_rule_t));
+	if (!dattr) {
+		yyerror("Out of memory!");
+		goto exit;
+	}
+
+	ebitmap_init(&dattr->attrs);
+
+	while ((id = queue_remove(id_queue))) {
+		const type_datum_t *attr;
+
+		if (!is_id_in_scope(SYM_TYPES, id)) {
+			yyerror2("attribute %s is not within scope", id);
+			goto exit;
+		}
+
+		attr = hashtab_search(policydbp->p_types.table, id);
+		if (!attr) {
+			yyerror2("attribute %s is not declared", id);
+			goto exit;
+		}
+
+		if (attr->flavor != TYPE_ATTRIB) {
+			yyerror2("%s is a type, not an attribute", id);
+			goto exit;
+		}
+
+		if (ebitmap_get_bit(&dattr->attrs, attr->s.value - 1)) {
+			yyerror2("attribute %s used multiple times", id);
+			goto exit;
+		}
+
+		if (ebitmap_set_bit(&dattr->attrs, attr->s.value - 1, TRUE)) {
+			yyerror("Out of memory!");
+			goto exit;
+		}
+
+		free(id);
+	}
+
+	dattr->next = policydbp->disjoint_attributes;
+	policydbp->disjoint_attributes = dattr;
+
+	dattr = NULL;
+	rc = 0;
+exit:
+	if (dattr) {
+		ebitmap_destroy(&dattr->attrs);
+		free(dattr);
+	}
+	free(id);
+	return rc;
+}
+
 static int add_aliases_to_type(type_datum_t * type)
 {
 	char *id;

@@ -80,6 +80,12 @@ static inline int ebitmap_node_get_bit(const ebitmap_node_t * n, unsigned int bi
 #define ebitmap_for_each_positive_bit(e, n, bit) \
 	ebitmap_for_each_bit(e, n, bit) if (ebitmap_node_get_bit(n, bit)) \
 
+#define ebitmap_for_each_bit_after(e, n, bit, startnode, startbit) \
+	for (n = startnode, bit = ebitmap_next(&n, startbit); bit < ebitmap_length(e); bit = ebitmap_next(&n, bit)) \
+
+#define ebitmap_for_each_positive_bit_after(e, n, bit, startnode, startbit) \
+	ebitmap_for_each_bit_after(e, n, bit, startnode, startbit) if (ebitmap_node_get_bit(n, bit)) \
+
 extern int ebitmap_cmp(const ebitmap_t * e1, const ebitmap_t * e2);
 extern int ebitmap_or(ebitmap_t * dst, const ebitmap_t * e1, const ebitmap_t * e2);
 extern int ebitmap_union(ebitmap_t * dst, const ebitmap_t * e1);

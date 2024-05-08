@@ -1933,6 +1933,33 @@ exit:
 	return rc;
 }
 
+static int write_disjoint_attributes_to_conf(FILE *out, const struct policydb *pdb)
+{
+	const disjoint_attributes_rule_t *dattr;
+
+	for (dattr = pdb->disjoint_attributes; dattr; dattr = dattr->next) {
+		struct ebitmap_node *node;
+		unsigned int bit;
+		int first = 1;
+
+		sepol_printf(out, "disjoint_attributes ");
+
+		ebitmap_for_each_positive_bit(&dattr->attrs, node, bit) {
+			if (first) {
+				first = 0;
+			} else {
+				sepol_printf(out, ", ");
+			}
+
+			sepol_printf(out, "%s", pdb->p_type_val_to_name[bit - 1]);
+		}
+
+		sepol_printf(out, ";\n");
+	}
+
+	return 0;
+}
+
 static char *level_to_str(struct policydb *pdb, struct mls_level *level)
 {
 	ebitmap_t *cats = &level->cat;
@@ -3222,6 +3249,11 @@ int sepol_kernel_policydb_to_conf(FILE *out, struct policydb *pdb)
 		goto exit;
 	}
 	write_filename_trans_rules_to_conf(out, pdb);
+
+	rc = write_disjoint_attributes_to_conf(out, pdb);
+	if (rc != 0) {
+		goto exit;
+	}
 
 	if (pdb->mls) {
 		rc = write_range_trans_rules_to_conf(out, pdb);

@@ -486,6 +486,11 @@ static void cil_reset_booleanif(struct cil_booleanif *bif)
 	cil_list_destroy(&bif->datum_expr, CIL_FALSE);
 }
 
+static void cil_reset_disjointattributes(struct cil_disjointattributes *dattrs)
+{
+	cil_list_destroy(&dattrs->datum_expr, CIL_FALSE);
+}
+
 static int __cil_reset_node(struct cil_tree_node *node,  __attribute__((unused)) uint32_t *finished, __attribute__((unused)) void *extra_args)
 {
 	switch (node->flavor) {
@@ -643,6 +648,9 @@ static int __cil_reset_node(struct cil_tree_node *node,  __attribute__((unused))
 		break;
 	case CIL_BOOLEANIF:
 		cil_reset_booleanif(node->data);
+		break;
+	case CIL_DISJOINTATTRIBUTES:
+		cil_reset_disjointattributes(node->data);
 		break;
 	case CIL_SIDORDER:
 	case CIL_CLASSORDER:

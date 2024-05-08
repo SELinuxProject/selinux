@@ -137,6 +137,8 @@ ATTRIBUTE |
 attribute			{ return(ATTRIBUTE); }
 EXPANDATTRIBUTE |
 expandattribute                 { return(EXPANDATTRIBUTE); }
+DISJOINT_ATTRIBUTES |
+disjoint_attributes		{ return(DISJOINTATTRIBUTES); }
 TYPE_TRANSITION |
 type_transition			{ return(TYPE_TRANSITION); }
 TYPE_MEMBER |

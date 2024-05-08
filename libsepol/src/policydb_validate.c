@@ -1642,6 +1642,32 @@ bad:
 	return -1;
 }
 
+static int validate_disjoint_attributes(sepol_handle_t *handle, const policydb_t *p, validate_t flavors[])
+{
+	const disjoint_attributes_rule_t *dattr_rule;
+	ebitmap_node_t *node;
+	unsigned int i;
+
+	for (dattr_rule = p->disjoint_attributes; dattr_rule; dattr_rule = dattr_rule->next) {
+		if (ebitmap_cardinality(&dattr_rule->attrs) < 2)
+			goto bad;
+
+		if (validate_ebitmap(&dattr_rule->attrs, &flavors[SYM_TYPES]))
+			goto bad;
+
+		ebitmap_for_each_positive_bit(&dattr_rule->attrs, node, i) {
+			if (p->type_val_to_struct[i]->flavor != TYPE_ATTRIB)
+				goto bad;
+		}
+	}
+
+	return 0;
+
+bad:
+	ERR(handle, "Invalid disjoint attributes rule definition");
+	return -1;
+}
+
 static int validate_properties(sepol_handle_t *handle, const policydb_t *p)
 {
 	switch (p->policy_type) {
@@ -1779,6 +1805,9 @@ int policydb_validate(sepol_handle_t *handle, const policydb_t *p)
 		if (validate_typeattr_map(handle, p, flavors))
 			goto bad;
 	}
+
+	if (validate_disjoint_attributes(handle, p, flavors))
+		goto bad;
 
 	validate_array_destroy(flavors);
 

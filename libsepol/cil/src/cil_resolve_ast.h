@@ -97,6 +97,7 @@ int cil_resolve_expr(enum cil_flavor expr_type, struct cil_list *str_expr, struc
 int cil_resolve_boolif(struct cil_tree_node *current, struct cil_db *db);
 int cil_evaluate_expr(struct cil_list *datum_expr, uint16_t *result);
 int cil_resolve_tunif(struct cil_tree_node *current, struct cil_db *db);
+int cil_resolve_disjointattributes(struct cil_tree_node *current, struct cil_db *db);
 
 int cil_resolve_ast(struct cil_db *db, struct cil_tree_node *current);
 int cil_resolve_name(struct cil_tree_node *ast_node, char *name, enum cil_sym_index sym_index, struct cil_db *db, struct cil_symtab_datum **datum);

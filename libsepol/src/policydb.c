@@ -335,6 +335,13 @@ static const struct policydb_compat_info policydb_compat[] = {
 	 .target_platform = SEPOL_TARGET_SELINUX,
 	},
 	{
+	 .type = POLICY_BASE,
+	 .version = MOD_POLICYDB_VERSION_DISJOINT_ATTRIBUTES,
+	 .sym_num = SYM_NUM,
+	 .ocon_num = OCON_IBENDPORT + 1,
+	 .target_platform = SEPOL_TARGET_SELINUX,
+	},
+	{
 	 .type = POLICY_MOD,
 	 .version = MOD_POLICYDB_VERSION_BASE,
 	 .sym_num = SYM_NUM,
@@ -456,6 +463,13 @@ static const struct policydb_compat_info policydb_compat[] = {
 	{
 	 .type = POLICY_MOD,
 	 .version = MOD_POLICYDB_VERSION_SELF_TYPETRANS,
+	 .sym_num = SYM_NUM,
+	 .ocon_num = 0,
+	 .target_platform = SEPOL_TARGET_SELINUX,
+	},
+	{
+	 .type = POLICY_MOD,
+	 .version = MOD_POLICYDB_VERSION_DISJOINT_ATTRIBUTES,
 	 .sym_num = SYM_NUM,
 	 .ocon_num = 0,
 	 .target_platform = SEPOL_TARGET_SELINUX,
@@ -758,6 +772,20 @@ void avrule_list_destroy(avrule_t * x)
 		avrule_destroy(cur);
 		free(cur);
 	}
+}
+
+void disjoint_attributes_rule_init(disjoint_attributes_rule_t * x)
+{
+	ebitmap_init(&x->attrs);
+	x->next = NULL;
+}
+
+
+void disjoint_attributes_rule_destroy(disjoint_attributes_rule_t * x)
+{
+	if (!x)
+		return;
+	ebitmap_destroy(&x->attrs);
 }
 
 /* 
@@ -1493,6 +1521,7 @@ void policydb_destroy(policydb_t * p)
 	unsigned int i;
 	role_allow_t *ra, *lra = NULL;
 	role_trans_t *tr, *ltr = NULL;
+	disjoint_attributes_rule_t *dattr, *dattr_next;
 
 	if (!p)
 		return;
@@ -1584,6 +1613,12 @@ void policydb_destroy(policydb_t * p)
 			ebitmap_destroy(&p->attr_type_map[i]);
 		}
 		free(p->attr_type_map);
+	}
+
+	for (dattr = p->disjoint_attributes; dattr; dattr = dattr_next) {
+		dattr_next = dattr->next;
+		disjoint_attributes_rule_destroy(dattr);
+		free(dattr);
 	}
 
 	return;
@@ -4073,6 +4108,41 @@ static int scope_read(policydb_t * p, int symnum, struct policy_file *fp)
 	return -1;
 }
 
+static int disjoint_attributes_read(policydb_t * p, struct policy_file *fp)
+{
+	disjoint_attributes_rule_t *list = NULL;
+	uint32_t buf, nel, i;
+	int rc;
+
+	rc = next_entry(&buf, fp, sizeof(uint32_t));
+	if (rc < 0)
+		return -1;
+	nel = le32_to_cpu(buf);
+	for (i = 0; i < nel; i++) {
+		disjoint_attributes_rule_t *dattr_rule;
+
+		dattr_rule = malloc(sizeof(disjoint_attributes_rule_t));
+		if (!dattr_rule)
+			return -1;
+
+		disjoint_attributes_rule_init(dattr_rule);
+
+		if (ebitmap_read(&dattr_rule->attrs, fp) < 0) {
+			ebitmap_destroy(&dattr_rule->attrs);
+			free(dattr_rule);
+			return -1;
+		}
+
+		if (list)
+			list->next = dattr_rule;
+		else
+			p->disjoint_attributes = dattr_rule;
+		list = dattr_rule;
+	}
+
+	return 0;
+}
+
 static sepol_security_class_t policydb_string_to_security_class(
 	struct policydb *policydb,
 	const char *class_name)
@@ -4457,6 +4527,12 @@ int policydb_read(policydb_t * p, struct policy_file *fp, unsigned verbose)
 					goto bad;
 			}
 		}
+	}
+
+	if (p->policy_type != POLICY_KERN &&
+	    p->policyvers >= MOD_POLICYDB_VERSION_DISJOINT_ATTRIBUTES) {
+		if (disjoint_attributes_read(p, fp))
+			return POLICYDB_ERROR;
 	}
 
 	if (policydb_validate(fp->handle, p))
