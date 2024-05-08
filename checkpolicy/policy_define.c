@@ -5335,6 +5335,100 @@ out:
 	return rc;
 }
 
+int define_ipv4_cidr_node_context(void)
+{
+	char *endptr, *id, *split;
+	unsigned long mask_bits;
+	uint32_t mask;
+	struct in_addr addr;
+	ocontext_t *newc, *c, *l, *head;
+	int rc;
+
+	if (policydbp->target_platform != SEPOL_TARGET_SELINUX) {
+		yyerror("nodecon not supported for target");
+		return -1;
+	}
+
+	if (pass == 1) {
+		free(queue_remove(id_queue));
+		parse_security_context(NULL);
+		return 0;
+	}
+
+	id = queue_remove(id_queue);
+	if (!id) {
+		yyerror("failed to read IPv4 address");
+		return -1;
+	}
+
+	split = strchr(id, '/');
+	if (!split) {
+		yyerror2("invalid IPv4 CIDR notation: %s", id);
+		free(id);
+		return -1;
+	}
+	*split = '\0';
+
+	rc = inet_pton(AF_INET, id, &addr);
+	if (rc < 1) {
+		yyerror2("failed to parse IPv4 address %s", id);
+		free(id);
+		return -1;
+	}
+
+	errno = 0;
+	mask_bits = strtoul(split + 1, &endptr, 10);
+	if (errno || *endptr != '\0' || mask_bits > 32) {
+		yyerror2("invalid mask in IPv4 CIDR notation: %s", split + 1);
+		free(id);
+		return -1;
+	}
+
+	free(id);
+
+	if (mask_bits == 0) {
+		yywarn("IPv4 CIDR mask of 0, matching all IPs");
+		mask = 0;
+	} else {
+		mask = ~((UINT32_C(1) << (32 - mask_bits)) - 1);
+		mask = htobe32(mask);
+	}
+
+	if ((~mask & addr.s_addr) != 0)
+		yywarn("host bits in IPv4 address set");
+
+	newc = calloc(1, sizeof(ocontext_t));
+	if (!newc) {
+		yyerror("out of memory");
+		return -1;
+	}
+
+	newc->u.node.addr = addr.s_addr & mask;
+	newc->u.node.mask = mask;
+
+	if (parse_security_context(&newc->context[0])) {
+		free(newc);
+		return -1;
+	}
+
+	/* Create order of most specific to least retaining
+	   the order specified in the configuration. */
+	head = policydbp->ocontexts[OCON_NODE];
+	for (l = NULL, c = head; c; l = c, c = c->next) {
+		if (newc->u.node.mask > c->u.node.mask)
+			break;
+	}
+
+	newc->next = c;
+
+	if (l)
+		l->next = newc;
+	else
+		policydbp->ocontexts[OCON_NODE] = newc;
+
+	return 0;
+}
+
 static int ipv6_is_mask_contiguous(const struct in6_addr *mask)
 {
 	int filled = 1;
@@ -5367,6 +5461,26 @@ static int ipv6_has_host_bits_set(const struct in6_addr *addr, const struct in6_
 	}
 
 	return 0;
+}
+
+static void ipv6_cidr_bits_to_mask(unsigned long cidr_bits, struct in6_addr *mask)
+{
+	unsigned i;
+
+	for (i = 0; i < 4; i++) {
+		if (cidr_bits == 0) {
+			mask->s6_addr32[i] = 0;
+		} else if (cidr_bits >= 32) {
+			mask->s6_addr32[i] = ~UINT32_C(0);
+		} else {
+			mask->s6_addr32[i] = htobe32(~((UINT32_C(1) << (32 - cidr_bits)) - 1));
+		}
+
+		if (cidr_bits >= 32)
+			cidr_bits -= 32;
+		else
+			cidr_bits = 0;
+	}
 }
 
 int define_ipv6_node_context(void)
@@ -5467,6 +5581,99 @@ int define_ipv6_node_context(void)
 	rc = 0;
       out:
 	return rc;
+}
+
+int define_ipv6_cidr_node_context(void)
+{
+	char *endptr, *id, *split;
+	unsigned long mask_bits;
+	int rc;
+	struct in6_addr addr, mask;
+	ocontext_t *newc, *c, *l, *head;
+
+	if (policydbp->target_platform != SEPOL_TARGET_SELINUX) {
+		yyerror("nodecon not supported for target");
+		return -1;
+	}
+
+	if (pass == 1) {
+		free(queue_remove(id_queue));
+		free(queue_remove(id_queue));
+		parse_security_context(NULL);
+		return 0;
+	}
+
+	id = queue_remove(id_queue);
+	if (!id) {
+		yyerror("failed to read IPv6 address");
+		return -1;
+	}
+
+	split = strchr(id, '/');
+	if (!split) {
+		yyerror2("invalid IPv6 CIDR notation: %s", id);
+		free(id);
+		return -1;
+	}
+	*split = '\0';
+
+	rc = inet_pton(AF_INET6, id, &addr);
+	if (rc < 1) {
+		yyerror2("failed to parse IPv6 address %s", id);
+		free(id);
+		return -1;
+	}
+
+	errno = 0;
+	mask_bits = strtoul(split + 1, &endptr, 10);
+	if (errno || *endptr != '\0' || mask_bits > 128) {
+		yyerror2("invalid mask in IPv6 CIDR notation: %s", split + 1);
+		free(id);
+		return -1;
+	}
+
+	if (mask_bits == 0) {
+		yywarn("IPv6 CIDR mask of 0, matching all IPs");
+	}
+
+	ipv6_cidr_bits_to_mask(mask_bits, &mask);
+
+	if (ipv6_has_host_bits_set(&addr, &mask)) {
+		yywarn("host bits in ipv6 address set");
+	}
+
+	free(id);
+
+	newc = calloc(1, sizeof(ocontext_t));
+	if (!newc) {
+		yyerror("out of memory");
+		return -1;
+	}
+
+	memcpy(&newc->u.node6.addr[0], &addr.s6_addr[0], 16);
+	memcpy(&newc->u.node6.mask[0], &mask.s6_addr[0], 16);
+
+	if (parse_security_context(&newc->context[0])) {
+		free(newc);
+		return -1;
+	}
+
+	/* Create order of most specific to least retaining
+	   the order specified in the configuration. */
+	head = policydbp->ocontexts[OCON_NODE6];
+	for (l = NULL, c = head; c; l = c, c = c->next) {
+		if (memcmp(&newc->u.node6.mask, &c->u.node6.mask, 16) > 0)
+			break;
+	}
+
+	newc->next = c;
+
+	if (l)
+		l->next = newc;
+	else
+		policydbp->ocontexts[OCON_NODE6] = newc;
+
+	return 0;
 }
 
 int define_fs_use(int behavior)

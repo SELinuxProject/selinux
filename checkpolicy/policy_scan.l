@@ -292,8 +292,10 @@ GLBLUB				{ return(GLBLUB); }
 {letter}({alnum}|[_\-])*([\.]?({alnum}|[_\-]))*	{ return(IDENTIFIER); }
 {digit}+|0x{hexval}+            { return(NUMBER); }
 {alnum}*{letter}{alnum}*        { return(FILESYSTEM); }
+{digit}{1,3}(\.{digit}{1,3}){3}"/"{digit}{1,2}	{ return(IPV4_CIDR); }
 {digit}{1,3}(\.{digit}{1,3}){3}    { return(IPV4_ADDR); }
 {hexval}{0,4}":"{hexval}{0,4}":"({hexval}|[:.])*  { return(IPV6_ADDR); }
+{hexval}{0,4}":"{hexval}{0,4}":"({hexval}|[:.])*"/"{digit}{1,3}	{ return(IPV6_CIDR); }
 {digit}+(\.({alnum}|[_.])*)?    { return(VERSION_IDENTIFIER); }
 #line[ ]1[ ]\"[^\n]*\"		{ set_source_file(yytext+9); }
 #line[ ]{digit}+	        {

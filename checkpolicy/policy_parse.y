@@ -145,7 +145,9 @@ typedef int (* require_func_t)(int pass);
 %token EQUALS
 %token NOTEQUAL
 %token IPV4_ADDR
+%token IPV4_CIDR
 %token IPV6_ADDR
+%token IPV6_CIDR
 %token MODULE VERSION_IDENTIFIER REQUIRE OPTIONAL
 %token POLICYCAP
 %token PERMISSIVE
@@ -739,8 +741,12 @@ node_contexts		: node_context_def
 			;
 node_context_def	: NODECON ipv4_addr_def ipv4_addr_def security_context_def
 			{if (define_ipv4_node_context()) YYABORT;}
+			| NODECON ipv4_cidr_def security_context_def
+			{if (define_ipv4_cidr_node_context()) YYABORT;}
 			| NODECON ipv6_addr ipv6_addr security_context_def
 			{if (define_ipv6_node_context()) YYABORT;}
+			| NODECON ipv6_cidr security_context_def
+			{if (define_ipv6_cidr_node_context()) YYABORT;}
 			;
 opt_fs_uses             : fs_uses
                         |
@@ -769,6 +775,9 @@ genfs_context_def	: GENFSCON filesystem path '-' identifier security_context_def
 			{if (define_genfs_context(0)) YYABORT;}
 			;
 ipv4_addr_def		: IPV4_ADDR
+			{ if (insert_id(yytext,0)) YYABORT; }
+			;
+ipv4_cidr_def		: IPV4_CIDR
 			{ if (insert_id(yytext,0)) YYABORT; }
 			;
 xperms		: xperm
@@ -897,6 +906,9 @@ number64		: NUMBER
 			}
 			;
 ipv6_addr		: IPV6_ADDR
+			{ if (insert_id(yytext,0)) YYABORT; }
+			;
+ipv6_cidr		: IPV6_CIDR
 			{ if (insert_id(yytext,0)) YYABORT; }
 			;
 policycap_def		: POLICYCAP identifier ';'
