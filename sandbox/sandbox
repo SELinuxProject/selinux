@@ -479,7 +479,10 @@ sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile ] [-
 
                     xmodmapfile = self.__homedir + "/.xmodmap"
                     xd = open(xmodmapfile, "w")
-                    subprocess.Popen(["/usr/bin/xmodmap", "-pke"], stdout=xd).wait()
+                    try:
+                        subprocess.Popen(["/usr/bin/xmodmap", "-pke"], stdout=xd).wait()
+                    except:
+                        pass
                     xd.close()
 
                     self.__setup_sandboxrc(self.__options.wm)
