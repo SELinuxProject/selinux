@@ -285,15 +285,12 @@ class Sandbox:
             fd.write("""#! /bin/sh
 #TITLE: %s
 # /usr/bin/test -r ~/.xmodmap && /usr/bin/xmodmap ~/.xmodmap
-%s &
-WM_PID=$!
 if which dbus-run-session >/dev/null 2>&1; then
     dbus-run-session -- %s
 else
     dbus-launch --exit-with-session %s
 fi
-kill -TERM $WM_PID  2> /dev/null
-""" % (command, wm, command, command))
+""" % (command, command, command))
         fd.close()
         os.chmod(execfile, 0o700)
 
