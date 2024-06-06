@@ -173,10 +173,10 @@ if [ -f ${PREFC} -a -x /usr/bin/diff ]; then
 	test -z "$TEMPFILE" && exit
 	PREFCTEMPFILE=`mktemp ${PREFC}.XXXXXXXXXX`
 	sed -r -e 's,:s0, ,g' $PREFC | sort -u > ${PREFCTEMPFILE}
-	sed -r -e 's,:s0, ,g' $FC | sort -u | \
-	/usr/bin/diff -b ${PREFCTEMPFILE} - | \
-	    grep '^[<>]'|cut -c3-| grep ^/ | \
-	    grep -Ev '(^/home|^/root|^/tmp)' |\
+	sed -r -e 's,:s0, ,g' $FC | sort -u |
+	/usr/bin/diff -b ${PREFCTEMPFILE} - |
+	    grep '^[<>]'|cut -c3-| grep ^/ |
+	    grep -Ev '(^/home|^/root|^/tmp)' |
 	sed -r -e 's,[[:blank:]].*,,g' \
 	       -e 's|\(([/[:alnum:]]+)\)\?|{\1,}|g' \
 	       -e 's|([/[:alnum:]])\?|{\1,}|g' \
@@ -185,19 +185,19 @@ if [ -f ${PREFC} -a -x /usr/bin/diff ]; then
 	       -e 's|\(.*|*|g' \
 	       -e 's|\[.*|*|g' \
 	       -e 's|\.\*.*|*|g' \
-	       -e 's|\.\+.*|*|g' | \
-	    # These two sorts need to be separate commands \
-	sort -u | \
-	sort -d | \
-	while read pattern ; \
-	    do if ! echo "$pattern" | grep -q -f ${TEMPFILE} 2>/dev/null; then \
-		  echo "$pattern"; \
-		  case "$pattern" in *"*") \
+	       -e 's|\.\+.*|*|g' |
+	    # These two sorts need to be separate commands
+	sort -u |
+	sort -d |
+	while read pattern ;
+	    do if ! echo "$pattern" | grep -q -f ${TEMPFILE} 2>/dev/null; then
+		  echo "$pattern";
+		  case "$pattern" in *"*")
 		       echo "$pattern" | sed -e 's,^,^,' -e 's,\*$,,g' >> ${TEMPFILE};;
-		  esac; \
-	       fi; \
-	    done | \
-	${RESTORECON} ${VERBOSE} ${EXCLUDEDIRS} ${FORCEFLAG} ${THREADS} $* -i -R -f -; \
+		  esac;
+	       fi;
+	    done |
+	${RESTORECON} ${VERBOSE} ${EXCLUDEDIRS} ${FORCEFLAG} ${THREADS} $* -i -R -f -;
 	rm -f ${TEMPFILE} ${PREFCTEMPFILE}
 fi
 }
