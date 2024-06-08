@@ -1925,7 +1925,7 @@ static int find_perm(hashtab_key_t key, hashtab_datum_t datum, void *varg)
  * Note that if a declaration had no requirement at all (e.g., an ELSE
  * block) this returns 1. */
 static int is_decl_requires_met(link_state_t * state,
-				avrule_decl_t * decl,
+				const avrule_decl_t * decl,
 				struct missing_requirement *req)
 {
 	/* (This algorithm is very unoptimized.  It performs many
@@ -1933,9 +1933,9 @@ static int is_decl_requires_met(link_state_t * state,
 	 * which symbols have been verified, so that they do not need
 	 * to be re-checked.) */
 	unsigned int i, j;
-	ebitmap_t *bitmap;
-	char *id, *perm_id;
-	policydb_t *pol = state->base;
+	const ebitmap_t *bitmap;
+	const char *id, *perm_id;
+	const policydb_t *pol = state->base;
 	ebitmap_node_t *node;
 
 	/* check that all symbols have been satisfied */
@@ -1961,27 +1961,25 @@ static int is_decl_requires_met(link_state_t * state,
 	}
 	/* check that all classes and permissions have been satisfied */
 	for (i = 0; i < decl->required.class_perms_len; i++) {
+		const class_datum_t *cladatum = pol->class_val_to_struct[i];
+		const scope_datum_t *scope;
 
-		bitmap = decl->required.class_perms_map + i;
+		bitmap = &decl->required.class_perms_map[i];
+		id = pol->p_class_val_to_name[i];
+
+
+		scope = hashtab_search(state->base->p_classes_scope.table, id);
+		if (scope == NULL) {
+			ERR(state->handle,
+				"Could not find scope information for class %s",
+				id);
+			return -1;
+		}
+
 		ebitmap_for_each_positive_bit(bitmap, node, j) {
 			struct find_perm_arg fparg;
-			class_datum_t *cladatum;
 			uint32_t perm_value = j + 1;
 			int rc;
-			scope_datum_t *scope;
-
-			id = pol->p_class_val_to_name[i];
-			cladatum = pol->class_val_to_struct[i];
-
-			scope =
-			    hashtab_search(state->base->p_classes_scope.table,
-					   id);
-			if (scope == NULL) {
-				ERR(state->handle,
-				    "Could not find scope information for class %s",
-				    id);
-				return -1;
-			}
 
 			fparg.valuep = perm_value;
 			fparg.key = NULL;
