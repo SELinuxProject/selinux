@@ -1968,6 +1968,10 @@ static int is_decl_requires_met(link_state_t * state,
 		id = pol->p_class_val_to_name[i];
 
 
+		if (!is_id_enabled(id, state->base, SYM_CLASSES)) {
+			return 0;
+		}
+
 		scope = hashtab_search(state->base->p_classes_scope.table, id);
 		if (scope == NULL) {
 			ERR(state->handle,
@@ -1994,7 +1998,7 @@ static int is_decl_requires_met(link_state_t * state,
 			perm_id = fparg.key;
 
 			assert(perm_id != NULL);
-			if (!is_perm_enabled(id, perm_id, state->base)) {
+			if (!is_perm_existent(cladatum, perm_id)) {
 				if (req != NULL) {
 					req->symbol_type = SYM_CLASSES;
 					req->symbol_value = i + 1;

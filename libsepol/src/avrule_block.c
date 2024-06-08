@@ -152,11 +152,11 @@ cond_list_t *get_decl_cond_list(policydb_t * p, avrule_decl_t * decl,
  * marked as SCOPE_DECL, and any of its declaring block has been enabled,
  * then return 1.  Otherwise return 0. Can only be called after the 
  * decl_val_to_struct index has been created */
-int is_id_enabled(char *id, policydb_t * p, int symbol_table)
+int is_id_enabled(const char *id, const policydb_t * p, int symbol_table)
 {
-	scope_datum_t *scope =
+	const scope_datum_t *scope =
 	    (scope_datum_t *) hashtab_search(p->scope[symbol_table].table, id);
-	avrule_decl_t *decl;
+	const avrule_decl_t *decl;
 	uint32_t len;
 
 	if (scope == NULL) {
@@ -189,21 +189,13 @@ int is_id_enabled(char *id, policydb_t * p, int symbol_table)
 	return 0;
 }
 
-/* Check if a particular permission is present within the given class,
- * and that the class is enabled.  Returns 1 if both conditions are
- * true, 0 if neither could be found or if the class id disabled. */
-int is_perm_enabled(char *class_id, char *perm_id, policydb_t * p)
+/* Check if a particular permission is present within the given class.
+ * Whether the class is enabled is NOT checked.
+ * Returns 1 if permission is present, 0 otherwise */
+int is_perm_existent(const class_datum_t *cladatum, const char *perm_id)
 {
-	class_datum_t *cladatum;
-	perm_datum_t *perm;
-	if (!is_id_enabled(class_id, p, SYM_CLASSES)) {
-		return 0;
-	}
-	cladatum =
-	    (class_datum_t *) hashtab_search(p->p_classes.table, class_id);
-	if (cladatum == NULL) {
-		return 0;
-	}
+	const perm_datum_t *perm;
+
 	perm = hashtab_search(cladatum->permissions.table, perm_id);
 	if (perm == NULL && cladatum->comdatum != 0) {
 		/* permission was not in this class.  before giving
