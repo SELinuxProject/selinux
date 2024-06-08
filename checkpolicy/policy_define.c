@@ -5238,12 +5238,45 @@ int define_netif_context(void)
 	return 0;
 }
 
+static int insert_ipv4_node(ocontext_t *newc)
+{
+	ocontext_t *c, *l;
+	char addr[INET_ADDRSTRLEN];
+	char mask[INET_ADDRSTRLEN];
+
+	/* Create order of most specific to least retaining
+	   the order specified in the configuration. */
+	for (l = NULL, c = policydbp->ocontexts[OCON_NODE]; c; l = c, c = c->next) {
+		if (newc->u.node.mask == c->u.node.mask &&
+		    newc->u.node.addr == c->u.node.addr) {
+			yyerror2("duplicate entry for network node %s %s",
+				 inet_ntop(AF_INET, &newc->u.node.addr, addr, INET_ADDRSTRLEN) ?: "<invalid>",
+				 inet_ntop(AF_INET, &newc->u.node.mask, mask, INET_ADDRSTRLEN) ?: "<invalid>");
+			context_destroy(&newc->context[0]);
+			free(newc);
+			return -1;
+		}
+
+		if (newc->u.node.mask > c->u.node.mask)
+			break;
+	}
+
+	newc->next = c;
+
+	if (l)
+		l->next = newc;
+	else
+		policydbp->ocontexts[OCON_NODE] = newc;
+
+	return 0;
+}
+
 int define_ipv4_node_context(void)
 {	
 	char *id;
 	int rc = 0;
 	struct in_addr addr, mask;
-	ocontext_t *newc, *c, *l, *head;
+	ocontext_t *newc;
 
 	if (policydbp->target_platform != SEPOL_TARGET_SELINUX) {
 		yyerror("nodecon not supported for target");
@@ -5254,40 +5287,34 @@ int define_ipv4_node_context(void)
 		free(queue_remove(id_queue));
 		free(queue_remove(id_queue));
 		parse_security_context(NULL);
-		goto out;
+		return 0;
 	}
 
 	id = queue_remove(id_queue);
 	if (!id) {
 		yyerror("failed to read ipv4 address");
-		rc = -1;
-		goto out;
+		return -1;
 	}
 
 	rc = inet_pton(AF_INET, id, &addr);
 	if (rc < 1) {
 		yyerror2("failed to parse ipv4 address %s", id);
 		free(id);
-		if (rc == 0)
-			rc = -1;
-		goto out;
+		return -1;
 	}
 	free(id);
 
 	id = queue_remove(id_queue);
 	if (!id) {
 		yyerror("failed to read ipv4 address");
-		rc = -1;
-		goto out;
+		return -1;
 	}
 
 	rc = inet_pton(AF_INET, id, &mask);
 	if (rc < 1) {
 		yyerror2("failed to parse ipv4 mask %s", id);
 		free(id);
-		if (rc == 0)
-			rc = -1;
-		goto out;
+		return -1;
 	}
 
 	free(id);
@@ -5303,8 +5330,7 @@ int define_ipv4_node_context(void)
 	newc = malloc(sizeof(ocontext_t));
 	if (!newc) {
 		yyerror("out of memory");
-		rc = -1;
-		goto out;
+		return -1;
 	}
 
 	memset(newc, 0, sizeof(ocontext_t));
@@ -5316,23 +5342,7 @@ int define_ipv4_node_context(void)
 		return -1;
 	}
 
-	/* Create order of most specific to least retaining
-	   the order specified in the configuration. */
-	head = policydbp->ocontexts[OCON_NODE];
-	for (l = NULL, c = head; c; l = c, c = c->next) {
-		if (newc->u.node.mask > c->u.node.mask)
-			break;
-	}
-
-	newc->next = c;
-
-	if (l)
-		l->next = newc;
-	else
-		policydbp->ocontexts[OCON_NODE] = newc;
-	rc = 0;
-out:
-	return rc;
+	return insert_ipv4_node(newc);
 }
 
 int define_ipv4_cidr_node_context(void)
@@ -5341,7 +5351,7 @@ int define_ipv4_cidr_node_context(void)
 	unsigned long mask_bits;
 	uint32_t mask;
 	struct in_addr addr;
-	ocontext_t *newc, *c, *l, *head;
+	ocontext_t *newc;
 	int rc;
 
 	if (policydbp->target_platform != SEPOL_TARGET_SELINUX) {
@@ -5411,22 +5421,7 @@ int define_ipv4_cidr_node_context(void)
 		return -1;
 	}
 
-	/* Create order of most specific to least retaining
-	   the order specified in the configuration. */
-	head = policydbp->ocontexts[OCON_NODE];
-	for (l = NULL, c = head; c; l = c, c = c->next) {
-		if (newc->u.node.mask > c->u.node.mask)
-			break;
-	}
-
-	newc->next = c;
-
-	if (l)
-		l->next = newc;
-	else
-		policydbp->ocontexts[OCON_NODE] = newc;
-
-	return 0;
+	return insert_ipv4_node(newc);
 }
 
 static int ipv6_is_mask_contiguous(const struct in6_addr *mask)
@@ -5483,12 +5478,45 @@ static void ipv6_cidr_bits_to_mask(unsigned long cidr_bits, struct in6_addr *mas
 	}
 }
 
+static int insert_ipv6_node(ocontext_t *newc)
+{
+	ocontext_t *c, *l;
+	char addr[INET6_ADDRSTRLEN];
+	char mask[INET6_ADDRSTRLEN];
+
+	/* Create order of most specific to least retaining
+	   the order specified in the configuration. */
+	for (l = NULL, c = policydbp->ocontexts[OCON_NODE6]; c; l = c, c = c->next) {
+		if (memcmp(&newc->u.node6.mask, &c->u.node6.mask, 16) == 0 &&
+		    memcmp(&newc->u.node6.addr, &c->u.node6.addr, 16) == 0) {
+			yyerror2("duplicate entry for network node %s %s",
+				 inet_ntop(AF_INET6, &newc->u.node6.addr, addr, INET6_ADDRSTRLEN) ?: "<invalid>",
+				 inet_ntop(AF_INET6, &newc->u.node6.mask, mask, INET6_ADDRSTRLEN) ?: "<invalid>");
+			context_destroy(&newc->context[0]);
+			free(newc);
+			return -1;
+		}
+
+		if (memcmp(&newc->u.node6.mask, &c->u.node6.mask, 16) > 0)
+			break;
+	}
+
+	newc->next = c;
+
+	if (l)
+		l->next = newc;
+	else
+		policydbp->ocontexts[OCON_NODE6] = newc;
+
+	return 0;
+}
+
 int define_ipv6_node_context(void)
 {
 	char *id;
 	int rc = 0;
 	struct in6_addr addr, mask;
-	ocontext_t *newc, *c, *l, *head;
+	ocontext_t *newc;
 
 	if (policydbp->target_platform != SEPOL_TARGET_SELINUX) {
 		yyerror("nodecon not supported for target");
@@ -5499,23 +5527,20 @@ int define_ipv6_node_context(void)
 		free(queue_remove(id_queue));
 		free(queue_remove(id_queue));
 		parse_security_context(NULL);
-		goto out;
+		return 0;
 	}
 
 	id = queue_remove(id_queue);
 	if (!id) {
 		yyerror("failed to read ipv6 address");
-		rc = -1;
-		goto out;
+		return -1;
 	}
 
 	rc = inet_pton(AF_INET6, id, &addr);
 	if (rc < 1) {
 		yyerror2("failed to parse ipv6 address %s", id);
 		free(id);
-		if (rc == 0)
-			rc = -1;
-		goto out;
+		return -1;
 	}
 
 	free(id);
@@ -5523,17 +5548,14 @@ int define_ipv6_node_context(void)
 	id = queue_remove(id_queue);
 	if (!id) {
 		yyerror("failed to read ipv6 address");
-		rc = -1;
-		goto out;
+		return -1;
 	}
 
 	rc = inet_pton(AF_INET6, id, &mask);
 	if (rc < 1) {
 		yyerror2("failed to parse ipv6 mask %s", id);
 		free(id);
-		if (rc == 0)
-			rc = -1;
-		goto out;
+		return -1;
 	}
 
 	free(id);
@@ -5549,8 +5571,7 @@ int define_ipv6_node_context(void)
 	newc = malloc(sizeof(ocontext_t));
 	if (!newc) {
 		yyerror("out of memory");
-		rc = -1;
-		goto out;
+		return -1;
 	}
 
 	memset(newc, 0, sizeof(ocontext_t));
@@ -5559,28 +5580,10 @@ int define_ipv6_node_context(void)
 
 	if (parse_security_context(&newc->context[0])) {
 		free(newc);
-		rc = -1;
-		goto out;
+		return -1;
 	}
 
-	/* Create order of most specific to least retaining
-	   the order specified in the configuration. */
-	head = policydbp->ocontexts[OCON_NODE6];
-	for (l = NULL, c = head; c; l = c, c = c->next) {
-		if (memcmp(&newc->u.node6.mask, &c->u.node6.mask, 16) > 0)
-			break;
-	}
-
-	newc->next = c;
-
-	if (l)
-		l->next = newc;
-	else
-		policydbp->ocontexts[OCON_NODE6] = newc;
-
-	rc = 0;
-      out:
-	return rc;
+	return insert_ipv6_node(newc);
 }
 
 int define_ipv6_cidr_node_context(void)
@@ -5589,7 +5592,7 @@ int define_ipv6_cidr_node_context(void)
 	unsigned long mask_bits;
 	int rc;
 	struct in6_addr addr, mask;
-	ocontext_t *newc, *c, *l, *head;
+	ocontext_t *newc;
 
 	if (policydbp->target_platform != SEPOL_TARGET_SELINUX) {
 		yyerror("nodecon not supported for target");
@@ -5658,22 +5661,7 @@ int define_ipv6_cidr_node_context(void)
 		return -1;
 	}
 
-	/* Create order of most specific to least retaining
-	   the order specified in the configuration. */
-	head = policydbp->ocontexts[OCON_NODE6];
-	for (l = NULL, c = head; c; l = c, c = c->next) {
-		if (memcmp(&newc->u.node6.mask, &c->u.node6.mask, 16) > 0)
-			break;
-	}
-
-	newc->next = c;
-
-	if (l)
-		l->next = newc;
-	else
-		policydbp->ocontexts[OCON_NODE6] = newc;
-
-	return 0;
+	return insert_ipv6_node(newc);
 }
 
 int define_fs_use(int behavior)
