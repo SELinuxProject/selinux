@@ -1654,6 +1654,26 @@ bad:
 	return -1;
 }
 
+static int validate_attrtype_map(sepol_handle_t *handle, const policydb_t *p, validate_t flavors[])
+{
+	const ebitmap_t *maps = p->attr_type_map;
+	uint32_t i;
+
+	if (p->policy_type == POLICY_KERN) {
+		for (i = 0; i < p->p_types.nprim; i++) {
+			if (validate_ebitmap(&maps[i], &flavors[SYM_TYPES]))
+				goto bad;
+		}
+	} else if (maps)
+		goto bad;
+
+	return 0;
+
+bad:
+	ERR(handle, "Invalid attr type map");
+	return -1;
+}
+
 static int validate_properties(sepol_handle_t *handle, const policydb_t *p)
 {
 	switch (p->policy_type) {
@@ -1788,6 +1808,9 @@ int policydb_validate(sepol_handle_t *handle, const policydb_t *p)
 		goto bad;
 
 	if (validate_typeattr_map(handle, p, flavors))
+		goto bad;
+
+	if (validate_attrtype_map(handle, p, flavors))
 		goto bad;
 
 	validate_array_destroy(flavors);
