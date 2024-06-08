@@ -281,7 +281,7 @@ The number of `expr_set`'s in an `expr` is dependent on the statement type (ther
         (mlsconstrain (process (transition dyntransition))
             (or (and (eq h1 h2) (eq l1 l2)) (eq t1 mlstrustedsubject)))
 
-        ; The equivalent policy language mlsconstrain statememt is:
+        ; The equivalent policy language mlsconstrain statement is:
         ;mlsconstrain process { transition dyntransition }
         ;    ((h1 eq h2 and l1 eq l2) or t1 == mlstrustedsubject);
 
@@ -289,7 +289,7 @@ The number of `expr_set`'s in an `expr` is dependent on the statement type (ther
         (mlsconstrain (process (getsched getsession getpgid getcap getattr ptrace share))
             (or (dom l1 l2) (eq t1 mlstrustedsubject)))
 
-        ; The equivalent policy language mlsconstrain statememt is:
+        ; The equivalent policy language mlsconstrain statement is:
         ;mlsconstrain process { getsched getsession getpgid getcap getattr ptrace share }
         ;    (l1 dom l2 or t1 == mlstrustedsubject);
     ```

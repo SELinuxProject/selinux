@@ -303,7 +303,7 @@ static int class_constraint_rules_to_strs(struct policydb *pdb, char *classkey,
 			goto exit;
 		}
 		if (*perms == '\0') {
-			ERR(NULL, "No permisisons in permission string");
+			ERR(NULL, "No permissions in permission string");
 			free(perms);
 			rc = -1;
 			goto exit;
@@ -1782,7 +1782,7 @@ static char *avtab_node_to_str(struct policydb *pdb, avtab_key_t *key, avtab_dat
 			goto exit;
 		}
 		if (*perms == '\0') {
-			ERR(NULL, "No permisisons in permission string");
+			ERR(NULL, "No permissions in permission string");
 			free(perms);
 			goto exit;
 		}

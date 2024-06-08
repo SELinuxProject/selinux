@@ -189,7 +189,7 @@ static int write_binary_file(struct saved_data *data, int fd,
 		if (len != 1)
 			goto err;
 
-		/* original context strin (including nul) */
+		/* original context string (including nul) */
 		len = fwrite(context, sizeof(char), to_write, bin_file);
 		if (len != to_write)
 			goto err;
