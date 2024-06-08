@@ -749,7 +749,7 @@ static int cat_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	return 0;
 }
 
-static int (*copy_callback_f[SYM_NUM]) (hashtab_key_t key,
+static int (*const copy_callback_f[SYM_NUM]) (hashtab_key_t key,
 					hashtab_datum_t datum, void *datap) = {
 NULL, class_copy_callback, role_copy_callback, type_copy_callback,
 	    user_copy_callback, bool_copy_callback, sens_copy_callback,
@@ -1215,7 +1215,7 @@ static int user_fix_callback(hashtab_key_t key, hashtab_datum_t datum,
 	return -1;
 }
 
-static int (*fix_callback_f[SYM_NUM]) (hashtab_key_t key, hashtab_datum_t datum,
+static int (*const fix_callback_f[SYM_NUM]) (hashtab_key_t key, hashtab_datum_t datum,
 				       void *datap) = {
 NULL, NULL, role_fix_callback, type_fix_callback, user_fix_callback,
 	    NULL, NULL, NULL};

@@ -2951,8 +2951,8 @@ static int ocontexts_to_cil(struct policydb *pdb)
 	int rc = -1;
 	int ocon;
 
-	static int (**ocon_funcs)(struct policydb *pdb, struct ocontext *ocon);
-	static int (*ocon_selinux_funcs[OCON_NUM])(struct policydb *pdb, struct ocontext *ocon) = {
+	static int (*const *ocon_funcs)(struct policydb *pdb, struct ocontext *ocon);
+	static int (*const ocon_selinux_funcs[OCON_NUM])(struct policydb *pdb, struct ocontext *ocon) = {
 		ocontext_selinux_isid_to_cil,
 		ocontext_selinux_fs_to_cil,
 		ocontext_selinux_port_to_cil,
@@ -2963,7 +2963,7 @@ static int ocontexts_to_cil(struct policydb *pdb)
 		ocontext_selinux_ibpkey_to_cil,
 		ocontext_selinux_ibendport_to_cil,
 	};
-	static int (*ocon_xen_funcs[OCON_NUM])(struct policydb *pdb, struct ocontext *ocon) = {
+	static int (*const ocon_xen_funcs[OCON_NUM])(struct policydb *pdb, struct ocontext *ocon) = {
 		ocontext_xen_isid_to_cil,
 		ocontext_xen_pirq_to_cil,
 		ocontext_xen_ioport_to_cil,
@@ -3404,7 +3404,7 @@ exit:
 }
 
 
-static int (*func_to_cil[SYM_NUM])(int indent, struct policydb *pdb, struct avrule_block *block, struct stack *decl_stack, char *key, void *datum, int scope) = {
+static int (*const func_to_cil[SYM_NUM])(int indent, struct policydb *pdb, struct avrule_block *block, struct stack *decl_stack, char *key, void *datum, int scope) = {
 	NULL,	// commons, only stored in the global symtab, handled elsewhere
 	class_to_cil,
 	role_to_cil,

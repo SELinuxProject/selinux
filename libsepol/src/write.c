@@ -1344,7 +1344,7 @@ static int user_write(hashtab_key_t key, hashtab_datum_t datum, void *ptr)
 	return POLICYDB_SUCCESS;
 }
 
-static int (*write_f[SYM_NUM]) (hashtab_key_t key, hashtab_datum_t datum,
+static int (*const write_f[SYM_NUM]) (hashtab_key_t key, hashtab_datum_t datum,
 				void *datap) = {
 common_write, class_write, role_write, type_write, user_write,
 	    cond_write_bool, sens_write, cat_write,};
