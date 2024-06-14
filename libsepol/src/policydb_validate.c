@@ -1076,6 +1076,7 @@ static int validate_avrules(sepol_handle_t *handle, const avrule_t *avrule, int 
 
 		switch(avrule->flags) {
 		case 0:
+			break;
 		case RULE_SELF:
 			if (p->policyvers != POLICY_KERN &&
 			    p->policyvers < MOD_POLICYDB_VERSION_SELF_TYPETRANS &&
