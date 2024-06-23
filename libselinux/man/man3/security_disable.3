@@ -14,7 +14,8 @@ disables the SELinux kernel code, unregisters selinuxfs from
 and then unmounts
 .IR /sys/fs/selinux .
 .sp
-This function can only be called at runtime and prior to the initial policy
+This function is only supported on Linux 6.3 and earlier, and can only be
+called at runtime and prior to the initial policy
 load. After the initial policy load, the SELinux kernel code cannot be disabled,
 but only placed in "permissive" mode by using
 .BR security_setenforce(3).
