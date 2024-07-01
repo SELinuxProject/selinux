@@ -1191,8 +1191,8 @@ static int selinux_restorecon_common(const char *pathname_orig,
 	}
 
 	/* Skip digest on in-memory filesystems and /sys */
-	if (state.sfsb.f_type == RAMFS_MAGIC || state.sfsb.f_type == TMPFS_MAGIC ||
-	    state.sfsb.f_type == SYSFS_MAGIC)
+	if ((uint32_t)state.sfsb.f_type == (uint32_t)RAMFS_MAGIC ||
+		state.sfsb.f_type == TMPFS_MAGIC || state.sfsb.f_type == SYSFS_MAGIC)
 		state.setrestorecondigest = false;
 
 	if (state.flags.set_xdev)
@@ -1490,7 +1490,7 @@ int selinux_restorecon_xattr(const char *pathname, unsigned int xattr_flags,
 
 	if (!recurse) {
 		if (statfs(pathname, &sfsb) == 0) {
-			if (sfsb.f_type == RAMFS_MAGIC ||
+			if ((uint32_t)sfsb.f_type == (uint32_t)RAMFS_MAGIC ||
 			    sfsb.f_type == TMPFS_MAGIC)
 				return 0;
 		}
@@ -1525,7 +1525,7 @@ int selinux_restorecon_xattr(const char *pathname, unsigned int xattr_flags,
 			continue;
 		case FTS_D:
 			if (statfs(ftsent->fts_path, &sfsb) == 0) {
-				if (sfsb.f_type == RAMFS_MAGIC ||
+				if ((uint32_t)sfsb.f_type == (uint32_t)RAMFS_MAGIC ||
 				    sfsb.f_type == TMPFS_MAGIC)
 					continue;
 			}
