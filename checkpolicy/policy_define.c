@@ -5036,7 +5036,7 @@ int define_ibpkey_context(unsigned int low, unsigned int high)
 		goto out;
 	}
 
-	if (subnet_prefix.s6_addr[2] || subnet_prefix.s6_addr[3]) {
+	if (subnet_prefix.s6_addr32[2] || subnet_prefix.s6_addr32[3]) {
 		yyerror("subnet prefix should be 0's in the low order 64 bits.");
 		rc = -1;
 		goto out;
