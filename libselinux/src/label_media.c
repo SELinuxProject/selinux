@@ -183,6 +183,7 @@ static void close(struct selabel_handle *rec)
 	    free(spec_arr);
 
 	free(data);
+	rec->data = NULL;
 }
 
 static struct selabel_lookup_rec *lookup(struct selabel_handle *rec,
