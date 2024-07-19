@@ -1362,14 +1362,12 @@ static int sepol_compute_sid(sepol_security_id_t ssid,
 	scontext = sepol_sidtab_search(sidtab, ssid);
 	if (!scontext) {
 		ERR(NULL, "unrecognized SID %d", ssid);
-		rc = -EINVAL;
-		goto out;
+		return -EINVAL;
 	}
 	tcontext = sepol_sidtab_search(sidtab, tsid);
 	if (!tcontext) {
 		ERR(NULL, "unrecognized SID %d", tsid);
-		rc = -EINVAL;
-		goto out;
+		return -EINVAL;
 	}
 
 	if (tclass && tclass <= policydb->p_classes.nprim)
