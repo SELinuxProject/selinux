@@ -172,9 +172,11 @@
 		(true
 			(typechange auditadm_t console_device_t file user_tty_device_t)
 			(allow getty_t console_device_t (file (getattr open read write append)))
+			(auditallowx getty_t console_device_t (ioctl file (range 0x2000 0x21FF)))
 		)
 		(false
 			(dontaudit getty_t console_device_t (file (getattr open read write append)))
+			(dontauditx getty_t console_device_t (ioctl file (range 0x3000 0x31FF)))
 		)
 	)
 
