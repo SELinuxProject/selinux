@@ -1,6 +1,8 @@
 #ifndef _RESTORECON_H_
 #define _RESTORECON_H_
 
+#include <selinux/label.h>
+
 #include <sys/types.h>
 #include <stddef.h>
 #include <stdarg.h>
