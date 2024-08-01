@@ -179,7 +179,9 @@ class PolicyGenerator:
             rule.rule_type = rule.DONTAUDIT
         rule.comment = ""
         if self.explain:
-            rule.comment = str(refpolicy.Comment(explain_access(av, verbosity=self.explain)))
+            comment = refpolicy.Comment(explain_access(av, verbosity=self.explain))
+            comment.set_gen_cil(self.gen_cil)
+            rule.comment = str(comment)
 
         if av.type == audit2why.ALLOW:
             rule.comment += "\n%s!!!! This avc is allowed in the current policy" % self.comment_start
