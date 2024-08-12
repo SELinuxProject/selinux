@@ -3174,16 +3174,6 @@ int cil_gen_aliasactual(struct cil_db *db, struct cil_tree_node *parse_current, 
 		goto exit;
 	}
 
-	rc = cil_verify_name(db, parse_current->next->data, flavor);
-	if (rc != SEPOL_OK) {
-		goto exit;
-	}
-
-	rc = cil_verify_name(db, parse_current->next->next->data, flavor);
-	if (rc != SEPOL_OK) {
-		goto exit;
-	}
-
 	cil_aliasactual_init(&aliasactual);
 
 	aliasactual->alias_str = parse_current->next->data;
