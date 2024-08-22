@@ -146,7 +146,8 @@ char *sepol_extended_perms_to_string(const avtab_extended_perms_t *xperms)
 	size_t remaining, size = 128;
 
 	if ((xperms->specified != AVTAB_XPERMS_IOCTLFUNCTION)
-		&& (xperms->specified != AVTAB_XPERMS_IOCTLDRIVER))
+		&& (xperms->specified != AVTAB_XPERMS_IOCTLDRIVER)
+		&& (xperms->specified != AVTAB_XPERMS_NLMSG))
 		return NULL;
 
 retry:
@@ -158,7 +159,12 @@ retry:
 	buffer = p;
 	remaining = size;
 
-	len = snprintf(p, remaining, "ioctl { ");
+	if ((xperms->specified == AVTAB_XPERMS_IOCTLFUNCTION)
+		|| (xperms->specified == AVTAB_XPERMS_IOCTLDRIVER)) {
+		len = snprintf(p, remaining, "ioctl { ");
+	} else {
+		len = snprintf(p, remaining, "nlmsg { ");
+	}
 	if (len < 0 || (size_t)len >= remaining)
 		goto err;
 	p += len;
@@ -179,7 +185,7 @@ retry:
 			continue;
 		}
 
-		if (xperms->specified & AVTAB_XPERMS_IOCTLFUNCTION) {
+		if (xperms->specified == AVTAB_XPERMS_IOCTLFUNCTION || xperms->specified == AVTAB_XPERMS_NLMSG) {
 			value = xperms->driver<<8 | bit;
 			if (in_range) {
 				low_value = xperms->driver<<8 | low_bit;
@@ -187,7 +193,7 @@ retry:
 			} else {
 				len = snprintf(p, remaining, "0x%hx ", value);
 			}
-		} else if (xperms->specified & AVTAB_XPERMS_IOCTLDRIVER) {
+		} else if (xperms->specified == AVTAB_XPERMS_IOCTLDRIVER) {
 			value = bit << 8;
 			if (in_range) {
 				low_value = low_bit << 8;

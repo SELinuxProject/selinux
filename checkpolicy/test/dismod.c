@@ -353,6 +353,8 @@ static int display_avrule(avrule_t * avrule, policydb_t * policy,
 			xperms.specified = AVTAB_XPERMS_IOCTLFUNCTION;
 		else if (avrule->xperms->specified == AVRULE_XPERMS_IOCTLDRIVER)
 			xperms.specified = AVTAB_XPERMS_IOCTLDRIVER;
+		else if (avrule->xperms->specified == AVRULE_XPERMS_NLMSG)
+			xperms.specified = AVTAB_XPERMS_NLMSG;
 		else {
 			fprintf(fp, "     ERROR: no valid xperms specified\n");
 			return -1;

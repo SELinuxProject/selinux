@@ -303,7 +303,13 @@ static void write_permx(FILE *out, struct cil_permissionx *permx)
 		fprintf(out, "%s", datum_to_str(DATUM(permx)));
 	} else {
 		fprintf(out, "(");
-		fprintf(out, "%s ", permx->kind == CIL_PERMX_KIND_IOCTL ? "ioctl" : "<?KIND>");
+		if (permx->kind == CIL_PERMX_KIND_IOCTL) {
+			fprintf(out, "ioctl ");
+		} else if (permx->kind == CIL_PERMX_KIND_NLMSG) {
+			fprintf(out, "nlmsg ");
+		} else {
+			fprintf(out, "<?KIND> ");
+		}
 		fprintf(out, "%s ", datum_or_str(DATUM(permx->obj), permx->obj_str));
 		write_expr(out, permx->expr_str);
 		fprintf(out, ")");
@@ -823,7 +829,13 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	case CIL_PERMISSIONX: {
 		struct cil_permissionx *permx = node->data;
 		fprintf(out, "(permissionx %s (", datum_to_str(DATUM(permx)));
-		fprintf(out, "%s ", permx->kind == CIL_PERMX_KIND_IOCTL ? "ioctl" : "<?KIND>");
+		if (permx->kind == CIL_PERMX_KIND_IOCTL) {
+			fprintf(out, "ioctl ");
+		} else if (permx->kind == CIL_PERMX_KIND_NLMSG) {
+			fprintf(out, "nlmsg ");
+		} else {
+			fprintf(out, "<?KIND> ");
+		}
 		fprintf(out, "%s ", datum_or_str(DATUM(permx->obj), permx->obj_str));
 		write_expr(out, permx->expr_str);
 		fprintf(out, "))\n");

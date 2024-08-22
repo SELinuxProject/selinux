@@ -921,6 +921,7 @@ static int validate_xperms(const avtab_extended_perms_t *xperms)
 	switch (xperms->specified) {
 	case AVTAB_XPERMS_IOCTLDRIVER:
 	case AVTAB_XPERMS_IOCTLFUNCTION:
+	case AVTAB_XPERMS_NLMSG:
 		break;
 	default:
 		goto bad;
@@ -1067,6 +1068,7 @@ static int validate_avrules(sepol_handle_t *handle, const avrule_t *avrule, int 
 			switch (avrule->xperms->specified) {
 			case AVRULE_XPERMS_IOCTLFUNCTION:
 			case AVRULE_XPERMS_IOCTLDRIVER:
+			case AVRULE_XPERMS_NLMSG:
 				break;
 			default:
 				goto bad;

@@ -2342,8 +2342,8 @@ static int avrule_ioctl_completedriver(struct av_xperm_range_list *rangelist,
 	return 0;
 }
 
-static int avrule_ioctl_func(struct av_xperm_range_list *rangelist,
-		av_extended_perms_t **extended_perms, unsigned int driver)
+static int avrule_xperm_func(struct av_xperm_range_list *rangelist,
+		av_extended_perms_t **extended_perms, unsigned int driver, uint8_t specified)
 {
 	struct av_xperm_range_list *r;
 	av_extended_perms_t *xperms;
@@ -2379,7 +2379,7 @@ static int avrule_ioctl_func(struct av_xperm_range_list *rangelist,
 		high = IOC_FUNC(high);
 		avrule_xperm_setrangebits(low, high, xperms);
 		xperms->driver = driver;
-		xperms->specified = AVRULE_XPERMS_IOCTLFUNCTION;
+		xperms->specified = specified;
 		r = r->next;
 	}
 
@@ -2495,7 +2495,61 @@ static int define_te_avtab_ioctl(const avrule_t *avrule_template)
 	 */
 	i = 0;
 	while (xperms_for_each_bit(&i, partial_driver)) {
-		if (avrule_ioctl_func(rangelist, &xperms, i))
+		if (avrule_xperm_func(rangelist, &xperms, i, AVRULE_XPERMS_IOCTLFUNCTION))
+			return -1;
+
+		if (xperms) {
+			avrule = (avrule_t *) calloc(1, sizeof(avrule_t));
+			if (!avrule) {
+				yyerror("out of memory");
+				return -1;
+			}
+			if (avrule_cpy(avrule, avrule_template))
+				return -1;
+			avrule->xperms = xperms;
+			append_avrule(avrule);
+		}
+	}
+
+done:
+	if (partial_driver)
+		free(partial_driver);
+
+	while (rangelist != NULL) {
+		r = rangelist;
+		rangelist = rangelist->next;
+		free(r);
+	}
+
+	return 0;
+}
+
+static int define_te_avtab_netlink(const avrule_t *avrule_template)
+{
+	avrule_t *avrule;
+	struct av_xperm_range_list *rangelist, *r;
+	av_extended_perms_t *partial_driver, *xperms;
+	unsigned int i;
+
+	/* organize ranges */
+	if (avrule_xperm_ranges(&rangelist))
+		return -1;
+
+	/* flag driver codes that are partially enabled */
+	if (avrule_xperm_partialdriver(rangelist, NULL, &partial_driver))
+		return -1;
+
+	if (!partial_driver || !avrule_xperms_used(partial_driver))
+		goto done;
+
+	/*
+	 * create rule for each partially used driver codes
+	 * "partially used" meaning that the code number e.g. socket 0x89
+	 * has some permission bits set and others not set.
+	 */
+	i = 0;
+	while (xperms_for_each_bit(&i, partial_driver)) {
+		if (avrule_xperm_func(rangelist, &xperms, i, AVRULE_XPERMS_NLMSG))
 			return -1;
 
 		if (xperms) {
@@ -2546,6 +2600,8 @@ int define_te_avtab_extended_perms(int which)
 	id = queue_remove(id_queue);
 	if (strcmp(id,"ioctl") == 0) {
 		rc = define_te_avtab_ioctl(avrule_template);
+	} else if (strcmp(id,"nlmsg") == 0) {
+		rc = define_te_avtab_netlink(avrule_template);
 	} else {
 		yyerror2("only ioctl extended permissions are supported, found %s", id);
 		rc = -1;

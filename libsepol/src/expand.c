@@ -1821,6 +1821,9 @@ static int allocate_xperms(sepol_handle_t * handle, avtab_datum_t * avdatump,
 	case AVRULE_XPERMS_IOCTLDRIVER:
 		xperms->specified = AVTAB_XPERMS_IOCTLDRIVER;
 		break;
+	case AVRULE_XPERMS_NLMSG:
+		xperms->specified = AVTAB_XPERMS_NLMSG;
+		break;
 	default:
 		return -1;
 	}

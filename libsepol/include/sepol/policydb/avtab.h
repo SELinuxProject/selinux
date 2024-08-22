@@ -74,6 +74,7 @@ typedef struct avtab_extended_perms {
 
 #define AVTAB_XPERMS_IOCTLFUNCTION	0x01
 #define AVTAB_XPERMS_IOCTLDRIVER	0x02
+#define AVTAB_XPERMS_NLMSG	0x03
 	/* extension of the avtab_key specified */
 	uint8_t specified;
 	uint8_t driver;
