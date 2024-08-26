@@ -111,7 +111,7 @@ static int nodups_specs(struct saved_data *data, const char *path)
 	struct chkdups_key *new = NULL;
 	unsigned int hashtab_len = (data->nspec / SHRINK_MULTIS) ? data->nspec / SHRINK_MULTIS : 1;
 
-	hashtab_t hash_table = hashtab_create(symhash, symcmp, hashtab_len);
+	hashtab_t hash_table = selinux_hashtab_create(symhash, symcmp, hashtab_len);
 	if (!hash_table) {
 		rc = -1;
 		COMPAT_LOG(SELINUX_ERROR, "%s: hashtab create failed.\n", path);
@@ -121,18 +121,18 @@ static int nodups_specs(struct saved_data *data, const char *path)
 		new = (struct chkdups_key *)malloc(sizeof(struct chkdups_key));
 		if (!new) {
 			rc = -1;
-			hashtab_destroy_key(hash_table, destroy_chkdups_key);
+			selinux_hashtab_destroy_key(hash_table, destroy_chkdups_key);
 			COMPAT_LOG(SELINUX_ERROR, "%s: hashtab key create failed.\n", path);
 			return rc;
 		}
 		new->regex = spec_arr[ii].regex_str;
 		new->mode = spec_arr[ii].mode;
-		ret = hashtab_insert(hash_table, (hashtab_key_t)new, &spec_arr[ii]);
+		ret = selinux_hashtab_insert(hash_table, (hashtab_key_t)new, &spec_arr[ii]);
 		if (ret == HASHTAB_SUCCESS)
 			continue;
 		if (ret == HASHTAB_PRESENT) {
 			curr_spec =
-				(struct spec *)hashtab_search(hash_table, (hashtab_key_t)new);
+				(struct spec *)selinux_hashtab_search(hash_table, (hashtab_key_t)new);
 			rc = -1;
 			errno = EINVAL;
 			free(new);
@@ -161,7 +161,7 @@ static int nodups_specs(struct saved_data *data, const char *path)
 		}
 	}
 
-	hashtab_destroy_key(hash_table, destroy_chkdups_key);
+	selinux_hashtab_destroy_key(hash_table, destroy_chkdups_key);
 
 	return rc;
 }

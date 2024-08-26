@@ -11,7 +11,7 @@
 #include <string.h>
 #include "hashtab.h"
 
-hashtab_t hashtab_create(unsigned int (*hash_value) (hashtab_t h,
+hashtab_t selinux_hashtab_create(unsigned int (*hash_value) (hashtab_t h,
 						     const_hashtab_key_t key),
 			 int (*keycmp) (hashtab_t h,
 					const_hashtab_key_t key1,
@@ -42,7 +42,7 @@ hashtab_t hashtab_create(unsigned int (*hash_value) (hashtab_t h,
 	return p;
 }
 
-int hashtab_insert(hashtab_t h, hashtab_key_t key, hashtab_datum_t datum)
+int selinux_hashtab_insert(hashtab_t h, hashtab_key_t key, hashtab_datum_t datum)
 {
 	unsigned int hvalue;
 	hashtab_ptr_t prev, cur, newnode;
@@ -79,7 +79,7 @@ int hashtab_insert(hashtab_t h, hashtab_key_t key, hashtab_datum_t datum)
 	return HASHTAB_SUCCESS;
 }
 
-int hashtab_remove(hashtab_t h, hashtab_key_t key,
+int selinux_hashtab_remove(hashtab_t h, hashtab_key_t key,
 		   void (*destroy) (hashtab_key_t k,
 				    hashtab_datum_t d, void *args), void *args)
 {
@@ -112,7 +112,7 @@ int hashtab_remove(hashtab_t h, hashtab_key_t key,
 	return HASHTAB_SUCCESS;
 }
 
-hashtab_datum_t hashtab_search(hashtab_t h, const_hashtab_key_t key)
+hashtab_datum_t selinux_hashtab_search(hashtab_t h, const_hashtab_key_t key)
 {
 
 	unsigned int hvalue;
@@ -132,7 +132,7 @@ hashtab_datum_t hashtab_search(hashtab_t h, const_hashtab_key_t key)
 	return cur->datum;
 }
 
-void hashtab_destroy(hashtab_t h)
+void selinux_hashtab_destroy(hashtab_t h)
 {
 	unsigned int i;
 	hashtab_ptr_t cur, temp;
@@ -156,7 +156,7 @@ void hashtab_destroy(hashtab_t h)
 	free(h);
 }
 
-void hashtab_destroy_key(hashtab_t h,
+void selinux_hashtab_destroy_key(hashtab_t h,
 		int (*destroy_key) (hashtab_key_t k))
 {
 	unsigned int i;
@@ -182,7 +182,7 @@ void hashtab_destroy_key(hashtab_t h,
 	free(h);
 }
 
-int hashtab_map(hashtab_t h,
+int selinux_hashtab_map(hashtab_t h,
 		int (*apply) (hashtab_key_t k,
 			      hashtab_datum_t d, void *args), void *args)
 {
@@ -205,7 +205,7 @@ int hashtab_map(hashtab_t h,
 	return HASHTAB_SUCCESS;
 }
 
-void hashtab_hash_eval(hashtab_t h, char *tag)
+void selinux_hashtab_hash_eval(hashtab_t h, char *tag)
 {
 	unsigned int i;
 	int chain_len, slots_used, max_chain_len;

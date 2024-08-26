@@ -52,7 +52,7 @@ typedef hashtab_val_t *hashtab_t;
    Returns NULL if insufficient space is available or
    the new hash table otherwise.
  */
-extern hashtab_t hashtab_create(unsigned int (*hash_value) (hashtab_t h,
+extern hashtab_t selinux_hashtab_create(unsigned int (*hash_value) (hashtab_t h,
 							    const_hashtab_key_t
 							    key),
 				int (*keycmp) (hashtab_t h,
@@ -66,7 +66,7 @@ extern hashtab_t hashtab_create(unsigned int (*hash_value) (hashtab_t h,
    HASHTAB_PRESENT  if there is already an entry with the same key or
    HASHTAB_SUCCESS otherwise.
  */
-extern int hashtab_insert(hashtab_t h, hashtab_key_t k, hashtab_datum_t d);
+extern int selinux_hashtab_insert(hashtab_t h, hashtab_key_t k, hashtab_datum_t d);
 
 /*
    Removes the entry with the specified key from the hash table.
@@ -76,7 +76,7 @@ extern int hashtab_insert(hashtab_t h, hashtab_key_t k, hashtab_datum_t d);
    Returns HASHTAB_MISSING if no entry has the specified key or
    HASHTAB_SUCCESS otherwise.
  */
-extern int hashtab_remove(hashtab_t h, hashtab_key_t k,
+extern int selinux_hashtab_remove(hashtab_t h, hashtab_key_t k,
 			  void (*destroy) (hashtab_key_t k,
 					   hashtab_datum_t d,
 					   void *args), void *args);
@@ -87,13 +87,13 @@ extern int hashtab_remove(hashtab_t h, hashtab_key_t k,
    Returns NULL if no entry has the specified key or
    the datum of the entry otherwise.
  */
-extern hashtab_datum_t hashtab_search(hashtab_t h, const_hashtab_key_t k);
+extern hashtab_datum_t selinux_hashtab_search(hashtab_t h, const_hashtab_key_t k);
 
 /*
    Destroys the specified hash table.
  */
-extern void hashtab_destroy(hashtab_t h);
-extern void hashtab_destroy_key(hashtab_t h,
+extern void selinux_hashtab_destroy(hashtab_t h);
+extern void selinux_hashtab_destroy_key(hashtab_t h,
 			int (*destroy_key) (hashtab_key_t k));
 
 /*
@@ -107,11 +107,11 @@ extern void hashtab_destroy_key(hashtab_t h,
    iterating through the hash table and will propagate the error
    return to its caller.
  */
-extern int hashtab_map(hashtab_t h,
+extern int selinux_hashtab_map(hashtab_t h,
 		       int (*apply) (hashtab_key_t k,
 				     hashtab_datum_t d,
 				     void *args), void *args);
 
-extern void hashtab_hash_eval(hashtab_t h, char *tag);
+extern void selinux_hashtab_hash_eval(hashtab_t h, char *tag);
 
 #endif
