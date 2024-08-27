@@ -486,7 +486,7 @@ def p_interface_call_param(p):
                             | nested_id_set
                             | TRUE
                             | FALSE
-                            | FILENAME
+                            | quoted_filename
     '''
     # Intentionally let single identifiers pass through
     # List means set, non-list identifier
@@ -1027,6 +1027,11 @@ def p_optional_semi(p):
                    | empty'''
     pass
 
+def p_quoted_filename(p):
+    '''quoted_filename : TICK quoted_filename SQUOTE
+                       | FILENAME
+    '''
+    p[0] = p[1]
 
 #
 # Interface to the parser
