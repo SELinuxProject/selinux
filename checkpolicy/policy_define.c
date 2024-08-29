@@ -1859,6 +1859,8 @@ int define_bool_tunable(int is_tunable)
 
 avrule_t *define_cond_pol_list(avrule_t * avlist, avrule_t * sl)
 {
+	avrule_t *last;
+
 	if (pass == 1) {
 		/* return something so we get through pass 1 */
 		return (avrule_t *) 1;
@@ -1869,8 +1871,12 @@ avrule_t *define_cond_pol_list(avrule_t * avlist, avrule_t * sl)
 		return avlist;
 	}
 
-	/* prepend the new avlist to the pre-existing one */
-	sl->next = avlist;
+	/* prepend the new avlist to the pre-existing one
+	 * An extended permission statement might consist of multiple av
+	 * rules. */
+	for (last = sl; last->next; last = last->next)
+		;
+	last->next = avlist;
 	return sl;
 }
 
@@ -2454,9 +2460,9 @@ static int avrule_cpy(avrule_t *dest, const avrule_t *src)
 	return 0;
 }
 
-static int define_te_avtab_ioctl(const avrule_t *avrule_template)
+static int define_te_avtab_ioctl(const avrule_t *avrule_template, avrule_t **ret_avrules)
 {
-	avrule_t *avrule;
+	avrule_t *avrule, *ret = NULL, **last = &ret;
 	struct av_ioctl_range_list *rangelist, *r;
 	av_extended_perms_t *complete_driver, *partial_driver, *xperms;
 	unsigned int i;
@@ -2478,7 +2484,12 @@ static int define_te_avtab_ioctl(const avrule_t *avrule_template)
 		if (avrule_cpy(avrule, avrule_template))
 			return -1;
 		avrule->xperms = complete_driver;
-		append_avrule(avrule);
+		if (ret_avrules) {
+			*last = avrule;
+			last = &(avrule->next);
+		} else {
+			append_avrule(avrule);
+		}
 	}
 
 	/* flag ioctl driver codes that are partially enabled */
@@ -2507,7 +2518,12 @@ static int define_te_avtab_ioctl(const avrule_t *avrule_template)
 			if (avrule_cpy(avrule, avrule_template))
 				return -1;
 			avrule->xperms = xperms;
-			append_avrule(avrule);
+			if (ret_avrules) {
+				*last = avrule;
+				last = &(avrule->next);
+			} else {
+				append_avrule(avrule);
+			}
 		}
 	}
 
@@ -2521,7 +2537,60 @@ done:
 		free(r);
 	}
 
+	if (ret_avrules)
+		*ret_avrules = ret;
+
 	return 0;
+}
+
+avrule_t *define_cond_te_avtab_extended_perms(int which)
+{
+	char *id;
+	unsigned int i;
+	avrule_t *avrule_template, *rules = NULL;
+	int rc = 0;
+
+	if (policydbp->policy_type == POLICY_KERN && policydbp->policyvers < POLICYDB_VERSION_COND_XPERMS) {
+		yyerror2("extended permissions in conditional policies are only supported since policy version %d, found policy version %d",
+			POLICYDB_VERSION_COND_XPERMS, policydbp->policyvers);
+		return COND_ERR;
+	}
+	if (policydbp->policy_type != POLICY_KERN && policydbp->policyvers < MOD_POLICYDB_VERSION_COND_XPERMS) {
+		yyerror2("extended permissions in conditional policies are only supported since module policy version %d, found module policy version %d",
+			MOD_POLICYDB_VERSION_COND_XPERMS, policydbp->policyvers);
+		return COND_ERR;
+	}
+
+	if (pass == 1) {
+		for (i = 0; i < 4; i++) {
+			while ((id = queue_remove(id_queue)))
+				free(id);
+		}
+		return (avrule_t *) 1; /* any non-NULL value */
+	}
+
+	/* populate avrule template with source/target/tclass */
+	if (define_te_avtab_xperms_helper(which, &avrule_template))
+		return COND_ERR;
+
+	id = queue_remove(id_queue);
+	if (strcmp(id,"ioctl") == 0) {
+		rc = define_te_avtab_ioctl(avrule_template, &rules);
+	} else {
+		yyerror2("only ioctl extended permissions are supported, found %s", id);
+		rc = -1;
+	}
+
+	free(id);
+	avrule_destroy(avrule_template);
+	free(avrule_template);
+
+	if (rc) {
+		avrule_destroy(rules);
+		return NULL;
+	}
+
+	return rules;
 }
 
 int define_te_avtab_extended_perms(int which)
@@ -2545,7 +2614,7 @@ int define_te_avtab_extended_perms(int which)
 
 	id = queue_remove(id_queue);
 	if (strcmp(id,"ioctl") == 0) {
-		rc = define_te_avtab_ioctl(avrule_template);
+		rc = define_te_avtab_ioctl(avrule_template, NULL);
 	} else {
 		yyerror2("only ioctl extended permissions are supported, found %s", id);
 		rc = -1;
