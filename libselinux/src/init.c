@@ -146,6 +146,7 @@ void set_selinuxmnt(const char *mnt)
 static void init_lib(void) __attribute__ ((constructor));
 static void init_lib(void)
 {
+	SELINUX_PROTECT_ERRNO;
 	selinux_page_size = sysconf(_SC_PAGE_SIZE);
 	init_selinuxmnt();
 #ifndef ANDROID

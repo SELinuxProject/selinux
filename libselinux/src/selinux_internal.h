@@ -3,6 +3,7 @@
 
 #include <selinux/selinux.h>
 #include <pthread.h>
+#include <errno.h>
 
 
 extern int require_seusers ;
@@ -131,4 +132,13 @@ void *reallocarray(void *ptr, size_t nmemb, size_t size);
 #define IGNORE_DEPRECATED_DECLARATION_END
 #endif
 
+static inline void selinux_reset_errno(int *saved_errno) {
+        if (*saved_errno < 0)
+                return;
+
+        errno = *saved_errno;
+}
+
+#define SELINUX_PROTECT_ERRNO __attribute__((__cleanup__(selinux_reset_errno))) \
+                         __attribute__((__unused__)) int __selinux_saved_errno = errno
 #endif /* SELINUX_INTERNAL_H_ */
