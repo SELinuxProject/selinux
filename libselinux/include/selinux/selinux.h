@@ -263,9 +263,15 @@ extern int security_compute_member_raw(const char * scon,
  * These interfaces are deprecated.  Use get_ordered_context_list() or
  * one of its variant interfaces instead.
  */
+#ifdef __GNUC__
+__attribute__ ((deprecated))
+#endif
 extern int security_compute_user(const char * scon,
 				 const char *username,
 				 char *** con);
+#ifdef __GNUC__
+__attribute__ ((deprecated))
+#endif
 extern int security_compute_user_raw(const char * scon,
 				     const char *username,
 				     char *** con);

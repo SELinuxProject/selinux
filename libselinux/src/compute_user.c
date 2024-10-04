@@ -96,7 +96,9 @@ int security_compute_user(const char * scon,
 	if (selinux_trans_to_raw_context(scon, &rscon))
 		return -1;
 
+	IGNORE_DEPRECATED_DECLARATION_BEGIN
 	ret = security_compute_user_raw(rscon, user, con);
+	IGNORE_DEPRECATED_DECLARATION_END
 
 	freecon(rscon);
 	if (!ret) {
