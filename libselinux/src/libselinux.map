@@ -262,3 +262,9 @@ LIBSELINUX_3.9 {
   global:
     context_to_str;
 } LIBSELINUX_3.8;
+
+LIBSELINUX_4.0 {
+  global:
+    selinux_unshare;
+    is_selinux_unshared;
+} LIBSELINUX_3.9;

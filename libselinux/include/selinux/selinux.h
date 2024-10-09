@@ -760,6 +760,29 @@ extern int selinux_lsetfilecon_default(const char *path);
  */
 extern void selinux_reset_config(void);
 
+/*
+ * Unshare the SELinux namespace.
+ * Prior to invoking this API, the caller must have unshared the
+ * mount namespace (CLONE_NEWNS) and mounted a MS_REC|MS_PRIVATE
+ * / filesystem so that selinux_unshare() can freely modify any
+ * existing selinuxfs mount as needed for the unshare.
+ * Returns 0 on success, in which case the SELinux namespace has
+ * been unshared and any old selinuxfs mount will have been unmounted.
+ * The caller can then proceed to mount a new selinuxfs filesystem
+ * for the new namespace, load a policy, set enforcing mode, etc.
+ */
+extern int selinux_unshare(void);
+
+/*
+ * Returns 1 if the SELinux namespace was unshared and has not
+ * yet been fully initialized (i.e. policy not yet loaded).
+ * Returns 0 if SELinux namespaces are not supported by the kernel,
+ * or the SELinux namespace was not unshared, or the namespace has
+ * been fully initialized already.
+ * Return < 0 on any error other than ENOSYS or EOPNOTSUPP.
+ */
+extern int is_selinux_unshared(void);
+
 #ifdef __cplusplus
 }
 #endif
