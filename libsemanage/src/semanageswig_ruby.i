@@ -38,7 +38,7 @@
 }
 
 %typemap(argout) semanage_module_info_t ** {
-        $result = SWIG_Ruby_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
+        $result = SWIG_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
 }
 
 /** context typemaps **/
@@ -50,7 +50,7 @@
 }
 
 %typemap(argout) semanage_context_t** {
-        $result = SWIG_Ruby_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
+        $result = SWIG_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
 }
 
 /** boolean typemaps **/
@@ -66,11 +66,11 @@
 }
 
 %typemap(argout) semanage_bool_t ** {
-        $result = SWIG_Ruby_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
+        $result = SWIG_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
 }
 
 %typemap(argout) semanage_bool_key_t ** {
-        $result = SWIG_Ruby_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
+        $result = SWIG_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
 }
 
 %typemap(in, numinputs=0) semanage_bool_key_t **(semanage_bool_key_t *temp=NULL) {
@@ -90,11 +90,11 @@
 }
 
 %typemap(argout) semanage_fcontext_t ** {
-        $result = SWIG_Ruby_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
+        $result = SWIG_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
 }
 
 %typemap(argout) semanage_fcontext_key_t ** {
-        $result = SWIG_Ruby_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
+        $result = SWIG_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
 }
 
 %typemap(in, numinputs=0) semanage_fcontext_key_t **(semanage_fcontext_key_t *temp=NULL) {
@@ -114,11 +114,11 @@
 }
 
 %typemap(argout) semanage_iface_t ** {
-        $result = SWIG_Ruby_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
+        $result = SWIG_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
 }
 
 %typemap(argout) semanage_iface_key_t ** {
-        $result = SWIG_Ruby_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
+        $result = SWIG_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
 }
 
 %typemap(in, numinputs=0) semanage_iface_key_t **(semanage_iface_key_t *temp=NULL) {
@@ -138,11 +138,11 @@
 }
 
 %typemap(argout) semanage_seuser_t ** {
-        $result = SWIG_Ruby_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
+        $result = SWIG_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
 }
 
 %typemap(argout) semanage_seuser_key_t ** {
-        $result = SWIG_Ruby_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
+        $result = SWIG_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
 }
 
 %typemap(in, numinputs=0) semanage_seuser_key_t **(semanage_seuser_key_t *temp=NULL) {
@@ -162,11 +162,11 @@
 }
 
 %typemap(argout) semanage_user_t ** {
-        $result = SWIG_Ruby_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
+        $result = SWIG_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
 }
 
 %typemap(argout) semanage_user_key_t ** {
-        $result = SWIG_Ruby_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
+        $result = SWIG_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
 }
 
 %typemap(in, numinputs=0) semanage_user_key_t **(semanage_user_key_t *temp=NULL) {
@@ -186,11 +186,11 @@
 }
 
 %typemap(argout) semanage_port_t ** {
-        $result = SWIG_Ruby_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
+        $result = SWIG_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
 }
 
 %typemap(argout) semanage_port_key_t ** {
-        $result = SWIG_Ruby_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
+        $result = SWIG_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
 }
 
 %typemap(in, numinputs=0) semanage_port_key_t **(semanage_port_key_t *temp=NULL) {
@@ -210,12 +210,12 @@
 }
 
 %typemap(argout) semanage_node_t ** {
-        $result = SWIG_Ruby_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
+        $result = SWIG_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
 }
 
 
 %typemap(argout) semanage_node_key_t ** {
-        $result = SWIG_Ruby_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
+        $result = SWIG_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
 }
 
 %typemap(in, numinputs=0) semanage_node_key_t **(semanage_node_key_t *temp=NULL) {
