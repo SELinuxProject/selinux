@@ -114,7 +114,12 @@ static ssize_t bunzip(semanage_handle_t *sh, FILE *f, void **data)
 
 	/* Check if the file is bzipped */
 	bzerror = fread(buf, 1, BZ2_MAGICLEN, f);
-	rewind(f);
+
+	if (fseek(f, 0L, SEEK_SET) == -1) {
+		ERR(sh, "Failure rewinding file.");
+		goto exit;
+	}
+
 	if ((bzerror != BZ2_MAGICLEN) || memcmp(buf, BZ2_MAGICSTR, BZ2_MAGICLEN)) {
 		goto exit;
 	}
