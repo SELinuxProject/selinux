@@ -116,7 +116,7 @@ void test_debug(void)
 	CU_ASSERT(semanage_module_info_create(sh, &modinfo) >= 0);
 
 	/* test */
-	CU_ASSERT(semanage_module_info_set_priority(sh, modinfo, -42) < 0);
+	CU_ASSERT(semanage_module_info_set_priority(sh, modinfo, (uint16_t)-42) < 0);
 
 	/* cleanup */
 	semanage_module_info_destroy(sh, modinfo);

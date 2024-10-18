@@ -37,6 +37,7 @@ struct dbase_file {
 	record_file_table_t *rftable;
 };
 
+__attribute__((no_sanitize("function")))
 static int dbase_file_cache(semanage_handle_t * handle, dbase_file_t * dbase)
 {
 
@@ -190,6 +191,9 @@ int dbase_file_init(semanage_handle_t * handle,
 /* Release dbase resources */
 void dbase_file_release(dbase_file_t * dbase)
 {
+
+	if (!dbase)
+		return;
 
 	dbase_llist_drop_cache(&dbase->llist);
 	free(dbase);
