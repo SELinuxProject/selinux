@@ -30,12 +30,12 @@ struct saved_data {
 	spec_t *spec_arr;
 };
 
-static int process_line(const char *path, char *line_buf, int pass,
+static int process_line(const char *path, const char *line_buf, int pass,
 			unsigned lineno, struct selabel_handle *rec)
 {
 	struct saved_data *data = (struct saved_data *)rec->data;
 	int items;
-	char *buf_p;
+	const char *buf_p;
 	char *key, *context;
 
 	buf_p = line_buf;
@@ -145,7 +145,6 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 				goto finish;
 		}
 	}
-	free(line_buf);
 
 	status = digest_add_specfile(rec->digest, fp, NULL, sb.st_size, path);
 	if (status)
@@ -154,6 +153,7 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 	digest_gen_hash(rec->digest);
 
 finish:
+	free(line_buf);
 	fclose(fp);
 	return status;
 }
