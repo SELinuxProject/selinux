@@ -563,8 +563,10 @@ static FILE *open_file(const char *path, const char *suffix,
 		/* This handles the case if suffix is null */
 		path = rolling_append(stack_path, fdetails[i].suffix,
 				      sizeof(stack_path));
-		if (!path)
+		if (!path) {
+			errno = ENOMEM;
 			return NULL;
+		}
 
 		rc = stat(path, &fdetails[i].sb);
 		if (rc)
