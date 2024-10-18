@@ -628,7 +628,7 @@ static int process_file(const char *path, const char *suffix,
 
 		rc = fcontext_is_binary(fp);
 		if (rc < 0) {
-			(void) fclose(fp);
+			fclose_errno_safe(fp);
 			return -1;
 		}
 
@@ -639,7 +639,7 @@ static int process_file(const char *path, const char *suffix,
 			rc = digest_add_specfile(digest, fp, NULL, sb.st_size,
 				found_path);
 
-		fclose(fp);
+		fclose_errno_safe(fp);
 
 		if (!rc)
 			return 0;

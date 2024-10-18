@@ -438,7 +438,7 @@ int get_ordered_context_list(const char *user,
 		__fsetlocking(fp, FSETLOCKING_BYCALLER);
 		rc = get_context_user(fp, con, user, &reachable, &nreachable);
 
-		fclose(fp);
+		fclose_errno_safe(fp);
 		if (rc < 0 && errno != ENOENT) {
 			selinux_log(SELINUX_ERROR,
 				"%s:  error in processing configuration file %s\n",
@@ -451,7 +451,7 @@ int get_ordered_context_list(const char *user,
 	if (fp) {
 		__fsetlocking(fp, FSETLOCKING_BYCALLER);
 		rc = get_context_user(fp, con, user, &reachable, &nreachable);
-		fclose(fp);
+		fclose_errno_safe(fp);
 		if (rc < 0 && errno != ENOENT) {
 			selinux_log(SELINUX_ERROR,
 				"%s:  error in processing configuration file %s\n",
