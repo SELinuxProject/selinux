@@ -101,7 +101,7 @@ static int read_source_policy(policydb_t *p, const uint8_t *data, size_t size)
 
 	init_parser(1);
 
-	if (!setjmp(fuzzing_pre_parse_stack_state)) {
+	if (setjmp(fuzzing_pre_parse_stack_state) != 0) {
 		queue_destroy(id_queue);
 		fclose(yyin);
 		yylex_destroy();
