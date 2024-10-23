@@ -975,7 +975,7 @@ static int __cil_insert_type_rule(policydb_t *pdb, uint32_t kind, uint32_t src, 
 {
 	int rc = SEPOL_OK;
 	avtab_key_t avtab_key;
-	avtab_datum_t avtab_datum;
+	avtab_datum_t avtab_datum = { .data = res, .xperms = NULL };
 	avtab_ptr_t existing;	
 
 	avtab_key.source_type = src;
@@ -997,8 +997,6 @@ static int __cil_insert_type_rule(policydb_t *pdb, uint32_t kind, uint32_t src, 
 		goto exit;
 	}
 
-	avtab_datum.data = res;
-	
 	existing = avtab_search_node(&pdb->te_avtab, &avtab_key);
 	if (existing) {
 		/* Don't add duplicate type rule and warn if they conflict.
@@ -1346,7 +1344,7 @@ static int __cil_insert_avrule(policydb_t *pdb, uint32_t kind, uint32_t src, uin
 {
 	int rc = SEPOL_OK;
 	avtab_key_t avtab_key;
-	avtab_datum_t avtab_datum;
+	avtab_datum_t avtab_datum = { .data = data, .xperms = NULL };
 	avtab_datum_t *avtab_dup = NULL;
 
 	avtab_key.source_type = src;
@@ -1372,7 +1370,6 @@ static int __cil_insert_avrule(policydb_t *pdb, uint32_t kind, uint32_t src, uin
 	if (!cond_node) {
 		avtab_dup = avtab_search(&pdb->te_avtab, &avtab_key);
 		if (!avtab_dup) {
-			avtab_datum.data = data;
 			rc = avtab_insert(&pdb->te_avtab, &avtab_key, &avtab_datum);
 		} else {
 			if (kind == CIL_AVRULE_DONTAUDIT)
@@ -1381,7 +1378,6 @@ static int __cil_insert_avrule(policydb_t *pdb, uint32_t kind, uint32_t src, uin
 				avtab_dup->data |= data;
 		}
 	} else {
-		avtab_datum.data = data;
 		rc = __cil_cond_insert_rule(&pdb->te_cond_avtab, &avtab_key, &avtab_datum, cond_node, cond_flavor);
 	}
 
