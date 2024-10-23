@@ -1315,6 +1315,8 @@ static int __cil_expr_to_bitmap(struct cil_list *expr, ebitmap_t *out, int max, 
 	curr = expr->head;
 	flavor = expr->flavor;
 
+	ebitmap_init(&tmp);
+
 	if (curr->flavor == CIL_OP) {
 		enum cil_flavor op = (enum cil_flavor)(uintptr_t)curr->data;
 
