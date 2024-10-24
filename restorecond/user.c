@@ -239,6 +239,7 @@ static int local_server(void) {
 	/* watch for stdin/terminal going away */
 	GIOChannel *in = g_io_channel_unix_new(0);
 	g_io_channel_set_encoding(in, NULL, NULL);
+	g_io_channel_set_flags(in, g_io_channel_get_flags(in) | G_IO_FLAG_NONBLOCK, NULL);
 	g_io_add_watch_full( in,
 			     G_PRIORITY_HIGH,
 			     G_IO_IN|G_IO_ERR|G_IO_HUP,
@@ -284,6 +285,7 @@ int server(int master_fd, const char *watch_file) {
 
 	GIOChannel *c = g_io_channel_unix_new(master_fd);
 	g_io_channel_set_encoding(c, NULL, NULL);
+	g_io_channel_set_flags(c, g_io_channel_get_flags(c) | G_IO_FLAG_NONBLOCK, NULL);
 
 	g_io_add_watch_full(c,
 			    G_PRIORITY_HIGH,
