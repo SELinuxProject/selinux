@@ -698,9 +698,9 @@ extern void level_datum_init(level_datum_t * x);
 extern void level_datum_destroy(level_datum_t * x);
 extern void cat_datum_init(cat_datum_t * x);
 extern void cat_datum_destroy(cat_datum_t * x);
-extern int check_assertion(policydb_t *p, avrule_t *avrule);
+extern int check_assertion(policydb_t *p, const avrule_t *avrule);
 extern int check_assertions(sepol_handle_t * handle,
-			    policydb_t * p, avrule_t * avrules);
+			    policydb_t * p, const avrule_t * avrules);
 
 extern int symtab_insert(policydb_t * x, uint32_t sym,
 			 hashtab_key_t key, hashtab_datum_t datum,
