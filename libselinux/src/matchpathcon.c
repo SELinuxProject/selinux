@@ -524,8 +524,10 @@ int selinux_file_context_verify(const char *path, mode_t mode)
 			return 0;
 	}
 	
-	if (!hnd && (matchpathcon_init_prefix(NULL, NULL) < 0))
+	if (!hnd && (matchpathcon_init_prefix(NULL, NULL) < 0)){
+			freecon(con);
 			return -1;
+	}
 
 	if (selabel_lookup_raw(hnd, &fcontext, path, mode) != 0) {
 		if (errno != ENOENT)
