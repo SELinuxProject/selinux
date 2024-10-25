@@ -53,6 +53,7 @@ int test_load_policy(policydb_t * p, int policy_type, int mls, const char *test_
 
 	p->policy_type = policy_type;
 	p->mls = mls;
+	p->policyvers = MOD_POLICYDB_VERSION_MAX;
 
 	if (read_source_policy(p, filename, test_name)) {
 		fprintf(stderr, "failed to read policy %s\n", filename);
