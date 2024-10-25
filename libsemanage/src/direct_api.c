@@ -582,7 +582,7 @@ cleanup:
 static int read_from_pipe_to_data(semanage_handle_t *sh, size_t initial_len, int fd, char **out_data_read, size_t *out_read_len)
 {
 	size_t max_len = initial_len;
-	size_t read_len = 0;
+	ssize_t read_len = 0;
 	size_t data_read_len = 0;
 	char *data_read = NULL;
 
