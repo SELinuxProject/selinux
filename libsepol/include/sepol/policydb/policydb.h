@@ -698,9 +698,9 @@ extern void level_datum_init(level_datum_t * x);
 extern void level_datum_destroy(level_datum_t * x);
 extern void cat_datum_init(cat_datum_t * x);
 extern void cat_datum_destroy(cat_datum_t * x);
-extern int check_assertion(policydb_t *p, avrule_t *avrule);
+extern int check_assertion(policydb_t *p, const avrule_t *avrule);
 extern int check_assertions(sepol_handle_t * handle,
-			    policydb_t * p, avrule_t * avrules);
+			    policydb_t * p, const avrule_t * avrules);
 
 extern int symtab_insert(policydb_t * x, uint32_t sym,
 			 hashtab_key_t key, hashtab_datum_t datum,
@@ -759,10 +759,11 @@ extern int policydb_set_target_platform(policydb_t *p, int platform);
 #define POLICYDB_VERSION_INFINIBAND		31 /* Linux-specific */
 #define POLICYDB_VERSION_GLBLUB		32
 #define POLICYDB_VERSION_COMP_FTRANS	33 /* compressed filename transitions */
+#define POLICYDB_VERSION_COND_XPERMS	34 /* extended permissions in conditional policies */
 
 /* Range of policy versions we understand*/
 #define POLICYDB_VERSION_MIN	POLICYDB_VERSION_BASE
-#define POLICYDB_VERSION_MAX	POLICYDB_VERSION_COMP_FTRANS
+#define POLICYDB_VERSION_MAX	POLICYDB_VERSION_COND_XPERMS
 
 /* Module versions and specific changes*/
 #define MOD_POLICYDB_VERSION_BASE		4
@@ -785,9 +786,10 @@ extern int policydb_set_target_platform(policydb_t *p, int platform);
 #define MOD_POLICYDB_VERSION_INFINIBAND		19
 #define MOD_POLICYDB_VERSION_GLBLUB		20
 #define MOD_POLICYDB_VERSION_SELF_TYPETRANS	21
+#define MOD_POLICYDB_VERSION_COND_XPERMS	22
 
 #define MOD_POLICYDB_VERSION_MIN MOD_POLICYDB_VERSION_BASE
-#define MOD_POLICYDB_VERSION_MAX MOD_POLICYDB_VERSION_SELF_TYPETRANS
+#define MOD_POLICYDB_VERSION_MAX MOD_POLICYDB_VERSION_COND_XPERMS
 
 #define POLICYDB_CONFIG_MLS    1
 
@@ -800,6 +802,12 @@ extern int policydb_set_target_platform(policydb_t *p, int platform);
 	  && (p)->policyvers >= POLICYDB_VERSION_BOUNDARY) ||	\
 	 ((p)->policy_type != POLICY_KERN			\
 	  && (p)->policyvers >= MOD_POLICYDB_VERSION_BOUNDARY))
+
+#define policydb_has_cond_xperms_feature(p)			\
+	(((p)->policy_type == POLICY_KERN			\
+	  && (p)->policyvers >= POLICYDB_VERSION_COND_XPERMS) ||	\
+	 ((p)->policy_type != POLICY_KERN			\
+	  && (p)->policyvers >= MOD_POLICYDB_VERSION_COND_XPERMS))
 
 /* the config flags related to unknown classes/perms are bits 2 and 3 */
 #define DENY_UNKNOWN	SEPOL_DENY_UNKNOWN
