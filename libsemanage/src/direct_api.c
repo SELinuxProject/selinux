@@ -1346,6 +1346,7 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 		cil_set_preserve_tunables(cildb, preserve_tunables);
 		cil_set_target_platform(cildb, sh->conf->target_platform);
 		cil_set_policy_version(cildb, sh->conf->policyvers);
+		cil_set_multiple_decls(cildb, sh->conf->multiple_decls);
 
 		if (sh->conf->handle_unknown != -1) {
 			cil_set_handle_unknown(cildb, sh->conf->handle_unknown);
