@@ -137,6 +137,7 @@ static int cil_allow_multiple_decls(struct cil_db *db, enum cil_flavor f_new, en
 	switch (f_new) {
 	case CIL_TYPE:
 	case CIL_TYPEATTRIBUTE:
+	case CIL_ROLE:
 		if (db->multiple_decls) {
 			return CIL_TRUE;
 		}
@@ -1744,7 +1745,12 @@ int cil_gen_role(struct cil_db *db, struct cil_tree_node *parse_current, struct 
 
 	rc = cil_gen_node(db, ast_node, (struct cil_symtab_datum*)role, (hashtab_key_t)key, CIL_SYM_ROLES, CIL_ROLE);
 	if (rc != SEPOL_OK) {
-		goto exit;
+		if (rc == SEPOL_EEXIST) {
+			cil_destroy_role(role);
+			role = NULL;
+		} else {
+			goto exit;
+		}
 	}
 
 	return SEPOL_OK;
