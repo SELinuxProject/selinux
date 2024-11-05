@@ -71,6 +71,7 @@ extern void digest_gen_hash(struct selabel_digest *digest);
 struct selabel_lookup_rec {
 	char * ctx_raw;
 	char * ctx_trans;
+	pthread_mutex_t lock;	/* lock for validation and translation */
 	unsigned int lineno;
 	bool validated;
 };
