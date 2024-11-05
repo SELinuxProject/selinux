@@ -71,8 +71,8 @@ extern void digest_gen_hash(struct selabel_digest *digest);
 struct selabel_lookup_rec {
 	char * ctx_raw;
 	char * ctx_trans;
-	int validated;
-	unsigned lineno;
+	unsigned int lineno;
+	bool validated;
 };
 
 struct selabel_handle {
@@ -143,6 +143,6 @@ compat_validate(const struct selabel_handle *rec,
  * The read_spec_entries function may be used to
  * replace sscanf to read entries from spec files.
  */
-extern int read_spec_entries(char *line_buf, const char **errbuf, int num_args, ...);
+extern int read_spec_entries(char *line_buf, size_t nread, const char **errbuf, int num_args, ...);
 
 #endif				/* _SELABEL_INTERNAL_H_ */
