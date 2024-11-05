@@ -156,9 +156,9 @@ static int id_has_dot(const char *id)
 
 int define_class(void)
 {
-	char *id = 0;
-	class_datum_t *datum = 0;
-	int ret;
+	char *id = NULL;
+	class_datum_t *datum = NULL;
+	int ret = -1;
 	uint32_t value;
 
 	if (pass == 2) {
@@ -175,26 +175,28 @@ int define_class(void)
 	datum = (class_datum_t *) malloc(sizeof(class_datum_t));
 	if (!datum) {
 		yyerror("out of memory");
-		goto bad;
+		goto cleanup;
 	}
 	memset(datum, 0, sizeof(class_datum_t));
 	ret = declare_symbol(SYM_CLASSES, id, datum, &value, &value);
 	switch (ret) {
 	case -3:{
 			yyerror("Out of memory!");
-			goto bad;
+			goto cleanup;
 		}
 	case -2:{
 			yyerror2("duplicate declaration of class %s", id);
-			goto bad;
+			goto cleanup;
 		}
 	case -1:{
 			yyerror("could not declare class here");
-			goto bad;
+			goto cleanup;
 		}
-	case 0:
-	case 1:{
+	case 0: {
 			break;
+		}
+	case 1:{
+			goto cleanup;
 		}
 	default:{
 			assert(0);	/* should never get here */
@@ -203,12 +205,10 @@ int define_class(void)
 	datum->s.value = value;
 	return 0;
 
-      bad:
-	if (id)
-		free(id);
-	if (datum)
-		free(datum);
-	return -1;
+      cleanup:
+	free(id);
+	free(datum);
+	return ret == 1 ? 0 : -1;
 }
 
 int define_permissive(void)
@@ -785,8 +785,13 @@ int define_sens(void)
 			yyerror2("could not declare sensitivity level %s here", id);
 			goto bad;
 		}
-	case 0:
+	case 0: {
+			break;
+		}
 	case 1:{
+			level_datum_destroy(datum);
+			free(datum);
+			free(id);
 			break;
 		}
 	default:{
@@ -827,8 +832,13 @@ int define_sens(void)
 				    ("could not declare sensitivity alias %s here", id);
 				goto bad_alias;
 			}
-		case 0:
+		case 0: {
+				break;
+			}
 		case 1:{
+				level_datum_destroy(aliasdatum);
+				free(aliasdatum);
+				free(id);
 				break;
 			}
 		default:{
@@ -957,15 +967,20 @@ int define_category(void)
 			yyerror2("could not declare category %s here", id);
 			goto bad;
 		}
-	case 0:
+	case 0:{
+			datum->s.value = value;
+			break;
+		}
 	case 1:{
+			cat_datum_destroy(datum);
+			free(datum);
+			free(id);
 			break;
 		}
 	default:{
 			assert(0);	/* should never get here */
 		}
 	}
-	datum->s.value = value;
 
 	while ((id = queue_remove(id_queue))) {
 		if (id_has_dot(id)) {
@@ -981,11 +996,11 @@ int define_category(void)
 		}
 		cat_datum_init(aliasdatum);
 		aliasdatum->isalias = TRUE;
-		aliasdatum->s.value = datum->s.value;
+		aliasdatum->s.value = value;
 
 		ret =
 		    declare_symbol(SYM_CATS, id, aliasdatum, NULL,
-				   &datum->s.value);
+				   &value);
 		switch (ret) {
 		case -3:{
 				yyerror("Out of memory!");
@@ -1001,8 +1016,13 @@ int define_category(void)
 				    ("could not declare category alias %s here", id);
 				goto bad_alias;
 			}
-		case 0:
+		case 0:{
+				break;
+			}
 		case 1:{
+				cat_datum_destroy(aliasdatum);
+				free(aliasdatum);
+				free(id);
 				break;
 			}
 		default:{
@@ -1833,9 +1853,11 @@ int define_bool_tunable(int is_tunable)
 			yyerror2("could not declare boolean %s here", id);
 			goto cleanup;
 		}
-	case 0:
-	case 1:{
+	case 0:{
 			break;
+		}
+	case 1:{
+			goto cleanup;
 		}
 	default:{
 			assert(0);	/* should never get here */
@@ -1854,7 +1876,7 @@ int define_bool_tunable(int is_tunable)
 	return 0;
       cleanup:
 	cond_destroy_bool(id, datum, NULL);
-	return -1;
+	return ret == 1 ? 0 : -1;
 }
 
 avrule_t *define_cond_pol_list(avrule_t * avlist, avrule_t * sl)

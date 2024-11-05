@@ -28,7 +28,7 @@ int define_policy(int pass, int module_header_given);
  */
 int declare_symbol(uint32_t symbol_type,
 		   hashtab_key_t key, hashtab_datum_t datum,
-		   uint32_t * dest_value, uint32_t * datum_value);
+		   uint32_t * dest_value, const uint32_t * datum_value);
 
 role_datum_t *declare_role(unsigned char isattr);
 type_datum_t *declare_type(unsigned char primary, unsigned char isattr);
