@@ -9,4 +9,5 @@ setfiles/restorecon
 setfiles/restorecon_xattr
 setfiles/setfiles
 setsebool/setsebool
+unsetfiles/unsetfiles
 hll/pp/pp
