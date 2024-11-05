@@ -24,8 +24,8 @@ struct sidtab {
 };
 
 int sidtab_init(struct sidtab *s) ;
-int sidtab_insert(struct sidtab *s, const char * ctx) ;
 
+const struct security_id * sidtab_context_lookup(const struct sidtab *s, const char *ctx);
 int sidtab_context_to_sid(struct sidtab *s,
 			  const char * ctx, security_id_t * sid) ;
 
