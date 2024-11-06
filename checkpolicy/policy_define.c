@@ -1322,6 +1322,7 @@ static int add_aliases_to_type(type_datum_t * type)
 				aliasdatum->primary = type->s.value;
 				aliasdatum->flavor = TYPE_ALIAS;
 
+				free(id);
 				break;
 			}
 		default:{
