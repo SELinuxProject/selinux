@@ -34,13 +34,13 @@
 
 #define CU_ASSERT_CONTEXT_EQUAL(CON1,CON2) \
 	do { \
-		char *__str; \
-		char *__str2; \
-		CU_ASSERT(semanage_context_to_string(sh, CON1, &__str) >= 0); \
-		CU_ASSERT(semanage_context_to_string(sh, CON2, &__str2) >= 0); \
-		CU_ASSERT_STRING_EQUAL(__str, __str2); \
-		free(__str2); \
-		free(__str); \
+		char *str__; \
+		char *str2__; \
+		CU_ASSERT(semanage_context_to_string(sh, CON1, &str__) >= 0); \
+		CU_ASSERT(semanage_context_to_string(sh, CON2, &str2__) >= 0); \
+		CU_ASSERT_STRING_EQUAL(str__, str2__); \
+		free(str2__); \
+		free(str__); \
 	} while (0)
 
 
@@ -49,9 +49,9 @@
 
 #undef CU_ASSERT_FATAL
 #define CU_ASSERT_FATAL(value) do { \
-		int _value = (value); \
-		CU_ASSERT(_value); \
-		assert(_value); \
+		int value_ = (value); \
+		CU_ASSERT(value_); \
+		assert(value_); \
 	} while (0)
 
 #undef CU_FAIL_FATAL
@@ -62,17 +62,19 @@
 
 #undef CU_ASSERT_PTR_NOT_NULL_FATAL
 #define CU_ASSERT_PTR_NOT_NULL_FATAL(value) do { \
-		const void *_value = (value); \
-		CU_ASSERT_PTR_NOT_NULL(_value); \
-		assert(_value != NULL); \
+		const void *value_ = (value); \
+		CU_ASSERT_PTR_NOT_NULL(value_); \
+		assert(value_ != NULL); \
 	} while (0)
 
 #endif /* __CHECKER__ */
 
-#define I_NULL  -1
+#define I_NULL (-1)
 #define I_FIRST  0
 #define I_SECOND 1
 #define I_THIRD  2
+
+extern semanage_handle_t *sh;
 
 typedef enum { SH_NULL, SH_HANDLE, SH_CONNECT, SH_TRANS } level_t;
 

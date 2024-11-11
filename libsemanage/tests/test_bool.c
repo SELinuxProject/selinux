@@ -55,8 +55,6 @@ static void test_bool_count_local(void);
 static void test_bool_iterate_local(void);
 static void test_bool_list_local(void);
 
-extern semanage_handle_t *sh;
-
 int boolean_test_init(void)
 {
 	if (create_test_store() < 0) {
@@ -601,9 +599,10 @@ static void test_bool_count(void)
 }
 
 /* Function bool_iterate */
-unsigned int counter_bool_iterate = 0;
+static unsigned int counter_bool_iterate = 0;
 
-static int handler_bool_iterate(const semanage_bool_t *record, void *varg)
+static int handler_bool_iterate(__attribute__((unused)) const semanage_bool_t *record,
+				__attribute__((unused)) void *varg)
 {
 	counter_bool_iterate++;
 	return 0;
@@ -857,9 +856,10 @@ static void test_bool_count_local(void)
 }
 
 /* Function bool_iterate_local */
-unsigned int counter_bool_iterate_local = 0;
+static unsigned int counter_bool_iterate_local = 0;
 
-static int handler_bool_iterate_local(const semanage_bool_t *record, void *varg)
+static int handler_bool_iterate_local(__attribute__((unused)) const semanage_bool_t *record,
+				      __attribute__((unused)) void *varg)
 {
 	counter_bool_iterate_local++;
 	return 0;

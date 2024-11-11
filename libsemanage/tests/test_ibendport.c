@@ -46,8 +46,6 @@ static void test_ibendport_count_local(void);
 static void test_ibendport_iterate_local(void);
 static void test_ibendport_list_local(void);
 
-extern semanage_handle_t *sh;
-
 int ibendport_test_init(void)
 {
 	if (create_test_store() < 0) {
@@ -254,9 +252,9 @@ static void test_ibendport_count(void)
 }
 
 /* Function semanage_ibendport_iterate */
-unsigned int helper_ibendport_iterate_counter = 0;
+static unsigned int helper_ibendport_iterate_counter = 0;
 
-static int helper_ibendport_iterate(const semanage_ibendport_t *ibendport,
+static int helper_ibendport_iterate(__attribute__((unused)) const semanage_ibendport_t *ibendport,
 			     void *fn_arg)
 {
 	CU_ASSERT(fn_arg == (void *) 42);
@@ -264,7 +262,7 @@ static int helper_ibendport_iterate(const semanage_ibendport_t *ibendport,
 	return 0;
 }
 
-static int helper_ibendport_iterate_error(const semanage_ibendport_t *ibendport,
+static int helper_ibendport_iterate_error(__attribute__((unused)) const semanage_ibendport_t *ibendport,
 				   void *fn_arg)
 {
 	CU_ASSERT(fn_arg == (void *) 42);
@@ -272,7 +270,7 @@ static int helper_ibendport_iterate_error(const semanage_ibendport_t *ibendport,
 	return -1;
 }
 
-static int helper_ibendport_iterate_break(const semanage_ibendport_t *ibendport,
+static int helper_ibendport_iterate_break(__attribute__((unused)) const semanage_ibendport_t *ibendport,
 				   void *fn_arg)
 {
 	CU_ASSERT(fn_arg == (void *) 42);
@@ -439,9 +437,9 @@ static void test_ibendport_count_local(void)
 }
 
 /* Function semanage_ibendport_iterate_local */
-unsigned int helper_ibendport_iterate_local_counter = 0;
+static unsigned int helper_ibendport_iterate_local_counter = 0;
 
-static int helper_ibendport_iterate_local(const semanage_ibendport_t *ibendport,
+static int helper_ibendport_iterate_local(__attribute__((unused)) const semanage_ibendport_t *ibendport,
 				   void *fn_arg)
 {
 	CU_ASSERT(fn_arg == (void *) 42);
@@ -449,7 +447,7 @@ static int helper_ibendport_iterate_local(const semanage_ibendport_t *ibendport,
 	return 0;
 }
 
-static int helper_ibendport_iterate_local_error(const semanage_ibendport_t *ibendport,
+static int helper_ibendport_iterate_local_error(__attribute__((unused)) const semanage_ibendport_t *ibendport,
 					 void *fn_arg)
 {
 	CU_ASSERT(fn_arg == (void *) 42);
@@ -457,7 +455,7 @@ static int helper_ibendport_iterate_local_error(const semanage_ibendport_t *iben
 	return -1;
 }
 
-static int helper_ibendport_iterate_local_break(const semanage_ibendport_t *ibendport,
+static int helper_ibendport_iterate_local_break(__attribute__((unused)) const semanage_ibendport_t *ibendport,
 					 void *fn_arg)
 {
 	CU_ASSERT(fn_arg == (void *) 42);

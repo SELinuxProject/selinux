@@ -50,8 +50,6 @@ static void test_user_count_local(void);
 static void test_user_iterate_local(void);
 static void test_user_list_local(void);
 
-extern semanage_handle_t *sh;
-
 int user_test_init(void)
 {
 	if (create_test_store() < 0) {
@@ -515,9 +513,10 @@ static void test_user_count(void)
 }
 
 /* Function semanage_user_iterate */
-unsigned int counter_user_iterate = 0;
+static unsigned int counter_user_iterate = 0;
 
-static int handler_user_iterate(const semanage_user_t *record, void *varg)
+static int handler_user_iterate(__attribute__((unused)) const semanage_user_t *record,
+				__attribute__((unused)) void *varg)
 {
 	counter_user_iterate++;
 	return 0;
@@ -648,9 +647,10 @@ static void test_user_count_local(void)
 }
 
 /* Function semanage_user_iterate_local */
-unsigned int counter_user_iterate_local = 0;
+static unsigned int counter_user_iterate_local = 0;
 
-static int handler_user_iterate_local(const semanage_user_t *record, void *varg)
+static int handler_user_iterate_local(__attribute__((unused)) const semanage_user_t *record,
+				      __attribute__((unused)) void *varg)
 {
 	counter_user_iterate_local++;
 	return 0;

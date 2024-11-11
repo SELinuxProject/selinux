@@ -24,14 +24,16 @@
 
 #include "utilities.h"
 
-int test_store_enabled = 0;
+static int test_store_enabled = 0;
 
 semanage_handle_t *sh = NULL;
 
 /* Silence any error output caused by our tests
  * by using this dummy function to catch messages.
  */
-void test_msg_handler(void *varg, semanage_handle_t *handle, const char *fmt,
+void test_msg_handler(__attribute__((unused)) void *varg,
+		      __attribute__((unused)) semanage_handle_t *handle,
+		      __attribute__((unused)) const char *fmt,
 		      ...)
 {
 }
@@ -213,7 +215,7 @@ void helper_handle_create(void) {
 		semanage_set_create_store(sh, 1);
 		semanage_set_reload(sh, 0);
 		semanage_set_store_root(sh, "");
-		semanage_select_store(sh, (char *) "store",
+		semanage_select_store(sh, "store",
 				      SEMANAGE_CON_DIRECT);
 	}
 }
@@ -271,7 +273,7 @@ void setup_handle_invalid_store(level_t level) {
 
 	helper_handle_create();
 
-	semanage_select_store(sh, (char *) "", SEMANAGE_CON_INVALID);
+	semanage_select_store(sh, "", SEMANAGE_CON_INVALID);
 
 	if (level >= SH_CONNECT)
 		helper_connect();

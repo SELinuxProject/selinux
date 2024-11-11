@@ -47,7 +47,7 @@ static void test_semanage_str_replace(void);
 static void test_semanage_findval(void);
 static void test_slurp_file_filter(void);
 
-char fname[] = {
+static char fname[] = {
 	'T', 'E', 'S', 'T', '_', 'T', 'E', 'M', 'P', '_', 'X', 'X', 'X', 'X',
 	'X', 'X', '\0'
 };

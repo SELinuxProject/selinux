@@ -34,8 +34,6 @@ static void test_msg_set_callback(void);
 static void test_root(void);
 static void test_select_store(void);
 
-extern semanage_handle_t *sh;
-
 int handle_test_init(void)
 {
 	if (create_test_store() < 0) {
@@ -234,10 +232,11 @@ static void test_mls_enabled(void)
 }
 
 /* Function semanage_set_callback */
-int msg_set_callback_count = 0;
+static int msg_set_callback_count = 0;
 
-static void helper_msg_set_callback(void *varg, semanage_handle_t *handle,
-			     const char *fmt, ...)
+static void helper_msg_set_callback(__attribute__((unused)) void *varg,
+				    __attribute__((unused)) semanage_handle_t *handle,
+				    __attribute__((unused)) const char *fmt, ...)
 {
 	msg_set_callback_count++;
 }
@@ -300,7 +299,7 @@ static void helper_select_store(const char *name, enum semanage_connect_type typ
 	/* FIXME: the storename parameter of semanage_select_store should be
 	 * 'const char *'
 	 */
-	semanage_select_store(sh, (char *) name, type);
+	semanage_select_store(sh, name, type);
 
 	int res = semanage_connect(sh);
 
