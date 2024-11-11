@@ -738,13 +738,14 @@ int semanage_copy_file(const char *src, const char *dst, mode_t mode,
 		goto out;
 	}
 	umask(mask);
-	while (retval == 0 && (amount_read = read(in, buf, sizeof(buf))) > 0) {
+	while ((amount_read = read(in, buf, sizeof(buf))) > 0) {
 		if (write_full(out, buf, amount_read) == -1) {
 			if (errno)
 				errsv = errno;
 			else
 				errsv = EIO;
 			retval = -1;
+			break;
 		}
 	}
 	if (amount_read < 0) {
