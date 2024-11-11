@@ -656,7 +656,7 @@ int semanage_store_access_check(void)
 
 /********************* other I/O functions *********************/
 
-static int semanage_copy_dir_flags(const char *src, const char *dst, int flag);
+static int semanage_copy_dir_flags(semanage_handle_t * sh, const char *src, const char *dst, int flag);
 
 /* Callback used by scandir() to select files. */
 static int semanage_filename_select(const struct dirent *d)
@@ -670,8 +670,8 @@ static int semanage_filename_select(const struct dirent *d)
 
 /* Copies a file from src to dst.  If dst already exists then
  * overwrite it.  Returns 0 on success, -1 on error. */
-int semanage_copy_file(const char *src, const char *dst, mode_t mode,
-		bool syncrequired)
+int semanage_copy_file(semanage_handle_t *sh, const char *src, const char *dst,
+		       mode_t mode, bool syncrequired)
 {
 	int in, out, retval = 0, amount_read, n, errsv = errno;
 	char tmp[PATH_MAX];
@@ -725,7 +725,7 @@ int semanage_copy_file(const char *src, const char *dst, mode_t mode,
 	if (!retval && rename(tmp, dst) == -1)
 		return -1;
 
-	semanage_setfiles(dst);
+	semanage_setfiles(sh, dst);
 out:
 	errno = errsv;
 	return retval;
@@ -741,7 +741,7 @@ static int semanage_rename(semanage_handle_t * sh, const char *src, const char *
 	/* we can't use rename() due to filesystem limitation, lets try to copy files manually */
 	WARN(sh, "WARNING: rename(%s, %s) failed: %m, fall back to non-atomic semanage_copy_dir_flags()",
 		 src, dst);
-	if (semanage_copy_dir_flags(src, dst, 1) == -1) {
+	if (semanage_copy_dir_flags(sh, src, dst, 1) == -1) {
 		return -1;
 	}
 	return semanage_remove_directory(src);
@@ -749,15 +749,15 @@ static int semanage_rename(semanage_handle_t * sh, const char *src, const char *
 
 /* Copies all of the files from src to dst, recursing into
  * subdirectories.  Returns 0 on success, -1 on error. */
-static int semanage_copy_dir(const char *src, const char *dst)
+static int semanage_copy_dir(semanage_handle_t * sh, const char *src, const char *dst)
 {
-	return semanage_copy_dir_flags(src, dst, 1);
+	return semanage_copy_dir_flags(sh, src, dst, 1);
 }
 
 /* Copies all of the dirs from src to dst, recursing into
  * subdirectories. If flag == 1, then copy regular files as
  * well. Returns 0 on success, -1 on error. */
-static int semanage_copy_dir_flags(const char *src, const char *dst, int flag)
+static int semanage_copy_dir_flags(semanage_handle_t * sh, const char *src, const char *dst, int flag)
 {
 	int i, len = 0, rc, retval = -1;
 	struct stat sb;
@@ -766,7 +766,7 @@ static int semanage_copy_dir_flags(const char *src, const char *dst, int flag)
 	mode_t mask;
 
 	if ((len = scandir(src, &names, semanage_filename_select, NULL)) == -1) {
-		fprintf(stderr, "Could not read the contents of %s: %s\n", src, strerror(errno));
+		ERR(sh, "Could not read the contents of %s.", src);
 		return -1;
 	}
 
@@ -774,12 +774,12 @@ static int semanage_copy_dir_flags(const char *src, const char *dst, int flag)
 		mask = umask(0077);
 		if (mkdir(dst, S_IRWXU) != 0) {
 			umask(mask);
-			fprintf(stderr, "Could not create %s: %s\n", dst, strerror(errno));
+			ERR(sh, "Could not create %s.", dst);
 			goto cleanup;
 		}
 		umask(mask);
 
-		semanage_setfiles(dst);
+		semanage_setfiles(sh, dst);
 	}
 
 	for (i = 0; i < len; i++) {
@@ -801,15 +801,15 @@ static int semanage_copy_dir_flags(const char *src, const char *dst, int flag)
 		if (S_ISDIR(sb.st_mode)) {
 			mask = umask(0077);
 			if (mkdir(path2, 0700) == -1 ||
-			    semanage_copy_dir_flags(path, path2, flag) == -1) {
+			    semanage_copy_dir_flags(sh, path, path2, flag) == -1) {
 				umask(mask);
 				goto cleanup;
 			}
 			umask(mask);
-			semanage_setfiles(path2);
+			semanage_setfiles(sh, path2);
 		} else if (S_ISREG(sb.st_mode) && flag == 1) {
 			mask = umask(0077);
-			if (semanage_copy_file(path, path2, sb.st_mode,
+			if (semanage_copy_file(sh, path, path2, sb.st_mode,
 						false) < 0) {
 				umask(mask);
 				goto cleanup;
@@ -912,7 +912,7 @@ int semanage_mkdir(semanage_handle_t *sh, const char *path)
 
 		}
 		umask(mask);
-		semanage_setfiles(path);
+		semanage_setfiles(sh, path);
 	}
 	else {
 		/* check that it really is a directory */
@@ -956,7 +956,7 @@ int semanage_make_sandbox(semanage_handle_t * sh)
 
 	mask = umask(0077);
 	if (mkdir(sandbox, S_IRWXU) == -1 ||
-	    semanage_copy_dir(semanage_path(SEMANAGE_ACTIVE, SEMANAGE_TOPLEVEL),
+	    semanage_copy_dir(sh, semanage_path(SEMANAGE_ACTIVE, SEMANAGE_TOPLEVEL),
 			      sandbox) == -1) {
 		umask(mask);
 		ERR(sh, "Could not copy files to sandbox %s.", sandbox);
@@ -1589,19 +1589,19 @@ static int semanage_validate_and_compile_fcontexts(semanage_handle_t * sh)
 		    semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_FC)) != 0) {
 		goto cleanup;
 	}
-	semanage_setfiles(semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_FC_BIN));
+	semanage_setfiles(sh, semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_FC_BIN));
 
 	if (sefcontext_compile(sh,
 		    semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_FC_LOCAL)) != 0) {
 		goto cleanup;
 	}
-	semanage_setfiles(semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_FC_LOCAL_BIN));
+	semanage_setfiles(sh, semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_FC_LOCAL_BIN));
 
 	if (sefcontext_compile(sh,
 		    semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_FC_HOMEDIRS)) != 0) {
 		goto cleanup;
 	}
-	semanage_setfiles(semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_FC_HOMEDIRS_BIN));
+	semanage_setfiles(sh, semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_FC_HOMEDIRS_BIN));
 
 	status = 0;
 cleanup:
@@ -1646,7 +1646,7 @@ static int semanage_install_final_tmp(semanage_handle_t * sh)
 			goto cleanup;
 		}
 
-		ret = semanage_copy_file(src, dst, sh->conf->file_mode,
+		ret = semanage_copy_file(sh, src, dst, sh->conf->file_mode,
 					true);
 		if (ret < 0) {
 			ERR(sh, "Could not copy %s to %s.", src, dst);
@@ -2994,7 +2994,7 @@ int semanage_nc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
 
 /* Make sure the file context and ownership of files in the policy
  * store does not change */
-void semanage_setfiles(const char *path){
+void semanage_setfiles(semanage_handle_t * sh, const char *path){
 	struct stat sb;
 	int fd;
 	/* Fix the user and role portions of the context, ignore errors
@@ -3009,7 +3009,7 @@ void semanage_setfiles(const char *path){
 		    !(S_ISREG(sb.st_mode) &&
 		      (sb.st_mode & (S_ISUID | S_ISGID))) &&
 		    (fchown(fd, 0, 0) == -1))
-			fprintf(stderr, "Warning! Could not set ownership of %s to root\n", path);
+			ERR(sh, "Warning! Could not set ownership of %s to root", path);
 
 		close(fd);
 	}

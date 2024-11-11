@@ -124,7 +124,7 @@ int semanage_get_cil_paths(semanage_handle_t * sh, semanage_module_info_t *modin
 int semanage_get_active_modules(semanage_handle_t *sh,
 			       semanage_module_info_t **modinfo, int *num_modules);
 
-void semanage_setfiles(const char *path);
+void semanage_setfiles(semanage_handle_t * sh, const char *path);
 
 /* lock file routines */
 int semanage_get_trans_lock(semanage_handle_t * sh);
@@ -165,7 +165,7 @@ int semanage_nc_sort(semanage_handle_t * sh,
 		     size_t buf_len,
 		     char **sorted_buf, size_t * sorted_buf_len);
 
-int semanage_copy_file(const char *src, const char *dst, mode_t mode,
-		bool syncrequired);
+int semanage_copy_file(semanage_handle_t * sh, const char *src, const char *dst,
+		       mode_t mode, bool syncrequired);
 
 #endif

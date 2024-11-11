@@ -1135,8 +1135,8 @@ static const int semanage_computed_files[] = {
 /* Copies a file from src to dst. If dst already exists then
  * overwrite it. If source doesn't exist then return success.
  * Returns 0 on success, -1 on error. */
-static int copy_file_if_exists(const char *src, const char *dst, mode_t mode){
-	int rc = semanage_copy_file(src, dst, mode, false);
+static int copy_file_if_exists(semanage_handle_t *sh, const char *src, const char *dst, mode_t mode){
+	int rc = semanage_copy_file(sh, src, dst, mode, false);
 	return (rc < 0 && errno != ENOENT) ? rc : 0;
 }
 
@@ -1431,7 +1431,7 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 
 		path = semanage_path(SEMANAGE_TMP, SEMANAGE_SEUSERS_LINKED);
 		if (stat(path, &sb) == 0) {
-			retval = semanage_copy_file(path,
+			retval = semanage_copy_file(sh, path,
 						    semanage_path(SEMANAGE_TMP,
 								  SEMANAGE_STORE_SEUSERS),
 						    0, false);
@@ -1449,7 +1449,7 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 
 		path = semanage_path(SEMANAGE_TMP, SEMANAGE_USERS_EXTRA_LINKED);
 		if (stat(path, &sb) == 0) {
-			retval = semanage_copy_file(path,
+			retval = semanage_copy_file(sh, path,
 						    semanage_path(SEMANAGE_TMP,
 								  SEMANAGE_USERS_EXTRA),
 						    0, false);
@@ -1558,28 +1558,28 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	if (retval < 0)
 		goto cleanup;
 
-	retval = semanage_copy_file(semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_KERNEL),
+	retval = semanage_copy_file(sh, semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_KERNEL),
 			semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_KERNEL),
 			sh->conf->file_mode, false);
 	if (retval < 0) {
 		goto cleanup;
 	}
 
-	retval = copy_file_if_exists(semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_FC_LOCAL),
+	retval = copy_file_if_exists(sh, semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_FC_LOCAL),
 						semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_FC_LOCAL),
 						sh->conf->file_mode);
 	if (retval < 0) {
 		goto cleanup;
 	}
 
-	retval = copy_file_if_exists(semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_FC),
+	retval = copy_file_if_exists(sh, semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_FC),
 						semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_FC),
 						sh->conf->file_mode);
 	if (retval < 0) {
 		goto cleanup;
 	}
 
-	retval = copy_file_if_exists(semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_SEUSERS),
+	retval = copy_file_if_exists(sh, semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_SEUSERS),
 						semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_SEUSERS),
 						sh->conf->file_mode);
 	if (retval < 0) {
@@ -1597,6 +1597,7 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 			}
 			/* file_contexts.homedirs was created in SEMANAGE_TMP store */
 			retval = semanage_copy_file(
+						sh,
 						semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_FC_HOMEDIRS),
 						semanage_final_path(SEMANAGE_FINAL_TMP,	SEMANAGE_FC_HOMEDIRS),
 						sh->conf->file_mode, false);
