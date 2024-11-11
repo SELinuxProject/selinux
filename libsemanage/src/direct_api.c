@@ -599,12 +599,16 @@ static int read_from_pipe_to_data(semanage_handle_t *sh, size_t initial_len, int
 	while ((read_len = read(fd, data_read + data_read_len, max_len - data_read_len)) > 0) {
 		data_read_len += read_len;
 		if (data_read_len == max_len) {
+			char *tmp;
+
 			max_len *= 2;
-			data_read = realloc(data_read, max_len);
-			if (data_read == NULL) {
+			tmp = realloc(data_read, max_len);
+			if (tmp == NULL) {
 				ERR(sh, "Failed to realloc, out of memory.\n");
+				free(data_read);
 				return -1;
 			}
+			data_read = tmp;
 		}
 	}
 
