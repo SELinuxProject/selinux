@@ -144,4 +144,17 @@ void semanage_keep_until_space(char *data);
 semanage_list_t *semanage_slurp_file_filter(FILE * file,
 					    int (*pred) (const char *))
     WARN_UNUSED;
+
+/**
+ * Wrapper around write(2), which retries on short writes.
+ *
+ * @param fd   file descriptor to write to
+ * @param buf  buffer to be written
+ * @param len  number of bytes to be written from buffer
+ *
+ * @return 0 on success, -1 else (with errno set)
+ */
+
+int write_full(int fd, const void *buf, size_t len) WARN_UNUSED;
+
 #endif

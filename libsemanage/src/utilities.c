@@ -25,6 +25,7 @@
 #include <ctype.h>
 #include <string.h>
 #include <sys/types.h>
+#include <unistd.h>
 #include <assert.h>
 
 #define TRUE 1
@@ -327,4 +328,25 @@ semanage_list_t *semanage_slurp_file_filter(FILE * file,
 	free(line);
 
 	return head.next;
+}
+
+int write_full(int fd, const void *buf, size_t len)
+{
+	ssize_t w;
+	const unsigned char *p = buf;
+
+	while (len > 0) {
+		w = write(fd, p, len);
+		if (w == -1) {
+			if (errno == EINTR)
+				continue;
+
+			return -1;
+		}
+
+		p += w;
+		len -= (size_t)w;
+	}
+
+	return 0;
 }

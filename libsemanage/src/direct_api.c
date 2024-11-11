@@ -462,7 +462,7 @@ static int write_file(semanage_handle_t * sh,
 		ERR(sh, "Could not open %s for writing.", filename);
 		return -1;
 	}
-	if (write(out, data, num_bytes) == -1) {
+	if (write_full(out, data, num_bytes) == -1) {
 		ERR(sh, "Error while writing to %s.", filename);
 		close(out);
 		return -1;
@@ -724,7 +724,7 @@ static int semanage_pipe_data(semanage_handle_t *sh, char *path, char *in_data, 
 			goto cleanup;
 		}
 
-		retval = write(input_fd[PIPE_WRITE], in_data, in_data_len);
+		retval = write_full(input_fd[PIPE_WRITE], in_data, in_data_len);
 		if (retval == -1) {
 			ERR(sh, "Failed to write data to input pipe: %s\n", strerror(errno));
 			goto cleanup;

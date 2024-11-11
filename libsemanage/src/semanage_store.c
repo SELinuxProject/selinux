@@ -739,7 +739,7 @@ int semanage_copy_file(const char *src, const char *dst, mode_t mode,
 	}
 	umask(mask);
 	while (retval == 0 && (amount_read = read(in, buf, sizeof(buf))) > 0) {
-		if (write(out, buf, amount_read) != amount_read) {
+		if (write_full(out, buf, amount_read) == -1) {
 			if (errno)
 				errsv = errno;
 			else
@@ -1555,14 +1555,14 @@ int semanage_split_fc(semanage_handle_t * sh)
 		    !strncmp(buf, "HOME_ROOT", 9) || strstr(buf, "ROLE") ||
 		    strstr(buf, "USER")) {
 			/* This contains one of the template variables, write it to homedir.template */
-			if (write(hd, buf, strlen(buf)) < 0) {
+			if (write_full(hd, buf, strlen(buf)) < 0) {
 				ERR(sh, "Write to %s failed.",
 				    semanage_path(SEMANAGE_TMP,
 						  SEMANAGE_HOMEDIR_TMPL));
 				goto cleanup;
 			}
 		} else {
-			if (write(fc, buf, strlen(buf)) < 0) {
+			if (write_full(fc, buf, strlen(buf)) < 0) {
 				ERR(sh, "Write to %s failed.",
 				    semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_FC));
 				goto cleanup;
@@ -1764,7 +1764,7 @@ static int semanage_commit_sandbox(semanage_handle_t * sh)
 		    commit_filename);
 		return -1;
 	}
-	amount_written = write(fd, write_buf, sizeof(write_buf));
+	amount_written = write_full(fd, write_buf, sizeof(write_buf));
 	if (amount_written == -1) {
 		ERR(sh, "Error while writing commit number to %s.",
 		    commit_filename);
