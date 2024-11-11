@@ -167,7 +167,7 @@ int semanage_list_sort(semanage_list_t ** l)
 	size_t count = 0;
 	size_t i = 0;
 
-	if (!l)
+	if (!l || !(*l)->next)
 		return 0;
 
 	for (temp = *l; temp; temp = temp->next)

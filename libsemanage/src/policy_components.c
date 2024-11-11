@@ -168,7 +168,7 @@ int semanage_base_merge_components(semanage_handle_t * handle)
 			goto err;
 
 		/* Sort records on MODE_SORT */
-		if (mode & MODE_SORT) {
+		if ((mode & MODE_SORT) && nrecords > 1) {
 			qsort(records, nrecords, sizeof(record_t *), rtable->compare2_qsort);
 		}
 

@@ -77,10 +77,10 @@ static int dbase_join_cache(semanage_handle_t * handle, dbase_join_t * dbase)
 		goto err;
 
 	/* Sort for quicker merge later */
-	if (rcount1 > 0) {
+	if (rcount1 > 1) {
 		qsort(records1, rcount1, sizeof(record1_t *), rtable1->compare2_qsort);
 	}
-	if (rcount2 > 0) {
+	if (rcount2 > 1) {
 		qsort(records2, rcount2, sizeof(record2_t *), rtable2->compare2_qsort);
 	}
 
