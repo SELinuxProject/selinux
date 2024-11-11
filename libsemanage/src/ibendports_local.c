@@ -80,8 +80,8 @@ int semanage_ibendport_validate_local(semanage_handle_t *handle)
 	semanage_ibendport_t **ibendports = NULL;
 	unsigned int nibendports = 0;
 	unsigned int i = 0, j = 0;
-	char *ibdev_name;
-	char *ibdev_name2;
+	char *ibdev_name = NULL;
+	char *ibdev_name2 = NULL;
 	int port;
 	int port2;
 
@@ -97,6 +97,8 @@ int semanage_ibendport_validate_local(semanage_handle_t *handle)
 	while (i < nibendports) {
 		int stop = 0;
 
+		free(ibdev_name);
+		ibdev_name = NULL;
 		if (STATUS_SUCCESS !=
 				semanage_ibendport_get_ibdev_name(handle,
 								  ibendports[i],
@@ -114,6 +116,8 @@ int semanage_ibendport_validate_local(semanage_handle_t *handle)
 			if (j == nibendports - 1)
 				goto next;
 			j++;
+			free(ibdev_name2);
+			ibdev_name2 = NULL;
 			if (STATUS_SUCCESS !=
 				semanage_ibendport_get_ibdev_name(handle,
 								  ibendports[j],
@@ -136,6 +140,8 @@ next:
 		j = i;
 	}
 
+	free(ibdev_name);
+	free(ibdev_name2);
 	for (i = 0; i < nibendports; i++)
 		semanage_ibendport_free(ibendports[i]);
 	free(ibendports);
@@ -145,6 +151,8 @@ err:
 	ERR(handle, "could not complete ibendports validity check");
 
 invalid:
+	free(ibdev_name);
+	free(ibdev_name2);
 	for (i = 0; i < nibendports; i++)
 		semanage_ibendport_free(ibendports[i]);
 	free(ibendports);
