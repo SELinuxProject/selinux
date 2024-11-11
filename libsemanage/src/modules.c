@@ -40,7 +40,6 @@
 #include <ctype.h>
 
 #include "handle.h"
-#include "modules.h"
 #include "sha256.h"
 #include "debug.h"
 
