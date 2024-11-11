@@ -423,7 +423,7 @@ cleanup:
 }
 
 /* THIS MUST BE THE FIRST FUNCTION CALLED IN THIS LIBRARY.  If the
- * library has nnot been initialized yet then call the functions that
+ * library has not been initialized yet then call the functions that
  * initialize the path variables.  This function does nothing if it
  * was previously called and that call was successful.  Return 0 on
  * success, -1 on error.
