@@ -202,9 +202,9 @@ int semanage_cmp_plist_t(const void *x, const void *y)
 	return strcmp((*l1)->data, (*l2)->data);
 }
 
-int semanage_str_count(const char *data, char what)
+size_t semanage_str_count(const char *data, char what)
 {
-	int count = 0;
+	size_t count = 0;
 
 	if (!data)
 		return 0;
@@ -219,7 +219,7 @@ int semanage_str_count(const char *data, char what)
 
 void semanage_rtrim(char *str, char trim_to)
 {
-	int len = 0;
+	size_t len;
 
 	if (!str)
 		return;

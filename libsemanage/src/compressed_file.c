@@ -104,7 +104,7 @@ static ssize_t bunzip(semanage_handle_t *sh, FILE *f, void **data)
 	size_t   total = 0;
 	uint8_t* uncompress = NULL;
 	uint8_t* tmpalloc = NULL;
-	int      ret = -1;
+	ssize_t  ret = -1;
 
 	buf = malloc(bufsize);
 	if (buf == NULL) {

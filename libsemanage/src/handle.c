@@ -172,7 +172,7 @@ int semanage_get_hll_compiler_path(semanage_handle_t *sh,
 	}
 
 	num_printed = snprintf(compiler, len, "%s/%s", sh->conf->compiler_directory_path, lower_lang_ext);
-	if (num_printed < 0 || (int)num_printed >= (int)len) {
+	if (num_printed < 0 || (size_t)num_printed >= len) {
 		ERR(sh, "Error creating compiler path.");
 		status = -1;
 		goto cleanup;
