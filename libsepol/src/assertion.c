@@ -201,7 +201,7 @@ static int report_assertion_extended_permissions(sepol_handle_t *handle,
 					permstring = sepol_extended_perms_to_string(&error);
 
 					ERR(handle, "neverallowxperm on line %lu of %s (or line %lu of %s) violated by\n"
-							"allowxperm %s %s:%s %s;",
+							"  allowxperm %s %s:%s %s;",
 							narule->source_line, narule->source_filename, narule->line, policy_name(p),
 							p->p_type_val_to_name[i],
 							p->p_type_val_to_name[j],
@@ -247,7 +247,7 @@ static int report_assertion_extended_permissions(sepol_handle_t *handle,
 						permstring = sepol_extended_perms_to_string(&error);
 
 						ERR(handle, "neverallowxperm on line %lu of %s (or line %lu of %s) violated by\n"
-								"allowxperm %s %s:%s %s;",
+								"  allowxperm %s %s:%s %s;",
 								narule->source_line, narule->source_filename, narule->line, policy_name(p),
 								p->p_type_val_to_name[i],
 								p->p_type_val_to_name[j],
@@ -289,7 +289,7 @@ static int report_assertion_extended_permissions(sepol_handle_t *handle,
 						permstring = sepol_extended_perms_to_string(&error);
 
 						ERR(handle, "neverallowxperm on line %lu of %s (or line %lu of %s) violated by\n"
-								"allowxperm %s %s:%s %s;",
+								"  allowxperm %s %s:%s %s;",
 								narule->source_line, narule->source_filename, narule->line, policy_name(p),
 								p->p_type_val_to_name[i],
 								p->p_type_val_to_name[j],
@@ -314,7 +314,7 @@ static int report_assertion_extended_permissions(sepol_handle_t *handle,
 		char *permstr = sepol_av_to_string(p, curperm->tclass, perms);
 
 		ERR(handle, "neverallowxperm on line %lu of %s (or line %lu of %s) violated by\n"
-				"allow %s %s:%s {%s };",
+				"  allow %s %s:%s {%s };",
 				narule->source_line, narule->source_filename, narule->line, policy_name(p),
 				p->p_type_val_to_name[stype],
 				p->p_type_val_to_name[ttype],
