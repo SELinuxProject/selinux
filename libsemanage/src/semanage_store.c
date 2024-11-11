@@ -739,8 +739,8 @@ static int semanage_rename(semanage_handle_t * sh, const char *src, const char *
 		return retval;
 
 	/* we can't use rename() due to filesystem limitation, lets try to copy files manually */
-	WARN(sh, "WARNING: rename(%s, %s) failed: %s, fall back to non-atomic semanage_copy_dir_flags()",
-		 src, dst, strerror(errno));
+	WARN(sh, "WARNING: rename(%s, %s) failed: %m, fall back to non-atomic semanage_copy_dir_flags()",
+		 src, dst);
 	if (semanage_copy_dir_flags(src, dst, 1) == -1) {
 		return -1;
 	}

@@ -79,8 +79,10 @@ void semanage_msg_default_handler(void *varg __attribute__ ((unused)),
 	vfprintf(stream, fmt, ap);
 	va_end(ap);
 
-	if (errsv && errsv != ENOMEM)
-		fprintf(stream, " (%s).", strerror(errsv));
+	if (errsv && errsv != ENOMEM) {
+		errno = errsv;
+		fprintf(stream, " (%m).");
+	}
 
 	fprintf(stream, "\n");
 }
