@@ -880,7 +880,7 @@ int semanage_remove_directory(const char *path)
 				return retval;
 			}
 		} else {
-			if (remove(s) == -1) {
+			if (unlink(s) == -1) {
 				return -3;
 			}
 		}
