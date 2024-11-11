@@ -470,10 +470,10 @@ static int HOME_DIR_PRED(const char *string)
 /* new names */
 static int USERNAME_CONTEXT_PRED(const char *string)
 {
-	return (int)(
-		(strstr(string, TEMPLATE_USERNAME) != NULL) ||
-		(strstr(string, TEMPLATE_USERID) != NULL)
-	);
+	return
+		strstr(string, TEMPLATE_USERNAME) != NULL ||
+		strstr(string, TEMPLATE_USERID) != NULL
+	;
 }
 
 /* This will never match USER if USERNAME or USERID are found. */
@@ -482,7 +482,7 @@ static int USER_CONTEXT_PRED(const char *string)
 	if (USERNAME_CONTEXT_PRED(string))
 		return 0;
 
-	return (int)(strstr(string, TEMPLATE_USER) != NULL);
+	return strstr(string, TEMPLATE_USER) != NULL;
 }
 
 static int STR_COMPARATOR(const void *a, const void *b)

@@ -2654,7 +2654,7 @@ int semanage_fc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
 			continue;
 		}
 
-		temp->path = (char *)strndup(&line_buf[start], regex_len);
+		temp->path = strndup(&line_buf[start], regex_len);
 		if (!temp->path) {
 			ERR(sh, "Failure allocating memory.");
 			semanage_fc_node_destroy(temp);
@@ -2689,7 +2689,7 @@ int semanage_fc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
 
 			/* Record the inode type. */
 			temp->file_type =
-			    (char *)strndup(&line_buf[i], type_len);
+			    strndup(&line_buf[i], type_len);
 			if (!temp->file_type) {
 				ERR(sh, "Failure allocating memory.");
 				semanage_fc_node_destroy(temp);
@@ -2722,7 +2722,7 @@ int semanage_fc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
 		finish = i;
 		context_len = finish - start;
 
-		temp->context = (char *)strndup(&line_buf[start], context_len);
+		temp->context = strndup(&line_buf[start], context_len);
 		if (!temp->context) {
 			ERR(sh, "Failure allocating memory.");
 			semanage_fc_node_destroy(temp);
@@ -2961,7 +2961,7 @@ int semanage_nc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
 		}
 
 		node->rule =
-		    (char *)strndup(line_buf + offset, line_len - offset);
+		    strndup(line_buf + offset, line_len - offset);
 		node->rule_len = line_len - offset;
 		node->next = NULL;
 
