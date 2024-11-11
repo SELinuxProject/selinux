@@ -696,8 +696,6 @@ int semanage_store_access_check(void)
 
 /********************* other I/O functions *********************/
 
-static int semanage_rename(semanage_handle_t * sh, const char *tmp, const char *dst);
-int semanage_remove_directory(const char *path);
 static int semanage_copy_dir_flags(const char *src, const char *dst, int flag);
 
 /* Callback used by scandir() to select files. */
