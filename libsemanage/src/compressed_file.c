@@ -45,7 +45,7 @@ static int bzip(semanage_handle_t *sh, const char *filename, void *data,
 	size_t  size = 1<<16;
 	int     bzerror;
 	size_t  total = 0;
-	size_t len = 0;
+	size_t len;
 	FILE *f;
 
 	if ((f = fopen(filename, "wb")) == NULL) {

@@ -582,7 +582,7 @@ cleanup:
 static int read_from_pipe_to_data(semanage_handle_t *sh, size_t initial_len, int fd, char **out_data_read, size_t *out_read_len)
 {
 	size_t max_len = initial_len;
-	ssize_t read_len = 0;
+	ssize_t read_len;
 	size_t data_read_len = 0;
 	char *data_read = NULL;
 
@@ -1001,7 +1001,7 @@ static int semanage_compile_hll_modules(semanage_handle_t *sh,
 	/* to be incremented when checksum input data format changes */
 	static const size_t CHECKSUM_EPOCH = 2;
 
-	int i, status = 0;
+	int i, status;
 	char cil_path[PATH_MAX];
 	struct stat sb;
 	Sha256Context context;

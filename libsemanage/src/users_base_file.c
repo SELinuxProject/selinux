@@ -66,7 +66,7 @@ static int user_base_parse(semanage_handle_t * handle,
 			   parse_info_t * info, semanage_user_base_t * user)
 {
 
-	int islist = 0;
+	int islist;
 	char *str = NULL;
 	char *start;
 	char *name_str = NULL;

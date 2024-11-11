@@ -2079,7 +2079,7 @@ int semanage_direct_get_serial(semanage_handle_t * sh)
 
 int semanage_load_files(semanage_handle_t * sh, cil_db_t *cildb, char **filenames, int numfiles)
 {
-	int i, retval = 0;
+	int i, retval;
 	char *filename;
 	struct file_contents contents = {};
 
@@ -2554,8 +2554,6 @@ int semanage_fc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
 	semanage_file_context_node_t *current;
 	semanage_file_context_bucket_t *main;
 	semanage_file_context_bucket_t *bcurrent;
-
-	i = 0;
 
 	if (sh == NULL) {
 		return -1;
