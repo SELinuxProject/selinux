@@ -21,9 +21,9 @@ static int clear_obsolete(semanage_handle_t * handle,
 	record_key_t *key = NULL;
 	unsigned int i;
 
-	dbase_table_t *src_dtable = src->dtable;
-	dbase_table_t *dst_dtable = dst->dtable;
-	record_table_t *rtable = src_dtable->get_rtable(src->dbase);
+	const dbase_table_t *src_dtable = src->dtable;
+	const dbase_table_t *dst_dtable = dst->dtable;
+	const record_table_t *rtable = src_dtable->get_rtable(src->dbase);
 
 	for (i = 0; i < nrecords; i++) {
 		int exists;
@@ -65,8 +65,8 @@ static int load_records(semanage_handle_t * handle,
 	record_key_t *rkey = NULL;
 
 	dbase_t *dbase = dst->dbase;
-	dbase_table_t *dtable = dst->dtable;
-	record_table_t *rtable = dtable->get_rtable(dbase);
+	const dbase_table_t *dtable = dst->dtable;
+	const record_table_t *rtable = dtable->get_rtable(dbase);
 
 	for (i = 0; i < nrecords; i++) {
 
@@ -154,7 +154,7 @@ int semanage_base_merge_components(semanage_handle_t * handle)
 		dbase_config_t *src = components[i].src;
 		dbase_config_t *dst = components[i].dst;
 		int mode = components[i].mode;
-		record_table_t *rtable = src->dtable->get_rtable(src->dbase);
+		const record_table_t *rtable = src->dtable->get_rtable(src->dbase);
 
 		/* Must invoke cache function first */
 		if (src->dtable->cache(handle, src->dbase) < 0)

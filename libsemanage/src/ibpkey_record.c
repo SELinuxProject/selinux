@@ -153,7 +153,7 @@ void semanage_ibpkey_free(semanage_ibpkey_t *ibpkey)
 
 
 /* key base functions */
-record_table_t SEMANAGE_IBPKEY_RTABLE = {
+const record_table_t SEMANAGE_IBPKEY_RTABLE = {
 	.create = semanage_ibpkey_create,
 	.key_extract = semanage_ibpkey_key_extract,
 	.key_free = semanage_ibpkey_key_free,

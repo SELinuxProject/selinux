@@ -129,7 +129,7 @@ void semanage_ibendport_free(semanage_ibendport_t *ibendport)
 
 
 /*key base functions */
-record_table_t SEMANAGE_IBENDPORT_RTABLE = {
+const record_table_t SEMANAGE_IBENDPORT_RTABLE = {
 	.create = semanage_ibendport_create,
 	.key_extract = semanage_ibendport_key_extract,
 	.key_free = semanage_ibendport_key_free,

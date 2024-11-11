@@ -382,7 +382,7 @@ void semanage_user_free(semanage_user_t * user)
 }
 
 /* Record base functions */
-record_table_t SEMANAGE_USER_RTABLE = {
+const record_table_t SEMANAGE_USER_RTABLE = {
 	.create = semanage_user_create,
 	.key_extract = semanage_user_key_extract,
 	.key_free = semanage_user_key_free,

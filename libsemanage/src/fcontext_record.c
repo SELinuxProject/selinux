@@ -289,7 +289,7 @@ void semanage_fcontext_free(semanage_fcontext_t * fcontext)
 
 
 /* Record base functions */
-record_table_t SEMANAGE_FCONTEXT_RTABLE = {
+const record_table_t SEMANAGE_FCONTEXT_RTABLE = {
 	.create = semanage_fcontext_create,
 	.key_extract = semanage_fcontext_key_extract,
 	.key_free = semanage_fcontext_key_free,

@@ -104,7 +104,7 @@ static int semanage_direct_install_info(semanage_handle_t *sh,
 static int semanage_direct_remove_key(semanage_handle_t *sh,
 				      const semanage_module_key_t *modkey);
 
-static struct semanage_policy_table direct_funcs = {
+static const struct semanage_policy_table direct_funcs = {
 	.get_serial = semanage_direct_get_serial,
 	.destroy = semanage_direct_destroy,
 	.disconnect = semanage_direct_disconnect,

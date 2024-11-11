@@ -88,8 +88,8 @@ typedef struct record_policydb_table {
 extern int dbase_policydb_init(semanage_handle_t * handle,
 			       const char *path_ro,
 			       const char *path_rw,
-			       record_table_t * rtable,
-			       record_policydb_table_t * rptable,
+			       const record_table_t * rtable,
+			       const record_policydb_table_t * rptable,
 			       dbase_policydb_t ** dbase);
 
 /* Attach to a shared policydb.
@@ -107,6 +107,6 @@ extern void dbase_policydb_detach(dbase_policydb_t * dbase);
 extern void dbase_policydb_release(dbase_policydb_t * dbase);
 
 /* POLICYDB database - method table implementation */
-extern dbase_table_t SEMANAGE_POLICYDB_DTABLE;
+extern const dbase_table_t SEMANAGE_POLICYDB_DTABLE;
 
 #endif

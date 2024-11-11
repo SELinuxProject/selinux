@@ -185,7 +185,7 @@ static int semanage_user_extra_compare2_qsort(const semanage_user_extra_t **
 }
 
 /* Record base functions */
-record_table_t SEMANAGE_USER_EXTRA_RTABLE = {
+const record_table_t SEMANAGE_USER_EXTRA_RTABLE = {
 	.create = semanage_user_extra_create,
 	.key_extract = semanage_user_extra_key_extract,
 	.key_free = semanage_user_key_free,

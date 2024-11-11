@@ -246,7 +246,7 @@ void semanage_seuser_free(semanage_seuser_t * seuser)
 
 
 /* Record base functions */
-record_table_t SEMANAGE_SEUSER_RTABLE = {
+const record_table_t SEMANAGE_SEUSER_RTABLE = {
 	.create = semanage_seuser_create,
 	.key_extract = semanage_seuser_key_extract,
 	.key_free = semanage_seuser_key_free,

@@ -80,7 +80,7 @@ struct semanage_handle {
 	/* these function pointers will point to the appropriate
 	 * routine given the connection type.  think of these as
 	 * simulating polymorphism for non-OO languages. */
-	struct semanage_policy_table *funcs;
+	const struct semanage_policy_table *funcs;
 
 	/* Object databases */
 #define DBASE_COUNT      24

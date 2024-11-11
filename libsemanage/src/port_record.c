@@ -164,7 +164,7 @@ void semanage_port_free(semanage_port_t * port)
 
 
 /* Port base functions */
-record_table_t SEMANAGE_PORT_RTABLE = {
+const record_table_t SEMANAGE_PORT_RTABLE = {
 	.create = semanage_port_create,
 	.key_extract = semanage_port_key_extract,
 	.key_free = semanage_port_key_free,

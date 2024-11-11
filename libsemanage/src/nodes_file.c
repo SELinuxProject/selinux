@@ -154,7 +154,7 @@ static int node_parse(semanage_handle_t * handle,
 }
 
 /* NODE RECORD: FILE extension: method table */
-static record_file_table_t SEMANAGE_NODE_FILE_RTABLE = {
+static const record_file_table_t SEMANAGE_NODE_FILE_RTABLE = {
 	.parse = node_parse,
 	.print = node_print,
 };

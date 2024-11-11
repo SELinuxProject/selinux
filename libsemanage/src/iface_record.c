@@ -144,7 +144,7 @@ void semanage_iface_free(semanage_iface_t * iface)
 
 
 /* Record base functions */
-record_table_t SEMANAGE_IFACE_RTABLE = {
+const record_table_t SEMANAGE_IFACE_RTABLE = {
 	.create = semanage_iface_create,
 	.key_extract = semanage_iface_key_extract,
 	.key_free = semanage_iface_key_free,

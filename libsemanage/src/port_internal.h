@@ -8,7 +8,7 @@
 #include "handle.h"
 
 /* PORT RECORD: method table */
-extern record_table_t SEMANAGE_PORT_RTABLE;
+extern const record_table_t SEMANAGE_PORT_RTABLE;
 
 extern int port_file_dbase_init(semanage_handle_t * handle,
 				const char *path_ro,

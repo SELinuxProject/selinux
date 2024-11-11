@@ -153,7 +153,7 @@ err:
 }
 
 /* IBPKEY RECORD: FILE extension: method table */
-static record_file_table_t SEMANAGE_IBPKEY_FILE_RTABLE = {
+static const record_file_table_t SEMANAGE_IBPKEY_FILE_RTABLE = {
 	.parse = ibpkey_parse,
 	.print = ibpkey_print,
 };

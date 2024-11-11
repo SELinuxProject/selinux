@@ -9,7 +9,7 @@
 #include "handle.h"
 
 /* FCONTEXT RECORD: method table */
-extern record_table_t SEMANAGE_FCONTEXT_RTABLE;
+extern const record_table_t SEMANAGE_FCONTEXT_RTABLE;
 
 extern int fcontext_file_dbase_init(semanage_handle_t * handle,
 				    const char *path_ro,

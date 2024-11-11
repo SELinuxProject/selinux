@@ -9,7 +9,7 @@
 #include "handle.h"
 
 /* SEUSER RECORD: method table */
-extern record_table_t SEMANAGE_SEUSER_RTABLE;
+extern const record_table_t SEMANAGE_SEUSER_RTABLE;
 
 extern int seuser_file_dbase_init(semanage_handle_t * handle,
 				  const char *path_ro,

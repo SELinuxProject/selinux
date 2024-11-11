@@ -8,7 +8,7 @@
 #include "handle.h"
 
 /* PKEY RECORD: method table */
-extern record_table_t SEMANAGE_IBPKEY_RTABLE;
+extern const record_table_t SEMANAGE_IBPKEY_RTABLE;
 
 extern int ibpkey_file_dbase_init(semanage_handle_t *handle,
 				  const char *path_ro,

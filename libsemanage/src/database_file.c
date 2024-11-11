@@ -34,14 +34,14 @@ struct dbase_file {
 	const char *path[2];
 
 	/* FILE extension */
-	record_file_table_t *rftable;
+	const record_file_table_t *rftable;
 };
 
 static int dbase_file_cache(semanage_handle_t * handle, dbase_file_t * dbase)
 {
 
-	record_table_t *rtable = dbase_llist_get_rtable(&dbase->llist);
-	record_file_table_t *rftable = dbase->rftable;
+	const record_table_t *rtable = dbase_llist_get_rtable(&dbase->llist);
+	const record_file_table_t *rftable = dbase->rftable;
 
 	record_t *process_record = NULL;
 	int pstatus = STATUS_SUCCESS;
@@ -114,7 +114,7 @@ static int dbase_file_cache(semanage_handle_t * handle, dbase_file_t * dbase)
 static int dbase_file_flush(semanage_handle_t * handle, dbase_file_t * dbase)
 {
 
-	record_file_table_t *rftable = dbase->rftable;
+	const record_file_table_t *rftable = dbase->rftable;
 
 	cache_entry_t *ptr;
 	const char *fname = NULL;
@@ -163,8 +163,8 @@ static int dbase_file_flush(semanage_handle_t * handle, dbase_file_t * dbase)
 int dbase_file_init(semanage_handle_t * handle,
 		    const char *path_ro,
 		    const char *path_rw,
-		    record_table_t * rtable,
-		    record_file_table_t * rftable, dbase_file_t ** dbase)
+		    const record_table_t * rtable,
+		    const record_file_table_t * rftable, dbase_file_t ** dbase)
 {
 
 	dbase_file_t *tmp_dbase = (dbase_file_t *) malloc(sizeof(dbase_file_t));
@@ -199,7 +199,7 @@ void dbase_file_release(dbase_file_t * dbase)
 }
 
 /* FILE dbase - method table implementation */
-dbase_table_t SEMANAGE_FILE_DTABLE = {
+dbase_table_t const SEMANAGE_FILE_DTABLE = {
 
 	/* Cache/Transactions */
 	.cache = dbase_file_cache,

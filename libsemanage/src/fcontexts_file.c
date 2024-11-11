@@ -158,7 +158,7 @@ static int fcontext_parse(semanage_handle_t * handle,
 }
 
 /* FCONTEXT RECORD: FILE extension: method table */
-static record_file_table_t SEMANAGE_FCONTEXT_FILE_RTABLE = {
+static const record_file_table_t SEMANAGE_FCONTEXT_FILE_RTABLE = {
 	.parse = fcontext_parse,
 	.print = fcontext_print,
 };

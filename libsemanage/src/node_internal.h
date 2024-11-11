@@ -8,7 +8,7 @@
 #include "handle.h"
 
 /* NODE RECORD: method table */
-extern record_table_t SEMANAGE_NODE_RTABLE;
+extern const record_table_t SEMANAGE_NODE_RTABLE;
 
 extern int node_file_dbase_init(semanage_handle_t * handle,
 				const char *path_ro,

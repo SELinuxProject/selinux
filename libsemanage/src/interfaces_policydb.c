@@ -36,7 +36,7 @@ typedef struct dbase_policydb dbase_t;
 #include "semanage_store.h"
 
 /* INTERFACE RECRORD (SEPOL): POLICYDB extension: method table */
-static record_policydb_table_t SEMANAGE_IFACE_POLICYDB_RTABLE = {
+static const record_policydb_table_t SEMANAGE_IFACE_POLICYDB_RTABLE = {
 	.add = NULL,
 	.modify = (record_policydb_table_modify_t) sepol_iface_modify,
 	.set = NULL,

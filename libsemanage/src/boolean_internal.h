@@ -9,7 +9,7 @@
 #include "handle.h"
 
 /* BOOL RECORD: method table */
-extern record_table_t SEMANAGE_BOOL_RTABLE;
+extern const record_table_t SEMANAGE_BOOL_RTABLE;
 
 extern int bool_file_dbase_init(semanage_handle_t * handle,
 				const char *path_ro,

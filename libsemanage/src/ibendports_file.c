@@ -129,7 +129,7 @@ err:
 }
 
 /* IBENDPORT RECORD: FILE extension: method table */
-static record_file_table_t SEMANAGE_IBENDPORT_FILE_RTABLE = {
+static const record_file_table_t SEMANAGE_IBENDPORT_FILE_RTABLE = {
 	.parse = ibendport_parse,
 	.print = ibendport_print,
 };

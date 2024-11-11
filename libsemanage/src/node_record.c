@@ -208,7 +208,7 @@ void semanage_node_free(semanage_node_t * node)
 
 
 /* Port base functions */
-record_table_t SEMANAGE_NODE_RTABLE = {
+const record_table_t SEMANAGE_NODE_RTABLE = {
 	.create = semanage_node_create,
 	.key_extract = semanage_node_key_extract,
 	.key_free = semanage_node_key_free,

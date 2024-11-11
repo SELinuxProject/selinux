@@ -9,13 +9,13 @@
 #include "handle.h"
 
 /* USER record: method table */
-extern record_table_t SEMANAGE_USER_RTABLE;
+extern const record_table_t SEMANAGE_USER_RTABLE;
 
 /* USER BASE record: method table */
-extern record_table_t SEMANAGE_USER_BASE_RTABLE;
+extern const record_table_t SEMANAGE_USER_BASE_RTABLE;
 
 /* USER EXTRA record: method table */
-extern record_table_t SEMANAGE_USER_EXTRA_RTABLE;
+extern const record_table_t SEMANAGE_USER_EXTRA_RTABLE;
 
 /* ============ Init/Release functions ========== */
 

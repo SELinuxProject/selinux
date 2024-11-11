@@ -8,7 +8,7 @@
 #include "handle.h"
 
 /* IBENDPORT RECORD: method table */
-extern record_table_t SEMANAGE_IBENDPORT_RTABLE;
+extern const record_table_t SEMANAGE_IBENDPORT_RTABLE;
 
 extern int ibendport_file_dbase_init(semanage_handle_t *handle,
 				     const char *path_ro,

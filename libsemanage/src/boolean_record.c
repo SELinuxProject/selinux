@@ -181,7 +181,7 @@ void semanage_bool_free(semanage_bool_t * boolean)
 
 
 /* Record base functions */
-record_table_t SEMANAGE_BOOL_RTABLE = {
+const record_table_t SEMANAGE_BOOL_RTABLE = {
 	.create = semanage_bool_create,
 	.key_extract = semanage_bool_key_extract,
 	.key_free = semanage_bool_key_free,

@@ -166,7 +166,7 @@ typedef struct dbase_table {
 	/* Retrieves the record table for this database,
 	 * which specifies how to perform basic operations
 	 * on each record. */
-	record_table_t *(*get_rtable) (dbase_t * dbase);
+	const record_table_t *(*get_rtable) (dbase_t * dbase);
 
 } dbase_table_t;
 
@@ -176,7 +176,7 @@ typedef struct dbase_config {
 	dbase_t *dbase;
 
 	/* Database methods */
-	dbase_table_t *dtable;
+	const dbase_table_t *dtable;
 
 } dbase_config_t;
 
