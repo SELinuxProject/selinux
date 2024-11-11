@@ -44,7 +44,7 @@ struct dbase_policydb {
 static void dbase_policydb_drop_cache(dbase_policydb_t * dbase)
 {
 
-	if (dbase->cache_serial >= 0) {
+	if (dbase && dbase->cache_serial >= 0) {
 		sepol_policydb_free(dbase->policydb);
 		dbase->cache_serial = -1;
 		dbase->modified = 0;

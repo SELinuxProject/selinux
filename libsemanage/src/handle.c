@@ -361,12 +361,11 @@ int semanage_access_check(semanage_handle_t * sh)
 
 int semanage_disconnect(semanage_handle_t * sh)
 {
-	assert(sh != NULL && sh->funcs != NULL
-	       && sh->funcs->disconnect != NULL);
+	assert(sh != NULL);
 	if (!sh->is_connected) {
 		return 0;
 	}
-	if (sh->funcs->disconnect(sh) < 0) {
+	if (sh->funcs && sh->funcs->disconnect(sh) < 0) {
 		return -1;
 	}
 	sh->is_in_transaction = 0;
