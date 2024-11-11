@@ -270,7 +270,7 @@ int parse_fetch_string(semanage_handle_t * handle,
 		       parse_info_t * info, char **str, char delim, int allow_spaces)
 {
 
-	char *start = info->ptr;
+	const char *start = info->ptr;
 	int len = 0;
 	char *tmp_str = NULL;
 

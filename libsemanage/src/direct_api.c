@@ -618,7 +618,7 @@ static int read_from_pipe_to_data(semanage_handle_t *sh, size_t initial_len, int
 	return 0;
 }
 
-static int semanage_pipe_data(semanage_handle_t *sh, char *path, char *in_data, size_t in_data_len, char **out_data, size_t *out_data_len, char **err_data, size_t *err_data_len)
+static int semanage_pipe_data(semanage_handle_t *sh, const char *path, const char *in_data, size_t in_data_len, char **out_data, size_t *out_data_len, char **err_data, size_t *err_data_len)
 {
 	int input_fd[2] = {-1, -1};
 	int output_fd[2] = {-1, -1};
@@ -1721,8 +1721,8 @@ static int semanage_direct_install_file(semanage_handle_t * sh,
 
 	int retval = -1;
 	char *path = NULL;
-	char *filename;
-	char *lang_ext = NULL;
+	const char *filename;
+	const char *lang_ext = NULL;
 	char *module_name = NULL;
 	char *separator;
 	char *version = NULL;
@@ -2214,7 +2214,7 @@ static int semanage_direct_get_module_info(semanage_handle_t *sh,
 
 	semanage_module_info_t *modinfos = NULL;
 	int modinfos_len = 0;
-	semanage_module_info_t *highest = NULL;
+	const semanage_module_info_t *highest = NULL;
 
 	/* check module name */
 	ret = semanage_module_validate_name(modkey->name);

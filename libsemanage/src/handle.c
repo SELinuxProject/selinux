@@ -138,7 +138,7 @@ void semanage_set_check_ext_changes(semanage_handle_t * sh, int do_check)
 }
 
 int semanage_get_hll_compiler_path(semanage_handle_t *sh,
-				char *lang_ext,
+				const char *lang_ext,
 				char **compiler_path)
 {
 	assert(sh != NULL);
@@ -272,7 +272,7 @@ int semanage_is_connected(semanage_handle_t * sh)
 	return sh->is_connected;
 }
 
-void semanage_select_store(semanage_handle_t * sh, char *storename,
+void semanage_select_store(semanage_handle_t * sh, const char *storename,
 			   enum semanage_connect_type storetype)
 {
 

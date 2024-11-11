@@ -20,7 +20,7 @@ typedef struct dbase_file dbase_t;
 #include "handle.h"
 
 static int seuser_print(semanage_handle_t * handle,
-			semanage_seuser_t * seuser, FILE * str)
+			const semanage_seuser_t * seuser, FILE * str)
 {
 
 	const char *name = semanage_seuser_get_name(seuser);

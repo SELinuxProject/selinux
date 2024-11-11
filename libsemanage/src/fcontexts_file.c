@@ -43,7 +43,7 @@ static const char *type_str(int type)
 }
 
 static int fcontext_print(semanage_handle_t * handle,
-			  semanage_fcontext_t * fcontext, FILE * str)
+			  const semanage_fcontext_t * fcontext, FILE * str)
 {
 
 	char *con_str = NULL;

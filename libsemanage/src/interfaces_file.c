@@ -19,7 +19,7 @@ typedef struct dbase_file dbase_t;
 #include "debug.h"
 
 static int iface_print(semanage_handle_t * handle,
-		       semanage_iface_t * iface, FILE * str)
+		       const semanage_iface_t * iface, FILE * str)
 {
 
 	char *con_str = NULL;

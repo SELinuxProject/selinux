@@ -22,7 +22,7 @@ typedef struct record_file_table {
 
 	/* Print record to stream */
 	int (*print) (semanage_handle_t * handle,
-		      record_t * record, FILE * str);
+		      const record_t * record, FILE * str);
 
 } record_file_table_t;
 

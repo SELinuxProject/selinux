@@ -20,7 +20,7 @@ typedef struct dbase_file dbase_t;
 #include "debug.h"
 
 static int port_print(semanage_handle_t * handle,
-		      semanage_port_t * port, FILE * str)
+		      const semanage_port_t * port, FILE * str)
 {
 
 	char *con_str = NULL;

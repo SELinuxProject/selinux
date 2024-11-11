@@ -78,13 +78,13 @@ static char *semanage_files[SEMANAGE_NUM_FILES] = { NULL };
 static int semanage_paths_initialized = 0;
 
 /* These are paths relative to the bottom of the module store */
-static const char *semanage_relative_files[SEMANAGE_NUM_FILES] = {
+static const char *const semanage_relative_files[SEMANAGE_NUM_FILES] = {
 	"",
 	"/semanage.trans.LOCK",
 	"/semanage.read.LOCK"
 };
 
-static const char *semanage_store_paths[SEMANAGE_NUM_STORES] = {
+static const char *const semanage_store_paths[SEMANAGE_NUM_STORES] = {
 	"/active",
 	"/previous",
 	"/tmp"
@@ -92,7 +92,7 @@ static const char *semanage_store_paths[SEMANAGE_NUM_STORES] = {
 
 /* relative path names to enum sandbox_paths for special files within
  * a sandbox */
-static const char *semanage_sandbox_paths[SEMANAGE_STORE_NUM_PATHS] = {
+static const char *const semanage_sandbox_paths[SEMANAGE_STORE_NUM_PATHS] = {
 	"",
 	"/modules",
 	"/policy.linked",
@@ -1152,7 +1152,7 @@ int semanage_get_active_modules(semanage_handle_t * sh,
 	int j = 0;
 
 	semanage_list_t *list = NULL;
-	semanage_list_t *found = NULL;
+	const semanage_list_t *found = NULL;
 
 	semanage_module_info_t *all_modinfos = NULL;
 	int all_modinfos_len = 0;
@@ -2091,7 +2091,7 @@ int semanage_direct_get_serial(semanage_handle_t * sh)
 int semanage_load_files(semanage_handle_t * sh, cil_db_t *cildb, char **filenames, int numfiles)
 {
 	int i, retval;
-	char *filename;
+	const char *filename;
 	struct file_contents contents = {};
 
 	for (i = 0; i < numfiles; i++) {
@@ -2216,7 +2216,7 @@ int semanage_verify_modules(semanage_handle_t * sh,
 		return 0;
 	}
 	for (i = 0; i < num_modules; i++) {
-		char *module = module_filenames[i];
+		const char *module = module_filenames[i];
 		external_prog_t *e;
 		for (e = conf->mod_prog; e != NULL; e = e->next) {
 			if (semanage_exec_prog(sh, e, module, "$<") != 0) {
@@ -2329,8 +2329,8 @@ static void semanage_fc_bucket_list_destroy(semanage_file_context_bucket_t * x)
  * now.  A proper comparison would determine which (if either)
  * regular expression is a subset of the other.
  */
-static int semanage_fc_compare(semanage_file_context_node_t * a,
-			       semanage_file_context_node_t * b)
+static int semanage_fc_compare(const semanage_file_context_node_t * a,
+			       const semanage_file_context_node_t * b)
 {
 	int a_has_meta = (a->meta >= 0);
 	int b_has_meta = (b->meta >= 0);

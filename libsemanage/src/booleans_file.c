@@ -21,7 +21,7 @@ typedef struct dbase_file dbase_t;
 #include "debug.h"
 
 static int bool_print(semanage_handle_t * handle,
-		      semanage_bool_t * boolean, FILE * str)
+		      const semanage_bool_t * boolean, FILE * str)
 {
 
 	const char *name = semanage_bool_get_name(boolean);

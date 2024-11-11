@@ -115,7 +115,7 @@ int semanage_base_merge_components(semanage_handle_t * handle)
 	/* Order is important here - change things carefully.
 	 * System components first, local next. Verify runs with
 	 * mutual dependencies are ran after everything is merged */
-	load_table_t components[] = {
+	const load_table_t components[] = {
 
 		{semanage_user_base_dbase_local(handle),
 		 semanage_user_base_dbase_policy(handle), MODE_MODIFY},
@@ -210,7 +210,7 @@ int semanage_commit_components(semanage_handle_t * handle)
 {
 
 	int i;
-	dbase_config_t *components[] = {
+	const dbase_config_t *components[] = {
 		semanage_iface_dbase_local(handle),
 		semanage_bool_dbase_local(handle),
 		semanage_user_base_dbase_local(handle),

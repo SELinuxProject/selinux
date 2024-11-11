@@ -170,7 +170,7 @@ err:
 }
 
 static int ignore(const char *homedir) {
-	ignoredir_t *ptr = ignore_head;
+	const ignoredir_t *ptr = ignore_head;
 	while (ptr) {
 		if (strcmp(ptr->dir, homedir) == 0) {
 			return 1;
@@ -683,7 +683,7 @@ fail:
 static int write_home_dir_context(genhomedircon_settings_t * s, FILE * out,
 				  semanage_list_t * tpl, const genhomedircon_user_entry_t *user)
 {
-	replacement_pair_t repl[] = {
+	const replacement_pair_t repl[] = {
 		{.search_for = TEMPLATE_HOME_DIR,.replace_with = user->home},
 		{.search_for = TEMPLATE_ROLE,.replace_with = user->prefix},
 		{NULL, NULL}
@@ -701,9 +701,9 @@ static int write_home_dir_context(genhomedircon_settings_t * s, FILE * out,
 }
 
 static int write_home_root_context(genhomedircon_settings_t * s, FILE * out,
-				   semanage_list_t * tpl, char *homedir)
+				   semanage_list_t * tpl, const char *homedir)
 {
-	replacement_pair_t repl[] = {
+	const replacement_pair_t repl[] = {
 		{.search_for = TEMPLATE_HOME_ROOT,.replace_with = homedir},
 		{NULL, NULL}
 	};
@@ -715,7 +715,7 @@ static int write_username_context(genhomedircon_settings_t * s, FILE * out,
 				  semanage_list_t * tpl,
 				  const genhomedircon_user_entry_t *user)
 {
-	replacement_pair_t repl[] = {
+	const replacement_pair_t repl[] = {
 		{.search_for = TEMPLATE_USERNAME,.replace_with = user->name},
 		{.search_for = TEMPLATE_USERID,.replace_with = user->uid},
 		{.search_for = TEMPLATE_ROLE,.replace_with = user->prefix},
@@ -728,7 +728,7 @@ static int write_username_context(genhomedircon_settings_t * s, FILE * out,
 static int write_user_context(genhomedircon_settings_t * s, FILE * out,
 			      semanage_list_t * tpl, const genhomedircon_user_entry_t *user)
 {
-	replacement_pair_t repl[] = {
+	const replacement_pair_t repl[] = {
 		{.search_for = TEMPLATE_USER,.replace_with = user->name},
 		{.search_for = TEMPLATE_ROLE,.replace_with = user->prefix},
 		{NULL, NULL}

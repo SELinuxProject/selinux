@@ -20,7 +20,7 @@ typedef struct dbase_file dbase_t;
 #include "debug.h"
 
 static int node_print(semanage_handle_t * handle,
-		      semanage_node_t * node, FILE * str)
+		      const semanage_node_t * node, FILE * str)
 {
 
 	char *con_str = NULL;
