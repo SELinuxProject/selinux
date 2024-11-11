@@ -290,14 +290,12 @@ int parse_fetch_string(semanage_handle_t * handle,
 		goto err;
 	}
 
-	tmp_str = (char *)malloc(len + 1);
+	tmp_str = strndup(start, len);
 	if (!tmp_str) {
 		ERR(handle, "out of memory");
 		goto err;
 	}
 
-	strncpy(tmp_str, start, len);
-	*(tmp_str + len) = '\0';
 	*str = tmp_str;
 	return STATUS_SUCCESS;
 
