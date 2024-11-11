@@ -66,8 +66,6 @@ typedef struct dbase_policydb dbase_t;
 /* relative path names to enum semanage_paths to special files and
  * directories for the module store */
 
-#define TRUE 1
-
 enum semanage_file_defs {
 	SEMANAGE_ROOT,
 	SEMANAGE_TRANS_LOCK,
