@@ -6164,7 +6164,11 @@ static int check_for_illegal_statement(struct cil_tree_node *parse_current, stru
 			parse_current->data != CIL_KEY_AUDITALLOW &&
 			parse_current->data != CIL_KEY_TYPETRANSITION &&
 			parse_current->data != CIL_KEY_TYPECHANGE &&
-			parse_current->data != CIL_KEY_TYPEMEMBER) {
+			parse_current->data != CIL_KEY_TYPEMEMBER &&
+			((args->db->policy_version < POLICYDB_VERSION_COND_XPERMS) ||
+			  (parse_current->data != CIL_KEY_ALLOWX &&
+			   parse_current->data != CIL_KEY_DONTAUDITX &&
+			   parse_current->data != CIL_KEY_AUDITALLOWX))) {
 			if (((struct cil_booleanif*)args->boolif->data)->preserved_tunable) {
 				cil_tree_log(parse_current, CIL_ERR, "%s is not allowed in tunableif being treated as a booleanif", (char *)parse_current->data);
 			} else {
