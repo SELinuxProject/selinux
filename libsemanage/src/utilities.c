@@ -28,9 +28,6 @@
 #include <unistd.h>
 #include <assert.h>
 
-#define TRUE 1
-#define FALSE 0
-
 char *semanage_findval(const char *file, const char *var, const char *delim)
 {
 	FILE *fd;
@@ -61,10 +58,10 @@ char *semanage_findval(const char *file, const char *var, const char *delim)
 int semanage_is_prefix(const char *str, const char *prefix)
 {
 	if (!str) {
-		return FALSE;
+		return 0;
 	}
 	if (!prefix) {
-		return TRUE;
+		return 1;
 	}
 
 	return strncmp(str, prefix, strlen(prefix)) == 0;
