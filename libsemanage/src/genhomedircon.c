@@ -144,10 +144,10 @@ static void ignore_free(void) {
 }
 
 static int ignore_setup(char *ignoredirs) {
-	char *tok;
+	char *tok, *saveptr = NULL;
 	ignoredir_t *ptr = NULL;
 
-	tok = strtok(ignoredirs, ";");
+	tok = strtok_r(ignoredirs, ";", &saveptr);
 	while(tok) {
 		ptr = calloc(1, sizeof(ignoredir_t));
 		if (!ptr)
@@ -159,7 +159,7 @@ static int ignore_setup(char *ignoredirs) {
 		ptr->next = ignore_head;
 		ignore_head = ptr;
 
-		tok = strtok(NULL, ";");
+		tok = strtok_r(NULL, ";", &saveptr);
 	}
 
 	return 0;
