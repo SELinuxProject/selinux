@@ -107,8 +107,10 @@ int semanage_bool_set_name(semanage_handle_t * handle,
 	end++;
 	*end = '\0';
 	rc = asprintf(&newroot, "%s%s%s", prefix, olddir, storename);
-	if (rc < 0)
+	if (rc < 0) {
+		newroot = NULL;
 		goto out;
+	}
 
 	if (strcmp(oldroot, newroot)) {
 		rc = selinux_set_policy_root(newroot);
