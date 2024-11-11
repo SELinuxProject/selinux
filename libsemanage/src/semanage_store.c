@@ -1899,14 +1899,12 @@ static int semanage_get_lock(semanage_handle_t * sh,
 	struct timeval origtime, curtime;
 	int got_lock = 0;
 
-	if ((fd = open(lock_file, O_RDONLY)) == -1) {
-		if ((fd =
-		     open(lock_file, O_RDWR | O_CREAT | O_TRUNC,
-			  S_IRUSR | S_IWUSR)) == -1) {
-			ERR(sh, "Could not open direct %s at %s.", lock_name,
-			    lock_file);
-			return -1;
-		}
+	if ((fd =
+	     open(lock_file, O_RDWR | O_CREAT | O_TRUNC,
+		  S_IRUSR | S_IWUSR)) == -1) {
+		ERR(sh, "Could not open direct %s at %s.", lock_name,
+		    lock_file);
+		return -1;
 	}
 	if (fcntl(fd, F_SETFD, FD_CLOEXEC) < 0) {
 		ERR(sh, "Could not set close-on-exec for %s at %s.", lock_name,
