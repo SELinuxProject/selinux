@@ -194,7 +194,6 @@ void semanage_set_create_store(semanage_handle_t * sh, int create_store)
 	assert(sh != NULL);
 
 	sh->create_store = create_store;
-	return;
 }
 
 int semanage_get_disable_dontaudit(semanage_handle_t * sh)
@@ -209,7 +208,6 @@ void semanage_set_disable_dontaudit(semanage_handle_t * sh, int disable_dontaudi
 	assert(sh != NULL);
 
 	sepol_set_disable_dontaudit(sh->sepolh, disable_dontaudit);
-	return;
 }
 
 int semanage_get_preserve_tunables(semanage_handle_t * sh)
@@ -244,7 +242,6 @@ void semanage_set_check_contexts(semanage_handle_t * sh, int do_check_contexts)
 	assert(sh != NULL);
 
 	sh->do_check_contexts = do_check_contexts;
-	return;
 }
 
 uint16_t semanage_get_default_priority(semanage_handle_t *sh)
@@ -285,8 +282,6 @@ void semanage_select_store(semanage_handle_t * sh, char *storename,
 	sh->conf->store_path = strdup(storename);
 	assert(sh->conf->store_path); /* no way to return failure */
 	sh->conf->store_type = storetype;
-
-	return;
 }
 
 void semanage_set_store_root(semanage_handle_t *sh, const char *store_root)
@@ -296,8 +291,6 @@ void semanage_set_store_root(semanage_handle_t *sh, const char *store_root)
 	free(sh->conf->store_root_path);
 	sh->conf->store_root_path = strdup(store_root);
 	assert(sh->conf->store_root_path); /* no way to return failure */
-
-	return;
 }
 
 int semanage_is_managed(semanage_handle_t * sh)
@@ -361,8 +354,6 @@ int semanage_access_check(semanage_handle_t * sh)
 	default:
 		return -1;
 	}
-
-	return -1;		/* unreachable */
 }
 
 

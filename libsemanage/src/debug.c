@@ -107,7 +107,6 @@ void semanage_msg_relay_handler(void *varg,
 	sh->msg_channel = sepol_msg_get_channel(sepolh);
 	sh->msg_level = sepol_msg_get_level(sepolh);	/* XXX should map values */
 	sh->msg_callback(sh->msg_callback_arg, sh, "%s", buffer);
-	return;
 }
 
 extern void semanage_msg_set_callback(semanage_handle_t * handle,
