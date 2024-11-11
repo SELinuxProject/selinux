@@ -1957,11 +1957,6 @@ static int semanage_direct_list(semanage_handle_t * sh,
 		goto cleanup;
 	}
 
-	if (num_modules == 0) {
-		retval = semanage_direct_get_serial(sh);
-		goto cleanup;
-	}
-
 	retval = semanage_direct_get_serial(sh);
 
       cleanup:
