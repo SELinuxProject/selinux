@@ -382,6 +382,12 @@ static int semanage_conf_init(semanage_conf_t * conf)
 	conf->save_previous = 0;
 	conf->save_linked = 0;
 
+	if (!conf->store_path ||
+	    !conf->store_root_path ||
+	    !conf->compiler_directory_path) {
+		return -1;
+	}
+
 	if ((conf->load_policy =
 	     calloc(1, sizeof(*(current_conf->load_policy)))) == NULL) {
 		return -1;
