@@ -26,6 +26,7 @@
 #include <selinux/selinux.h>
 #include <semanage/handle.h>
 
+#include <errno.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -140,13 +141,15 @@ ignore_module_cache:	IGNORE_MODULE_CACHE '=' ARG  {
         ;
 
 version:        VERSION '=' ARG  {
-                        current_conf->policyvers = atoi($3);
+                        char *endptr;
+                        long value;
+                        errno = 0;
+                        value = strtol($3, &endptr, 10);
+                        if (*endptr != '\0' || errno != 0 || value < sepol_policy_kern_vers_min() || value > sepol_policy_kern_vers_max())
+                                yyerror("policy-version must be a valid policy version");
+                        else
+                                current_conf->policyvers = value;
                         free($3);
-                        if (current_conf->policyvers < sepol_policy_kern_vers_min() ||
-                            current_conf->policyvers > sepol_policy_kern_vers_max()) {
-                                parse_errors++;
-                                YYABORT;
-                        }
                 }
         ;
 
@@ -163,13 +166,27 @@ target_platform: TARGET_PLATFORM '=' ARG  {
         ;
 
 expand_check:   EXPAND_CHECK '=' ARG  {
-                        current_conf->expand_check = atoi($3);
+                        char *endptr;
+                        long value;
+                        errno = 0;
+                        value = strtol($3, &endptr, 10);
+                        if (*endptr != '\0' || errno != 0 || (value != 0 && value != 1))
+                                yyerror("expand-check can only be '1' or '0'");
+                        else
+                                current_conf->expand_check = value;
                         free($3);
                 }
         ;
 
 file_mode:   FILE_MODE '=' ARG  {
-                        current_conf->file_mode = strtoul($3, NULL, 8);
+                        char *endptr;
+                        long value;
+                        errno = 0;
+                        value = strtol($3, &endptr, 8);
+                        if (*endptr != '\0' || errno != 0 || value < 0 || value > 0777)
+                                yyerror("file-mode must be a valid permission mode");
+                        else
+                                current_conf->file_mode = value;
                         free($3);
                 }
         ;
@@ -240,12 +257,15 @@ handle_unknown: HANDLE_UNKNOWN '=' ARG {
  }
 
 bzip_blocksize:  BZIP_BLOCKSIZE '=' ARG {
-	int blocksize = atoi($3);
-	free($3);
-	if (blocksize > 9)
+	char *endptr;
+	long value;
+	errno = 0;
+	value = strtol($3, &endptr, 10);
+	if (*endptr != '\0' || errno != 0 || value < 0 || value > 9)
 		yyerror("bzip-blocksize can only be in the range 0-9");
 	else
-		current_conf->bzip_blocksize = blocksize;
+		current_conf->bzip_blocksize = value;
+	free($3);
 }
 
 bzip_small:  BZIP_SMALL '=' ARG {
