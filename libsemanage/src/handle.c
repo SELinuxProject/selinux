@@ -141,15 +141,13 @@ int semanage_get_hll_compiler_path(semanage_handle_t *sh,
 				const char *lang_ext,
 				char **compiler_path)
 {
-	assert(sh != NULL);
-	assert(lang_ext != NULL);
-
-	int i;
+	size_t i;
 	int status = 0;
-	int num_printed = 0;
-	size_t len;
 	char *compiler = NULL;
 	char *lower_lang_ext = NULL;
+
+	assert(sh != NULL);
+	assert(lang_ext != NULL);
 
 	lower_lang_ext = strdup(lang_ext);
 	if (lower_lang_ext == NULL) {
@@ -162,17 +160,7 @@ int semanage_get_hll_compiler_path(semanage_handle_t *sh,
 		lower_lang_ext[i] = tolower(lower_lang_ext[i]);
 	}
 
-	len = strlen(sh->conf->compiler_directory_path) + strlen("/") + strlen(lower_lang_ext) + 1;
-
-	compiler = malloc(len * sizeof(*compiler));
-	if (compiler == NULL) {
-		ERR(sh, "Error allocating space for compiler path.");
-		status = -1;
-		goto cleanup;
-	}
-
-	num_printed = snprintf(compiler, len, "%s/%s", sh->conf->compiler_directory_path, lower_lang_ext);
-	if (num_printed < 0 || (size_t)num_printed >= len) {
+	if (asprintf(&compiler, "%s/%s", sh->conf->compiler_directory_path, lower_lang_ext) < 0) {
 		ERR(sh, "Error creating compiler path.");
 		status = -1;
 		goto cleanup;
@@ -183,10 +171,6 @@ int semanage_get_hll_compiler_path(semanage_handle_t *sh,
 
 cleanup:
 	free(lower_lang_ext);
-	if (status != 0) {
-		free(compiler);
-	}
-
 	return status;
 }
 

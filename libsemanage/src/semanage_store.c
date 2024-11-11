@@ -165,21 +165,17 @@ typedef struct semanage_netfilter_context_node {
  */
 static int semanage_init_paths(const char *root)
 {
-	size_t len, prefix_len;
 	int i;
 
 	if (!root)
 		return -1;
 
-	prefix_len = strlen(root);
-
 	for (i = 0; i < SEMANAGE_NUM_FILES; i++) {
-		len = (strlen(semanage_relative_files[i]) + prefix_len);
-		semanage_files[i] = calloc(len + 1, sizeof(char));
-		if (!semanage_files[i])
+		if (asprintf(&semanage_files[i], "%s%s",
+			     root, semanage_relative_files[i]) < 0) {
+			semanage_files[i] = NULL;
 			return -1;
-		sprintf(semanage_files[i], "%s%s", root,
-			semanage_relative_files[i]);
+		}
 	}
 
 	return 0;
@@ -191,28 +187,20 @@ static int semanage_init_paths(const char *root)
 static int semanage_init_store_paths(const char *root)
 {
 	int i, j;
-	size_t len;
-	size_t prefix_len;
 
 	if (!root)
 		return -1;
 
-	prefix_len = strlen(root);
-
 	for (i = 0; i < SEMANAGE_NUM_STORES; i++) {
 		for (j = 0; j < SEMANAGE_STORE_NUM_PATHS; j++) {
-			len = prefix_len + strlen(semanage_store_paths[i])
-			    + strlen(semanage_sandbox_paths[j]);
-			semanage_paths[i][j] = calloc(len + 1, sizeof(char));
-			if (!semanage_paths[i][j])
-				goto cleanup;
-			sprintf(semanage_paths[i][j], "%s%s%s", root,
-				semanage_store_paths[i],
-				semanage_sandbox_paths[j]);
+			if (asprintf(&semanage_paths[i][j], "%s%s%s",
+				     root, semanage_store_paths[i], semanage_sandbox_paths[j]) < 0) {
+				semanage_paths[i][j] = NULL;
+				return -1;
+			}
 		}
 	}
 
-      cleanup:
 	return 0;
 }
 
@@ -222,47 +210,25 @@ static int semanage_init_final(semanage_handle_t *sh, const char *prefix)
 	assert(prefix);
 
 	int status = 0;
-	size_t len;
 	const char *store_path = sh->conf->store_path;
-	size_t store_len = strlen(store_path);
 
 	/* SEMANAGE_FINAL_TMP */
-	len = strlen(semanage_root()) +
-	      strlen(prefix) +
-	      strlen("/") +
-	      strlen(semanage_final_prefix[SEMANAGE_FINAL_TMP]) +
-	      store_len;
-	semanage_final[SEMANAGE_FINAL_TMP] = malloc(len + 1);
-	if (semanage_final[SEMANAGE_FINAL_TMP] == NULL) {
+	if (asprintf(&semanage_final[SEMANAGE_FINAL_TMP], "%s%s%s/%s",
+		     semanage_root(), prefix,
+		     semanage_final_prefix[SEMANAGE_FINAL_TMP], store_path) < 0) {
+		semanage_final[SEMANAGE_FINAL_TMP] = NULL;
 		status = -1;
 		goto cleanup;
 	}
-
-	sprintf(semanage_final[SEMANAGE_FINAL_TMP],
-		"%s%s%s/%s",
-		semanage_root(),
-		prefix,
-		semanage_final_prefix[SEMANAGE_FINAL_TMP],
-		store_path);
 
 	/* SEMANAGE_FINAL_SELINUX */
-	const char *selinux_root = selinux_path();
-	len = strlen(semanage_root()) +
-	      strlen(selinux_root) +
-	      strlen(semanage_final_prefix[SEMANAGE_FINAL_SELINUX]) +
-	      store_len;
-	semanage_final[SEMANAGE_FINAL_SELINUX] = malloc(len + 1);
-	if (semanage_final[SEMANAGE_FINAL_SELINUX] == NULL) {
+	if (asprintf(&semanage_final[SEMANAGE_FINAL_SELINUX], "%s%s%s%s",
+		     semanage_root(), selinux_path(),
+		     semanage_final_prefix[SEMANAGE_FINAL_SELINUX], store_path) < 0) {
+		semanage_final[SEMANAGE_FINAL_SELINUX] = NULL;
 		status = -1;
 		goto cleanup;
 	}
-
-	sprintf(semanage_final[SEMANAGE_FINAL_SELINUX],
-		"%s%s%s%s",
-		semanage_root(),
-		selinux_root,
-		semanage_final_prefix[SEMANAGE_FINAL_SELINUX],
-		store_path);
 
 cleanup:
 	if (status != 0) {
@@ -386,24 +352,18 @@ static int semanage_init_final_paths(semanage_handle_t *sh)
 {
 	int status = 0;
 	int i, j;
-	size_t len;
 
 	for (i = 0; i < SEMANAGE_FINAL_NUM; i++) {
 		for (j = 0; j < SEMANAGE_FINAL_PATH_NUM; j++) {
-			len = 	  strlen(semanage_final[i])
-				+ strlen(semanage_final_suffix[j]);
-
-			semanage_final_paths[i][j] = malloc(len + 1);
-			if (semanage_final_paths[i][j] == NULL) {
+			if (asprintf(&semanage_final_paths[i][j],
+				 "%s%s",
+				     semanage_final[i],
+				     semanage_final_suffix[j]) < 0) {
+				semanage_final_paths[i][j] = NULL;
 				ERR(sh, "Unable to allocate space for policy final path.");
 				status = -1;
 				goto cleanup;
-			}
-
-			sprintf(semanage_final_paths[i][j],
-				"%s%s",
-				semanage_final[i],
-				semanage_final_suffix[j]);
+				}
 		}
 	}
 
