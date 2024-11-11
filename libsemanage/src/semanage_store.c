@@ -798,7 +798,7 @@ static int semanage_copy_dir(const char *src, const char *dst)
  * well. Returns 0 on success, -1 on error. */
 static int semanage_copy_dir_flags(const char *src, const char *dst, int flag)
 {
-	int i, len = 0, retval = -1;
+	int i, len = 0, rc, retval = -1;
 	struct stat sb;
 	struct dirent **names = NULL;
 	char path[PATH_MAX], path2[PATH_MAX];
@@ -822,13 +822,21 @@ static int semanage_copy_dir_flags(const char *src, const char *dst, int flag)
 	}
 
 	for (i = 0; i < len; i++) {
-		snprintf(path, sizeof(path), "%s/%s", src, names[i]->d_name);
+		rc = snprintf(path, sizeof(path), "%s/%s", src, names[i]->d_name);
+		if (rc < 0 || (size_t)rc >= sizeof(path)) {
+			errno = EOVERFLOW;
+			goto cleanup;
+		}
 		/* stat() to see if this entry is a file or not since
 		 * d_type isn't set properly on XFS */
 		if (stat(path, &sb)) {
 			goto cleanup;
 		}
-		snprintf(path2, sizeof(path2), "%s/%s", dst, names[i]->d_name);
+		rc = snprintf(path2, sizeof(path2), "%s/%s", dst, names[i]->d_name);
+		if (rc < 0 || (size_t)rc >= sizeof(path2)) {
+			errno = EOVERFLOW;
+			goto cleanup;
+		}
 		if (S_ISDIR(sb.st_mode)) {
 			mask = umask(0077);
 			if (mkdir(path2, 0700) == -1 ||
@@ -862,7 +870,7 @@ static int semanage_copy_dir_flags(const char *src, const char *dst, int flag)
 int semanage_remove_directory(const char *path)
 {
 	struct dirent **namelist = NULL;
-	int num_entries, i;
+	int num_entries, i, rc;
 	if ((num_entries = scandir(path, &namelist, semanage_filename_select,
 				   NULL)) == -1) {
 		return -1;
@@ -870,7 +878,11 @@ int semanage_remove_directory(const char *path)
 	for (i = 0; i < num_entries; i++) {
 		char s[PATH_MAX];
 		struct stat buf;
-		snprintf(s, sizeof(s), "%s/%s", path, namelist[i]->d_name);
+		rc = snprintf(s, sizeof(s), "%s/%s", path, namelist[i]->d_name);
+		if (rc < 0 || (size_t)rc >= sizeof(s)) {
+			errno = EOVERFLOW;
+			return -2;
+		}
 		if (stat(s, &buf) == -1) {
 			return -2;
 		}
