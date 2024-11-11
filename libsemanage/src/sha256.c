@@ -180,7 +180,7 @@ void
     (
         Sha256Context*      Context,        // [in out]
         void const*         Buffer,         // [in]
-        uint32_t            BufferSize      // [in]
+        size_t              BufferSize      // [in]
     )
 {
     uint32_t n;
@@ -282,7 +282,7 @@ void
     Sha256Calculate
     (
         void  const*        Buffer,         // [in]
-        uint32_t            BufferSize,     // [in]
+        size_t              BufferSize,     // [in]
         SHA256_HASH*        Digest          // [in]
     )
 {
