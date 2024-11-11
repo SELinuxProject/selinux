@@ -113,7 +113,7 @@ static int user_base_parse(semanage_handle_t * handle,
 		start = info->ptr;
 		while (*(info->ptr) &&
 		       *(info->ptr) != ';' &&
-		       *(info->ptr) != '}' && !isspace(*(info->ptr)))
+		       *(info->ptr) != '}' && !isspace((unsigned char)*(info->ptr)))
 			info->ptr++;
 
 		delim = *(info->ptr);
@@ -122,7 +122,7 @@ static int user_base_parse(semanage_handle_t * handle,
 		if (semanage_user_base_add_role(handle, user, start) < 0)
 			goto err;
 
-		if (delim && !isspace(delim)) {
+		if (delim && !isspace((unsigned char)delim)) {
 			if (islist && delim == '}')
 				break;
 			else if (!islist && delim == ';')

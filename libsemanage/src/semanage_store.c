@@ -1409,7 +1409,7 @@ static char **split_args(const char *arg0, char *arg_string,
 				break;
 			}
 		default:{
-				if (isspace(*s) && !in_quote && !in_dquote) {
+				if (isspace((unsigned char)*s) && !in_quote && !in_dquote) {
 					if (arg != NULL) {
 						rc = append_arg(&argv, &num_args, arg);
 						if (rc)
@@ -2596,7 +2596,7 @@ int semanage_fc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
 
 		/* Skip the whitespace at the front of the line. */
 		for (i = 0; i < line_len; i++) {
-			if (!isspace(line_buf[i]))
+			if (!isspace((unsigned char)line_buf[i]))
 				break;
 		}
 
@@ -2628,7 +2628,7 @@ int semanage_fc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
 		escape_chars = 0;
 		just_saw_escape = 0;
 		start = i;
-		while (i < line_len && (!isspace(line_buf[i]))) {
+		while (i < line_len && (!isspace((unsigned char)line_buf[i]))) {
 			if (line_buf[i] == '\\') {
 				if (!just_saw_escape) {
 					escape_chars++;
@@ -2664,7 +2664,7 @@ int semanage_fc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
 
 		/* Skip the whitespace after the regular expression. */
 		for (; i < line_len; i++) {
-			if (!isspace(line_buf[i]))
+			if (!isspace((unsigned char)line_buf[i]))
 				break;
 		}
 		if (i == line_len) {
@@ -2701,7 +2701,7 @@ int semanage_fc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
 
 			/* Skip the whitespace after the type. */
 			for (; i < line_len; i++) {
-				if (!isspace(line_buf[i]))
+				if (!isspace((unsigned char)line_buf[i]))
 					break;
 			}
 			if (i == line_len) {
@@ -2717,7 +2717,7 @@ int semanage_fc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
 
 		/* Extract the context from the line. */
 		start = i;
-		while (i < line_len && (!isspace(line_buf[i])))
+		while (i < line_len && (!isspace((unsigned char)line_buf[i])))
 			i++;
 		finish = i;
 		context_len = finish - start;
@@ -2912,7 +2912,7 @@ int semanage_nc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
 
 		/* Skip the whitespace at the front of the line. */
 		for (i = 0; i < line_len; i++) {
-			if (!isspace(line_buf[i]))
+			if (!isspace((unsigned char)line_buf[i]))
 				break;
 		}
 
@@ -2948,7 +2948,7 @@ int semanage_nc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
 		}
 
 		/* skip over whitespace */
-		for (; offset < line_len && isspace(line_buf[offset]);
+		for (; offset < line_len && isspace((unsigned char)line_buf[offset]);
 		     offset++) ;
 
 		/* load rule into node */

@@ -541,14 +541,14 @@ static const char *extract_context(const char *line)
 	while (off > 0) {
 		p--;
 		off--;
-		if (!isspace(*p))
+		if (!isspace((unsigned char)*p))
 			break;
 	}
 	if (off == 0)
 		return NULL;
 
 	/* find the last field in line */
-	while (off > 0 && !isspace(*(p - 1))) {
+	while (off > 0 && !isspace((unsigned char)*(p - 1))) {
 		p--;
 		off--;
 	}

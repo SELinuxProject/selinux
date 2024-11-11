@@ -90,7 +90,7 @@ int parse_skip_space(semanage_handle_t * handle, parse_info_t * info)
 	char *ptr;
 
 	if (info->ptr) {
-		while (*(info->ptr) && isspace(*(info->ptr)))
+		while (*(info->ptr) && isspace((unsigned char)*(info->ptr)))
 			info->ptr++;
 
 		if (*(info->ptr))
@@ -109,7 +109,7 @@ int parse_skip_space(semanage_handle_t * handle, parse_info_t * info)
 			buffer[len - 1] = '\0';
 
 		ptr = buffer;
-		while (*ptr && isspace(*ptr))
+		while (*ptr && isspace((unsigned char)*ptr))
 			ptr++;
 
 		/* Skip comments and blank lines */
@@ -156,7 +156,7 @@ int parse_assert_space(semanage_handle_t * handle, parse_info_t * info)
 	if (parse_assert_noeof(handle, info) < 0)
 		return STATUS_ERR;
 
-	if (*(info->ptr) && !isspace(*(info->ptr))) {
+	if (*(info->ptr) && !isspace((unsigned char)*(info->ptr))) {
 		ERR(handle, "missing whitespace (%s: %u):\n%s",
 		    info->filename, info->lineno, info->orig_line);
 		return STATUS_ERR;
@@ -242,7 +242,7 @@ int parse_fetch_int(semanage_handle_t * handle,
 	if (parse_fetch_string(handle, info, &str, delim, 0) < 0)
 		goto err;
 
-	if (!isdigit((int)*str)) {
+	if (!isdigit((unsigned char)*str)) {
 		ERR(handle, "expected a numeric value: (%s: %u)\n%s",
 		    info->filename, info->lineno, info->orig_line);
 		goto err;
@@ -277,7 +277,7 @@ int parse_fetch_string(semanage_handle_t * handle,
 	if (parse_assert_noeof(handle, info) < 0)
 		goto err;
 
-	while (*(info->ptr) && (allow_spaces || !isspace(*(info->ptr))) &&
+	while (*(info->ptr) && (allow_spaces || !isspace((unsigned char)*(info->ptr))) &&
 	       (*(info->ptr) != delim)) {
 		info->ptr++;
 		len++;

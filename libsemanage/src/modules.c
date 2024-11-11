@@ -819,12 +819,12 @@ int semanage_module_validate_name(const char * name)
 		goto exit;
 	}
 
-	if (!isalpha(*name)) {
+	if (!isalpha((unsigned char)*name)) {
 		status = -1;
 		goto exit;
 	}
 
-#define ISVALIDCHAR(c) (isalnum(c) || c == '_' || c == '-')
+#define ISVALIDCHAR(c) (isalnum((unsigned char)c) || c == '_' || c == '-')
 
 	for (name++; *name; name++) {
 		if (ISVALIDCHAR(*name)) {
@@ -876,12 +876,12 @@ int semanage_module_validate_lang_ext(const char *ext)
 		goto exit;
 	}
 
-	if (!isalnum(*ext)) {
+	if (!isalnum((unsigned char)*ext)) {
 		status = -1;
 		goto exit;
 	}
 
-#define ISVALIDCHAR(c) (isalnum(c) || c == '_' || c == '-')
+#define ISVALIDCHAR(c) (isalnum((unsigned char)c) || c == '_' || c == '-')
 
 	for (ext++; *ext; ext++) {
 		if (ISVALIDCHAR(*ext)) {

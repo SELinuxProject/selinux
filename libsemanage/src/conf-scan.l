@@ -79,11 +79,11 @@ args              return PROG_ARGS;
  * Returns NULL on error. */
 static char *my_strdup(char *s) {
 	char *t;
-	while (isspace(*s)) {
+	while (isspace((unsigned char)*s)) {
 		s++;
 	}
 	t = s + strlen(s) - 1;
-	while (t >= s && isspace(*t)) {
+	while (t >= s && isspace((unsigned char)*t)) {
 		*t = '\0';
 		t--;
 	}
