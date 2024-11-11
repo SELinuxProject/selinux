@@ -141,7 +141,7 @@ static int bool_commit_list(semanage_handle_t * handle,
 }
 
 /* BOOL RECORD: ACTIVEDB extension: method table */
-record_activedb_table_t SEMANAGE_BOOL_ACTIVEDB_RTABLE = {
+static record_activedb_table_t SEMANAGE_BOOL_ACTIVEDB_RTABLE = {
 	.read_list = bool_read_list,
 	.commit_list = bool_commit_list,
 };

@@ -130,7 +130,7 @@ typedef struct IgnoreDir {
 	char *dir;
 } ignoredir_t;
 
-ignoredir_t *ignore_head = NULL;
+static ignoredir_t *ignore_head = NULL;
 
 static void ignore_free(void) {
 	ignoredir_t *next;

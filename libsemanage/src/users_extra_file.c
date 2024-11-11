@@ -100,7 +100,7 @@ static int user_extra_parse(semanage_handle_t * handle,
 }
 
 /* USER EXTRA RECORD: FILE extension: method table */
-record_file_table_t SEMANAGE_USER_EXTRA_FILE_RTABLE = {
+static record_file_table_t SEMANAGE_USER_EXTRA_FILE_RTABLE = {
 	.parse = user_extra_parse,
 	.print = user_extra_print,
 };

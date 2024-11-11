@@ -161,7 +161,7 @@ static int port_parse(semanage_handle_t * handle,
 }
 
 /* PORT RECORD: FILE extension: method table */
-record_file_table_t SEMANAGE_PORT_FILE_RTABLE = {
+static record_file_table_t SEMANAGE_PORT_FILE_RTABLE = {
 	.parse = port_parse,
 	.print = port_print,
 };

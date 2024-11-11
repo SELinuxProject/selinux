@@ -22,7 +22,7 @@ typedef struct dbase_join dbase_t;
 #include "debug.h"
 
 /* USER record: JOIN extension: method table */
-record_join_table_t SEMANAGE_USER_JOIN_RTABLE = {
+static record_join_table_t SEMANAGE_USER_JOIN_RTABLE = {
 	.join = semanage_user_join,
 	.split = semanage_user_split,
 };

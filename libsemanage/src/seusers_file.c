@@ -109,7 +109,7 @@ static int seuser_parse(semanage_handle_t * handle,
 }
 
 /* SEUSER RECORD: FILE extension: method table */
-record_file_table_t SEMANAGE_SEUSER_FILE_RTABLE = {
+static record_file_table_t SEMANAGE_SEUSER_FILE_RTABLE = {
 	.parse = seuser_parse,
 	.print = seuser_print,
 };

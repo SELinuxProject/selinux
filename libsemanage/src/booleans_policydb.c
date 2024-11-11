@@ -36,7 +36,7 @@ typedef struct dbase_policydb dbase_t;
 #include "semanage_store.h"
 
 /* BOOLEAN RECRORD (SEPOL): POLICYDB extension: method table */
-record_policydb_table_t SEMANAGE_BOOL_POLICYDB_RTABLE = {
+static record_policydb_table_t SEMANAGE_BOOL_POLICYDB_RTABLE = {
 	.add = NULL,
 	.modify = NULL,
 /* FIXME: these casts depend on structs in libsepol matching structs

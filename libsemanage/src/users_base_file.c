@@ -195,7 +195,7 @@ static int user_base_parse(semanage_handle_t * handle,
 }
 
 /* USER BASE record: FILE extension: method table */
-record_file_table_t SEMANAGE_USER_BASE_FILE_RTABLE = {
+static record_file_table_t SEMANAGE_USER_BASE_FILE_RTABLE = {
 	.parse = user_base_parse,
 	.print = user_base_print,
 };
