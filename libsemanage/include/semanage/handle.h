@@ -25,7 +25,7 @@
 
 /* All accesses with semanage are through a "semanage_handle".  The
  * handle may ultimately reference local config files,
- * the binary policy file, a module store, or a policy management server. 
+ * the binary policy file, a module store, or a policy management server.
  */
 struct semanage_handle;
 typedef struct semanage_handle semanage_handle_t;
@@ -48,7 +48,7 @@ enum semanage_connect_type {
 };
 
 /* This function allows you to specify the store to  connect to.
- * It must be called after semanage_handle_create but before 
+ * It must be called after semanage_handle_create but before
  * semanage_connect. The argument should be the full path to the store.
  */
 extern void semanage_select_store(semanage_handle_t * handle, char *path,
@@ -76,8 +76,8 @@ extern void semanage_set_check_ext_changes(semanage_handle_t * handle, int do_ch
  * Upon success returns 0, -1 on error. */
 extern int semanage_get_hll_compiler_path(semanage_handle_t *sh, char *lang_ext, char **compiler_path);
 
-/* create the store if it does not exist, this only has an effect on 
- * direct connections and must be called before semanage_connect 
+/* create the store if it does not exist, this only has an effect on
+ * direct connections and must be called before semanage_connect
  * 1 for yes, 0 for no (default) */
 extern void semanage_set_create_store(semanage_handle_t * handle, int create_store);
 
@@ -103,9 +103,9 @@ extern int semanage_set_default_priority(semanage_handle_t *sh, uint16_t priorit
  */
 extern int semanage_is_managed(semanage_handle_t *);
 
-/* "Connect" to a manager based on the configuration and 
+/* "Connect" to a manager based on the configuration and
  * associate the provided handle with the connection.
- * If the connect fails then this function returns a negative value, 
+ * If the connect fails then this function returns a negative value,
  * else it returns zero.
  */
 extern int semanage_connect(semanage_handle_t *);

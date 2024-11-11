@@ -1,6 +1,6 @@
 .TH semanage_iterate 3 "15 March 2006" "ivg2@cornell.edu" "Libsemanage API documentation"
 
-.SH "NAME" 
+.SH "NAME"
 semanage_iterate \- SELinux Management API
 
 .SH "SYNOPSIS"
@@ -23,10 +23,10 @@ Replace the function and object name as necessary.
 .SH "DESCRIPTION"
 .TP
 .B Behavior:
-The iterate function will execute the specified handler over all objects in the selected location. An arbitrary argument can be passed into the handler function along with each object. 
+The iterate function will execute the specified handler over all objects in the selected location. An arbitrary argument can be passed into the handler function along with each object.
 
-The object passed in is property of the libsemanage library, and may not be modified or preserved - use 
-.B semanage_OBJECT_clone 
+The object passed in is property of the libsemanage library, and may not be modified or preserved - use
+.B semanage_OBJECT_clone
 if that is necessary.
 
 The handler code may not invoke any semanage write requests for the same object type (i.e. modifying the underlying store is not allowed). The iterate function is reentrant only while inside a transaction (see
@@ -35,17 +35,17 @@ The handler code may not invoke any semanage write requests for the same object 
 
 .TP
 .B Parameters:
-The 
+The
 .I handle
 is used to track persistent state across semanage calls, and for error reporting. The
 .I handler
-is the function to execute, with 
+is the function to execute, with
 .I handler_arg
 as its second parameter, and each object as its first parameter.
 
 .TP
 .B Requirements:
-This function requires an semanage connection to be established (see 
+This function requires an semanage connection to be established (see
 .BR semanage_connect "(3)"
 )
 

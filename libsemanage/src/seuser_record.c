@@ -23,7 +23,7 @@ struct semanage_seuser {
 	/* This user's name */
 	char *name;
 
-	/* This user's corresponding 
+	/* This user's corresponding
 	 * seuser ("role set") */
 	char *sename;
 

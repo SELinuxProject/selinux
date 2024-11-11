@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2004-2005 Tresys Technology, LLC
  * Copyright (C) 2005 Red Hat, Inc.
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
@@ -207,7 +207,7 @@ int semanage_get_disable_dontaudit(semanage_handle_t * sh)
 void semanage_set_disable_dontaudit(semanage_handle_t * sh, int disable_dontaudit)
 {
 	assert(sh != NULL);
-	
+
 	sepol_set_disable_dontaudit(sh->sepolh, disable_dontaudit);
 	return;
 }
@@ -279,7 +279,7 @@ void semanage_select_store(semanage_handle_t * sh, char *storename,
 
 	assert(sh != NULL);
 
-	/* This just sets the storename to what the user requests, no 
+	/* This just sets the storename to what the user requests, no
 	   verification of existence will be done until connect */
 	free(sh->conf->store_path);
 	sh->conf->store_path = strdup(storename);

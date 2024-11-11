@@ -20,9 +20,9 @@ $(EXECUTABLE): $(OBJECTS) ../src/libsemanage.a
 %.policy: %.cil
 	../../secilc/secilc $*.cil -o $*.policy -f /dev/null
 
-clean distclean: 
+clean distclean:
 	rm -rf $(OBJECTS) $(POLICIES) $(EXECUTABLE)
 
-test: all 
+test: all
 	./$(EXECUTABLE)
 

@@ -97,7 +97,7 @@ int semanage_port_validate_local(semanage_handle_t * handle)
 		const char *proto_str2;
 		int proto2, low2, high2;
 
-		/* Find the first port with matching 
+		/* Find the first port with matching
 		   protocol to compare against */
 		do {
 			if (j == nports - 1)
@@ -119,8 +119,8 @@ int semanage_port_validate_local(semanage_handle_t * handle)
 		}
 
 		/* If closest port of matching protocol doesn't overlap with
-		 * test port, neither do the rest of them, because that's 
-		 * how the sort function works on ports - lower bound 
+		 * test port, neither do the rest of them, because that's
+		 * how the sort function works on ports - lower bound
 		 * ports come first */
 	      next:
 		i++;

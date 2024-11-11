@@ -301,7 +301,7 @@ void semanage_user_free(semanage_user_t * user)
 	if (!tmp_user)
 		goto omem;
 
-	/* Set the shared name from one of the records 
+	/* Set the shared name from one of the records
 	 * (at least one is available) */
 	if (record1 == NULL)
 		name = semanage_user_extra_get_name(record2);

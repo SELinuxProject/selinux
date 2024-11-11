@@ -1,6 +1,6 @@
 .TH semanage_bool 3 "16 March 2006" "ivg2@cornell.edu" "Libsemanage API documentation"
 
-.SH "NAME" 
+.SH "NAME"
 semanage_bool \- SELinux Policy Booleans Management API
 
 .SH "SYNOPSIS"
@@ -20,8 +20,8 @@ For details on a specific function, see its manual page.
 
 .SH "Record API Overview"
 
-.HP 
-.BR semanage_bool_create "(3)" \- 
+.HP
+.BR semanage_bool_create "(3)" \-
 .br
 create a boolean
 
@@ -41,17 +41,17 @@ create a key, which can be used to identify a boolean
 release resources for this boolean key
 
 .HP
-.BR semanage_bool_key_extract "(3)" \- 
+.BR semanage_bool_key_extract "(3)" \-
 .br
 create a key matching this boolean
 
 .HP
-.BR semanage_bool_clone "(3)" \- 
+.BR semanage_bool_clone "(3)" \-
 .br
 create an identical boolean (deep-copy clone)
 
 .HP
-.BR semanage_bool_compare "(3)" \- 
+.BR semanage_bool_compare "(3)" \-
 .br
 compare this boolean to the provided key
 
@@ -87,7 +87,7 @@ set the value of this boolean
 .SH "Record Store API Overview"
 
 .HP
-.BR semanage_bool_modify_local "(3)" \- 
+.BR semanage_bool_modify_local "(3)" \-
 .br
 add or update a boolean in the local store
 
@@ -122,7 +122,7 @@ check if a boolean is defined in the currently active policy
 query a boolean in the persistent policy
 
 .HP
-.BR semanage_bool_query_local "(3)" \- 
+.BR semanage_bool_query_local "(3)" \-
 .br
 query a boolean in the local store
 
@@ -174,4 +174,4 @@ return an array containing all booleans in the local store
 .HP
 .BR semanage_bool_list_active "(3)" \-
 .br
-return an array containing all booleans in the currently active policy 
+return an array containing all booleans in the currently active policy

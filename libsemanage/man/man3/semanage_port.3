@@ -1,6 +1,6 @@
 .TH semanage_port 3 "16 March 2006" "ivg2@cornell.edu" "Libsemanage API documentation"
 
-.SH "NAME" 
+.SH "NAME"
 semanage_port \- SELinux Network Ports Management API
 
 .SH "SYNOPSIS"
@@ -18,8 +18,8 @@ For details on a specific function, see its manual page.
 
 .SH "Record API Overview"
 
-.HP 
-.BR semanage_port_create "(3)" \- 
+.HP
+.BR semanage_port_create "(3)" \-
 .br
 create a port range
 
@@ -39,17 +39,17 @@ create a key, which can be used to identify a port range
 release resources for this port range key
 
 .HP
-.BR semanage_port_key_extract "(3)" \- 
+.BR semanage_port_key_extract "(3)" \-
 .br
 create a key matching this port range
 
 .HP
-.BR semanage_port_clone "(3)" \- 
+.BR semanage_port_clone "(3)" \-
 .br
 create an identical port range (deep-copy clone)
 
 .HP
-.BR semanage_port_compare "(3)" \- 
+.BR semanage_port_compare "(3)" \-
 .br
 compare this port range to the provided key
 
@@ -109,7 +109,7 @@ set the SELinux context for this port range
 .SH "Record Store API Overview"
 
 .HP
-.BR semanage_port_modify_local "(3)" \- 
+.BR semanage_port_modify_local "(3)" \-
 .br
 add or update a port range in the local store
 
@@ -134,7 +134,7 @@ check if a port range is defined in the local store
 query a port range in the persistent policy
 
 .HP
-.BR semanage_port_query_local "(3)" \- 
+.BR semanage_port_query_local "(3)" \-
 .br
 query a port range in the local store
 
@@ -166,4 +166,4 @@ return an array containing all port ranges in the persistent policy
 .HP
 .BR semanage_port_list_local "(3)" \-
 .br
-return an array containing all port ranges in the local store 
+return an array containing all port ranges in the local store

@@ -15,7 +15,7 @@ int main(const int argc, const char **argv) {
 
 	int exist = 0;
 	sh = semanage_handle_create();
-	if (sh == NULL) { 
+	if (sh == NULL) {
 		perror("Can't create semanage handle\n");
 		return -1;
 	}

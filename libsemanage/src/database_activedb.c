@@ -1,7 +1,7 @@
 /* Copyright (C) 2005 Red Hat, Inc. */
 
 /* Object: dbase_activedb_t (Active/Kernel)
- * Extends: dbase_llist_t (Linked List) 
+ * Extends: dbase_llist_t (Linked List)
  * Implements: dbase_t (Database)
  */
 
@@ -20,7 +20,7 @@ typedef struct dbase_activedb dbase_t;
 /* ACTIVEDB dbase */
 struct dbase_activedb {
 
-	/* Parent object - must always be 
+	/* Parent object - must always be
 	 * the first field - here we are using
 	 * a linked list to store the records */
 	dbase_llist_t llist;

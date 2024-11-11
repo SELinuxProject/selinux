@@ -1,6 +1,6 @@
 .TH semanage_node 3 "16 March 2006" "ivg2@cornell.edu" "Libsemanage API documentation"
 
-.SH "NAME" 
+.SH "NAME"
 semanage_node \- SELinux Network Nodes Management API
 
 .SH "SYNOPSIS"
@@ -11,27 +11,27 @@ semanage_node \- SELinux Network Nodes Management API
 .B #include <semanage/nodes_local.h>
 
 .PP
-This object contains properties associated with a network node. 
+This object contains properties associated with a network node.
 
 .PP
 For details on a specific function, see its manual page.
 
 .SH "Record API Overview"
 
-.HP 
-.BR semanage_node_create "(3)" \- 
+.HP
+.BR semanage_node_create "(3)" \-
 .br
-create a node 
+create a node
 
 .HP
 .BR semanage_node_free "(3)" \-
 .br
-release resources for this node 
+release resources for this node
 
 .HP
 .BR semanage_node_key_create "(3)" \-
 .br
-create a key, which can be used to identify a node 
+create a key, which can be used to identify a node
 
 .HP
 .BR semanage_node_key_free "(3)" \-
@@ -39,17 +39,17 @@ create a key, which can be used to identify a node
 release resources for this node key
 
 .HP
-.BR semanage_node_key_extract "(3)" \- 
+.BR semanage_node_key_extract "(3)" \-
 .br
-create a key matching this node 
+create a key matching this node
 
 .HP
-.BR semanage_node_clone "(3)" \- 
+.BR semanage_node_clone "(3)" \-
 .br
 create an identical node (deep-copy clone)
 
 .HP
-.BR semanage_node_compare "(3)" \- 
+.BR semanage_node_compare "(3)" \-
 .br
 compare this node to the provided key
 
@@ -61,7 +61,7 @@ compare this node to another
 .SH "Properties API Overview"
 
 .HP
-.BR semanage_node_get_addr "(3)" \- 
+.BR semanage_node_get_addr "(3)" \-
 .br
 return the IP address of this node in string representation
 
@@ -118,17 +118,17 @@ set the IP protocol version for this node
 .HP
 .BR semanage_node_get_con "(3)" \-
 .br
-return the SELinux context associated with this node 
+return the SELinux context associated with this node
 
 .HP
 .BR semanage_node_set_con "(3)" \-
 .br
-set the SELinux context associated with this node 
+set the SELinux context associated with this node
 
 .SH "Record Store API Overview"
 
 .HP
-.BR semanage_node_modify_local "(3)" \- 
+.BR semanage_node_modify_local "(3)" \-
 .br
 add or update an interface in the local store
 
@@ -153,7 +153,7 @@ check if an interface is defined in the local store
 query an interface in the persistent policy
 
 .HP
-.BR semanage_node_query_local "(3)" \- 
+.BR semanage_node_query_local "(3)" \-
 .br
 query an interface in the local store
 

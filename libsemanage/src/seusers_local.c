@@ -316,7 +316,7 @@ static int validate_handler(const semanage_seuser_t * seuser, void *varg)
 	return -1;
 }
 
-/* This function may not be called outside a transaction, or 
+/* This function may not be called outside a transaction, or
  * it will (1) deadlock, because iterate is not reentrant outside
  * a transaction, and (2) be racy, because it makes multiple dbase calls */
 

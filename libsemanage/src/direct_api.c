@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2004-2006 Tresys Technology, LLC
  * Copyright (C) 2005 Red Hat, Inc.
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
@@ -514,7 +514,7 @@ static int semanage_direct_update_user_extra(semanage_handle_t * sh, cil_db_t *c
 			goto cleanup;
 
 		pusers_extra->dtable->drop_cache(pusers_extra->dbase);
-		
+
 	} else {
 		retval =  pusers_extra->dtable->clear(sh, pusers_extra->dbase);
 	}
@@ -1510,8 +1510,8 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	/* ======= Post-process: Validate non-policydb components ===== */
 
 	/* Validate local modifications to file contexts.
-	 * Note: those are still cached, even though they've been 
-	 * merged into the main file_contexts. We won't check the 
+	 * Note: those are still cached, even though they've been
+	 * merged into the main file_contexts. We won't check the
 	 * large file_contexts - checked at compile time */
 	if (do_rebuild || fcontexts_modified) {
 		retval = semanage_fcontext_validate_local(sh, out);
@@ -1604,7 +1604,7 @@ static int semanage_direct_commit(semanage_handle_t * sh)
                                See /etc/selinux/semanage.conf if you need to enable it.");
         }
 
-	/* free out, if we don't free it before calling semanage_install_sandbox 
+	/* free out, if we don't free it before calling semanage_install_sandbox
 	 * then fork() may fail on low memory machines */
 	sepol_policydb_free(out);
 	out = NULL;
@@ -2736,7 +2736,7 @@ cleanup:
 		if (modinfos != NULL) {
 			for (i = 0; i < *modinfos_len; i++) {
 				semanage_module_info_destroy(
-						sh, 
+						sh,
 						&(*modinfos)[i]);
 			}
 			free(*modinfos);
@@ -2847,7 +2847,7 @@ static int semanage_direct_install_info(semanage_handle_t *sh,
 		status = -3;
 		goto cleanup;
 	}
-	
+
 	/* if this is an HLL, delete the CIL cache if it exists so it will get recompiled */
 	if (type == SEMANAGE_MODULE_PATH_HLL) {
 		ret = semanage_module_get_path(
@@ -2993,4 +2993,3 @@ cleanup:
 
 	return status;
 }
-

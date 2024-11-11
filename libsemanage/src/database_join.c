@@ -1,7 +1,7 @@
 /* Copyright (C) 2005 Red Hat, Inc. */
 
 /* Object: dbase_join_t (Join)
- * Extends: dbase_llist_t (Linked List) 
+ * Extends: dbase_llist_t (Linked List)
  * Implements: dbase_t (Database)
  */
 
@@ -20,7 +20,7 @@ typedef struct dbase_join dbase_t;
 /* JOIN dbase */
 struct dbase_join {
 
-	/* Parent object - must always be 
+	/* Parent object - must always be
 	 * the first field - here we are using
 	 * a linked list to store the records */
 	dbase_llist_t llist;
@@ -194,7 +194,7 @@ static int dbase_join_flush(semanage_handle_t * handle, dbase_join_t * dbase)
 
 	/* Then clear all records from the cache.
 	 * This is *not* the same as dropping the cache - it's an explicit
-	 * request to delete all current records. We need to do 
+	 * request to delete all current records. We need to do
 	 * this because we don't store delete deltas for the join,
 	 * so we must re-add all records from scratch */
 	if (dtable1->clear(handle, dbase1) < 0)

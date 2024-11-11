@@ -145,7 +145,7 @@ static void ignore_free(void) {
 
 static int ignore_setup(char *ignoredirs) {
 	char *tok;
-	ignoredir_t *ptr = NULL; 
+	ignoredir_t *ptr = NULL;
 
 	tok = strtok(ignoredirs, ";");
 	while(tok) {
@@ -1372,7 +1372,7 @@ done:
 
 int semanage_genhomedircon(semanage_handle_t * sh,
 			   sepol_policydb_t * policydb,
-			   int usepasswd, 
+			   int usepasswd,
 			   char *ignoredirs)
 {
 	genhomedircon_settings_t s;

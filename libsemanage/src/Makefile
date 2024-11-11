@@ -43,9 +43,9 @@ SWIGRUBYIF= semanageswig_ruby.i
 SWIGCOUT= semanageswig_wrap.c
 SWIGRUBYCOUT= semanageswig_ruby_wrap.c
 SWIGLOBJ:= $(patsubst %.c,$(PYPREFIX)%.lo,$(SWIGCOUT))
-SWIGRUBYLOBJ:= $(patsubst %.c,$(RUBYPREFIX)%.lo,$(SWIGRUBYCOUT)) 
+SWIGRUBYLOBJ:= $(patsubst %.c,$(RUBYPREFIX)%.lo,$(SWIGRUBYCOUT))
 SWIGSO=$(PYPREFIX)_semanage.so
-SWIGFILES=$(SWIGSO) semanage.py 
+SWIGFILES=$(SWIGSO) semanage.py
 SWIGRUBYSO=$(RUBYPREFIX)_semanage.so
 LIBSO=$(TARGET).$(LIBVERSION)
 
@@ -107,7 +107,7 @@ conf-parse.c: conf-parse.y
 
 conf-parse.h: conf-parse.c
 
-%.o:  %.c 
+%.o:  %.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
 %.lo:  %.c
@@ -134,7 +134,7 @@ $(SWIGRUBYCOUT): $(SWIGRUBYIF)
 swigify: $(SWIGIF)
 	$(SWIG) $<
 
-install: all 
+install: all
 	test -d $(DESTDIR)$(LIBDIR) || install -m 755 -d $(DESTDIR)$(LIBDIR)
 	install -m 644 $(LIBA) $(DESTDIR)$(LIBDIR)
 	install -m 755 $(LIBSO) $(DESTDIR)$(LIBDIR)
@@ -143,20 +143,20 @@ install: all
 	test -f $(DESTDIR)$(DEFAULT_SEMANAGE_CONF_LOCATION) || install -m 644 -D semanage.conf $(DESTDIR)$(DEFAULT_SEMANAGE_CONF_LOCATION)
 	cd $(DESTDIR)$(LIBDIR) && ln -sf $(LIBSO) $(TARGET)
 
-install-pywrap: pywrap 
+install-pywrap: pywrap
 	test -d $(DESTDIR)$(PYTHONLIBDIR) || install -m 755 -d $(DESTDIR)$(PYTHONLIBDIR)
 	install -m 755 $(SWIGSO) $(DESTDIR)$(PYTHONLIBDIR)/_semanage$(PYCEXT)
 	install -m 644 semanage.py $(DESTDIR)$(PYTHONLIBDIR)
 
 
 install-rubywrap: rubywrap
-	test -d $(DESTDIR)$(RUBYINSTALL) || install -m 755 -d $(DESTDIR)$(RUBYINSTALL) 
+	test -d $(DESTDIR)$(RUBYINSTALL) || install -m 755 -d $(DESTDIR)$(RUBYINSTALL)
 	install -m 755 $(SWIGRUBYSO) $(DESTDIR)$(RUBYINSTALL)/semanage.so
 
 relabel:
 	/sbin/restorecon $(DESTDIR)$(LIBDIR)/$(LIBSO)
 
-clean: 
+clean:
 	-rm -f $(LIBPC) $(OBJS) $(LOBJS) $(LIBA) $(LIBSO) $(SWIGLOBJ) $(SWIGSO) $(SWIGRUBYSO) $(TARGET) conf-parse.c conf-parse.h conf-scan.c *.o *.lo *~
 
 distclean: clean

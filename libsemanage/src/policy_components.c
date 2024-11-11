@@ -113,7 +113,7 @@ int semanage_base_merge_components(semanage_handle_t * handle)
 	int rc = STATUS_SUCCESS;
 
 	/* Order is important here - change things carefully.
-	 * System components first, local next. Verify runs with 
+	 * System components first, local next. Verify runs with
 	 * mutual dependencies are ran after everything is merged */
 	load_table_t components[] = {
 

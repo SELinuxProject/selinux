@@ -12,7 +12,7 @@
 /* a few helpful typemaps are available in this library */
 %include <typemaps.i>
 
-/* wrap all int*'s so they can be used for results 
+/* wrap all int*'s so they can be used for results
    if it becomes necessary to send in data this should be changed to INOUT */
 %apply int *OUTPUT { int * };
 %apply int *OUTPUT { size_t * };

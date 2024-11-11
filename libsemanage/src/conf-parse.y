@@ -178,7 +178,7 @@ save_previous:    SAVE_PREVIOUS '=' ARG {
 	                if (strcasecmp($3, "true") == 0)
 		                current_conf->save_previous = 1;
 			else if (strcasecmp($3, "false") == 0)
-				current_conf->save_previous = 0;		
+				current_conf->save_previous = 0;
 			else {
 				yyerror("save-previous can only be 'true' or 'false'");
 			}
@@ -191,7 +191,7 @@ save_linked:    SAVE_LINKED '=' ARG {
 	                if (strcasecmp($3, "true") == 0)
 		                current_conf->save_linked = 1;
 			else if (strcasecmp($3, "false") == 0)
-				current_conf->save_linked = 0;		
+				current_conf->save_linked = 0;
 			else {
 				yyerror("save-linked can only be 'true' or 'false'");
 			}
@@ -292,7 +292,7 @@ multiple_decls:  MULTIPLE_DECLS '=' ARG {
 	free($3);
 }
 
-command_block: 
+command_block:
                 command_start external_opts BLOCK_END  {
                         if (new_external->path == NULL) {
                                 parse_errors++;

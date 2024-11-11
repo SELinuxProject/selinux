@@ -1,6 +1,6 @@
 .TH semanage_fcontext 3 "16 March 2006" "ivg2@cornell.edu" "Libsemanage API documentation"
 
-.SH "NAME" 
+.SH "NAME"
 semanage_fcontext \- SELinux File Context Management API
 
 .SH "SYNOPSIS"
@@ -18,15 +18,15 @@ For details on a specific function, see its manual page.
 
 .SH "Record API Overview"
 
-.HP 
-.BR semanage_fcontext_create "(3)" \- 
+.HP
+.BR semanage_fcontext_create "(3)" \-
 .br
 create a file context spec
 
 .HP
 .BR semanage_fcontext_free "(3)" \-
 .br
-release resources for this file context spec 
+release resources for this file context spec
 
 .HP
 .BR semanage_fcontext_key_create "(3)" \-
@@ -39,17 +39,17 @@ create a key, which can be used to identify a file context spec
 release resources for this file context spec key
 
 .HP
-.BR semanage_fcontext_key_extract "(3)" \- 
+.BR semanage_fcontext_key_extract "(3)" \-
 .br
-create a key matching this file context spec 
+create a key matching this file context spec
 
 .HP
-.BR semanage_fcontext_clone "(3)" \- 
+.BR semanage_fcontext_clone "(3)" \-
 .br
 create an identical file context spec (deep-copy clone)
 
 .HP
-.BR semanage_fcontext_compare "(3)" \- 
+.BR semanage_fcontext_compare "(3)" \-
 .br
 compare this file context spec to the provided key
 
@@ -100,7 +100,7 @@ set the SELinux context for this file context spec
 .SH "Record Store API Overview"
 
 .HP
-.BR semanage_fcontext_modify_local "(3)" \- 
+.BR semanage_fcontext_modify_local "(3)" \-
 .br
 add or update a file context spec in the local store
 
@@ -125,7 +125,7 @@ check if a file context spec is defined in the local store
 query a file context spec in the persistent policy
 
 .HP
-.BR semanage_fcontext_query_local "(3)" \- 
+.BR semanage_fcontext_query_local "(3)" \-
 .br
 query a file context spec in the local store
 

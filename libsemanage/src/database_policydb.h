@@ -68,7 +68,7 @@ typedef int (*record_policydb_table_iterate_t) (sepol_handle_t * h,
 typedef struct record_policydb_table {
 	/* Add policy record */
 	record_policydb_table_add_t add;
-	/* Modify policy record, or add if 
+	/* Modify policy record, or add if
 	 * the key isn't found */
 	record_policydb_table_modify_t modify;
 	/* Set policy record */

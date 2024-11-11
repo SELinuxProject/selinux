@@ -1,7 +1,7 @@
 /* Author: Joshua Brindle <jbrindle@tresys.com>
  *         Jason Tang     <jtang@tresys.com>
  *         Ivan Gyurdiev  <ivg2@cornell.edu>
- *           
+ *
  * Copyright (C) 2005 Tresys Technology, LLC
  * Copyright (C) 2005 Red Hat Inc.
  *

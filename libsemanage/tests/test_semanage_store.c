@@ -124,7 +124,7 @@ int semanage_store_test_cleanup(void)
 	return 0;
 }
 
-/* Adds all the tests needed for this suite. 
+/* Adds all the tests needed for this suite.
  */
 int semanage_store_add_tests(CU_pSuite suite)
 {

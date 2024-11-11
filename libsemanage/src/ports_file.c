@@ -101,7 +101,7 @@ static int port_parse(semanage_handle_t * handle,
 	if (parse_fetch_int(handle, info, &low, '-') < 0)
 		goto err;
 
-	/* If range (-) does not follow immediately, require a space 
+	/* If range (-) does not follow immediately, require a space
 	 * In other words, the space here is optional, but only
 	 * in the ranged case, not in the single port case,
 	 * so do a custom test */

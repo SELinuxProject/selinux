@@ -5,7 +5,7 @@ read-only filesystem by using DAC permissions. Consequently, these tests
 will fail if run as root, as root can override DAC permissions.
 
 
-How to add and use unit tests 
+How to add and use unit tests
 =============================
 
 We are using the CUnit unit testing framework.  This framework--and the
@@ -22,13 +22,13 @@ add unit tests for your code:
    semanage_store.c.   Your new .h/.c files represent a suite of related
    tests.
 
-2. Write or add new tests to a suite.  Tests are simply functions that 
+2. Write or add new tests to a suite.  Tests are simply functions that
    take the form:
 
 	void test_my_function(void)
 
    These tests are where you will make calls to the CUnit assertions.
- 
+
    If you are making a new test suite, also add the suite init/cleanup
    functions.  These take the form:
 
@@ -51,9 +51,9 @@ add unit tests for your code:
 6. Run your tests.  Rejoice or despair, as appropriate.
 
 
-A note on the the utilities.c: Add functions that can be commonly used 
-here.  For example, it is handy to have a dummy message callback 
-function to silence error messages produced by libsemanage and keep 
+A note on the the utilities.c: Add functions that can be commonly used
+here.  For example, it is handy to have a dummy message callback
+function to silence error messages produced by libsemanage and keep
 your output pretty.  To do this, include utilities.h and specify the
 callback like so:
 

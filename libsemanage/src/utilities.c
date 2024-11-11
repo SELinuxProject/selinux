@@ -318,7 +318,7 @@ semanage_list_t *semanage_slurp_file_filter(FILE * file,
 		if (pred(line)) {
 			semanage_rtrim(line, '\n');
 			current = list_addafter_controlmem(current, line);
-			if (!current) 
+			if (!current)
 				break;
 			line = NULL;
 			buff_len = 0;

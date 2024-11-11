@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2004-2005 Tresys Technology, LLC
  * Copyright (C) 2006 Red Hat, Inc
- *  
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
@@ -36,34 +36,34 @@
 
 	/* There are two ways to call this function:
 	 * One is with a valid swig_type and destructor.
-	 * Two is with a NULL swig_type and NULL destructor. 
-	 * 
+	 * Two is with a NULL swig_type and NULL destructor.
+	 *
 	 * In the first mode, the function converts
-	 * an array of *cloned* objects [of the given pointer swig type] 
-	 * into a PyList, and destroys the array in the process 
+	 * an array of *cloned* objects [of the given pointer swig type]
+	 * into a PyList, and destroys the array in the process
 	 * (the objects pointers are preserved).
 	 *
 	 * In the second mode, the function converts
 	 * an array of *constant* strings into a PyList, and destroys
-	 * the array in the process 
+	 * the array in the process
 	 * (the strings are copied, originals not freed). */
 
 	static int semanage_array2plist(
 		semanage_handle_t* handle,
-		void** arr, 
-		unsigned int asize, 
+		void** arr,
+		unsigned int asize,
 		swig_type_info* swig_type,
-		void (*destructor) (void*),	
+		void (*destructor) (void*),
 		PyObject** result) {
-		
+
 		PyObject* plist = PyList_New(0);
 		unsigned int i;
 
-		if (!plist) 
+		if (!plist)
 			goto err;
-	
+
 		for (i = 0; i < asize; i++)  {
-			
+
 			PyObject* obj = NULL;
 
 			/* NULL indicates string conversion,
@@ -71,31 +71,31 @@
 			if (!swig_type)
 				obj = SWIG_FromCharPtr(arr[i]);
 			else
-				obj = SWIG_NewPointerObj(arr[i], swig_type, 0);				 
+				obj = SWIG_NewPointerObj(arr[i], swig_type, 0);
 
-			if (!obj) 
+			if (!obj)
 				goto err;
 
-			if (PyList_Append(plist, obj) < 0) 
+			if (PyList_Append(plist, obj) < 0)
 				goto err;
 		}
 
 		free(arr);
-		
-		*result = plist;		
+
+		*result = plist;
 		return STATUS_SUCCESS;
 
 		err:
-		for (i = 0; i < asize; i++) 
+		for (i = 0; i < asize; i++)
 			if (destructor)
 				destructor(arr[i]);
 		free(arr);
 		return STATUS_ERR;
 	}
-%} 
+%}
 /* a few helpful typemaps are available in this library */
 %include <typemaps.i>
-/* wrap all int*'s so they can be used for results 
+/* wrap all int*'s so they can be used for results
    if it becomes necessary to send in data this should be changed to INOUT */
 %apply int *OUTPUT { int * };
 %apply int *OUTPUT { size_t * };
@@ -122,10 +122,10 @@
 %typemap(argout) (
  	semanage_handle_t* handle,
 	const semanage_user_t* user,
-	const char*** roles_arr, 
+	const char*** roles_arr,
 	unsigned int* num_roles) {
 
-	if ($result) {	
+	if ($result) {
 		int value;
 		SWIG_AsVal_int($result, &value);
 		if (value >= 0) {
@@ -185,10 +185,10 @@
 
 %typemap(argout) (
  	semanage_handle_t* handle,
-	semanage_bool_t*** records, 
+	semanage_bool_t*** records,
 	unsigned int* count) {
 
-	if ($result) {	
+	if ($result) {
 		int value;
 		SWIG_AsVal_int($result, &value);
 		if (value >= 0) {
@@ -228,10 +228,10 @@
 
 %typemap(argout) (
  	semanage_handle_t* handle,
-	semanage_fcontext_t*** records, 
+	semanage_fcontext_t*** records,
 	unsigned int* count) {
 
-	if ($result) {	
+	if ($result) {
 		int value;
 		SWIG_AsVal_int($result, &value);
 		if (value >= 0) {
@@ -272,10 +272,10 @@
 
 %typemap(argout) (
  	semanage_handle_t* handle,
-	semanage_iface_t*** records, 
+	semanage_iface_t*** records,
 	unsigned int* count) {
 
-	if ($result) {	
+	if ($result) {
 		int value;
 		SWIG_AsVal_int($result, &value);
 		if (value >= 0) {
@@ -316,10 +316,10 @@
 
 %typemap(argout) (
  	semanage_handle_t* handle,
-	semanage_seuser_t*** records, 
+	semanage_seuser_t*** records,
 	unsigned int* count) {
 
-	if ($result) {	
+	if ($result) {
 		int value;
 		SWIG_AsVal_int($result, &value);
 		if (value >= 0) {
@@ -359,10 +359,10 @@
 
 %typemap(argout) (
  	semanage_handle_t* handle,
-	semanage_user_t*** records, 
+	semanage_user_t*** records,
 	unsigned int* count) {
 
-	if ($result) {	
+	if ($result) {
 		int value;
 		SWIG_AsVal_int($result, &value);
 		if (value >= 0) {
@@ -402,10 +402,10 @@
 
 %typemap(argout) (
  	semanage_handle_t* handle,
-	semanage_port_t*** records, 
+	semanage_port_t*** records,
 	unsigned int* count) {
 
-	if ($result) {	
+	if ($result) {
 		int value;
 		SWIG_AsVal_int($result, &value);
 		if (value >= 0) {
@@ -531,10 +531,10 @@
 
 %typemap(argout) (
  	semanage_handle_t* handle,
-	semanage_node_t*** records, 
+	semanage_node_t*** records,
 	unsigned int* count) {
 
-	if ($result) {	
+	if ($result) {
 		int value;
 		SWIG_AsVal_int($result, &value);
 		if (value >= 0) {

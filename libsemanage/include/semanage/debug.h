@@ -35,9 +35,9 @@ extern const char *semanage_msg_get_channel(semanage_handle_t * handle);
 
 extern const char *semanage_msg_get_fname(semanage_handle_t * handle);
 
-/* Set the messaging callback. 
+/* Set the messaging callback.
  * By the default, the callback will print
- * the message on standard output, in a 
+ * the message on standard output, in a
  * particular format. Passing NULL here
  * indicates that messaging should be suppressed */
 extern void semanage_msg_set_callback(semanage_handle_t * handle,

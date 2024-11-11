@@ -17,7 +17,7 @@ The following parameters are allowed:
 
 .RS
 .TP
-.B module-store 
+.B module-store
 Specify how the SELinux Management library should interact with the SELinux policy store. When set to "direct", the SELinux
 Management library writes to the SELinux policy module store directly (this is the default setting).
 Otherwise a socket path or a server name can be used for the argument.
@@ -45,7 +45,7 @@ Whether or not to ignore the cache of CIL modules compiled from HLL. It can be s
 If the cache is ignored, then all CIL modules are recompiled from their HLL modules.
 
 .TP
-.B policy-version 
+.B policy-version
 When generating the policy, by default
 .BR semanage
 will set the policy version to POLICYDB_VERSION_MAX, as defined in <sepol/policydb/policydb.h>. Change this setting if a different
@@ -78,11 +78,11 @@ It can be set to either "true" or "false" and by default it is set to "false" (t
 
 .TP
 .B ignoredirs
-List, separated by ";",  of directories to ignore when setting up users homedirs. 
-Some distributions use this to stop labeling /root as a homedir. 
+List, separated by ";",  of directories to ignore when setting up users homedirs.
+Some distributions use this to stop labeling /root as a homedir.
 
 .TP
-.B usepasswd 
+.B usepasswd
 Whether or not to enable the use getpwent() to obtain a list of home directories to label. It can be set to either "true" or "false".
 By default it is set to "true".
 

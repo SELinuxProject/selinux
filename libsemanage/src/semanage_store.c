@@ -187,7 +187,7 @@ static int semanage_init_paths(const char *root)
 	return 0;
 }
 
-/* This initializes the paths inside the stores, this is only necessary 
+/* This initializes the paths inside the stores, this is only necessary
  * when directly accessing the store
  */
 static int semanage_init_store_paths(const char *root)
@@ -649,7 +649,7 @@ int semanage_create_store(semanage_handle_t * sh, int create)
 }
 
 /* returns <0 if the active store cannot be read or doesn't exist
- * 0 if the store exists but the lock file cannot be accessed 
+ * 0 if the store exists but the lock file cannot be accessed
  * SEMANAGE_CAN_READ if the store can be read and the lock file used
  * SEMANAGE_CAN_WRITE if the modules directory and binary policy dir can be written to
  */
@@ -732,7 +732,7 @@ int semanage_copy_file(const char *src, const char *dst, mode_t mode,
 
 	if (!mode)
 		mode = S_IRUSR | S_IWUSR;
-	
+
 	mask = umask(0);
 	if ((out = open(tmp, O_WRONLY | O_CREAT | O_TRUNC, mode)) == -1) {
 		umask(mask);
@@ -1496,7 +1496,7 @@ static int semanage_exec_prog(semanage_handle_t * sh,
 	return WEXITSTATUS(status);
 }
 
-/* reloads the policy pointed to by the handle, used locally by install 
+/* reloads the policy pointed to by the handle, used locally by install
  * and exported for user reload requests */
 int semanage_reload_policy(semanage_handle_t * sh)
 {
@@ -2104,8 +2104,8 @@ int semanage_load_files(semanage_handle_t * sh, cil_db_t *cildb, char **filename
 	return 0;
 }
 
-/* 
- * Expands the policy contained within *base 
+/*
+ * Expands the policy contained within *base
  */
 
 /**
@@ -2289,7 +2289,7 @@ static void semanage_fc_node_list_destroy(semanage_file_context_node_t * x)
 	}
 }
 
-/* Free the linked list of buckets (and their node lists) 
+/* Free the linked list of buckets (and their node lists)
  * starting at the given bucket. */
 static void semanage_fc_bucket_list_destroy(semanage_file_context_bucket_t * x)
 {
@@ -2317,7 +2317,7 @@ static void semanage_fc_bucket_list_destroy(semanage_file_context_bucket_t * x)
  *      -> a is less specific than b.
  *     If a does not have a specified type and b does not,
  *      -> a is less specific than b.
- * FIXME: These heuristics are imperfect, but good enough for 
+ * FIXME: These heuristics are imperfect, but good enough for
  * now.  A proper comparison would determine which (if either)
  * regular expression is a subset of the other.
  */
@@ -2355,13 +2355,13 @@ static int semanage_fc_compare(semanage_file_context_node_t * a,
 	if (!b->file_type && a->file_type)
 		return 1;
 
-	/* If none of the above conditions were satisfied, 
+	/* If none of the above conditions were satisfied,
 	 * then a and b are equally specific. */
 	return 0;
 }
 
 /* Merges two sorted file context linked lists into a single sorted one.
- * The left list is assumed to represent nodes that came first in the original ordering. 
+ * The left list is assumed to represent nodes that came first in the original ordering.
  * The final sorted list is returned.
  */
 static semanage_file_context_node_t
@@ -2413,9 +2413,9 @@ static semanage_file_context_node_t
  *  This is a stable implementation of an iterative merge sort.
  *  Each bucket initially has a linked list of file contexts
  *   that are 1 node long.
- *  Each pass, buckets (and the nodes they contain) are merged 
+ *  Each pass, buckets (and the nodes they contain) are merged
  *   two at time.
- *  Buckets are merged until there is only one bucket left, 
+ *  Buckets are merged until there is only one bucket left,
  *   containing the list of file contexts, sorted.
  */
 static void semanage_fc_merge_sort(semanage_file_context_bucket_t * main)
@@ -2428,9 +2428,9 @@ static void semanage_fc_merge_sort(semanage_file_context_bucket_t * main)
 	while (main->next) {
 		current = main;
 
-		/* Merge buckets two-by-two. 
-		 * If there is an odd number of buckets, the last 
-		 * bucket will be left alone, which corresponds 
+		/* Merge buckets two-by-two.
+		 * If there is an odd number of buckets, the last
+		 * bucket will be left alone, which corresponds
 		 * to the operation of merging it with an empty bucket. */
 		while (current) {
 			if (current->next) {
@@ -2442,7 +2442,7 @@ static void semanage_fc_merge_sort(semanage_file_context_bucket_t * main)
 
 				/* Free the (now empty) second bucket.
 				 * (This does not touch the node list
-				 * in the bucket because it has been 
+				 * in the bucket because it has been
 				 * shifted over to the first bucket. */
 				free(temp);
 			}
@@ -2451,8 +2451,8 @@ static void semanage_fc_merge_sort(semanage_file_context_bucket_t * main)
 	}
 }
 
-/* Compute the location of the first regular expression 
- *   meta character in the path of the given node, if it exists. 
+/* Compute the location of the first regular expression
+ *   meta character in the path of the given node, if it exists.
  * On return:
  *     fc_node->meta = position of meta character, if it exists
  *			(-1 corresponds to no character)
@@ -2513,7 +2513,7 @@ static char *semanage_strnchr(const char *buf, size_t buf_len, char c)
 }
 
 /* Returns a pointer to the end of line character in the given buffer.
- * Used in the context of a file context char buffer that we will be 
+ * Used in the context of a file context char buffer that we will be
  * parsing and sorting.
  */
 static char *semanage_get_line_end(const char *buf, size_t buf_len)
@@ -2538,7 +2538,7 @@ static char *semanage_get_line_end(const char *buf, size_t buf_len)
  *  Returns 0 on success, -1 on failure.
  *  Allocates a buffer pointed to by sorted_buf that contains the sorted lines.
  *  sorted_buf_len is set to the size of this buffer.
- *  This buffer is guaranteed to have a final \0 character. 
+ *  This buffer is guaranteed to have a final \0 character.
  *  This buffer must be released by the caller.
  */
 int semanage_fc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
@@ -2571,7 +2571,7 @@ int semanage_fc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
 		return -1;
 	}
 
-	/* Initialize the head of the linked list 
+	/* Initialize the head of the linked list
 	 * that will contain a node for each file context line. */
 	head = current =
 	    (semanage_file_context_node_t *) calloc(1,
@@ -2641,7 +2641,7 @@ int semanage_fc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
 					escape_chars++;
 					just_saw_escape = 1;
 				} else {
-					/* We're looking at an escaped 
+					/* We're looking at an escaped
 					   escape. Reset our flag. */
 					just_saw_escape = 0;
 				}
@@ -2790,7 +2790,7 @@ int semanage_fc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
 	/* Sort the bucket list. */
 	semanage_fc_merge_sort(main);
 
-	/* First, calculate how much space we'll need for 
+	/* First, calculate how much space we'll need for
 	 * the newly sorted block of data.  (We don't just
 	 * use buf_len for this because we have extracted
 	 * comments and whitespace.) */
@@ -2878,7 +2878,7 @@ static void semanage_nc_destroy_ruletab(semanage_netfilter_context_node_t *
  *  Returns 0 on success, -1 on failure.
  *  Allocates a buffer pointed to by sorted_buf that contains the sorted lines.
  *  sorted_buf_len is set to the size of this buffer.
- *  This buffer is guaranteed to have a final \0 character. 
+ *  This buffer is guaranteed to have a final \0 character.
  *  This buffer must be released by the caller.
  */
 int semanage_nc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
@@ -2992,7 +2992,7 @@ int semanage_nc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
 		line_buf = line_end + 1;
 	}
 
-	/* First, calculate how much space we'll need for 
+	/* First, calculate how much space we'll need for
 	 * the newly sorted block of data.  (We don't just
 	 * use buf_len for this because we have extracted
 	 * comments and whitespace.)  Start at 1 for trailing \0 */
