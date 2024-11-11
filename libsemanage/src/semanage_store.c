@@ -2199,7 +2199,7 @@ int semanage_write_policydb(semanage_handle_t * sh, sepol_policydb_t * out,
 int semanage_verify_modules(semanage_handle_t * sh,
 			    char **module_filenames, int num_modules)
 {
-	int i, retval;
+	int i;
 	semanage_conf_t *conf = sh->conf;
 	if (conf->mod_prog == NULL) {
 		return 0;
@@ -2208,8 +2208,7 @@ int semanage_verify_modules(semanage_handle_t * sh,
 		char *module = module_filenames[i];
 		external_prog_t *e;
 		for (e = conf->mod_prog; e != NULL; e = e->next) {
-			if ((retval =
-			     semanage_exec_prog(sh, e, module, "$<")) != 0) {
+			if (semanage_exec_prog(sh, e, module, "$<") != 0) {
 				return -1;
 			}
 		}
