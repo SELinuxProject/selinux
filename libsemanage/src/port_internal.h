@@ -26,7 +26,6 @@ extern int semanage_port_validate_local(semanage_handle_t * handle);
 
 /* ==== Internal (to ports) API === */
 
- int semanage_port_compare2_qsort(const semanage_port_t ** port,
-					const semanage_port_t ** port2);
+ int semanage_port_compare2_qsort(const void* p1, const void *p2);
 
 #endif

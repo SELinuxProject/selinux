@@ -169,9 +169,7 @@ int semanage_base_merge_components(semanage_handle_t * handle)
 
 		/* Sort records on MODE_SORT */
 		if (mode & MODE_SORT) {
-			qsort(records, nrecords, sizeof(record_t *),
-			      (int (*)(const void *, const void *))rtable->
-			      compare2_qsort);
+			qsort(records, nrecords, sizeof(record_t *), rtable->compare2_qsort);
 		}
 
 		/* Clear obsolete ones for MODE_SET */

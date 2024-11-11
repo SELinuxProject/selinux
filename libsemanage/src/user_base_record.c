@@ -47,12 +47,12 @@ static int semanage_user_base_compare2(const semanage_user_base_t * user,
 	return sepol_user_compare2(user, user2);
 }
 
-static int semanage_user_base_compare2_qsort(const semanage_user_base_t ** user,
-					     const semanage_user_base_t **
-					     user2)
+static int semanage_user_base_compare2_qsort(const void *p1, const void *p2)
 {
+	const semanage_user_base_t *const *user1 = p1;
+	const semanage_user_base_t *const *user2 = p2;
 
-	return sepol_user_compare2(*user, *user2);
+	return sepol_user_compare2(*user1, *user2);
 }
 
 /* Name */

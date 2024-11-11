@@ -91,9 +91,7 @@ int semanage_ibpkey_validate_local(semanage_handle_t *handle)
 	if (semanage_ibpkey_list_local(handle, &ibpkeys, &nibpkeys) < 0)
 		goto err;
 
-	qsort(ibpkeys, nibpkeys, sizeof(semanage_ibpkey_t *),
-	      (int (*)(const void *, const void *))
-	      &semanage_ibpkey_compare2_qsort);
+	qsort(ibpkeys, nibpkeys, sizeof(semanage_ibpkey_t *), semanage_ibpkey_compare2_qsort);
 
 	/* Test each ibpkey for overlap */
 	while (i < nibpkeys) {

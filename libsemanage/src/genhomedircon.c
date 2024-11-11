@@ -755,14 +755,20 @@ static int seuser_sort_func(const void *arg1, const void *arg2)
 	return strcmp(name1, name2);
 }
 
-static int user_sort_func(semanage_user_t ** arg1, semanage_user_t ** arg2)
+static int user_sort_func(const void *arg1, const void *arg2)
 {
-	return strcmp(semanage_user_get_name(*arg1),
-		      semanage_user_get_name(*arg2));
+	const semanage_user_t *const *user1 = arg1;
+	const semanage_user_t *const *user2 = arg2;
+
+	return strcmp(semanage_user_get_name(*user1),
+		      semanage_user_get_name(*user2));
 }
 
-static int name_user_cmp(char *key, semanage_user_t ** val)
+static int name_user_cmp(const void *arg1, const void *arg2)
 {
+	const char *key = arg1;
+	const semanage_user_t *const *val = arg2;
+
 	return strcmp(key, semanage_user_get_name(*val));
 }
 
@@ -1182,8 +1188,7 @@ static genhomedircon_user_entry_t *get_users(genhomedircon_settings_t * s,
 
 	qsort(seuser_list, nseusers, sizeof(semanage_seuser_t *),
 	      &seuser_sort_func);
-	qsort(user_list, nusers, sizeof(semanage_user_t *),
-	      (int (*)(const void *, const void *))&user_sort_func);
+	qsort(user_list, nusers, sizeof(semanage_user_t *), user_sort_func);
 
 	for (i = 0; i < nseusers; i++) {
 		seuname = semanage_seuser_get_sename(seuser_list[i]);
@@ -1193,9 +1198,7 @@ static genhomedircon_user_entry_t *get_users(genhomedircon_settings_t * s,
 			continue;
 
 		/* find the user structure given the name */
-		u = bsearch(seuname, user_list, nusers, sizeof(semanage_user_t *),
-			    (int (*)(const void *, const void *))
-			    &name_user_cmp);
+		u = bsearch(seuname, user_list, nusers, sizeof(semanage_user_t *), name_user_cmp);
 
 		/* %groupname syntax */
 		if (name[0] == '%') {

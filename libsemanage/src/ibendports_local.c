@@ -89,9 +89,7 @@ int semanage_ibendport_validate_local(semanage_handle_t *handle)
 	if (semanage_ibendport_list_local(handle, &ibendports, &nibendports) < 0)
 		goto err;
 
-	qsort(ibendports, nibendports, sizeof(semanage_ibendport_t *),
-	      (int (*)(const void *, const void *))
-	      &semanage_ibendport_compare2_qsort);
+	qsort(ibendports, nibendports, sizeof(semanage_ibendport_t *), semanage_ibendport_compare2_qsort);
 
 	/* Test each ibendport */
 	while (i < nibendports) {

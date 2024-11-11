@@ -183,8 +183,7 @@ int semanage_list_sort(semanage_list_t ** l)
 		array[i++] = temp;
 	}
 
-	qsort(array, count, sizeof(semanage_list_t *),
-	      (int (*)(const void *, const void *))&semanage_cmp_plist_t);
+	qsort(array, count, sizeof(semanage_list_t *), semanage_cmp_plist_t);
 	for (i = 0; i < (count - 1); ++i) {
 		array[i]->next = array[i + 1];
 	}
@@ -195,9 +194,12 @@ int semanage_list_sort(semanage_list_t ** l)
 	return 0;
 }
 
-int semanage_cmp_plist_t(const semanage_list_t ** x, const semanage_list_t ** y)
+int semanage_cmp_plist_t(const void *x, const void *y)
 {
-	return strcmp((*x)->data, (*y)->data);
+	const semanage_list_t *const *l1 = x;
+	const semanage_list_t *const *l2 = y;
+
+	return strcmp((*l1)->data, (*l2)->data);
 }
 
 int semanage_str_count(const char *data, char what)

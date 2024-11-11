@@ -26,7 +26,6 @@ extern int semanage_ibendport_validate_local(semanage_handle_t *handle);
 
 /* ==== Internal (to ibendports) API === */
 
- int semanage_ibendport_compare2_qsort(const semanage_ibendport_t **ibendport,
-					     const semanage_ibendport_t **ibendport2);
+ int semanage_ibendport_compare2_qsort(const void *p1, const void *p2);
 
 #endif

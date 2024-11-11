@@ -79,11 +79,12 @@ int semanage_user_compare2(const semanage_user_t * user,
 }
 
 
-static int semanage_user_compare2_qsort(const semanage_user_t ** user,
-					const semanage_user_t ** user2)
+static int semanage_user_compare2_qsort(const void *p1, const void *p2)
 {
+	const semanage_user_t *const *user1 = p1;
+	const semanage_user_t *const *user2 = p2;
 
-	return strcmp((*user)->name, (*user2)->name);
+	return semanage_user_compare2(*user1, *user2);
 }
 
 /* Name */

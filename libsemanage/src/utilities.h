@@ -98,8 +98,7 @@ int semanage_list_sort(semanage_list_t ** l) WARN_UNUSED;
  * returns strcmp(x->data, y->data)
  * used internally by semanage_list_sort()
  */
-int semanage_cmp_plist_t(const semanage_list_t ** x,
-			 const semanage_list_t ** y);
+int semanage_cmp_plist_t(const void *x, const void *y);
 /**
  * @param      data a target string
  * @param      what  a character

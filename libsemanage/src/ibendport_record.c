@@ -37,10 +37,12 @@ int semanage_ibendport_compare2(const semanage_ibendport_t *ibendport,
 }
 
 
- int semanage_ibendport_compare2_qsort(const semanage_ibendport_t **ibendport,
-					     const semanage_ibendport_t **ibendport2)
+ int semanage_ibendport_compare2_qsort(const void *p1, const void *p2)
 {
-	return sepol_ibendport_compare2(*ibendport, *ibendport2);
+	const semanage_ibendport_t *const *ibendport1 = p1;
+	const semanage_ibendport_t *const *ibendport2 = p2;
+
+	return sepol_ibendport_compare2(*ibendport1, *ibendport2);
 }
 
 int semanage_ibendport_key_create(semanage_handle_t *handle,

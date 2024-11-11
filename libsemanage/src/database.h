@@ -43,7 +43,7 @@ typedef struct record_table {
 	/* Same as above, but dereferences the pointer first.
 	 * This function is intenteded to be used as a qsort
 	 * comparator. */
-	int (*compare2_qsort) (const record_t ** rec, const record_t ** rec2);
+	int (*compare2_qsort) (const void * rec, const void * rec2);
 
 	/* Deep-copy clone of this record */
 	int (*clone) (struct semanage_handle * handle,

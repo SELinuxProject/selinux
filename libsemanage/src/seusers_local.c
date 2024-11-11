@@ -126,7 +126,8 @@ int semanage_seuser_modify_local(semanage_handle_t * handle,
 				 const semanage_seuser_t * data)
 {
 	int rc;
-	void *callback = (void *) handle->msg_callback;
+	__attribute__((format(printf, 3, 4)))
+	void (*callback) (void*, semanage_handle_t*, const char*, ...) = handle->msg_callback;
 	dbase_config_t *dconfig = semanage_seuser_dbase_local(handle);
 	const char *sename = semanage_seuser_get_sename(data);
 	const char *mls_range = semanage_seuser_get_mlsrange(data);

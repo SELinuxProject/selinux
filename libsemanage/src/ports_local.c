@@ -82,9 +82,7 @@ int semanage_port_validate_local(semanage_handle_t * handle)
 	/* List and sort the ports */
 	if (semanage_port_list_local(handle, &ports, &nports) < 0)
 		goto err;
-	qsort(ports, nports, sizeof(semanage_port_t *),
-	      (int (*)(const void *, const void *))
-	      &semanage_port_compare2_qsort);
+	qsort(ports, nports, sizeof(semanage_port_t *), semanage_port_compare2_qsort);
 
 	/* Test each port for overlap */
 	while (i < nports) {

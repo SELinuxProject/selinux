@@ -121,13 +121,12 @@ int semanage_fcontext_compare2(const semanage_fcontext_t * fcontext,
 }
 
 
-static int semanage_fcontext_compare2_qsort(const semanage_fcontext_t **
-					    fcontext,
-					    const semanage_fcontext_t **
-					    fcontext2)
+static int semanage_fcontext_compare2_qsort(const void *p1, const void *p2)
 {
+	const semanage_fcontext_t *const *fcontext1 = p1;
+	const semanage_fcontext_t *const *fcontext2 = p2;
 
-	return semanage_fcontext_compare2(*fcontext, *fcontext2);
+	return semanage_fcontext_compare2(*fcontext1, *fcontext2);
 }
 
 /* Create */
