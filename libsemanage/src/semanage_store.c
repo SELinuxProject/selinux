@@ -1058,8 +1058,8 @@ cleanup:
 /* qsort comparison function for semanage_get_active_modules. */
 static int semanage_get_active_modules_cmp(const void *a, const void *b)
 {
-	semanage_module_info_t *aa = (semanage_module_info_t *)a;
-	semanage_module_info_t *bb = (semanage_module_info_t *)b;
+	const semanage_module_info_t *aa = (const semanage_module_info_t *)a;
+	const semanage_module_info_t *bb = (const semanage_module_info_t *)b;
 
 	return strcmp(aa->name, bb->name);
 }
