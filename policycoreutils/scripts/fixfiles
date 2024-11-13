@@ -45,9 +45,9 @@ FS="`cat /proc/self/mounts | sort | uniq | awk '{print $2}'`"
 for i in $FS; do
 	if [ `useseclabel` -ge 0 ]
 	then
-		grep " $i " /proc/self/mounts | awk '{print $4}' | grep -E --silent '(^|,)seclabel(,|$)' && echo $i
+		grep -F " $i " /proc/self/mounts | awk '{print $4}' | grep -E --silent '(^|,)seclabel(,|$)' && echo $i
 	else
-		grep " $i " /proc/self/mounts | grep -v "context=" | grep -E --silent '(ext[234]| ext4dev | gfs2 | xfs | jfs | btrfs )' && echo $i
+		grep -F " $i " /proc/self/mounts | grep -v "context=" | grep -E --silent '(ext[234]| ext4dev | gfs2 | xfs | jfs | btrfs )' && echo $i
 	fi
 done
 }
@@ -55,14 +55,14 @@ done
 get_rw_labeled_mounts() {
 FS=`get_all_labeled_mounts | sort | uniq`
 for i in $FS; do
-	grep " $i " /proc/self/mounts | awk '{print $4}' | grep -E --silent '(^|,)rw(,|$)' && echo $i
+	grep -F " $i " /proc/self/mounts | awk '{print $4}' | grep -E --silent '(^|,)rw(,|$)' && echo $i
 done
 }
 
 get_ro_labeled_mounts() {
 FS=`get_all_labeled_mounts | sort | uniq`
 for i in $FS; do
-	grep " $i " /proc/self/mounts | awk '{print $4}' | grep -E --silent '(^|,)ro(,|$)' && echo $i
+	grep -F " $i " /proc/self/mounts | awk '{print $4}' | grep -E --silent '(^|,)ro(,|$)' && echo $i
 done
 }
 
