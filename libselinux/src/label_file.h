@@ -164,6 +164,9 @@ struct saved_data {
 	struct selabel_sub *subs;
 };
 
+void free_spec_node(struct spec_node *node);
+void sort_spec_node(struct spec_node *node, struct spec_node *parent);
+
 static inline mode_t string_to_file_kind(const char *mode)
 {
 	if (mode[0] != '-' || mode[1] == '\0' || mode[2] != '\0')
@@ -399,33 +402,6 @@ static inline int compare_spec_node(const void *p1, const void *p2)
 	/* There should not be two nodes with the same stem in the same array */
 	assert(rc != 0);
 	return rc;
-}
-
-static inline void sort_spec_node(struct spec_node *node, struct spec_node *parent)
-{
-	/* A node should not be its own parent */
-	assert(node != parent);
-	/* Only root node has NULL stem */
-	assert((!parent && !node->stem) || (parent && node->stem && node->stem[0] != '\0'));
-	/* A non-root node should not be empty */
-	assert(!parent || (node->literal_specs_num || node->regex_specs_num || node->children_num));
-
-
-	node->parent = parent;
-
-	/* Sort for comparison support and binary search lookup */
-
-	if (node->literal_specs_num > 1)
-		qsort(node->literal_specs, node->literal_specs_num, sizeof(struct literal_spec), compare_literal_spec);
-
-	if (node->regex_specs_num > 1)
-		qsort(node->regex_specs, node->regex_specs_num, sizeof(struct regex_spec), compare_regex_spec);
-
-	if (node->children_num > 1)
-		qsort(node->children, node->children_num, sizeof(struct spec_node), compare_spec_node);
-
-	for (uint32_t i = 0; i < node->children_num; i++)
-		sort_spec_node(&node->children[i], node);
 }
 
 static inline void sort_specs(struct saved_data *data)
@@ -812,47 +788,6 @@ static int insert_spec(const struct selabel_handle *rec, struct saved_data *data
 }
 
 #undef GROW_ARRAY
-
-static inline void free_spec_node(struct spec_node *node)
-{
-	for (uint32_t i = 0; i < node->literal_specs_num; i++) {
-		struct literal_spec *lspec = &node->literal_specs[i];
-
-		free(lspec->lr.ctx_raw);
-		free(lspec->lr.ctx_trans);
-		__pthread_mutex_destroy(&lspec->lr.lock);
-
-		if (lspec->from_mmap)
-			continue;
-
-		free(lspec->literal_match);
-		free(lspec->regex_str);
-	}
-	free(node->literal_specs);
-
-	for (uint32_t i = 0; i < node->regex_specs_num; i++) {
-		struct regex_spec *rspec = &node->regex_specs[i];
-
-		free(rspec->lr.ctx_raw);
-		free(rspec->lr.ctx_trans);
-		__pthread_mutex_destroy(&rspec->lr.lock);
-		regex_data_free(rspec->regex);
-		__pthread_mutex_destroy(&rspec->regex_lock);
-
-		if (rspec->from_mmap)
-			continue;
-
-		free(rspec->regex_str);
-	}
-	free(node->regex_specs);
-
-	for (uint32_t i = 0; i < node->children_num; i++)
-		free_spec_node(&node->children[i]);
-	free(node->children);
-
-	if (!node->from_mmap)
-		free(node->stem);
-}
 
 /* This will always check for buffer over-runs and either read the next entry
  * if buf != NULL or skip over the entry (as these areas are mapped in the
