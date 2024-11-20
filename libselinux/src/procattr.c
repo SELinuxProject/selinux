@@ -139,12 +139,11 @@ static int getprocattrcon_raw(char **context, pid_t pid, const char *attr,
 		return -1;
 
 	size = selinux_page_size;
-	buf = malloc(size);
+	buf = calloc(1, size);
 	if (!buf) {
 		ret = -1;
 		goto out;
 	}
-	memset(buf, 0, size);
 
 	do {
 		ret = read(fd, buf, size - 1);

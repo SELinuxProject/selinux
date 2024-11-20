@@ -14,10 +14,9 @@ int lgetfilecon_raw(const char *path, char ** context)
 	ssize_t ret;
 
 	size = INITCONTEXTLEN + 1;
-	buf = malloc(size);
+	buf = calloc(1, size);
 	if (!buf)
 		return -1;
-	memset(buf, 0, size);
 
 	ret = lgetxattr(path, XATTR_NAME_SELINUX, buf, size - 1);
 	if (ret < 0 && errno == ERANGE) {

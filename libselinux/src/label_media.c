@@ -134,10 +134,9 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 				status = 0;
 				goto finish;
 			}
-			data->spec_arr = malloc(sizeof(spec_t)*data->nspec);
+			data->spec_arr = calloc(data->nspec, sizeof(spec_t));
 			if (data->spec_arr == NULL)
 				goto finish;
-			memset(data->spec_arr, 0, sizeof(spec_t)*data->nspec);
 			maxnspec = data->nspec;
 
 			status = fseek(fp, 0L, SEEK_SET);
@@ -230,10 +229,9 @@ int selabel_media_init(struct selabel_handle *rec,
 {
 	struct saved_data *data;
 
-	data = (struct saved_data *)malloc(sizeof(*data));
+	data = (struct saved_data *)calloc(1, sizeof(*data));
 	if (!data)
 		return -1;
-	memset(data, 0, sizeof(*data));
 
 	rec->data = data;
 	rec->func_close = &close;
