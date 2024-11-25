@@ -45,7 +45,7 @@ void parse_release(parse_info_t * info)
 int parse_open(semanage_handle_t * handle, parse_info_t * info)
 {
 
-	info->file_stream = fopen(info->filename, "r");
+	info->file_stream = fopen(info->filename, "re");
 	if (!info->file_stream && (errno != ENOENT)) {
 		ERR(handle, "could not open file %s: %s",
 		    info->filename, strerror(errno));

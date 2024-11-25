@@ -127,7 +127,7 @@ static int dbase_file_flush(semanage_handle_t * handle, dbase_file_t * dbase)
 	fname = dbase->path[handle->is_in_transaction];
 
 	mask = umask(0077);
-	str = fopen(fname, "w");
+	str = fopen(fname, "we");
 	umask(mask);
 	if (!str) {
 		ERR(handle, "could not open %s for writing: %s",

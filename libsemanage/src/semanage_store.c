@@ -585,7 +585,7 @@ int semanage_create_store(semanage_handle_t * sh, int create)
 	if (stat(path, &sb) == -1) {
 		if (errno == ENOENT && create) {
 			mask = umask(0077);
-			if ((fd = creat(path, S_IRUSR | S_IWUSR)) == -1) {
+			if ((fd = open(path, O_CREAT | O_WRONLY | O_TRUNC | O_CLOEXEC, S_IRUSR | S_IWUSR)) == -1) {
 				umask(mask);
 				ERR(sh, "Could not create lock file at %s.",
 				    path);
@@ -682,7 +682,7 @@ int semanage_copy_file(semanage_handle_t *sh, const char *src, const char *dst,
 	if (n < 0 || n >= PATH_MAX)
 		return -1;
 
-	if ((in = open(src, O_RDONLY)) == -1) {
+	if ((in = open(src, O_RDONLY | O_CLOEXEC)) == -1) {
 		return -1;
 	}
 
@@ -690,7 +690,7 @@ int semanage_copy_file(semanage_handle_t *sh, const char *src, const char *dst,
 		mode = S_IRUSR | S_IWUSR;
 
 	mask = umask(0);
-	if ((out = open(tmp, O_WRONLY | O_CREAT | O_TRUNC, mode)) == -1) {
+	if ((out = open(tmp, O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC, mode)) == -1) {
 		umask(mask);
 		errsv = errno;
 		close(in);
@@ -1489,7 +1489,7 @@ int semanage_split_fc(semanage_handle_t * sh)
 	char buf[PATH_MAX] = { 0 };
 
 	/* I use fopen here instead of open so that I can use fgets which only reads a single line */
-	file_con = fopen(semanage_path(SEMANAGE_TMP, SEMANAGE_FC_TMPL), "r");
+	file_con = fopen(semanage_path(SEMANAGE_TMP, SEMANAGE_FC_TMPL), "re");
 	if (!file_con) {
 		ERR(sh, "Could not open %s for reading.",
 		    semanage_path(SEMANAGE_TMP, SEMANAGE_FC_TMPL));
@@ -1497,14 +1497,14 @@ int semanage_split_fc(semanage_handle_t * sh)
 	}
 
 	fc = open(semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_FC),
-		  O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+		  O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC, S_IRUSR | S_IWUSR);
 	if (fc < 0) {
 		ERR(sh, "Could not open %s for writing.",
 		    semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_FC));
 		goto cleanup;
 	}
 	hd = open(semanage_path(SEMANAGE_TMP, SEMANAGE_HOMEDIR_TMPL),
-		  O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+		  O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC, S_IRUSR | S_IWUSR);
 	if (hd < 0) {
 		ERR(sh, "Could not open %s for writing.",
 		    semanage_path(SEMANAGE_TMP, SEMANAGE_HOMEDIR_TMPL));
@@ -1719,7 +1719,7 @@ static int semanage_commit_sandbox(semanage_handle_t * sh)
 	memset(write_buf, 0, sizeof(write_buf));
 	snprintf(write_buf, sizeof(write_buf), "%d", commit_number);
 	if ((fd =
-	     open(commit_filename, O_WRONLY | O_CREAT | O_TRUNC,
+	     open(commit_filename, O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC,
 		  S_IRUSR | S_IWUSR)) == -1) {
 		ERR(sh, "Could not open commit number file %s for writing.",
 		    commit_filename);
@@ -1735,7 +1735,7 @@ static int semanage_commit_sandbox(semanage_handle_t * sh)
 	close(fd);
 
 	/* sync changes in sandbox to filesystem */
-	fd = open(sandbox, O_DIRECTORY);
+	fd = open(sandbox, O_DIRECTORY | O_CLOEXEC);
 	if (fd == -1) {
 		ERR(sh, "Error while opening %s for syncfs(): %d", sandbox, errno);
 		return -1;
@@ -1869,7 +1869,7 @@ static int semanage_get_lock(semanage_handle_t * sh,
 	int got_lock = 0;
 
 	if ((fd =
-	     open(lock_file, O_RDWR | O_CREAT | O_TRUNC,
+	     open(lock_file, O_RDWR | O_CREAT | O_TRUNC | O_CLOEXEC,
 		  S_IRUSR | S_IWUSR)) == -1) {
 		ERR(sh, "Could not open direct %s at %s.", lock_name,
 		    lock_file);
@@ -2013,7 +2013,7 @@ int semanage_direct_get_serial(semanage_handle_t * sh)
 		    semanage_path(SEMANAGE_ACTIVE, SEMANAGE_COMMIT_NUM_FILE);
 	}
 
-	if ((fd = open(commit_filename, O_RDONLY)) == -1) {
+	if ((fd = open(commit_filename, O_RDONLY | O_CLOEXEC)) == -1) {
 		if (errno == ENOENT) {
 			/* the commit number file does not exist yet,
 			 * so assume that the number is 0 */
@@ -2093,7 +2093,7 @@ int semanage_read_policydb(semanage_handle_t * sh, sepol_policydb_t * in,
 	     semanage_path(SEMANAGE_ACTIVE, file)) == NULL) {
 		goto cleanup;
 	}
-	if ((infile = fopen(kernel_filename, "r")) == NULL) {
+	if ((infile = fopen(kernel_filename, "re")) == NULL) {
 		ERR(sh, "Could not open kernel policy %s for reading.",
 		    kernel_filename);
 		goto cleanup;
@@ -2136,7 +2136,7 @@ int semanage_write_policydb(semanage_handle_t * sh, sepol_policydb_t * out,
 	     semanage_path(SEMANAGE_TMP, file)) == NULL) {
 		goto cleanup;
 	}
-	if ((outfile = fopen(kernel_filename, "wb")) == NULL) {
+	if ((outfile = fopen(kernel_filename, "wbe")) == NULL) {
 		ERR(sh, "Could not open kernel policy %s for writing.",
 		    kernel_filename);
 		goto cleanup;
@@ -3003,7 +3003,7 @@ void semanage_setfiles(semanage_handle_t * sh, const char *path){
 
 	/* Make sure "path" is owned by root */
 	if ((geteuid() != 0 || getegid() != 0) &&
-	    ((fd = open(path, O_RDONLY)) != -1)){
+	    ((fd = open(path, O_RDONLY | O_CLOEXEC)) != -1)){
 		/* Skip files with the SUID or SGID bit set -- abuse protection */
 		if ((fstat(fd, &sb) != -1) &&
 		    !(S_ISREG(sb.st_mode) &&

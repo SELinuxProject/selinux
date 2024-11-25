@@ -38,7 +38,7 @@ char *semanage_findval(const char *file, const char *var, const char *delim)
 	assert(file);
 	assert(var);
 
-	if ((fd = fopen(file, "r")) == NULL)
+	if ((fd = fopen(file, "re")) == NULL)
 		return NULL;
 
 	while (getline(&buff, &buff_len, fd) > 0) {

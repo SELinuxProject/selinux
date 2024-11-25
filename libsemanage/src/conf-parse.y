@@ -468,7 +468,7 @@ semanage_conf_t *semanage_conf_parse(const char *config_filename)
 	if (semanage_conf_init(current_conf) == -1) {
 		goto cleanup;
 	}
-	if ((semanage_in = fopen(config_filename, "r")) == NULL) {
+	if ((semanage_in = fopen(config_filename, "re")) == NULL) {
 		/* configuration file does not exist or could not be
 		 * read.  THIS IS NOT AN ERROR.  just rely on the
 		 * defaults. */

@@ -48,7 +48,7 @@ static int bzip(semanage_handle_t *sh, const char *filename, void *data,
 	size_t len;
 	FILE *f;
 
-	if ((f = fopen(filename, "wb")) == NULL) {
+	if ((f = fopen(filename, "wbe")) == NULL) {
 		return -1;
 	}
 
@@ -177,7 +177,7 @@ int map_compressed_file(semanage_handle_t *sh, const char *path,
 	int ret = 0, fd = -1;
 	FILE *file = NULL;
 
-	fd = open(path, O_RDONLY);
+	fd = open(path, O_RDONLY | O_CLOEXEC);
 	if (fd == -1) {
 		ERR(sh, "Unable to open %s\n", path);
 		return -1;

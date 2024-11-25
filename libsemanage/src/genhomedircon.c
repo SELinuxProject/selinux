@@ -218,7 +218,7 @@ static semanage_list_t *get_shell_list(void)
 	size_t buff_len = 0;
 	ssize_t len;
 
-	shells = fopen(PATH_SHELLS_FILE, "r");
+	shells = fopen(PATH_SHELLS_FILE, "re");
 	if (!shells)
 		return default_shell_list();
 	while ((len = getline(&temp, &buff_len, shells)) > 0) {
@@ -227,11 +227,13 @@ static semanage_list_t *get_shell_list(void)
 			if (semanage_list_push(&list, temp)) {
 				free(temp);
 				semanage_list_destroy(&list);
+				fclose(shells);
 				return default_shell_list();
 			}
 		}
 	}
 	free(temp);
+	fclose(shells);
 
 	return list;
 }
@@ -503,7 +505,7 @@ static semanage_list_t *make_template(genhomedircon_settings_t * s,
 	FILE *template_file = NULL;
 	semanage_list_t *template_data = NULL;
 
-	template_file = fopen(s->homedir_template_path, "r");
+	template_file = fopen(s->homedir_template_path, "re");
 	if (!template_file)
 		return NULL;
 	template_data = semanage_slurp_file_filter(template_file, pred);
@@ -1413,7 +1415,7 @@ int semanage_genhomedircon(semanage_handle_t * sh,
 	s.h_semanage = sh;
 	s.policydb = policydb;
 
-	if (!(out = fopen(s.fcfilepath, "w"))) {
+	if (!(out = fopen(s.fcfilepath, "we"))) {
 		/* couldn't open output file */
 		ERR(sh, "Could not open the file_context file for writing");
 		retval = STATUS_ERR;
