@@ -149,7 +149,10 @@ static int dbase_file_flush(semanage_handle_t * handle, dbase_file_t * dbase)
 	}
 
 	dbase_llist_set_modified(&dbase->llist, 0);
-	fclose(str);
+	if (fclose(str) != 0 && errno != EINTR) {
+		str = NULL;
+		goto err;
+	}
 	return STATUS_SUCCESS;
 
       err:

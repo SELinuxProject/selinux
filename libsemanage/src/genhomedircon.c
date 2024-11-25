@@ -1429,7 +1429,8 @@ int semanage_genhomedircon(semanage_handle_t * sh,
 
 done:
 	if (out != NULL)
-		fclose(out);
+		if (fclose(out) != 0 && errno != EINTR)
+			retval = STATUS_ERR;
 
 	while (s.fallback)
 		pop_user_entry(&(s.fallback));

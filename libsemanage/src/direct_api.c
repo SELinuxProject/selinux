@@ -467,7 +467,10 @@ static int write_file(semanage_handle_t * sh,
 		close(out);
 		return -1;
 	}
-	close(out);
+	if (close(out) == -1 && errno != EINTR) {
+		ERR(sh, "Error while closing %s.", filename);
+		return -1;
+	}
 	return 0;
 }
 
@@ -839,7 +842,7 @@ static int semanage_direct_write_langext(semanage_handle_t *sh,
 		goto cleanup;
 	}
 
-	if (fclose(fp) != 0) {
+	if (fclose(fp) != 0 && errno != EINTR) {
 		ERR(sh, "Unable to close %s module ext file.", modinfo->name);
 		fp = NULL;
 		ret = -1;
@@ -1216,7 +1219,7 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 		FILE *touch;
 		touch = fopen(path, "we");
 		if (touch != NULL) {
-			if (fclose(touch) != 0) {
+			if (fclose(touch) != 0 && errno != EINTR) {
 				ERR(sh, "Error attempting to create disable_dontaudit flag.");
 				goto cleanup;
 			}
@@ -1248,7 +1251,7 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 		FILE *touch;
 		touch = fopen(path, "we");
 		if (touch != NULL) {
-			if (fclose(touch) != 0) {
+			if (fclose(touch) != 0 && errno != EINTR) {
 				ERR(sh, "Error attempting to create preserve_tunable flag.");
 				goto cleanup;
 			}
@@ -2120,7 +2123,7 @@ static int semanage_direct_set_enabled(semanage_handle_t *sh,
 
 			ret = fclose(fp);
 			fp = NULL;
-			if (ret != 0) {
+			if (ret != 0 && errno != EINTR) {
 				ERR(sh,
 				    "Unable to close disabled file for module %s",
 				    modkey->name);
@@ -2321,7 +2324,7 @@ static int semanage_direct_get_module_info(semanage_handle_t *sh,
 	free(tmp);
 	tmp = NULL;
 
-	if (fclose(fp) != 0) {
+	if (fclose(fp) != 0 && errno != EINTR) {
 		fp = NULL;
 		ERR(sh,
 		    "Unable to close %s module lang ext file.",
