@@ -396,7 +396,7 @@ static int semanage_conf_init(semanage_conf_t * conf)
 	conf->bzip_small = 0;
 	conf->ignore_module_cache = 0;
 	conf->remove_hll = 0;
-	conf->optimize_policy = 0;
+	conf->optimize_policy = 1;
 	conf->multiple_decls = 1;
 
 	conf->save_previous = 0;
