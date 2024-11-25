@@ -47,8 +47,8 @@ int parse_open(semanage_handle_t * handle, parse_info_t * info)
 
 	info->file_stream = fopen(info->filename, "re");
 	if (!info->file_stream && (errno != ENOENT)) {
-		ERR(handle, "could not open file %s: %s",
-		    info->filename, strerror(errno));
+		ERR(handle, "could not open file %s.",
+		    info->filename);
 		return STATUS_ERR;
 	}
 	if (info->file_stream)

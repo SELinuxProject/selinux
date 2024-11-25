@@ -179,13 +179,13 @@ int map_compressed_file(semanage_handle_t *sh, const char *path,
 
 	fd = open(path, O_RDONLY | O_CLOEXEC);
 	if (fd == -1) {
-		ERR(sh, "Unable to open %s\n", path);
+		ERR(sh, "Unable to open %s.", path);
 		return -1;
 	}
 
 	file = fdopen(fd, "r");
 	if (file == NULL) {
-		ERR(sh, "Unable to open %s\n", path);
+		ERR(sh, "Unable to open %s.", path);
 		close(fd);
 		return -1;
 	}

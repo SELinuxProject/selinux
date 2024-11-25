@@ -113,8 +113,8 @@ static int dbase_policydb_cache(semanage_handle_t * handle,
 	 * ENOENT is not fatal - we just create an empty policydb */
 	fp = fopen(fname, "rbe");
 	if (fp == NULL && errno != ENOENT) {
-		ERR(handle, "could not open %s for reading: %s",
-		    fname, strerror(errno));
+		ERR(handle, "could not open %s for reading",
+		    fname);
 		goto err;
 	}
 

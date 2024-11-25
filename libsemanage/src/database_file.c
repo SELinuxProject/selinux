@@ -130,8 +130,8 @@ static int dbase_file_flush(semanage_handle_t * handle, dbase_file_t * dbase)
 	str = fopen(fname, "we");
 	umask(mask);
 	if (!str) {
-		ERR(handle, "could not open %s for writing: %s",
-		    fname, strerror(errno));
+		ERR(handle, "could not open %s for writing",
+		    fname);
 		goto err;
 	}
 	__fsetlocking(str, FSETLOCKING_BYCALLER);

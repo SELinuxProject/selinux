@@ -151,7 +151,7 @@ int semanage_get_hll_compiler_path(semanage_handle_t *sh,
 
 	lower_lang_ext = strdup(lang_ext);
 	if (lower_lang_ext == NULL) {
-		ERR(sh, "Could not create copy of lang_ext. Out of memory.\n");
+		ERR(sh, "Could not create copy of lang_ext. Out of memory.");
 		status = -1;
 		goto cleanup;
 	}

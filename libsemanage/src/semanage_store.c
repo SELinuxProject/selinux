@@ -1551,7 +1551,7 @@ static int sefcontext_compile(semanage_handle_t * sh, const char *path) {
 
 	if (stat(path, &sb) < 0) {
 		if (errno != ENOENT) {
-			ERR(sh, "Unable to access %s: %s\n", path, strerror(errno));
+			ERR(sh, "Unable to access %s.", path);
 			return -1;
 		}
 
@@ -1737,11 +1737,11 @@ static int semanage_commit_sandbox(semanage_handle_t * sh)
 	/* sync changes in sandbox to filesystem */
 	fd = open(sandbox, O_DIRECTORY | O_CLOEXEC);
 	if (fd == -1) {
-		ERR(sh, "Error while opening %s for syncfs(): %d", sandbox, errno);
+		ERR(sh, "Error while opening %s for syncfs().", sandbox);
 		return -1;
 	}
 	if (syncfs(fd) == -1) {
-		ERR(sh, "Error while syncing %s to filesystem: %d", sandbox, errno);
+		ERR(sh, "Error while syncing %s to filesystem.", sandbox);
 		close(fd);
 		return -1;
 	}
