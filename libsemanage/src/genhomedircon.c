@@ -192,15 +192,23 @@ static semanage_list_t *default_shell_list(void)
 	semanage_list_t *list = NULL;
 
 	if (semanage_list_push(&list, "/bin/csh")
+	    || semanage_list_push(&list, "/usr/bin/csh")
 	    || semanage_list_push(&list, "/bin/tcsh")
+	    || semanage_list_push(&list, "/usr/bin/tcsh")
 	    || semanage_list_push(&list, "/bin/ksh")
-	    || semanage_list_push(&list, "/bin/bsh")
-	    || semanage_list_push(&list, "/bin/ash")
 	    || semanage_list_push(&list, "/usr/bin/ksh")
+	    || semanage_list_push(&list, "/bin/bsh")
+	    || semanage_list_push(&list, "/usr/bin/bsh")
+	    || semanage_list_push(&list, "/bin/ash")
+	    || semanage_list_push(&list, "/usr/bin/ash")
+	    || semanage_list_push(&list, "/bin/pdksh")
 	    || semanage_list_push(&list, "/usr/bin/pdksh")
 	    || semanage_list_push(&list, "/bin/zsh")
+	    || semanage_list_push(&list, "/usr/bin/zsh")
 	    || semanage_list_push(&list, "/bin/sh")
-	    || semanage_list_push(&list, "/bin/bash"))
+	    || semanage_list_push(&list, "/usr/bin/sh")
+	    || semanage_list_push(&list, "/bin/bash")
+	    || semanage_list_push(&list, "/usr/bin/bash"))
 		goto fail;
 
 	return list;
@@ -208,6 +216,12 @@ static semanage_list_t *default_shell_list(void)
       fail:
 	semanage_list_destroy(&list);
 	return NULL;
+}
+
+static bool is_nologin_shell(const char *path)
+{
+	return strcmp(path, PATH_NOLOGIN_SHELL) == 0 ||
+	       strcmp(path, "/usr" PATH_NOLOGIN_SHELL) == 0;
 }
 
 static semanage_list_t *get_shell_list(void)
@@ -223,13 +237,13 @@ static semanage_list_t *get_shell_list(void)
 		return default_shell_list();
 	while ((len = getline(&temp, &buff_len, shells)) > 0) {
 		if (temp[len-1] == '\n') temp[len-1] = 0;
-		if (strcmp(temp, PATH_NOLOGIN_SHELL)) {
-			if (semanage_list_push(&list, temp)) {
-				free(temp);
-				semanage_list_destroy(&list);
-				fclose(shells);
-				return NULL;
-			}
+		if (is_nologin_shell(temp))
+			continue;
+		if (semanage_list_push(&list, temp)) {
+			free(temp);
+			semanage_list_destroy(&list);
+			fclose(shells);
+			return NULL;
 		}
 	}
 	free(temp);
