@@ -228,7 +228,7 @@ static semanage_list_t *get_shell_list(void)
 				free(temp);
 				semanage_list_destroy(&list);
 				fclose(shells);
-				return default_shell_list();
+				return NULL;
 			}
 		}
 	}
@@ -333,7 +333,10 @@ static semanage_list_t *get_home_dirs(genhomedircon_settings_t * s)
 		return homedir_list;
 
 	shells = get_shell_list();
-	assert(shells);
+	if (!shells) {
+		ERR(s->h_semanage, "Allocation failure!");
+		goto fail;
+	}
 
 	path = semanage_findval(PATH_ETC_LOGIN_DEFS, "UID_MIN", NULL);
 	if (path && *path) {
