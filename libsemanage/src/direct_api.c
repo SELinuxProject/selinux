@@ -2762,7 +2762,6 @@ static int semanage_direct_install_info(semanage_handle_t *sh,
 	int status = 0;
 	int ret = 0;
 	int type;
-	struct stat sb;
 
 	char path[PATH_MAX];
 	mode_t mask = umask(0077);
@@ -2863,13 +2862,11 @@ static int semanage_direct_install_info(semanage_handle_t *sh,
 			goto cleanup;
 		}
 
-		if (stat(path, &sb) == 0) {
-			ret = unlink(path);
-			if (ret != 0) {
-				ERR(sh, "Error while removing cached CIL file %s.", path);
-				status = -3;
-				goto cleanup;
-			}
+		ret = unlink(path);
+		if (ret != 0 && errno != ENOENT) {
+			ERR(sh, "Error while removing cached CIL file %s.", path);
+			status = -3;
+			goto cleanup;
 		}
 	}
 
@@ -2966,13 +2963,10 @@ static int semanage_direct_remove_key(semanage_handle_t *sh,
 			goto cleanup;
 		}
 
-		struct stat sb;
-		if (stat(path, &sb) == 0) {
-			ret = unlink(path);
-			if (ret != 0) {
-				status = -1;
-				goto cleanup;
-			}
+		ret = unlink(path);
+		if (ret != 0 && errno != ENOENT) {
+			status = -1;
+			goto cleanup;
 		}
 	}
 	else {
