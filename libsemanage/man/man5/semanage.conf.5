@@ -131,6 +131,85 @@ It can be set to either "true" or "false" and by default it is set to "true".
 When set to "true", duplicate type, type attribute, and role declarations will be allowed.
 It can be set to either "true" or "false" and by default it is set to "true".
 
+.RE
+.PP
+For certain tasks the SELinux Management library resorts to running
+external commands.  For the following commands their path and arguments can
+be overridden:
+
+.RS
+.RS
+.TP
+.B load_policy
+Command to load a kernel policy.
+Requires no argument.
+Defaults to
+.IR /sbin/load_policy
+with no arguments.
+
+.TP
+.B setfiles
+Command to verify file context definitions.
+Requires two arguments, the path to the kernel policy and the path to the
+file context definition file.
+Defaults to
+.IR /sbin/setfiles
+with the arguments '\-q \-c $@ $<'.
+
+.TP
+.B sefcontext_compile
+Command to compile a file context definition file.
+Requires one argument, the path to the to be compiled file context
+definition file.
+Defaults to
+.IR /sbin/sefcontext_compile
+with the argument '$@'.
+
+.RE
+.PP
+Either
+.IR path
+or
+.IR args
+can be omitted.
+The argument string must contain '$@' for the first required argument,
+and '$<' for the second one.
+The syntax for overriding an external command property is:
+
+.RS
+
+[\fIname\fR]
+.sp 0
+path = /path/to/command
+.sp 0
+args = --flag
+.sp 0
+[end]
+
+.RE
+
+.TP
+Example
+
+.RS
+
+[sefcontext_compile]
+.sp 0
+path = /usr/sbin/sefcontext_compile
+.sp 0
+args = -r $@
+.sp 0
+[end]
+
+.RE
+.PP
+Optionally the SELinux Management library can invoke external commands to
+verify source modules (\fBverify module\fR), linked modules
+(\fBverify linked\fR), and kernel policies (\fBverify kernel\fR).
+The syntax is identical to the above command overrides.
+The program should exit with a value of 0 on success, and non zero on
+failure.
+
 .SH "SEE ALSO"
 .TP
 semanage(8)
