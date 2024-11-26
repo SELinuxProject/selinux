@@ -1188,28 +1188,27 @@ static int process_file(const char *path, const char *suffix,
 	return -1;
 }
 
-static void selabel_subs_fini(struct selabel_sub *ptr)
+static void selabel_subs_fini(struct selabel_sub *subs, uint32_t num)
 {
-	struct selabel_sub *next;
-
-	while (ptr) {
-		next = ptr->next;
-		free(ptr->src);
-		free(ptr->dst);
-		free(ptr);
-		ptr = next;
+	for (uint32_t i = 0; i < num; i++) {
+		free(subs[i].src);
+		free(subs[i].dst);
 	}
+
+	free(subs);
 }
 
-static char *selabel_sub(const struct selabel_sub *ptr, const char *src)
+static char *selabel_apply_subs(const struct selabel_sub *subs, uint32_t num, const char *src)
 {
-	char *dst = NULL;
-	unsigned int len;
+	char *dst;
+	uint32_t len;
 
-	while (ptr) {
+	for (uint32_t i = 0; i < num; i++) {
+		const struct selabel_sub *ptr = &subs[i];
+
 		if (strncmp(src, ptr->src, ptr->slen) == 0 ) {
 			if (src[ptr->slen] == '/' ||
-			    src[ptr->slen] == 0) {
+			    src[ptr->slen] == '\0') {
 				if ((src[ptr->slen] == '/') &&
 				    (strcmp(ptr->dst, "/") == 0))
 					len = ptr->slen + 1;
@@ -1220,34 +1219,38 @@ static char *selabel_sub(const struct selabel_sub *ptr, const char *src)
 				return dst;
 			}
 		}
-		ptr = ptr->next;
 	}
+
 	return NULL;
 }
 
 #if !defined(BUILD_HOST) && !defined(ANDROID)
 static int selabel_subs_init(const char *path, struct selabel_digest *digest,
-			     struct selabel_sub **out_subs)
+			     struct selabel_sub **out_subs,
+			     uint32_t *out_num, uint32_t *out_alloc)
 {
 	char buf[1024];
-	FILE *cfg = fopen(path, "re");
-	struct selabel_sub *list = NULL, *sub = NULL;
+	FILE *cfg;
 	struct stat sb;
-	int status = -1;
+	struct selabel_sub *tmp = NULL;
+	uint32_t tmp_num = 0, tmp_alloc = 0;
+	char *src_cpy = NULL, *dst_cpy = NULL;
+	int rc;
 
 	*out_subs = NULL;
+	*out_num = 0;
+	*out_alloc = 0;
+
+	cfg = fopen(path, "re");
 	if (!cfg) {
 		/* If the file does not exist, it is not fatal */
 		return (errno == ENOENT) ? 0 : -1;
 	}
 
-	if (fstat(fileno(cfg), &sb) < 0)
-		goto out;
-
 	while (fgets_unlocked(buf, sizeof(buf) - 1, cfg)) {
-		char *ptr = NULL;
+		char *ptr;
 		char *src = buf;
-		char *dst = NULL;
+		char *dst;
 		size_t len;
 
 		while (*src && isspace((unsigned char)*src))
@@ -1275,62 +1278,68 @@ static int selabel_subs_init(const char *path, struct selabel_digest *digest,
 			goto err;
 		}
 
-		sub = calloc(1, sizeof(*sub));
-		if (! sub)
+		src_cpy = strdup(src);
+		if (!src_cpy)
 			goto err;
 
-		sub->src = strdup(src);
-		if (! sub->src)
+		dst_cpy = strdup(dst);
+		if (!dst_cpy)
 			goto err;
 
-		sub->dst = strdup(dst);
-		if (! sub->dst)
+		rc = GROW_ARRAY(tmp);
+		if (rc)
 			goto err;
 
-		sub->slen = len;
-		sub->next = list;
-		list = sub;
-		sub = NULL;
+		tmp[tmp_num++] = (struct selabel_sub) {
+			.src = src_cpy,
+			.slen = len,
+			.dst = dst_cpy,
+		};
+		src_cpy = NULL;
+		dst_cpy = NULL;
 	}
+
+	rc = fstat(fileno(cfg), &sb);
+	if (rc < 0)
+		goto err;
 
 	if (digest_add_specfile(digest, cfg, NULL, sb.st_size, path) < 0)
 		goto err;
 
-	*out_subs = list;
-	status = 0;
+	*out_subs = tmp;
+	*out_num = tmp_num;
+	*out_alloc = tmp_alloc;
 
-out:
 	fclose(cfg);
-	return status;
+
+	return 0;
+
 err:
-	if (sub)
-		free(sub->src);
-	free(sub);
-	while (list) {
-		sub = list->next;
-		free(list->src);
-		free(list->dst);
-		free(list);
-		list = sub;
+	free(dst_cpy);
+	free(src_cpy);
+	for (uint32_t i = 0; i < tmp_num; i++) {
+		free(tmp[i].src);
+		free(tmp[i].dst);
 	}
-	goto out;
+	free(tmp);
+	fclose_errno_safe(cfg);
+	return -1;
 }
 #endif
 
 static char *selabel_sub_key(const struct saved_data *data, const char *key)
 {
-	char *ptr = NULL;
-	char *dptr = NULL;
+	char *ptr, *dptr;
 
-	ptr = selabel_sub(data->subs, key);
+	ptr = selabel_apply_subs(data->subs, data->subs_num, key);
 	if (ptr) {
-		dptr = selabel_sub(data->dist_subs, ptr);
+		dptr = selabel_apply_subs(data->dist_subs, data->dist_subs_num, ptr);
 		if (dptr) {
 			free(ptr);
 			ptr = dptr;
 		}
 	} else {
-		ptr = selabel_sub(data->dist_subs, key);
+		ptr = selabel_apply_subs(data->dist_subs, data->dist_subs_num, key);
 	}
 
 	return ptr;
@@ -1375,23 +1384,25 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 	if (!path) {
 		status = selabel_subs_init(
 			selinux_file_context_subs_dist_path(),
-			rec->digest, &data->dist_subs);
+			rec->digest,
+			&data->dist_subs, &data->dist_subs_num, &data->dist_subs_alloc);
 		if (status)
 			goto finish;
 		status = selabel_subs_init(selinux_file_context_subs_path(),
-			rec->digest, &data->subs);
+			rec->digest,
+			&data->subs, &data->subs_num, &data->subs_alloc);
 		if (status)
 			goto finish;
 		path = selinux_file_context_path();
 	} else {
 		snprintf(subs_file, sizeof(subs_file), "%s.subs_dist", path);
 		status = selabel_subs_init(subs_file, rec->digest,
-					   &data->dist_subs);
+					   &data->dist_subs, &data->dist_subs_num, &data->dist_subs_alloc);
 		if (status)
 			goto finish;
 		snprintf(subs_file, sizeof(subs_file), "%s.subs", path);
 		status = selabel_subs_init(subs_file, rec->digest,
-					   &data->subs);
+					   &data->subs, &data->subs_num, &data->subs_alloc);
 		if (status)
 			goto finish;
 	}
@@ -1459,8 +1470,8 @@ static void closef(struct selabel_handle *rec)
 	if (!data)
 		return;
 
-	selabel_subs_fini(data->subs);
-	selabel_subs_fini(data->dist_subs);
+	selabel_subs_fini(data->subs, data->subs_num);
+	selabel_subs_fini(data->dist_subs, data->dist_subs_num);
 
 	free_spec_node(data->root);
 	free(data->root);

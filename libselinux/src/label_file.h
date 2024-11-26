@@ -67,11 +67,11 @@ extern struct lookup_result *lookup_all(struct selabel_handle *rec, const char *
 extern enum selabel_cmp_result cmp(const struct selabel_handle *h1, const struct selabel_handle *h2);
 #endif  /* FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION */
 
+/* A path substitution entry */
 struct selabel_sub {
-	char *src;
-	unsigned int slen;
-	char *dst;
-	struct selabel_sub *next;
+	char *src;				/* source path prefix */
+	char *dst;				/* substituted path prefix */
+	uint32_t slen;				/* length of source path prefix */
 };
 
 /* A regular expression file security context specification */
@@ -159,9 +159,17 @@ struct saved_data {
 
 	struct mmap_area *mmap_areas;
 
-	/* substitution support */
+	/*
+	 * Array of distribution substitutions
+	 */
 	struct selabel_sub *dist_subs;
+	uint32_t dist_subs_num, dist_subs_alloc;
+
+	/*
+	 * Array of local substitutions
+	 */
 	struct selabel_sub *subs;
+	uint32_t subs_num, subs_alloc;
 };
 
 void free_spec_node(struct spec_node *node);
@@ -786,8 +794,6 @@ static int insert_spec(const struct selabel_handle *rec, struct saved_data *data
 
 	return 0;
 }
-
-#undef GROW_ARRAY
 
 /* This will always check for buffer over-runs and either read the next entry
  * if buf != NULL or skip over the entry (as these areas are mapped in the
