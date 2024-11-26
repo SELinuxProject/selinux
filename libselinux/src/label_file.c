@@ -1198,9 +1198,9 @@ static void selabel_subs_fini(struct selabel_sub *subs, uint32_t num)
 	free(subs);
 }
 
-static char *selabel_apply_subs(const struct selabel_sub *subs, uint32_t num, const char *src)
+static char *selabel_apply_subs(const struct selabel_sub *subs, uint32_t num, const char *src, size_t slen)
 {
-	char *dst;
+	char *dst, *tmp;
 	uint32_t len;
 
 	for (uint32_t i = 0; i < num; i++) {
@@ -1214,8 +1214,14 @@ static char *selabel_apply_subs(const struct selabel_sub *subs, uint32_t num, co
 					len = ptr->slen + 1;
 				else
 					len = ptr->slen;
-				if (asprintf(&dst, "%s%s", ptr->dst, &src[len]) < 0)
+
+				dst = malloc(ptr->dlen + slen - len + 1);
+				if (!dst)
 					return NULL;
+
+				tmp = mempcpy(dst, ptr->dst, ptr->dlen);
+				tmp = mempcpy(tmp, &src[len], slen - len);
+				*tmp = '\0';
 				return dst;
 			}
 		}
@@ -1251,7 +1257,7 @@ static int selabel_subs_init(const char *path, struct selabel_digest *digest,
 		char *ptr;
 		char *src = buf;
 		char *dst;
-		size_t len;
+		size_t slen, dlen;
 
 		while (*src && isspace((unsigned char)*src))
 			src++;
@@ -1272,8 +1278,14 @@ static int selabel_subs_init(const char *path, struct selabel_digest *digest,
 		if (! *dst)
 			continue;
 
-		len = strlen(src);
-		if (len >= UINT32_MAX) {
+		slen = strlen(src);
+		if (slen >= UINT32_MAX) {
+			errno = EINVAL;
+			goto err;
+		}
+
+		dlen = strlen(dst);
+		if (dlen >= UINT32_MAX) {
 			errno = EINVAL;
 			goto err;
 		}
@@ -1292,8 +1304,9 @@ static int selabel_subs_init(const char *path, struct selabel_digest *digest,
 
 		tmp[tmp_num++] = (struct selabel_sub) {
 			.src = src_cpy,
-			.slen = len,
+			.slen = slen,
 			.dst = dst_cpy,
+			.dlen = dlen,
 		};
 		src_cpy = NULL;
 		dst_cpy = NULL;
@@ -1327,19 +1340,19 @@ err:
 }
 #endif
 
-static char *selabel_sub_key(const struct saved_data *data, const char *key)
+static char *selabel_sub_key(const struct saved_data *data, const char *key, size_t key_len)
 {
 	char *ptr, *dptr;
 
-	ptr = selabel_apply_subs(data->subs, data->subs_num, key);
+	ptr = selabel_apply_subs(data->subs, data->subs_num, key, key_len);
 	if (ptr) {
-		dptr = selabel_apply_subs(data->dist_subs, data->dist_subs_num, ptr);
+		dptr = selabel_apply_subs(data->dist_subs, data->dist_subs_num, ptr, strlen(ptr));
 		if (dptr) {
 			free(ptr);
 			ptr = dptr;
 		}
 	} else {
-		ptr = selabel_apply_subs(data->dist_subs, data->dist_subs_num, key);
+		ptr = selabel_apply_subs(data->dist_subs, data->dist_subs_num, key, key_len);
 	}
 
 	return ptr;
@@ -1855,9 +1868,10 @@ FUZZ_EXTERN struct lookup_result *lookup_all(struct selabel_handle *rec,
 
 		clean_key[len - 1] = '\0';
 		key = clean_key;
+		len--;
 	}
 
-	sub = selabel_sub_key(data, key);
+	sub = selabel_sub_key(data, key, len);
 	if (sub)
 		key = sub;
 
