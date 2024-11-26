@@ -1535,11 +1535,29 @@ FUZZ_EXTERN void free_lookup_result(struct lookup_result *result)
 	}
 }
 
-static struct lookup_result *lookup_check_node(struct spec_node *node, const char *key, uint8_t file_kind, bool partial, bool find_all)
+/**
+ * lookup_check_node() - Try to find a file context definition in the given node or parents.
+ * @node:      The deepest specification node to match against. Parent nodes are successively
+ *             searched on no match or when finding all matches.
+ * @key:       The absolute file path to look up.
+ * @file_kind: The kind of the file to look up (translated from file type into LABEL_FILE_KIND_*).
+ * @partial:   Whether to partially match the given file path or completely.
+ * @find_all:  Whether to find all file context definitions or just the most specific.
+ * @buf:       A pre-allocated buffer for a potential result to avoid allocating it on the heap or
+ *             NULL. Mututal exclusive with @find_all.
+ *
+ * Return: A pointer to a file context definition if a match was found. If @find_all was specified
+ *         its a linked list of all results. If @buf was specified it is returned on a match found.
+ *         NULL is returned in case of no match found.
+ */
+static struct lookup_result *lookup_check_node(struct spec_node *node, const char *key, uint8_t file_kind,
+					       bool partial, bool find_all, struct lookup_result *buf)
 {
 	struct lookup_result *result = NULL;
 	struct lookup_result **next = &result;
 	size_t key_len = strlen(key);
+
+	assert(!(find_all && buf != NULL));
 
 	for (struct spec_node *n = node; n; n = n->parent) {
 
@@ -1563,10 +1581,14 @@ static struct lookup_result *lookup_check_node(struct spec_node *node, const cha
 						return NULL;
 					}
 
-					r = malloc(sizeof(*r));
-					if (!r) {
-						free_lookup_result(result);
-						return NULL;
+					if (likely(buf)) {
+						r = buf;
+					} else {
+						r = malloc(sizeof(*r));
+						if (!r) {
+							free_lookup_result(result);
+							return NULL;
+						}
 					}
 
 					*r = (struct lookup_result) {
@@ -1578,11 +1600,11 @@ static struct lookup_result *lookup_check_node(struct spec_node *node, const cha
 						.next = NULL,
 					};
 
+					if (likely(!find_all))
+						return r;
+
 					*next = r;
 					next = &r->next;
-
-					if (!find_all)
-						return result;
 				}
 
 				literal_idx++;
@@ -1624,10 +1646,14 @@ static struct lookup_result *lookup_check_node(struct spec_node *node, const cha
 					return NULL;
 				}
 
-				r = malloc(sizeof(*r));
-				if (!r) {
-					free_lookup_result(result);
-					return NULL;
+				if (likely(buf)) {
+					r = buf;
+				} else {
+					r = malloc(sizeof(*r));
+					if (!r) {
+						free_lookup_result(result);
+						return NULL;
+					}
 				}
 
 				*r = (struct lookup_result) {
@@ -1639,11 +1665,11 @@ static struct lookup_result *lookup_check_node(struct spec_node *node, const cha
 					.next = NULL,
 				};
 
+				if (likely(!find_all))
+					return r;
+
 				*next = r;
 				next = &r->next;
-
-				if (!find_all)
-					return result;
 
 				continue;
 			}
@@ -1760,7 +1786,8 @@ FUZZ_EXTERN struct lookup_result *lookup_all(struct selabel_handle *rec,
 				 const char *key,
 				 int type,
 				 bool partial,
-				 bool find_all)
+				 bool find_all,
+				 struct lookup_result *buf)
 {
 	struct saved_data *data = (struct saved_data *)rec->data;
 	struct lookup_result *result = NULL;
@@ -1772,18 +1799,18 @@ FUZZ_EXTERN struct lookup_result *lookup_all(struct selabel_handle *rec,
 	unsigned int sofar = 0;
 	char *sub = NULL;
 
-	if (!key) {
+	if (unlikely(!key)) {
 		errno = EINVAL;
 		goto finish;
 	}
 
-	if (!data->num_specs) {
+	if (unlikely(!data->num_specs)) {
 		errno = ENOENT;
 		goto finish;
 	}
 
 	/* Remove duplicate slashes */
-	if ((next_slash = strstr(key, "//"))) {
+	if (unlikely(next_slash = strstr(key, "//"))) {
 		clean_key = (char *) malloc(strlen(key) + 1);
 		if (!clean_key)
 			goto finish;
@@ -1800,12 +1827,12 @@ FUZZ_EXTERN struct lookup_result *lookup_all(struct selabel_handle *rec,
 
 	/* remove trailing slash */
 	len = strlen(key);
-	if (len == 0) {
+	if (unlikely(len == 0)) {
 		errno = EINVAL;
 		goto finish;
 	}
 
-	if (len > 1 && key[len - 1] == '/') {
+	if (unlikely(len > 1 && key[len - 1] == '/')) {
 		/* reuse clean_key from above if available */
 		if (!clean_key) {
 			clean_key = (char *) malloc(len);
@@ -1825,7 +1852,7 @@ FUZZ_EXTERN struct lookup_result *lookup_all(struct selabel_handle *rec,
 
 	node = lookup_find_deepest_node(data->root, key);
 
-	result = lookup_check_node(node, key, file_kind, partial, find_all);
+	result = lookup_check_node(node, key, file_kind, partial, find_all, buf);
 
 finish:
 	free(clean_key);
@@ -1836,14 +1863,9 @@ finish:
 static struct lookup_result *lookup_common(struct selabel_handle *rec,
 					   const char *key,
 					   int type,
-					   bool partial) {
-	struct lookup_result *result = lookup_all(rec, key, type, partial, false);
-	if (!result)
-		return NULL;
-
-	free_lookup_result(result->next);
-	result->next = NULL;
-	return result;
+					   bool partial,
+					   struct lookup_result *buf) {
+	return lookup_all(rec, key, type, partial, false, buf);
 }
 
 /*
@@ -1903,7 +1925,7 @@ static bool hash_all_partial_matches(struct selabel_handle *rec, const char *key
 {
 	assert(digest);
 
-	struct lookup_result *matches = lookup_all(rec, key, 0, true, true);
+	struct lookup_result *matches = lookup_all(rec, key, 0, true, true, NULL);
 	if (!matches) {
 		return false;
 	}
@@ -1932,25 +1954,20 @@ static bool hash_all_partial_matches(struct selabel_handle *rec, const char *key
 static struct selabel_lookup_rec *lookup(struct selabel_handle *rec,
 					 const char *key, int type)
 {
-	struct lookup_result *result;
-	struct selabel_lookup_rec *lookup_result;
+	struct lookup_result buf, *result;
 
-	result = lookup_common(rec, key, type, false);
+	result = lookup_common(rec, key, type, false, &buf);
 	if (!result)
 		return NULL;
 
-	lookup_result = result->lr;
-	free_lookup_result(result);
-	return lookup_result;
+	return result->lr;
 }
 
 static bool partial_match(struct selabel_handle *rec, const char *key)
 {
-	struct lookup_result *result = lookup_common(rec, key, 0, true);
-	bool ret = result;
+	struct lookup_result buf;
 
-	free_lookup_result(result);
-	return ret;
+	return !!lookup_common(rec, key, 0, true, &buf);
 }
 
 static struct selabel_lookup_rec *lookup_best_match(struct selabel_handle *rec,
@@ -1972,7 +1989,7 @@ static struct selabel_lookup_rec *lookup_best_match(struct selabel_handle *rec,
 	results = calloc(n+1, sizeof(*results));
 	if (!results)
 		return NULL;
-	results[0] = lookup_common(rec, key, type, false);
+	results[0] = lookup_common(rec, key, type, false, NULL);
 	if (results[0]) {
 		if (!results[0]->has_meta_chars) {
 			/* exact match on key */
@@ -1983,7 +2000,7 @@ static struct selabel_lookup_rec *lookup_best_match(struct selabel_handle *rec,
 		prefix_len = results[0]->prefix_len;
 	}
 	for (i = 1; i <= n; i++) {
-		results[i] = lookup_common(rec, aliases[i-1], type, false);
+		results[i] = lookup_common(rec, aliases[i-1], type, false, NULL);
 		if (results[i]) {
 			if (!results[i]->has_meta_chars) {
 				/* exact match on alias */
