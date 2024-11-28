@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <sys/stat.h>
 #include <string.h>
 #include <errno.h>
@@ -259,6 +260,31 @@ int matchpathcon_filespec_add(ino_t ino, int specind, const char *file)
 		 __FUNCTION__, file);
 	return -1;
 }
+
+#if defined(_FILE_OFFSET_BITS) && _FILE_OFFSET_BITS == 64 && __BITS_PER_LONG < 64
+/* alias defined in the public header but we undefine it here */
+#undef matchpathcon_filespec_add
+
+/* ABI backwards-compatible shim for non-LFS 32-bit systems */
+
+static_assert(sizeof(unsigned long) == sizeof(__ino_t), "inode size mismatch");
+static_assert(sizeof(unsigned long) == sizeof(uint32_t), "inode size mismatch");
+static_assert(sizeof(ino_t) == sizeof(ino64_t), "inode size mismatch");
+static_assert(sizeof(ino64_t) == sizeof(uint64_t), "inode size mismatch");
+
+extern int matchpathcon_filespec_add(unsigned long ino, int specind,
+                                     const char *file);
+
+int matchpathcon_filespec_add(unsigned long ino, int specind,
+                              const char *file)
+{
+	return matchpathcon_filespec_add64(ino, specind, file);
+}
+#else
+
+static_assert(sizeof(unsigned long) == sizeof(ino_t), "inode size mismatch");
+
+#endif
 
 /*
  * Evaluate the association hash table distribution.
