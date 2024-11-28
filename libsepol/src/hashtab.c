@@ -48,12 +48,14 @@ hashtab_t hashtab_create(unsigned int (*hash_value) (hashtab_t h,
 	if (p == NULL)
 		return p;
 
-	memset(p, 0, sizeof(hashtab_val_t));
-	p->size = size;
-	p->nel = 0;
-	p->hash_value = hash_value;
-	p->keycmp = keycmp;
-	p->htable = (hashtab_ptr_t *) calloc(size, sizeof(hashtab_ptr_t));
+	*p = (hashtab_val_t) {
+		.size = size,
+		.nel = 0,
+		.hash_value = hash_value,
+		.keycmp = keycmp,
+		.htable = (hashtab_ptr_t *) calloc(size, sizeof(hashtab_ptr_t)),
+	};
+
 	if (p->htable == NULL) {
 		free(p);
 		return NULL;
@@ -127,9 +129,10 @@ int hashtab_insert(hashtab_t h, hashtab_key_t key, hashtab_datum_t datum)
 	newnode = (hashtab_ptr_t) malloc(sizeof(hashtab_node_t));
 	if (newnode == NULL)
 		return SEPOL_ENOMEM;
-	memset(newnode, 0, sizeof(struct hashtab_node));
-	newnode->key = key;
-	newnode->datum = datum;
+	*newnode = (hashtab_node_t) {
+		.key = key,
+		.datum = datum,
+	};
 	if (prev) {
 		newnode->next = prev->next;
 		prev->next = newnode;
@@ -223,8 +226,6 @@ void hashtab_destroy(hashtab_t h)
 	}
 
 	free(h->htable);
-	h->htable = NULL;
-
 	free(h);
 }
 
