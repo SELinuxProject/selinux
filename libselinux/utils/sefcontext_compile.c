@@ -471,7 +471,7 @@ static int write_binary_file(const struct saved_data *data, const struct sidtab 
 	/* write context table */
 	rc = write_sidtab(bin_file, stab);
 	if (rc)
-		return rc;
+		goto err;
 
 	rc = write_spec_node(bin_file, do_write_precompregex, data->root, stab);
 	if (rc)
