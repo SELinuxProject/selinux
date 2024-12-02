@@ -5709,6 +5709,14 @@ static void ipv6_cidr_bits_to_mask(unsigned long cidr_bits, struct in6_addr *mas
 	}
 }
 
+static void ipv6_apply_mask(struct in6_addr *restrict addr, const struct in6_addr *restrict mask)
+{
+	unsigned i;
+
+	for (i = 0; i < 4; i++)
+		addr->s6_addr32[i] &= mask->s6_addr32[i];
+}
+
 static int insert_ipv6_node(ocontext_t *newc)
 {
 	ocontext_t *c, *l;
@@ -5884,6 +5892,7 @@ int define_ipv6_cidr_node_context(void)
 		return -1;
 	}
 
+	ipv6_apply_mask(&addr, &mask);
 	memcpy(&newc->u.node6.addr[0], &addr.s6_addr[0], 16);
 	memcpy(&newc->u.node6.mask[0], &mask.s6_addr[0], 16);
 
