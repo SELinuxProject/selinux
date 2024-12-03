@@ -188,6 +188,9 @@ static int write_sidtab(FILE *bin_file, const struct sidtab *stab)
 	if (len != 1)
 		return -1;
 
+	if (stab->nel == 0)
+		return 0;
+
 	/* sort entries by id */
 	sids = calloc(stab->nel, sizeof(*sids));
 	if (!sids)
@@ -203,8 +206,6 @@ static int write_sidtab(FILE *bin_file, const struct sidtab *stab)
 	}
 	assert(index == stab->nel);
 	qsort(sids, stab->nel, sizeof(struct security_id), security_id_compare);
-	assert(sids[0].id == 1);
-	assert(sids[stab->nel - 1].id == stab->nel);
 
 	/* write raw contexts sorted by id */
 	for (uint32_t i = 0; i < stab->nel; i++) {
