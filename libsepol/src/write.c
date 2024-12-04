@@ -231,13 +231,13 @@ static int avtab_write_item(policydb_t * p,
 		return POLICYDB_ERROR;
 	if ((p->policyvers < POLICYDB_VERSION_XPERMS_IOCTL) &&
 			(cur->key.specified & AVTAB_XPERMS)) {
-		ERR(fp->handle, "policy version %u does not support extended"
+		ERR(fp->handle, "policy version %u does not support extended "
 				"permissions rules and one was specified", p->policyvers);
 		return POLICYDB_ERROR;
 	}
 
 	if (!policydb_has_cond_xperms_feature(p) && (cur->key.specified & AVTAB_XPERMS) && conditional) {
-		ERR(fp->handle, "policy version %u does not support extended"
+		ERR(fp->handle, "policy version %u does not support extended "
 				"permissions rules in conditional policies and one was specified", p->policyvers);
 		return POLICYDB_ERROR;
 	}
