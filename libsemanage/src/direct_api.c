@@ -1144,6 +1144,7 @@ static int copy_file_if_exists(semanage_handle_t *sh, const char *src, const cha
 /* Commits all changes in sandbox to the actual kernel policy.
  * Returns commit number on success, -1 on error.
  */
+__attribute__((no_sanitize("function")))
 static int semanage_direct_commit(semanage_handle_t * sh)
 {
 	char **mod_filenames = NULL;

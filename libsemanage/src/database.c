@@ -21,6 +21,7 @@ static int assert_init(semanage_handle_t * handle, const dbase_config_t * dconfi
 	return STATUS_SUCCESS;
 }
 
+__attribute__((no_sanitize("function")))
 static int enter_ro(semanage_handle_t * handle, dbase_config_t * dconfig)
 {
 
@@ -58,6 +59,7 @@ static inline int exit_ro(semanage_handle_t * handle)
 	return commit_num;
 }
 
+__attribute__((no_sanitize("function")))
 static int enter_rw(semanage_handle_t * handle, dbase_config_t * dconfig)
 {
 
@@ -79,6 +81,7 @@ static int enter_rw(semanage_handle_t * handle, dbase_config_t * dconfig)
 	return STATUS_ERR;
 }
 
+__attribute__((no_sanitize("function")))
 int dbase_modify(semanage_handle_t * handle,
 		 dbase_config_t * dconfig,
 		 const record_key_t * key, const record_t * data)
@@ -93,6 +96,7 @@ int dbase_modify(semanage_handle_t * handle,
 	return STATUS_SUCCESS;
 }
 
+__attribute__((no_sanitize("function")))
 int dbase_set(semanage_handle_t * handle,
 	      dbase_config_t * dconfig,
 	      const record_key_t * key, const record_t * data)
@@ -107,6 +111,7 @@ int dbase_set(semanage_handle_t * handle,
 	return STATUS_SUCCESS;
 }
 
+__attribute__((no_sanitize("function")))
 int dbase_del(semanage_handle_t * handle,
 	      dbase_config_t * dconfig, const record_key_t * key)
 {
@@ -120,6 +125,7 @@ int dbase_del(semanage_handle_t * handle,
 	return STATUS_SUCCESS;
 }
 
+__attribute__((no_sanitize("function")))
 int dbase_query(semanage_handle_t * handle,
 		dbase_config_t * dconfig,
 		const record_key_t * key, record_t ** response)
@@ -136,6 +142,7 @@ int dbase_query(semanage_handle_t * handle,
 	return exit_ro(handle);
 }
 
+__attribute__((no_sanitize("function")))
 int dbase_exists(semanage_handle_t * handle,
 		 dbase_config_t * dconfig,
 		 const record_key_t * key, int *response)
@@ -152,6 +159,7 @@ int dbase_exists(semanage_handle_t * handle,
 	return exit_ro(handle);
 }
 
+__attribute__((no_sanitize("function")))
 int dbase_count(semanage_handle_t * handle,
 		dbase_config_t * dconfig, unsigned int *response)
 {
@@ -167,6 +175,7 @@ int dbase_count(semanage_handle_t * handle,
 	return exit_ro(handle);
 }
 
+__attribute__((no_sanitize("function")))
 int dbase_iterate(semanage_handle_t * handle,
 		  dbase_config_t * dconfig,
 		  int (*fn) (const record_t * record,
@@ -184,6 +193,7 @@ int dbase_iterate(semanage_handle_t * handle,
 	return exit_ro(handle);
 }
 
+__attribute__((no_sanitize("function")))
 int dbase_list(semanage_handle_t * handle,
 	       dbase_config_t * dconfig,
 	       record_t *** records, unsigned int *count)

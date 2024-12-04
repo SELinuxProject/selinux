@@ -34,6 +34,7 @@ struct dbase_join {
 	const record_join_table_t *rjtable;
 };
 
+__attribute__((no_sanitize("function")))
 static int dbase_join_cache(semanage_handle_t * handle, dbase_join_t * dbase)
 {
 
@@ -168,6 +169,7 @@ static int dbase_join_cache(semanage_handle_t * handle, dbase_join_t * dbase)
 }
 
 /* Flush database */
+__attribute__((no_sanitize("function")))
 static int dbase_join_flush(semanage_handle_t * handle, dbase_join_t * dbase)
 {
 

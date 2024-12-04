@@ -315,6 +315,7 @@ static void helper_select_store(const char *name, enum semanage_connect_type typ
 		cleanup_handle(SH_HANDLE);
 }
 
+__attribute__((no_sanitize("implicit-integer-sign-change")))
 static void test_select_store(void)
 {
 	helper_select_store("asdf", SEMANAGE_CON_INVALID - 1, -1);

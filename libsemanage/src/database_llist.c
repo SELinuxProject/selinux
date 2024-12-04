@@ -34,6 +34,7 @@ int dbase_llist_needs_resync(semanage_handle_t * handle, dbase_llist_t * dbase)
 }
 
 /* Helper for adding records to the cache */
+__attribute__((no_sanitize("function")))
 int dbase_llist_cache_prepend(semanage_handle_t * handle,
 			      dbase_llist_t * dbase, const record_t * data)
 {
@@ -67,6 +68,7 @@ int dbase_llist_cache_prepend(semanage_handle_t * handle,
 	return STATUS_ERR;
 }
 
+__attribute__((no_sanitize("function")))
 void dbase_llist_drop_cache(dbase_llist_t * dbase)
 {
 
@@ -99,6 +101,7 @@ int dbase_llist_set_serial(semanage_handle_t * handle, dbase_llist_t * dbase)
 }
 
 /* Helper for finding records in the cache */
+__attribute__((no_sanitize("function")))
 static int dbase_llist_cache_locate(semanage_handle_t * handle,
 				    dbase_llist_t * dbase,
 				    const record_key_t * key,
@@ -226,6 +229,7 @@ int dbase_llist_modify(semanage_handle_t * handle,
 	return STATUS_SUCCESS;
 }
 
+__attribute__((no_sanitize("function")))
 int dbase_llist_query(semanage_handle_t * handle,
 		      dbase_llist_t * dbase,
 		      const record_key_t * key, record_t ** response)
@@ -248,6 +252,7 @@ int dbase_llist_query(semanage_handle_t * handle,
 	return STATUS_ERR;
 }
 
+__attribute__((no_sanitize("function")))
 int dbase_llist_iterate(semanage_handle_t * handle,
 			dbase_llist_t * dbase,
 			int (*fn) (const record_t * record,
@@ -274,6 +279,7 @@ int dbase_llist_iterate(semanage_handle_t * handle,
 	return STATUS_ERR;
 }
 
+__attribute__((no_sanitize("function")))
 int dbase_llist_del(semanage_handle_t * handle __attribute__ ((unused)),
 		    dbase_llist_t * dbase, const record_key_t * key)
 {
@@ -304,6 +310,7 @@ int dbase_llist_del(semanage_handle_t * handle __attribute__ ((unused)),
 	return STATUS_SUCCESS;
 }
 
+__attribute__((no_sanitize("function")))
 int dbase_llist_clear(semanage_handle_t * handle, dbase_llist_t * dbase)
 {
 
@@ -331,6 +338,7 @@ int dbase_llist_clear(semanage_handle_t * handle, dbase_llist_t * dbase)
 	return STATUS_SUCCESS;
 }
 
+__attribute__((no_sanitize("function")))
 int dbase_llist_list(semanage_handle_t * handle,
 		     dbase_llist_t * dbase,
 		     record_t *** records, unsigned int *count)
