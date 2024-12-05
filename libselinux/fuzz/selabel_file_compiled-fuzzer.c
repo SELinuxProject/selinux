@@ -232,7 +232,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 	assert(cmp(&rec, &rec) == SELABEL_EQUAL);
 
 	errno = 0;
-	result = lookup_all(&rec, key, mode, partial, find_all);
+	result = lookup_all(&rec, key, mode, partial, find_all, NULL);
 
 	if (!result)
 		assert(errno != 0);

@@ -63,7 +63,7 @@ struct lookup_result {
 extern int load_mmap(FILE *fp, const size_t len, struct selabel_handle *rec, const char *path);
 extern int process_text_file(FILE *fp, const char *prefix, struct selabel_handle *rec, const char *path);
 extern void free_lookup_result(struct lookup_result *result);
-extern struct lookup_result *lookup_all(struct selabel_handle *rec, const char *key, int type, bool partial, bool find_all);
+extern struct lookup_result *lookup_all(struct selabel_handle *rec, const char *key, int type, bool partial, bool find_all, struct lookup_result *buf);
 extern enum selabel_cmp_result cmp(const struct selabel_handle *h1, const struct selabel_handle *h2);
 #endif  /* FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION */
 
