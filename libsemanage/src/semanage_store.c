@@ -3000,15 +3000,29 @@ int semanage_nc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
 	return 0;
 }
 
+/* log_callback muting all logs */
+static int __attribute__ ((format(printf, 2, 3)))
+log_callback_mute(__attribute__((unused)) int type, __attribute__((unused)) const char *fmt, ...)
+{
+	return 0;
+}
+
 /* Make sure the file context and ownership of files in the policy
  * store does not change */
 void semanage_setfiles(semanage_handle_t * sh, const char *path){
 	struct stat sb;
 	int fd;
+	union selinux_callback cb_orig = selinux_get_callback(SELINUX_CB_LOG);
+	union selinux_callback cb = { .func_log = log_callback_mute };
+
+	/* Mute all logs */
+	selinux_set_callback(SELINUX_CB_LOG, cb);
+
 	/* Fix the user and role portions of the context, ignore errors
 	 * since this is not a critical operation */
 	selinux_restorecon(path, SELINUX_RESTORECON_SET_SPECFILE_CTX | SELINUX_RESTORECON_IGNORE_NOENTRY);
-
+	/* restore log_logging */
+	selinux_set_callback(SELINUX_CB_LOG, cb_orig);
 	/* Make sure "path" is owned by root */
 	if ((geteuid() != 0 || getegid() != 0) &&
 	    ((fd = open(path, O_RDONLY | O_CLOEXEC)) != -1)){
