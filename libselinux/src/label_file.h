@@ -61,7 +61,7 @@ struct lookup_result {
 };
 #ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
 extern int load_mmap(FILE *fp, const size_t len, struct selabel_handle *rec, const char *path);
-extern int process_text_file(FILE *fp, const char *prefix, struct selabel_handle *rec, const char *path);
+extern int process_text_file(FILE *fp, const char *prefix, struct selabel_handle *rec, const char *path, uint8_t inputno);
 extern void free_lookup_result(struct lookup_result *result);
 extern struct lookup_result *lookup_all(struct selabel_handle *rec, const char *key, int type, bool partial, bool find_all, struct lookup_result *buf);
 extern enum selabel_cmp_result cmp(const struct selabel_handle *h1, const struct selabel_handle *h2);
@@ -81,7 +81,9 @@ struct regex_spec {
 	char *regex_str;			/* original regular expression string for diagnostics */
 	struct regex_data *regex;		/* backend dependent regular expression data */
 	pthread_mutex_t regex_lock;		/* lock for lazy compilation of regex */
+	uint32_t lineno;			/* Line number in source file */
 	uint16_t prefix_len;			/* length of fixed path prefix */
+	uint8_t inputno;			/* Input number of source file */
 	uint8_t file_kind;			/* file type */
 	bool regex_compiled;			/* whether the regex is compiled */
 	bool any_matches;			/* whether any pathname match */
@@ -123,7 +125,7 @@ struct spec_node {
 	uint32_t literal_specs_num, literal_specs_alloc;
 
 	/*
-	 * Array of regular expression specifications (ordered from most to least specific)
+	 * Array of regular expression specifications (order preserved from input)
 	 */
 	struct regex_spec *regex_specs;
 	uint32_t regex_specs_num, regex_specs_alloc;
@@ -369,38 +371,6 @@ static inline int compare_literal_spec(const void *p1, const void *p2)
 	return (l1->file_kind < l2->file_kind) - (l1->file_kind > l2->file_kind);
 }
 
-static inline int compare_regex_spec(const void *p1, const void *p2)
-{
-	const struct regex_spec *r1 = p1;
-	const struct regex_spec *r2 = p2;
-	size_t regex_len1, regex_len2;
-	int ret;
-
-	/* Order from high prefix length to low */
-	ret = (r1->prefix_len < r2->prefix_len) - (r1->prefix_len > r2->prefix_len);
-	if (ret)
-		return ret;
-
-	/* Order from long total regex length to short */
-	regex_len1 = strlen(r1->regex_str);
-	regex_len2 = strlen(r2->regex_str);
-	ret = (regex_len1 < regex_len2) - (regex_len1 > regex_len2);
-	if (ret)
-		return ret;
-
-	/*
-	 * Order for no-duplicates check.
-	 * Use reverse alphabetically order to retain the Fedora ordering of
-	 * `/usr/(.* /)?lib(/.*)?` before `/usr/(.* /)?bin(/.*)?`.
-	 */
-	ret = strcmp(r1->regex_str, r2->regex_str);
-	if (ret)
-		return -ret;
-
-	/* Order wildcard mode (0) last */
-	return (r1->file_kind < r2->file_kind) - (r1->file_kind > r2->file_kind);
-}
-
 static inline int compare_spec_node(const void *p1, const void *p2)
 {
 	const struct spec_node *n1 = p1;
@@ -531,7 +501,7 @@ static inline int compile_regex(struct regex_spec *spec, const char **errbuf)
 
 static int insert_spec(const struct selabel_handle *rec, struct saved_data *data,
 		       const char *prefix, char *regex, uint8_t file_kind, char *context,
-		       const char *path, unsigned int lineno)
+		       const char *path, uint8_t inputno, uint32_t lineno)
 {
 	size_t prefix_len;
 	bool has_meta;
@@ -642,6 +612,8 @@ static int insert_spec(const struct selabel_handle *rec, struct saved_data *data
 			.regex_lock = PTHREAD_MUTEX_INITIALIZER,
 			.file_kind = file_kind,
 			.any_matches = false,
+			.inputno = inputno,
+			.lineno = lineno,
 			.lr.ctx_raw = context,
 			.lr.ctx_trans = NULL,
 			.lr.lineno = lineno,
@@ -816,7 +788,8 @@ static inline int next_entry(void *buf, struct mmap_area *fp, size_t bytes)
  * utils/sefcontext_compile.c */
 static inline int process_line(struct selabel_handle *rec,
 			       const char *path, const char *prefix,
-			       char *line_buf, size_t nread, unsigned lineno)
+			       char *line_buf, size_t nread,
+			       uint8_t inputno, uint32_t lineno)
 {
 	int items;
 	char *regex = NULL, *type = NULL, *context = NULL;
@@ -886,7 +859,7 @@ static inline int process_line(struct selabel_handle *rec,
 		free(type);
 	}
 
-	return insert_spec(rec, data, prefix, regex, file_kind, context, path, lineno);
+	return insert_spec(rec, data, prefix, regex, file_kind, context, path, inputno, lineno);
 }
 
 #endif /* _SELABEL_FILE_H_ */

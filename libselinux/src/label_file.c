@@ -87,13 +87,13 @@ void sort_spec_node(struct spec_node *node, struct spec_node *parent)
 
 	node->parent = parent;
 
-	/* Sort for comparison support and binary search lookup */
+	/*
+	 * Sort for comparison support and binary search lookup,
+	 * except for regex specs which are matched in reverse input order.
+	 */
 
 	if (node->literal_specs_num > 1)
 		qsort(node->literal_specs, node->literal_specs_num, sizeof(struct literal_spec), compare_literal_spec);
-
-	if (node->regex_specs_num > 1)
-		qsort(node->regex_specs, node->regex_specs_num, sizeof(struct regex_spec), compare_regex_spec);
 
 	if (node->children_num > 1)
 		qsort(node->children, node->children_num, sizeof(struct spec_node), compare_spec_node);
@@ -144,36 +144,38 @@ static int nodups_spec_node(const struct spec_node *node, const char *path)
 
 	if (node->regex_specs_num > 1) {
 		for (uint32_t i = 0; i < node->regex_specs_num - 1; i++) {
-			const struct regex_spec *node1 = &node->regex_specs[i];
-			const struct regex_spec *node2 = &node->regex_specs[i+1];
+			for (uint32_t j = i; j < node->regex_specs_num - 1; j++) {
+				const struct regex_spec *node1 = &node->regex_specs[i];
+				const struct regex_spec *node2 = &node->regex_specs[j + 1];
 
-			if (node1->prefix_len != node2->prefix_len)
-				continue;
+				if (node1->prefix_len != node2->prefix_len)
+					continue;
 
-			if (strcmp(node1->regex_str, node2->regex_str) != 0)
-				continue;
+				if (strcmp(node1->regex_str, node2->regex_str) != 0)
+					continue;
 
-			if (node1->file_kind != LABEL_FILE_KIND_ALL && node2->file_kind != LABEL_FILE_KIND_ALL && node1->file_kind != node2->file_kind)
-				continue;
+				if (node1->file_kind != LABEL_FILE_KIND_ALL && node2->file_kind != LABEL_FILE_KIND_ALL && node1->file_kind != node2->file_kind)
+					continue;
 
-			rc = -1;
-			errno = EINVAL;
-			if (strcmp(node1->lr.ctx_raw, node2->lr.ctx_raw) != 0) {
-				COMPAT_LOG
-					(SELINUX_ERROR,
-						"%s: Multiple different specifications for %s %s  (%s and %s).\n",
-						path,
-						file_kind_to_string(node1->file_kind),
-						node1->regex_str,
-						node1->lr.ctx_raw,
-						node2->lr.ctx_raw);
-			} else {
-				COMPAT_LOG
-					(SELINUX_ERROR,
-						"%s: Multiple same specifications for %s %s.\n",
-						path,
-						file_kind_to_string(node1->file_kind),
-						node1->regex_str);
+				rc = -1;
+				errno = EINVAL;
+				if (strcmp(node1->lr.ctx_raw, node2->lr.ctx_raw) != 0) {
+					COMPAT_LOG
+						(SELINUX_ERROR,
+							"%s: Multiple different specifications for %s %s  (%s and %s).\n",
+							path,
+							file_kind_to_string(node1->file_kind),
+							node1->regex_str,
+							node1->lr.ctx_raw,
+							node2->lr.ctx_raw);
+				} else {
+					COMPAT_LOG
+						(SELINUX_ERROR,
+							"%s: Multiple same specifications for %s %s.\n",
+							path,
+							file_kind_to_string(node1->file_kind),
+							node1->regex_str);
+				}
 			}
 		}
 	}
@@ -190,7 +192,8 @@ static int nodups_spec_node(const struct spec_node *node, const char *path)
 }
 
 FUZZ_EXTERN int process_text_file(FILE *fp, const char *prefix,
-				  struct selabel_handle *rec, const char *path)
+				  struct selabel_handle *rec, const char *path,
+				  uint8_t inputno)
 {
 	int rc;
 	size_t line_len;
@@ -199,7 +202,7 @@ FUZZ_EXTERN int process_text_file(FILE *fp, const char *prefix,
 	char *line_buf = NULL;
 
 	while ((nread = getline(&line_buf, &line_len, fp)) > 0) {
-		rc = process_line(rec, path, prefix, line_buf, nread, ++lineno);
+		rc = process_line(rec, path, prefix, line_buf, nread, inputno, ++lineno);
 		if (rc)
 			goto out;
 	}
@@ -568,9 +571,10 @@ static int load_mmap_literal_spec(struct mmap_area *mmap_area, bool validating,
 }
 
 static int load_mmap_regex_spec(struct mmap_area *mmap_area, bool validating, bool do_load_precompregex,
+				uint8_t inputno,
 				struct regex_spec *rspec, const struct context_array *ctx_array)
 {
-	uint32_t data_u32, ctx_id;
+	uint32_t data_u32, ctx_id, lineno;
 	uint16_t data_u16, regex_len;
 	uint8_t data_u8;
 	int rc;
@@ -598,6 +602,20 @@ static int load_mmap_regex_spec(struct mmap_area *mmap_area, bool validating, bo
 	if (validating)
 		/* validated in load_mmap_ctxarray() */
 		rspec->lr.validated = true;
+
+
+	/*
+	 * Read line number in source file.
+	 */
+	rc = next_entry(&data_u32, mmap_area, sizeof(uint32_t));
+	if (rc < 0)
+		return -1;
+	lineno = be32toh(data_u32);
+
+	if (lineno == 0 || lineno == UINT32_MAX)
+		return -1;
+	rspec->lineno = lineno;
+	rspec->inputno = inputno;
 
 
 	/*
@@ -649,14 +667,14 @@ static int load_mmap_regex_spec(struct mmap_area *mmap_area, bool validating, bo
 	if (rc < 0)
 		return -1;
 
-	__pthread_mutex_init(&rspec->regex_lock, NULL);
 
+	__pthread_mutex_init(&rspec->regex_lock, NULL);
 
 	return 0;
 }
 
 static int load_mmap_spec_node(struct mmap_area *mmap_area, const char *path, bool validating, bool do_load_precompregex,
-			       struct spec_node *node, bool is_root, const struct context_array *ctx_array)
+			       struct spec_node *node, bool is_root, uint8_t inputno, const struct context_array *ctx_array)
 {
 	uint32_t data_u32, lspec_num, rspec_num, children_num;
 	uint16_t data_u16, stem_len;
@@ -744,7 +762,7 @@ static int load_mmap_spec_node(struct mmap_area *mmap_area, const char *path, bo
 		node->regex_specs_alloc = rspec_num;
 
 		for (uint32_t i = 0; i < rspec_num; i++) {
-			rc = load_mmap_regex_spec(mmap_area, validating, do_load_precompregex, &node->regex_specs[i], ctx_array);
+			rc = load_mmap_regex_spec(mmap_area, validating, do_load_precompregex, inputno, &node->regex_specs[i], ctx_array);
 			if (rc)
 				return -1;
 		}
@@ -776,7 +794,7 @@ static int load_mmap_spec_node(struct mmap_area *mmap_area, const char *path, bo
 		node->children_alloc = children_num;
 
 		for (uint32_t i = 0; i < children_num; i++) {
-			rc = load_mmap_spec_node(mmap_area, path, validating, do_load_precompregex, &node->children[i], false, ctx_array);
+			rc = load_mmap_spec_node(mmap_area, path, validating, do_load_precompregex, &node->children[i], false, inputno, ctx_array);
 			if (rc)
 				return -1;
 
@@ -796,7 +814,7 @@ static int load_mmap_spec_node(struct mmap_area *mmap_area, const char *path, bo
 }
 
 FUZZ_EXTERN int load_mmap(FILE *fp, const size_t len, struct selabel_handle *rec,
-			  const char *path)
+			  const char *path, uint8_t inputno)
 {
 	struct saved_data *data = rec->data;
 	struct spec_node *root = NULL;
@@ -952,6 +970,7 @@ end_arch_check:
 	rc = load_mmap_spec_node(mmap_area, path, rec->validating,
 				 reg_version_matches && reg_arch_matches,
 				 root, true,
+				 inputno,
 				 &ctx_array);
 	if (rc)
 		goto err;
@@ -1142,7 +1161,8 @@ static FILE *open_file(const char *path, const char *suffix,
 static int process_file(const char *path, const char *suffix,
 			struct selabel_handle *rec,
 			const char *prefix,
-			struct selabel_digest *digest)
+			struct selabel_digest *digest,
+			uint8_t inputno)
 {
 	int rc;
 	unsigned int i;
@@ -1171,9 +1191,9 @@ static int process_file(const char *path, const char *suffix,
 			COMPAT_LOG(SELINUX_INFO, "%s:  Old compiled fcontext format, skipping\n", found_path);
 			errno = EINVAL;
 		} else if (rc == 1) {
-			rc = load_mmap(fp, sb.st_size, rec, found_path);
+			rc = load_mmap(fp, sb.st_size, rec, found_path, inputno);
 		} else {
-			rc = process_text_file(fp, prefix, rec, found_path);
+			rc = process_text_file(fp, prefix, rec, found_path, inputno);
 		}
 
 		if (!rc)
@@ -1434,7 +1454,7 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 	/*
 	 * The do detailed validation of the input and fill the spec array
 	 */
-	status = process_file(path, NULL, rec, prefix, rec->digest);
+	status = process_file(path, NULL, rec, prefix, rec->digest, 0);
 	if (status)
 		goto finish;
 
@@ -1448,12 +1468,12 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 
 	if (!baseonly) {
 		status = process_file(path, "homedirs", rec, prefix,
-							    rec->digest);
+							    rec->digest, 1);
 		if (status && errno != ENOENT)
 			goto finish;
 
 		status = process_file(path, "local", rec, prefix,
-							    rec->digest);
+							    rec->digest, 2);
 		if (status && errno != ENOENT)
 			goto finish;
 	}
@@ -1579,68 +1599,76 @@ static struct lookup_result *lookup_check_node(struct spec_node *node, const cha
 {
 	struct lookup_result *result = NULL;
 	struct lookup_result **next = &result;
+	struct lookup_result *child_regex_match = NULL;
+	uint8_t child_regex_match_inputno = 0;  /* initialize to please GCC */
+	uint32_t child_regex_match_lineno = 1;  /* initialize to please GCC */
 	size_t key_len = strlen(key);
 
 	assert(!(find_all && buf != NULL));
 
 	for (struct spec_node *n = node; n; n = n->parent) {
 
-		uint32_t literal_idx = search_literal_spec(n->literal_specs, n->literal_specs_num, key, key_len, partial);
-		if (literal_idx != (uint32_t)-1) {
-			do {
-				struct literal_spec *lspec = &n->literal_specs[literal_idx];
+		if (n == node) {
+			uint32_t literal_idx = search_literal_spec(n->literal_specs, n->literal_specs_num, key, key_len, partial);
+			if (literal_idx != (uint32_t)-1) {
+				do {
+					struct literal_spec *lspec = &n->literal_specs[literal_idx];
 
-				if (file_kind == LABEL_FILE_KIND_ALL || lspec->file_kind == LABEL_FILE_KIND_ALL || lspec->file_kind == file_kind) {
-					struct lookup_result *r;
+					if (file_kind == LABEL_FILE_KIND_ALL || lspec->file_kind == LABEL_FILE_KIND_ALL || lspec->file_kind == file_kind) {
+						struct lookup_result *r;
 
 #ifdef __ATOMIC_RELAXED
-					__atomic_store_n(&lspec->any_matches, true, __ATOMIC_RELAXED);
+						__atomic_store_n(&lspec->any_matches, true, __ATOMIC_RELAXED);
 #else
 #error "Please use a compiler that supports __atomic builtins"
 #endif
 
-					if (strcmp(lspec->lr.ctx_raw, "<<none>>") == 0) {
-						free_lookup_result(result);
-						errno = ENOENT;
-						return NULL;
-					}
-
-					if (likely(buf)) {
-						r = buf;
-					} else {
-						r = malloc(sizeof(*r));
-						if (!r) {
-							free_lookup_result(result);
-							return NULL;
+						if (strcmp(lspec->lr.ctx_raw, "<<none>>") == 0) {
+							errno = ENOENT;
+							goto fail;
 						}
+
+						if (likely(buf)) {
+							r = buf;
+						} else {
+							r = malloc(sizeof(*r));
+							if (!r)
+								goto fail;
+						}
+
+						*r = (struct lookup_result) {
+							.regex_str = lspec->regex_str,
+							.prefix_len = lspec->prefix_len,
+							.file_kind = lspec->file_kind,
+							.lr = &lspec->lr,
+							.has_meta_chars = false,
+							.next = NULL,
+						};
+
+						if (likely(!find_all))
+							return r;
+
+						*next = r;
+						next = &r->next;
 					}
 
-					*r = (struct lookup_result) {
-						.regex_str = lspec->regex_str,
-						.prefix_len = lspec->prefix_len,
-						.file_kind = lspec->file_kind,
-						.lr = &lspec->lr,
-						.has_meta_chars = false,
-						.next = NULL,
-					};
-
-					if (likely(!find_all))
-						return r;
-
-					*next = r;
-					next = &r->next;
-				}
-
-				literal_idx++;
-			} while (literal_idx < n->literal_specs_num &&
-				 (partial ? (strncmp(n->literal_specs[literal_idx].literal_match, key, key_len) == 0)
-					  : (strcmp(n->literal_specs[literal_idx].literal_match, key) == 0)));
+					literal_idx++;
+				} while (literal_idx < n->literal_specs_num &&
+					(partial ? (strncmp(n->literal_specs[literal_idx].literal_match, key, key_len) == 0)
+						: (strcmp(n->literal_specs[literal_idx].literal_match, key) == 0)));
+			}
 		}
 
-		for (uint32_t i = 0; i < n->regex_specs_num; i++) {
-			struct regex_spec *rspec = &n->regex_specs[i];
+		for (uint32_t i = n->regex_specs_num; i > 0; i--) {
+			/* search in reverse order */
+			struct regex_spec *rspec = &n->regex_specs[i - 1];
 			const char *errbuf = NULL;
 			int rc;
+
+			if (child_regex_match &&
+			    (rspec->inputno < child_regex_match_inputno ||
+			     (rspec->inputno == child_regex_match_inputno && rspec->lineno < child_regex_match_lineno)))
+				break;
 
 			if (file_kind != LABEL_FILE_KIND_ALL && rspec->file_kind != LABEL_FILE_KIND_ALL && file_kind != rspec->file_kind)
 				continue;
@@ -1648,8 +1676,7 @@ static struct lookup_result *lookup_check_node(struct spec_node *node, const cha
 			if (compile_regex(rspec, &errbuf) < 0) {
 				COMPAT_LOG(SELINUX_ERROR, "Failed to compile regular expression '%s':  %s\n",
 					   rspec->regex_str, errbuf);
-				free_lookup_result(result);
-				return NULL;
+				goto fail;
 			}
 
 			rc = regex_match(rspec->regex, key, partial);
@@ -1665,19 +1692,18 @@ static struct lookup_result *lookup_check_node(struct spec_node *node, const cha
 				}
 
 				if (strcmp(rspec->lr.ctx_raw, "<<none>>") == 0) {
-					free_lookup_result(result);
 					errno = ENOENT;
-					return NULL;
+					goto fail;
 				}
 
-				if (likely(buf)) {
+				if (child_regex_match) {
+					r = child_regex_match;
+				} else if (buf) {
 					r = buf;
 				} else {
 					r = malloc(sizeof(*r));
-					if (!r) {
-						free_lookup_result(result);
-						return NULL;
-					}
+					if (!r)
+						goto fail;
 				}
 
 				*r = (struct lookup_result) {
@@ -1689,8 +1715,12 @@ static struct lookup_result *lookup_check_node(struct spec_node *node, const cha
 					.next = NULL,
 				};
 
-				if (likely(!find_all))
-					return r;
+				if (likely(!find_all)) {
+					child_regex_match = r;
+					child_regex_match_inputno = rspec->inputno;
+					child_regex_match_lineno = rspec->lineno;
+					goto parent_node;
+				}
 
 				*next = r;
 				next = &r->next;
@@ -1702,15 +1732,28 @@ static struct lookup_result *lookup_check_node(struct spec_node *node, const cha
 				continue;
 
 			/* else it's an error */
-			free_lookup_result(result);
 			errno = ENOENT;
-			return NULL;
+			goto fail;
 		}
+
+	    parent_node:
+		continue;
 	}
+
+	if (child_regex_match)
+		return child_regex_match;
 
 	if (!result)
 		errno = ENOENT;
 	return result;
+
+    fail:
+	if (!find_all && child_regex_match && child_regex_match != buf)
+		free(child_regex_match);
+
+	free_lookup_result(result);
+
+	return NULL;
 }
 
 static struct spec_node* search_child_node(struct spec_node *array, uint32_t size, const char *key, size_t key_len)
@@ -2221,81 +2264,69 @@ static enum selabel_cmp_result spec_node_cmp(const struct spec_node *node1, cons
 		while (iter1 < node1->regex_specs_num && iter2 < node2->regex_specs_num) {
 			const struct regex_spec *rspec1 = &node1->regex_specs[iter1];
 			const struct regex_spec *rspec2 = &node2->regex_specs[iter2];
-			int cmp;
+			bool found_successor;
 
-			if (rspec1->prefix_len > rspec2->prefix_len) {
-				if (result == SELABEL_EQUAL || result == SELABEL_SUPERSET) {
-					result = SELABEL_SUPERSET;
-					iter1++;
-					continue;
-				}
-
-				return rspec_incomp(node1->stem, rspec1, rspec2, "regex_prefix_length", iter1, iter2);
+			if (rspec1->file_kind == rspec2->file_kind && strcmp(rspec1->regex_str, rspec2->regex_str) == 0) {
+				iter1++;
+				iter2++;
+				continue;
 			}
 
-			if (rspec1->prefix_len < rspec2->prefix_len) {
-				if (result == SELABEL_EQUAL || result == SELABEL_SUBSET) {
+			if (result == SELABEL_SUPERSET) {
+				iter1++;
+				continue;
+			}
+
+			if (result == SELABEL_SUBSET) {
+				iter2++;
+				continue;
+			}
+
+			assert(result == SELABEL_EQUAL);
+
+			found_successor = false;
+
+			for (uint32_t i = iter2; i < node2->regex_specs_num; i++) {
+				const struct regex_spec *successor = &node2->regex_specs[i];
+
+				if (rspec1->file_kind == successor->file_kind && strcmp(rspec1->regex_str, successor->regex_str) == 0) {
 					result = SELABEL_SUBSET;
-					iter2++;
-					continue;
-				}
-
-				return rspec_incomp(node1->stem, rspec1, rspec2, "regex_prefix_length", iter1, iter2);
-			}
-
-			/* If prefix length is equal compare regex string */
-
-			cmp = strcmp(rspec1->regex_str, rspec2->regex_str);
-			if (cmp < 0) {
-				if (result == SELABEL_EQUAL || result == SELABEL_SUPERSET) {
-					result = SELABEL_SUPERSET;
 					iter1++;
-					continue;
+					iter2 = i + 1;
+					found_successor = true;
+					break;
 				}
-
-				return rspec_incomp(node1->stem, rspec1, rspec2, "regex_str", iter1, iter2);
 			}
 
-			if (cmp > 0) {
-				if (result == SELABEL_EQUAL || result == SELABEL_SUBSET) {
-					result = SELABEL_SUBSET;
-					iter2++;
-					continue;
-				}
+			if (found_successor)
+				continue;
 
-				return rspec_incomp(node1->stem, rspec1, rspec2, "regex_str", iter1, iter2);
-			}
+			for (uint32_t i = iter1; i < node1->regex_specs_num; i++) {
+				const struct regex_spec *successor = &node1->regex_specs[i];
 
-			/* If literal match is equal compare file kind */
-
-			if (rspec1->file_kind > rspec2->file_kind) {
-				if (result == SELABEL_EQUAL || result == SELABEL_SUPERSET) {
+				if (successor->file_kind == rspec2->file_kind && strcmp(successor->regex_str, rspec2->regex_str) == 0) {
 					result = SELABEL_SUPERSET;
-					iter1++;
-					continue;
-				}
-
-				return rspec_incomp(node1->stem, rspec1, rspec2, "file_kind", iter1, iter2);
-			}
-
-			if (rspec1->file_kind < rspec2->file_kind) {
-				if (result == SELABEL_EQUAL || result == SELABEL_SUBSET) {
-					result = SELABEL_SUBSET;
+					iter1 = i + 1;
 					iter2++;
-					continue;
+					found_successor = true;
+					break;
 				}
-
-				return rspec_incomp(node1->stem, rspec1, rspec2, "file_kind", iter1, iter2);
 			}
 
-			iter1++;
-			iter2++;
+			if (found_successor)
+				continue;
+
+			return rspec_incomp(node1->stem, rspec1, rspec2, "regex", iter1, iter2);
 		}
 		if (iter1 != node1->regex_specs_num) {
 			if (result == SELABEL_EQUAL || result == SELABEL_SUPERSET) {
 				result = SELABEL_SUPERSET;
 			} else {
-				selinux_log(SELINUX_INFO, "selabel_cmp: mismatch regex_str left remnant in stem %s\n", fmt_stem(node1->stem));
+				const struct regex_spec *rspec1 = &node1->regex_specs[iter1];
+
+				selinux_log(SELINUX_INFO, "selabel_cmp: mismatch regex left remnant in stem %s entry %u: (%s, %s, %s)\n",
+					    fmt_stem(node1->stem),
+					    iter1, rspec1->regex_str, file_kind_to_string(rspec1->file_kind), rspec1->lr.ctx_raw);
 				return SELABEL_INCOMPARABLE;
 			}
 		}
@@ -2303,7 +2334,11 @@ static enum selabel_cmp_result spec_node_cmp(const struct spec_node *node1, cons
 			if (result == SELABEL_EQUAL || result == SELABEL_SUBSET) {
 				result = SELABEL_SUBSET;
 			} else {
-				selinux_log(SELINUX_INFO, "selabel_cmp: mismatch regex_str right remnant in stem %s\n", fmt_stem(node1->stem));
+				const struct regex_spec *rspec2 = &node2->regex_specs[iter2];
+
+				selinux_log(SELINUX_INFO, "selabel_cmp: mismatch regex right remnant in stem %s entry %u: (%s, %s, %s)\n",
+					    fmt_stem(node1->stem),
+					    iter2, rspec2->regex_str, file_kind_to_string(rspec2->file_kind), rspec2->lr.ctx_raw);
 				return SELABEL_INCOMPARABLE;
 			}
 		}

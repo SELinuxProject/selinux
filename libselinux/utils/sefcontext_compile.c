@@ -31,7 +31,7 @@ static int validate_context(char **ctxp)
 
 static int process_file(struct selabel_handle *rec, const char *filename)
 {
-	unsigned int line_num;
+	uint32_t line_num;
 	int rc;
 	char *line_buf = NULL;
 	size_t line_len = 0;
@@ -48,7 +48,7 @@ static int process_file(struct selabel_handle *rec, const char *filename)
 	line_num = 0;
 	rc = 0;
 	while ((nread = getline(&line_buf, &line_len, context_file)) > 0) {
-		rc = process_line(rec, filename, prefix, line_buf, nread, ++line_num);
+		rc = process_line(rec, filename, prefix, line_buf, nread, 0, ++line_num);
 		if (rc || ctx_err) {
 			/* With -p option need to check and fail if ctx err as
 			 * process_line() context validation on Linux does not
@@ -160,6 +160,7 @@ static int create_sidtab(const struct saved_data *data, struct sidtab *stab)
  * Regular Expression Specification Format (RSpec)
  *
  * u32     - context table index for raw context (1-based)
+ * u32     - line number in source file
  * u16     - length of upcoming regex_str INCLUDING nul
  * [char]  - char array of the original regex string including the stem INCLUDING nul
  * u16     - length of the fixed path prefix
@@ -303,6 +304,12 @@ static int write_regex_spec(FILE *bin_file, bool do_write_precompregex, const st
 	sid = sidtab_context_lookup(stab, rspec->lr.ctx_raw);
 	assert(sid); /* should be set via create_sidtab() */
 	data_u32 = htobe32(sid->id);
+	len = fwrite(&data_u32, sizeof(uint32_t), 1, bin_file);
+	if (len != 1)
+		return -1;
+
+	/* write line number */
+	data_u32 = htobe32(rspec->lineno);
 	len = fwrite(&data_u32, sizeof(uint32_t), 1, bin_file);
 	if (len != 1)
 		return -1;
