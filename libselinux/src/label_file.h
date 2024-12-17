@@ -60,7 +60,7 @@ struct lookup_result {
 	struct lookup_result *next;
 };
 #ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
-extern int load_mmap(FILE *fp, const size_t len, struct selabel_handle *rec, const char *path);
+extern int load_mmap(FILE *fp, const size_t len, struct selabel_handle *rec, const char *path, uint8_t inputno);
 extern int process_text_file(FILE *fp, const char *prefix, struct selabel_handle *rec, const char *path, uint8_t inputno);
 extern void free_lookup_result(struct lookup_result *result);
 extern struct lookup_result *lookup_all(struct selabel_handle *rec, const char *key, int type, bool partial, bool find_all, struct lookup_result *buf);

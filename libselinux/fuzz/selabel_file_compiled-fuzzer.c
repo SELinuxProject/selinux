@@ -195,7 +195,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 		goto cleanup;
 
 	errno = 0;
-	rc = load_mmap(fp, fcontext_data1_len, &rec, MEMFD_FILE_NAME);
+	rc = load_mmap(fp, fcontext_data1_len, &rec, MEMFD_FILE_NAME, 0);
 	if (rc) {
 		assert(errno != 0);
 		goto cleanup;
@@ -208,7 +208,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 		goto cleanup;
 
 	errno = 0;
-	rc = load_mmap(fp, fcontext_data2_len, &rec, MEMFD_FILE_NAME);
+	rc = load_mmap(fp, fcontext_data2_len, &rec, MEMFD_FILE_NAME, 1);
 	if (rc) {
 		assert(errno != 0);
 		goto cleanup;
@@ -221,7 +221,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 		goto cleanup;
 
 	errno = 0;
-	rc = load_mmap(fp, fcontext_data3_len, &rec, MEMFD_FILE_NAME);
+	rc = load_mmap(fp, fcontext_data3_len, &rec, MEMFD_FILE_NAME, 2);
 	if (rc) {
 		assert(errno != 0);
 		goto cleanup;

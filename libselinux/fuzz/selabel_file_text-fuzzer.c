@@ -167,7 +167,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 		goto cleanup;
 
 	errno = 0;
-	rc = process_text_file(fp, /*prefix=*/ NULL, &rec, MEMFD_FILE_NAME);
+	rc = process_text_file(fp, /*prefix=*/ NULL, &rec, MEMFD_FILE_NAME, 0);
 	if (rc) {
 		assert(errno != 0);
 		goto cleanup;
