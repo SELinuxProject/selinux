@@ -1,0 +1,17 @@
+name: Run SELinux testsuite in Testing Farm
+
+on: [push, pull_request]
+
+jobs:
+  tf_testsuite:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [x86_64, aarch64]
+    steps:
+      - name: Schedule test on Testing Farm
+        uses: sclorg/testing-farm-as-github-action@main
+        with:
+          api_key: ${{ secrets.TESTING_FARM_API_TOKEN }}
+          arch: ${{ matrix.arch }}
