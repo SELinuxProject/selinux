@@ -709,7 +709,7 @@ static int avrulex_to_cil(int indent, struct policydb *pdb, uint32_t type, const
 	} else if (xperms->specified == AVTAB_XPERMS_NLMSG) {
 		xperm = "nlmsg";
 	} else {
-		ERR(NULL, "Unkown avrule xperms->specified: %i", xperms->specified);
+		ERR(NULL, "Unknown avrule xperms->specified: %i", xperms->specified);
 		rc = -1;
 		goto exit;
 	}

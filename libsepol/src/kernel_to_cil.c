@@ -1802,7 +1802,7 @@ static char *avtab_node_to_str(struct policydb *pdb, avtab_key_t *key, avtab_dat
 		} else if (datum->xperms->specified == AVTAB_XPERMS_NLMSG) {
 			xperm = (char *) "nlmsg";
 		} else {
-			ERR(NULL, "Unknown extended permssion");
+			ERR(NULL, "Unknown extended permission");
 			goto exit;
 		}
 		rule = create_str("(%s %s %s (%s %s (%s)))",

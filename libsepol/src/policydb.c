@@ -1662,7 +1662,7 @@ int policydb_load_isids(policydb_t * p, sidtab_t * s)
  *
  * arguments:
  *   policydb_t *pol       module policy to modify
- *   uint32_t sym          the symbole table for insertion (SYM_*)
+ *   uint32_t sym          the symbol table for insertion (SYM_*)
  *   hashtab_key_t key     the key for the symbol - not cloned
  *   hashtab_datum_t data  the data for the symbol - not cloned
  *   scope                 scope of this symbol, either SCOPE_REQ or SCOPE_DECL
