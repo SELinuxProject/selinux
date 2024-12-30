@@ -111,7 +111,7 @@ class ModuleCompiler:
      .semodule_package [string] Fully qualified path to the module
                    packager. Defaults to /usr/bin/semodule_package.
      .output       [file object] File object used to write verbose
-                   output of the compililation and packaging process.
+                   output of the compilation and packaging process.
     """
     def __init__(self, output=None):
         """Create a ModuleCompiler instance, optionally with an

@@ -324,7 +324,7 @@ class SecurityContext(Leaf):
     def to_string(self, default_level=None):
         """Return a string representing this security context.
 
-        By default, the string will contiain a MCS / MLS level
+        By default, the string will contain a MCS / MLS level
         potentially from the default which is passed in if none was
         set.
 
@@ -333,7 +333,7 @@ class SecurityContext(Leaf):
              empty string.
 
         Returns:
-           A string represening the security context in the form
+           A string representing the security context in the form
               'user:role:type:level'.
         """
         fields = [self.user, self.role, self.type]
@@ -609,7 +609,7 @@ class AVRule(Leaf):
     def to_string(self):
         """Return a string representation of the rule
         that is a valid policy language representation (assuming
-        that the types, object class, etc. are valie).
+        that the types, object class, etc. are valid).
         """
         if self.gen_cil:
             s = ""

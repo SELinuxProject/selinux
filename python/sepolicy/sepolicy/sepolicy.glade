@@ -235,7 +235,7 @@
       <column type="gchararray"/>
       <!-- column-name Label -->
       <column type="gboolean"/>
-      <!-- column-name Mislabled -->
+      <!-- column-name Mislabeled -->
       <column type="gboolean"/>
       <!-- column-name Cur -->
       <column type="gchararray"/>
@@ -392,7 +392,7 @@
       <column type="gchararray"/>
       <!-- column-name Fix -->
       <column type="gboolean"/>
-      <!-- column-name Mislabled -->
+      <!-- column-name Mislabeled -->
       <column type="gboolean"/>
       <!-- column-name Cur -->
       <column type="gchararray"/>
@@ -5538,7 +5538,7 @@ s0-s0:c1023</property>
       <column type="gchararray"/>
       <!-- column-name Label -->
       <column type="gboolean"/>
-      <!-- column-name Mislabled -->
+      <!-- column-name Mislabeled -->
       <column type="gboolean"/>
       <!-- column-name Cur -->
       <column type="gchararray"/>
