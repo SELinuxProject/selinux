@@ -61,6 +61,7 @@ jobs:
             gawk \
             gettext \
             libaudit-dev \
+            libbz2-dev \
             libcap-dev \
             libcap-ng-dev \
             libcunit1-dev \
