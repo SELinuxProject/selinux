@@ -95,7 +95,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 	uint8_t control;
 	uint8_t *fcontext_data1 = NULL, *fcontext_data2 = NULL, *fcontext_data3 = NULL;
 	char *key = NULL;
-	size_t fcontext_data1_len, fcontext_data2_len, fcontext_data3_len, key_len;
+	size_t fcontext_data1_len, fcontext_data2_len = 0, fcontext_data3_len = 0, key_len;
 	bool partial, find_all;
 	mode_t mode;
 	int rc;
@@ -141,11 +141,14 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 	sep = memmem(data, size, separator, 4);
 	if (sep) {
 		fcontext_data2_len = sep - data;
-		fcontext_data2 = malloc(fcontext_data2_len);
-		if (!fcontext_data2)
-			goto cleanup;
+		if (fcontext_data2_len) {
+			fcontext_data2 = malloc(fcontext_data2_len);
+			if (!fcontext_data2)
+				goto cleanup;
 
-		memcpy(fcontext_data2, data, fcontext_data2_len);
+			memcpy(fcontext_data2, data, fcontext_data2_len);
+		}
+
 		data += fcontext_data2_len + 4;
 		size -= fcontext_data2_len + 4;
 	}
@@ -153,11 +156,14 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 	sep = memmem(data, size, separator, 4);
 	if (sep) {
 		fcontext_data3_len = sep - data;
-		fcontext_data3 = malloc(fcontext_data3_len);
-		if (!fcontext_data3)
-			goto cleanup;
+		if (fcontext_data3_len) {
+			fcontext_data3 = malloc(fcontext_data3_len);
+			if (!fcontext_data3)
+				goto cleanup;
 
-		memcpy(fcontext_data3, data, fcontext_data3_len);
+			memcpy(fcontext_data3, data, fcontext_data3_len);
+		}
+
 		data += fcontext_data3_len + 4;
 		size -= fcontext_data3_len + 4;
 	}
@@ -202,29 +208,38 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 	}
 
 	fclose(fp);
+	fp = NULL;
 
-	fp = convert_data(fcontext_data2, fcontext_data2_len);
-	if (!fp)
-		goto cleanup;
+	if (fcontext_data2_len) {
+		fp = convert_data(fcontext_data2, fcontext_data2_len);
+		if (!fp)
+			goto cleanup;
 
-	errno = 0;
-	rc = load_mmap(fp, fcontext_data2_len, &rec, MEMFD_FILE_NAME, 1);
-	if (rc) {
-		assert(errno != 0);
-		goto cleanup;
+		errno = 0;
+		rc = load_mmap(fp, fcontext_data2_len, &rec, MEMFD_FILE_NAME, 1);
+		if (rc) {
+			assert(errno != 0);
+			goto cleanup;
+		}
+
+		fclose(fp);
+		fp = NULL;
 	}
 
-	fclose(fp);
+	if (fcontext_data3_len) {
+		fp = convert_data(fcontext_data3, fcontext_data3_len);
+		if (!fp)
+			goto cleanup;
 
-	fp = convert_data(fcontext_data3, fcontext_data3_len);
-	if (!fp)
-		goto cleanup;
+		errno = 0;
+		rc = load_mmap(fp, fcontext_data3_len, &rec, MEMFD_FILE_NAME, 2);
+		if (rc) {
+			assert(errno != 0);
+			goto cleanup;
+		}
 
-	errno = 0;
-	rc = load_mmap(fp, fcontext_data3_len, &rec, MEMFD_FILE_NAME, 2);
-	if (rc) {
-		assert(errno != 0);
-		goto cleanup;
+		fclose(fp);
+		fp = NULL;
 	}
 
 	sort_specs(&sdata);
