@@ -2616,6 +2616,8 @@ int cil_booleanif_to_policydb(policydb_t *pdb, const struct cil_db *db, struct c
 	return SEPOL_OK;
 
 exit:
+	hashtab_map(avrulex_nlmsg_table, __cil_avrulex_xperm_destroy, NULL);
+	hashtab_destroy(avrulex_nlmsg_table);
 	hashtab_map(avrulex_ioctl_table, __cil_avrulex_xperm_destroy, NULL);
 	hashtab_destroy(avrulex_ioctl_table);
 	if (tmp_cond) {
