@@ -23,14 +23,7 @@ using a custom policy please include it as well.
 
 ## Compiling
 
-There are a number of dependencies required to build the userspace
-tools/libraries. On a Fedora system you can install them with yum:
-
-    # yum install audit-libs-devel bison bzip2-devel dbus-devel dbus-glib-devel flex flex-devel flex-static glib2-devel libcap-devel libcap-ng-devel pam-devel pcre2-devel python-devel setools-devel swig ustr-devel
-
-The tools and libraries can be built and installed under a private directory from the top level with make, e.g.
-
-    $ make DESTDIR=~/obj install install-pywrap
+See README.md for instructions on how to compile and test this project.
 
 ## Contributing Code
 
