@@ -4850,7 +4850,6 @@ int define_fs_context(unsigned int major, unsigned int minor)
 int define_pirq_context(unsigned int pirq)
 {
 	ocontext_t *newc, *c, *l, *head;
-	char *id;
 
 	if (policydbp->target_platform != SEPOL_TARGET_XEN) {
 		yyerror("pirqcon not supported for target");
@@ -4858,8 +4857,6 @@ int define_pirq_context(unsigned int pirq)
 	}
 
 	if (pass == 1) {
-		id = (char *) queue_remove(id_queue);
-		free(id);
 		parse_security_context(NULL);
 		return 0;
 	}
@@ -4904,7 +4901,6 @@ bad:
 int define_iomem_context(uint64_t low, uint64_t high)
 {
 	ocontext_t *newc, *c, *l, *head;
-	char *id;
 
 	if (policydbp->target_platform != SEPOL_TARGET_XEN) {
 		yyerror("iomemcon not supported for target");
@@ -4912,8 +4908,6 @@ int define_iomem_context(uint64_t low, uint64_t high)
 	}
 
 	if (pass == 1) {
-		id = (char *)queue_remove(id_queue);
-		free(id);
 		parse_security_context(NULL);
 		return 0;
 	}
@@ -4968,7 +4962,6 @@ bad:
 int define_ioport_context(unsigned long low, unsigned long high)
 {
 	ocontext_t *newc, *c, *l, *head;
-	char *id;
 
 	if (policydbp->target_platform != SEPOL_TARGET_XEN) {
 		yyerror("ioportcon not supported for target");
@@ -4976,8 +4969,6 @@ int define_ioport_context(unsigned long low, unsigned long high)
 	}
 
 	if (pass == 1) {
-		id = (char *)queue_remove(id_queue);
-		free(id);
 		parse_security_context(NULL);
 		return 0;
 	}
@@ -5032,7 +5023,6 @@ bad:
 int define_pcidevice_context(unsigned long device)
 {
 	ocontext_t *newc, *c, *l, *head;
-	char *id;
 
 	if (policydbp->target_platform != SEPOL_TARGET_XEN) {
 		yyerror("pcidevicecon not supported for target");
@@ -5040,8 +5030,6 @@ int define_pcidevice_context(unsigned long device)
 	}
 
 	if (pass == 1) {
-		id = (char *) queue_remove(id_queue);
-		free(id);
 		parse_security_context(NULL);
 		return 0;
 	}
@@ -5845,7 +5833,6 @@ int define_ipv6_cidr_node_context(void)
 	}
 
 	if (pass == 1) {
-		free(queue_remove(id_queue));
 		free(queue_remove(id_queue));
 		parse_security_context(NULL);
 		return 0;
