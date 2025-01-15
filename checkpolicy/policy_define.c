@@ -4686,14 +4686,13 @@ static int parse_security_context(context_struct_t * c)
 
 	if (mlspol) {
 		/* extract the low sensitivity */
-		id = (char *)queue_head(id_queue);
+		id = (char *)queue_remove(id_queue);
 		if (!id) {
 			yyerror("no sensitivity name for sid context"
 				" definition?");
 			return -1;
 		}
 
-		id = (char *)queue_remove(id_queue);
 		for (l = 0; l < 2; l++) {
 			levdatum = (level_datum_t *)
 			    hashtab_search(policydbp->p_levels.table,
