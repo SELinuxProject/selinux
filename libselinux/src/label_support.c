@@ -45,8 +45,11 @@ static inline int read_spec_entry(char **entry, const char **ptr, size_t *len, c
 	}
 
 	if (*len) {
-		if (*len >= UINT16_MAX)
+		if (*len >= UINT16_MAX) {
+			errno = EINVAL;
+			*errbuf = "Spec entry too long";
 			return -1;
+		}
 
 		*entry = strndup(tmp_buf, *len);
 		if (!*entry)
