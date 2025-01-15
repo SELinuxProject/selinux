@@ -25,11 +25,10 @@ extern unsigned int policydb_errors;
 
 extern int yynerrs;
 extern FILE *yyin;
-extern void init_parser(int);
+extern void init_parser(int pass, const char *input_name);
 extern int yyparse(void);
 extern void yyrestart(FILE *);
 extern int yylex_destroy(void);
-extern void set_source_file(const char *name);
 
 jmp_buf fuzzing_pre_parse_stack_state;
 
@@ -87,8 +86,6 @@ static int read_source_policy(policydb_t *p, const uint8_t *data, size_t size)
 
 	rewind(yyin);
 
-	set_source_file("fuzz-input");
-
 	id_queue = queue_create();
 	if (id_queue == NULL) {
 		fclose(yyin);
@@ -99,7 +96,7 @@ static int read_source_policy(policydb_t *p, const uint8_t *data, size_t size)
 	policydbp = p;
 	mlspol = p->mls;
 
-	init_parser(1);
+	init_parser(1, "fuzz-input-1");
 
 	if (setjmp(fuzzing_pre_parse_stack_state) != 0) {
 		queue_destroy(id_queue);
@@ -119,8 +116,7 @@ static int read_source_policy(policydb_t *p, const uint8_t *data, size_t size)
 	}
 
 	rewind(yyin);
-	init_parser(2);
-	set_source_file("fuzz-input");
+	init_parser(2, "fuzz-input-2");
 	yyrestart(yyin);
 
 	rc = yyparse();

@@ -58,7 +58,7 @@
 #include "module_compiler.h"
 #include "policy_define.h"
 
-extern void init_parser(int pass_number);
+extern void init_parser(int pass_number, const char *input_name);
 __attribute__ ((format(printf, 1, 2)))
 extern void yyerror2(const char *fmt, ...);
 
@@ -71,17 +71,20 @@ extern unsigned long policydb_lineno;
 extern unsigned long source_lineno;
 extern unsigned int policydb_errors;
 extern char source_file[PATH_MAX];
+extern void set_source_file(const char *name);
 
 extern int yywarn(const char *msg);
 extern int yyerror(const char *msg);
 
 /* initialize all of the state variables for the scanner/parser */
-void init_parser(int pass_number)
+void init_parser(int pass_number, const char *input_name)
 {
 	policydb_lineno = 1;
 	source_lineno = 1;
 	policydb_errors = 0;
 	pass = pass_number;
+	set_source_file(input_name);
+	queue_clear(id_queue);
 }
 
 void yyerror2(const char *fmt, ...)
