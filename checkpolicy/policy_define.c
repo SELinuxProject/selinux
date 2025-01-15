@@ -4437,6 +4437,7 @@ static int parse_semantic_categories(char *id, level_datum_t * levdatum __attrib
 
 int define_user(void)
 {
+	const char *username;
 	char *id;
 	user_datum_t *usrdatum, *usr_global;
 	level_datum_t *levdatum;
@@ -4463,7 +4464,13 @@ int define_user(void)
 		return 0;
 	}
 
-	id = strdup(queue_head(id_queue));
+	username = queue_head(id_queue);
+	if (!username) {
+		yyerror("no user name");
+		return -1;
+	}
+
+	id = strdup(username);
 
 	if ((usrdatum = declare_user()) == NULL) {
 		free(id);
