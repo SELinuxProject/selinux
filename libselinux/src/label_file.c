@@ -674,11 +674,21 @@ static int load_mmap_regex_spec(struct mmap_area *mmap_area, bool validating, bo
 }
 
 static int load_mmap_spec_node(struct mmap_area *mmap_area, const char *path, bool validating, bool do_load_precompregex,
-			       struct spec_node *node, bool is_root, uint8_t inputno, const struct context_array *ctx_array)
+			       struct spec_node *node, const unsigned depth, uint8_t inputno, const struct context_array *ctx_array)
 {
 	uint32_t data_u32, lspec_num, rspec_num, children_num;
 	uint16_t data_u16, stem_len;
+	const bool is_root = (depth == 0);
 	int rc;
+
+	/*
+	 * Guard against deep recursion by malicious pre-compiled fcontext
+	 * definitions. The limit of 32 is chosen intuitively and should
+	 * suffice for any real world scenario. See the macro
+	 * SPEC_NODE_MAX_DEPTH for the current value used for tree building.
+	 */
+	if (depth >= 32)
+		return -1;
 
 	node->from_mmap = true;
 
@@ -794,7 +804,7 @@ static int load_mmap_spec_node(struct mmap_area *mmap_area, const char *path, bo
 		node->children_alloc = children_num;
 
 		for (uint32_t i = 0; i < children_num; i++) {
-			rc = load_mmap_spec_node(mmap_area, path, validating, do_load_precompregex, &node->children[i], false, inputno, ctx_array);
+			rc = load_mmap_spec_node(mmap_area, path, validating, do_load_precompregex, &node->children[i], depth + 1, inputno, ctx_array);
 			if (rc)
 				return -1;
 
@@ -969,7 +979,7 @@ end_arch_check:
 
 	rc = load_mmap_spec_node(mmap_area, path, rec->validating,
 				 reg_version_matches && reg_arch_matches,
-				 root, true,
+				 root, 0,
 				 inputno,
 				 &ctx_array);
 	if (rc)
