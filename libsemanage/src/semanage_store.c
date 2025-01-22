@@ -3012,8 +3012,13 @@ log_callback_mute(__attribute__((unused)) int type, __attribute__((unused)) cons
 void semanage_setfiles(semanage_handle_t * sh, const char *path){
 	struct stat sb;
 	int fd;
+	struct selabel_handle *sehandle;
+
 	union selinux_callback cb_orig = selinux_get_callback(SELINUX_CB_LOG);
 	union selinux_callback cb = { .func_log = log_callback_mute };
+
+	sehandle = selinux_restorecon_default_handle();
+	selinux_restorecon_set_sehandle(sehandle);
 
 	/* Mute all logs */
 	selinux_set_callback(SELINUX_CB_LOG, cb);
