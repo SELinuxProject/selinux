@@ -67,7 +67,10 @@ SWIG = swig -Wall -python -o $(SWIGCOUT) -outdir ./
 
 SWIGRUBY = swig -Wall -ruby -o $(SWIGRUBYCOUT) -outdir ./
 
-all: $(LIBA) $(LIBSO) $(LIBPC)
+all: $(LIBA) $(LIBPC)
+ifneq ($(DISABLE_SHARED),y)
+all: $(LIBSO)
+endif
 
 pywrap: all $(SWIGSO)
 
@@ -137,11 +140,13 @@ swigify: $(SWIGIF)
 install: all
 	test -d $(DESTDIR)$(LIBDIR) || install -m 755 -d $(DESTDIR)$(LIBDIR)
 	install -m 644 $(LIBA) $(DESTDIR)$(LIBDIR)
-	install -m 755 $(LIBSO) $(DESTDIR)$(LIBDIR)
 	test -d $(DESTDIR)$(LIBDIR)/pkgconfig || install -m 755 -d $(DESTDIR)$(LIBDIR)/pkgconfig
 	install -m 644 $(LIBPC) $(DESTDIR)$(LIBDIR)/pkgconfig
 	test -f $(DESTDIR)$(DEFAULT_SEMANAGE_CONF_LOCATION) || install -m 644 -D semanage.conf $(DESTDIR)$(DEFAULT_SEMANAGE_CONF_LOCATION)
+ifneq ($(DISABLE_SHARED),y)
+	install -m 755 $(LIBSO) $(DESTDIR)$(LIBDIR)
 	cd $(DESTDIR)$(LIBDIR) && ln -sf $(LIBSO) $(TARGET)
+endif
 
 install-pywrap: pywrap
 	test -d $(DESTDIR)$(PYTHONLIBDIR) || install -m 755 -d $(DESTDIR)$(PYTHONLIBDIR)

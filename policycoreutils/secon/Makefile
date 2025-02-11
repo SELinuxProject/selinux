@@ -8,7 +8,7 @@ WARNS=-Werror -W -Wall -Wundef -Wshadow -Wpointer-arith -Wbad-function-cast -Wca
 VERSION = $(shell cat ../VERSION)
 CFLAGS ?= $(WARNS) -O1
 override CFLAGS += -DVERSION=\"$(VERSION)\"
-override LDLIBS += -lselinux
+override LDLIBS += $(LIBSELINUX_LDLIBS)
 
 all: secon
 

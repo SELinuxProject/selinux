@@ -8,7 +8,7 @@ ETCDIR ?= /etc
 
 CFLAGS ?= -Werror -Wall -W
 override CFLAGS += -D_FILE_OFFSET_BITS=64
-override LDLIBS += -lselinux
+override LDLIBS += $(LIBSELINUX_LDLIBS)
 
 all: sestatus
 

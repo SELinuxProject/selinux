@@ -3,7 +3,7 @@ SBINDIR ?= $(PREFIX)/sbin
 MANDIR ?= $(PREFIX)/share/man
 
 override CFLAGS += -D_GNU_SOURCE
-override LDLIBS += -lselinux
+override LDLIBS += $(LIBSELINUX_LDLIBS)
 
 
 all: unsetfiles

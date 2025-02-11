@@ -5,11 +5,12 @@ SBINDIR ?= $(PREFIX)/sbin
 MANDIR = $(PREFIX)/share/man
 
 CFLAGS ?= -Werror -Wall -W
-override LDLIBS += -lsepol -lselinux -lsemanage
+override LDLIBS += -lsemanage -lsepol $(LIBSELINUX_LDLIBS)
 SEMODULE_OBJS = semodule.o
 
 all: semodule genhomedircon
 
+semodule: LDLIBS += -laudit -lbz2
 semodule: $(SEMODULE_OBJS)
 
 genhomedircon:

@@ -53,7 +53,13 @@ else
 TARGETS=$(patsubst %.c,%,$(sort $(wildcard *.c)))
 endif
 
-sefcontext_compile: LDLIBS += ../src/libselinux.a $(PCRE_LDLIBS) -lsepol
+sefcontext_compile: LDLIBS += ../src/libselinux.a -lsepol
+
+PCRE_USERS = matchpathcon sefcontext_compile selabel_compare \
+	selabel_digest selabel_get_digests_all_partial_matches \
+	selabel_lookup selabel_lookup_best_match \
+	selabel_partial_match
+$(PCRE_USERS): LDLIBS += $(PCRE_LDLIBS)
 
 all: $(TARGETS)
 

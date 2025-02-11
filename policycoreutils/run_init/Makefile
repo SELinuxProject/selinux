@@ -11,7 +11,7 @@ AUDITH ?= $(shell test -f /usr/include/libaudit.h && echo y)
 
 CFLAGS ?= -Werror -Wall -W
 override CFLAGS += -DUSE_NLS -DLOCALEDIR="\"$(LOCALEDIR)\"" -DPACKAGE="\"policycoreutils\""
-override LDLIBS += -lselinux
+override LDLIBS += $(LIBSELINUX_LDLIBS)
 ifeq ($(PAMH), y)
 	override CFLAGS += -DUSE_PAM
 	override LDLIBS += -lpam -lpam_misc
