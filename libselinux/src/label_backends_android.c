@@ -58,10 +58,10 @@ static int nodups_specs(struct saved_data *data, const char *path)
 		for (jj = ii + 1; jj < data->nspec; jj++) {
 			if (!strcmp(spec_arr[jj].property_key,
 					    curr_spec->property_key)) {
-				rc = -1;
-				errno = EINVAL;
 				if (strcmp(spec_arr[jj].lr.ctx_raw,
 						    curr_spec->lr.ctx_raw)) {
+					rc = -1;
+					errno = EINVAL;
 					selinux_log
 						(SELINUX_ERROR,
 						 "%s: Multiple different specifications for %s  (%s and %s).\n",
@@ -70,7 +70,7 @@ static int nodups_specs(struct saved_data *data, const char *path)
 						 curr_spec->lr.ctx_raw);
 				} else {
 					selinux_log
-						(SELINUX_ERROR,
+						(SELINUX_WARNING,
 						 "%s: Multiple same specifications for %s.\n",
 						 path, curr_spec->property_key);
 				}
