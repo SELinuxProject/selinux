@@ -26,6 +26,7 @@
 
 #include <assert.h>
 #include <fcntl.h>
+#include <libgen.h>
 #include <stdio.h>
 #include <stdio_ext.h>
 #include <stdlib.h>

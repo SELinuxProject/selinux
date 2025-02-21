@@ -156,4 +156,17 @@ semanage_list_t *semanage_slurp_file_filter(FILE * file,
 
 int write_full(int fd, const void *buf, size_t len) WARN_UNUSED;
 
+/**
+ * Portable implementation of the glibc version of basename(3).
+ *
+ * @param filename  path to find basename of
+ *
+ * @return          basename of filename
+ */
+
+#ifdef __GNUC__
+__attribute__((nonnull))
+#endif
+char *semanage_basename(const char *filename);
+
 #endif

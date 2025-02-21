@@ -21,6 +21,7 @@
 %{
 
 #include "semanage_conf.h"
+#include "utilities.h"
 
 #include <sepol/policydb.h>
 #include <selinux/selinux.h>
@@ -382,7 +383,10 @@ external_opt:   PROG_PATH '=' ARG  { PASSIGN(new_external->path, $3); }
 static int semanage_conf_init(semanage_conf_t * conf)
 {
 	conf->store_type = SEMANAGE_CON_DIRECT;
-	conf->store_path = strdup(basename(selinux_policy_root()));
+	const char *policy_root = selinux_policy_root();
+	if (policy_root != NULL) {
+		conf->store_path = strdup(semanage_basename(policy_root));
+	}
 	conf->ignoredirs = NULL;
 	conf->store_root_path = strdup("/var/lib/selinux");
 	conf->compiler_directory_path = strdup("/usr/libexec/selinux/hll");
@@ -544,8 +548,11 @@ static int parse_module_store(char *arg)
 	free(current_conf->store_path);
 	if (strcmp(arg, "direct") == 0) {
 		current_conf->store_type = SEMANAGE_CON_DIRECT;
-		current_conf->store_path =
-		    strdup(basename(selinux_policy_root()));
+		const char *policy_root = selinux_policy_root();
+		if (policy_root != NULL) {
+			current_conf->store_path =
+			    strdup(semanage_basename(policy_root));
+		}
 		current_conf->server_port = -1;
 	} else if (*arg == '/') {
 		current_conf->store_type = SEMANAGE_CON_POLSERV_LOCAL;
