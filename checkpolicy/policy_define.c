@@ -1610,7 +1610,8 @@ struct val_to_name {
 
 /* Adds a type, given by its textual name, to a typeset.  If *add is
    0, then add the type to the negative set; otherwise if *add is 1
-   then add it to the positive side. */
+   then add it to the positive side.
+   The identifier `id` is always consumed. */
 static int set_types(type_set_t * set, char *id, int *add, char starallowed)
 {
 	type_datum_t *t;
@@ -2117,18 +2118,17 @@ static int define_te_avtab_xperms_helper(int which, avrule_t ** rule)
 {
 	char *id;
 	class_perm_node_t *perms, *tail = NULL, *cur_perms = NULL;
-	class_datum_t *cladatum;
-	perm_datum_t *perdatum = NULL;
+	const class_datum_t *cladatum;
+	const perm_datum_t *perdatum;
 	ebitmap_t tclasses;
 	ebitmap_node_t *node;
 	avrule_t *avrule;
 	unsigned int i;
-	int add = 1, ret = 0;
+	int add = 1, ret;
 
 	avrule = (avrule_t *) malloc(sizeof(avrule_t));
 	if (!avrule) {
 		yyerror("out of memory");
-		ret = -1;
 		goto out;
 	}
 	avrule_init(avrule);
@@ -2139,14 +2139,13 @@ static int define_te_avtab_xperms_helper(int which, avrule_t ** rule)
 	avrule->xperms = NULL;
 	if (!avrule->source_filename) {
 		yyerror("out of memory");
-		return -1;
+		goto out;
 	}
 
 	while ((id = queue_remove(id_queue))) {
 		if (set_types
 		    (&avrule->stypes, id, &add,
 		     which == AVRULE_XPERMS_NEVERALLOW ? 1 : 0)) {
-			ret = -1;
 			goto out;
 		}
 	}
@@ -2156,13 +2155,11 @@ static int define_te_avtab_xperms_helper(int which, avrule_t ** rule)
 			free(id);
 			if (add == 0 && which != AVRULE_XPERMS_NEVERALLOW) {
 				yyerror("-self is only supported in neverallow and neverallowxperm rules");
-				ret = -1;
 				goto out;
 			}
 			avrule->flags |= (add ? RULE_SELF : RULE_NOTSELF);
 			if ((avrule->flags & RULE_SELF) && (avrule->flags & RULE_NOTSELF)) {
 				yyerror("self and -self are mutual exclusive");
-				ret = -1;
 				goto out;
 			}
 			continue;
@@ -2170,7 +2167,6 @@ static int define_te_avtab_xperms_helper(int which, avrule_t ** rule)
 		if (set_types
 		    (&avrule->ttypes, id, &add,
 		     which == AVRULE_XPERMS_NEVERALLOW ? 1 : 0)) {
-			ret = -1;
 			goto out;
 		}
 	}
@@ -2178,7 +2174,6 @@ static int define_te_avtab_xperms_helper(int which, avrule_t ** rule)
 	if ((avrule->ttypes.flags & TYPE_COMP)) {
 		if (avrule->flags & RULE_NOTSELF) {
 			yyerror("-self is not supported in complements");
-			ret = -1;
 			goto out;
 		}
 		if (avrule->flags & RULE_SELF) {
@@ -2190,7 +2185,7 @@ static int define_te_avtab_xperms_helper(int which, avrule_t ** rule)
 	ebitmap_init(&tclasses);
 	ret = read_classes(&tclasses);
 	if (ret)
-		goto out;
+		goto out2;
 
 	perms = NULL;
 	id = queue_head(id_queue);
@@ -2199,8 +2194,7 @@ static int define_te_avtab_xperms_helper(int which, avrule_t ** rule)
 		    (class_perm_node_t *) malloc(sizeof(class_perm_node_t));
 		if (!cur_perms) {
 			yyerror("out of memory");
-			ret = -1;
-			goto out;
+			goto out2;
 		}
 		class_perm_node_init(cur_perms);
 		cur_perms->tclass = i + 1;
@@ -2238,9 +2232,14 @@ static int define_te_avtab_xperms_helper(int which, avrule_t ** rule)
 
 	avrule->perms = perms;
 	*rule = avrule;
+	return 0;
 
+out2:
+	ebitmap_destroy(&tclasses);
 out:
-	return ret;
+	avrule_destroy(avrule);
+	free(avrule);
+	return -1;
 }
 
 /* index of the u32 containing the permission */
