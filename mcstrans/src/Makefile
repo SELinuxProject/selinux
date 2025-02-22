@@ -16,6 +16,8 @@ PROG_OBJS= $(patsubst %.c,%.o,$(PROG_SRC))
 PROG=mcstransd
 INITSCRIPT=mcstrans
 CFLAGS ?= -Wall -W -Wundef -Wmissing-noreturn -Wmissing-format-attribute
+override CFLAGS += -I../../libselinux/include
+override LDFLAGS+= -L../../libselinux/src
 
 all: $(PROG)
 
