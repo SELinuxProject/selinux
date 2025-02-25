@@ -1712,6 +1712,7 @@ static int semanage_commit_sandbox(semanage_handle_t * sh)
 	    semanage_path(SEMANAGE_PREVIOUS, SEMANAGE_TOPLEVEL);
 	const char *sandbox = semanage_path(SEMANAGE_TMP, SEMANAGE_TOPLEVEL);
 	struct stat buf;
+	struct selabel_handle *sehandle;
 
 	/* update the commit number */
 	if ((commit_number = semanage_direct_get_serial(sh)) < 0) {
@@ -1822,6 +1823,8 @@ static int semanage_commit_sandbox(semanage_handle_t * sh)
 
       cleanup:
 	semanage_release_active_lock(sh);
+	sehandle = selinux_restorecon_default_handle();
+	selinux_restorecon_set_sehandle(sehandle);
 	return retval;
 }
 
@@ -3012,13 +3015,9 @@ log_callback_mute(__attribute__((unused)) int type, __attribute__((unused)) cons
 void semanage_setfiles(semanage_handle_t * sh, const char *path){
 	struct stat sb;
 	int fd;
-	struct selabel_handle *sehandle;
 
 	union selinux_callback cb_orig = selinux_get_callback(SELINUX_CB_LOG);
 	union selinux_callback cb = { .func_log = log_callback_mute };
-
-	sehandle = selinux_restorecon_default_handle();
-	selinux_restorecon_set_sehandle(sehandle);
 
 	/* Mute all logs */
 	selinux_set_callback(SELINUX_CB_LOG, cb);
