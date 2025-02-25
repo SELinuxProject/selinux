@@ -3181,10 +3181,10 @@ static int set_roles(role_set_t * set, char *id)
 int define_role_trans(int class_specified)
 {
 	char *id;
-	role_datum_t *role;
+	const role_datum_t *role;
 	role_set_t roles;
 	type_set_t types;
-	class_datum_t *cladatum;
+	const class_datum_t *cladatum;
 	ebitmap_t e_types, e_roles, e_classes;
 	ebitmap_node_t *tnode, *rnode, *cnode;
 	struct role_trans *tr = NULL;
@@ -3213,29 +3213,29 @@ int define_role_trans(int class_specified)
 
 	while ((id = queue_remove(id_queue))) {
 		if (set_roles(&roles, id))
-			return -1;
+			goto bad;
 	}
 	add = 1;
 	while ((id = queue_remove(id_queue))) {
 		if (set_types(&types, id, &add, 0))
-			return -1;
+			goto bad;
 	}
 
 	if (class_specified) {
 		if (read_classes(&e_classes))
-			return -1;
+			goto bad;
 	} else {
 		cladatum = hashtab_search(policydbp->p_classes.table,
 					  "process");
 		if (!cladatum) {
 			yyerror2("could not find process class for "
 				 "legacy role_transition statement");
-			return -1;
+			goto bad;
 		}
 
 		if (ebitmap_set_bit(&e_classes, cladatum->s.value - 1, TRUE)) {
 			yyerror("out of memory");
-			return -1;
+			goto bad;
 		}
 	}
 
@@ -3291,7 +3291,7 @@ int define_role_trans(int class_specified)
 				tr = malloc(sizeof(struct role_trans));
 				if (!tr) {
 					yyerror("out of memory");
-					return -1;
+					goto bad;
 				}
 				memset(tr, 0, sizeof(struct role_trans));
 				tr->role = i + 1;
@@ -3307,7 +3307,7 @@ int define_role_trans(int class_specified)
 	rule = malloc(sizeof(struct role_trans_rule));
 	if (!rule) {
 		yyerror("out of memory");
-		return -1;
+		goto bad;
 	}
 	memset(rule, 0, sizeof(struct role_trans_rule));
 	rule->roles = roles;
@@ -3323,6 +3323,11 @@ int define_role_trans(int class_specified)
 	return 0;
 
       bad:
+	role_set_destroy(&roles);
+	type_set_destroy(&types);
+	ebitmap_destroy(&e_roles);
+	ebitmap_destroy(&e_types);
+	ebitmap_destroy(&e_classes);
 	return -1;
 }
 
