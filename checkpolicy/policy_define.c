@@ -4201,6 +4201,7 @@ cond_expr_t *define_cond_expr(uint32_t expr_type, void *arg1, void *arg2)
 		if (!e1 || e1->next) {
 			yyerror
 			    ("illegal right side of conditional binary op expression");
+			cond_expr_destroy(arg1);
 			free(expr);
 			return NULL;
 		}
