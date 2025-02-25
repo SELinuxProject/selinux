@@ -291,6 +291,7 @@ static int create_role(uint32_t scope, unsigned char isattr, role_datum_t **role
 		if (*role && (isattr != (*role)->flavor)) {
 			yyerror2("Identifier %s used as both an attribute and a role",
 				 id);
+			*role = NULL;
 			free(id);
 			role_datum_destroy(datum);
 			free(datum);
@@ -428,6 +429,7 @@ static int create_type(uint32_t scope, unsigned char isattr, type_datum_t **type
 		if (*type && (isattr != (*type)->flavor)) {
 			yyerror2("Identifier %s used as both an attribute and a type",
 				 id);
+			*type = NULL;
 			free(id);
 			return -1;
 		}
