@@ -11,6 +11,7 @@ restorecon \- restore file(s) default SELinux security contexts.
 .RB [ \-v ]
 .RB [ \-i ]
 .RB [ \-F ]
+.RB [ \-U ]
 .RB [ \-W ]
 .RB [ \-I | \-D ]
 .RB [ \-x ]
@@ -30,6 +31,7 @@ restorecon \- restore file(s) default SELinux security contexts.
 .RB [ \-v ]
 .RB [ \-i ]
 .RB [ \-F ]
+.RB [ \-U ]
 .RB [ \-W ]
 .RB [ \-I | \-D ]
 .RB [ \-x ]
@@ -60,7 +62,9 @@ context,
 will only modify the type portion of the security context.
 The
 .B \-F
-option will force a replacement of the entire context.
+and
+.B \-U
+options will force a replacement of the entire context.
 .P
 If a file is labeled with
 .BR customizable
@@ -87,6 +91,10 @@ for
 .B \-F
 Force reset of context to match file_context for customizable files, and the
 default file context, changing the user, role, range portion as well as the type.
+.TP
+.B \-U
+In addition to the type portion also change the user and role portions, but
+not the range portion.
 .TP
 .B \-h, \-?
 display usage information and exit.

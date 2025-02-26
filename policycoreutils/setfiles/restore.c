@@ -36,6 +36,7 @@ void restore_init(struct restore_opts *opts)
 	opts->restorecon_flags = 0;
 	opts->restorecon_flags = opts->nochange | opts->verbose |
 			   opts->progress | opts->set_specctx  |
+			   opts->set_user_role |
 			   opts->add_assoc | opts->ignore_digest |
 			   opts->recurse | opts->userealpath |
 			   opts->xdev | opts->abort_on_error |

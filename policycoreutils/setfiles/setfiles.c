@@ -35,14 +35,14 @@ static __attribute__((__noreturn__)) void usage(const char *const name)
 {
 	if (iamrestorecon) {
 		fprintf(stderr,
-			"usage:  %s [-iIDFmnprRv0xT] [-e excludedir] pathname...\n"
-			"usage:  %s [-iIDFmnprRv0xT] [-e excludedir] -f filename\n",
+			"usage:  %s [-iIDFUmnprRv0xT] [-e excludedir] pathname...\n"
+			"usage:  %s [-iIDFUmnprRv0xT] [-e excludedir] -f filename\n",
 			name, name);
 	} else {
 		fprintf(stderr,
-			"usage:  %s [-diIDlmnpqvCEFWT] [-e excludedir] [-r alt_root_path] [-c policyfile] spec_file pathname...\n"
-			"usage:  %s [-diIDlmnpqvCEFWT] [-e excludedir] [-r alt_root_path] [-c policyfile] spec_file -f filename\n"
-			"usage:  %s -s [-diIDlmnpqvFWT] spec_file\n",
+			"usage:  %s [-diIDlmnpqvCEFUWT] [-e excludedir] [-r alt_root_path] [-c policyfile] spec_file pathname...\n"
+			"usage:  %s [-diIDlmnpqvCEFUWT] [-e excludedir] [-r alt_root_path] [-c policyfile] spec_file -f filename\n"
+			"usage:  %s -s [-diIDlmnpqvFUWT] spec_file\n",
 			name, name, name);
 	}
 	exit(-1);
@@ -146,8 +146,8 @@ int main(int argc, char **argv)
 	size_t buf_len, nthreads = 1;
 	const char *base;
 	int errors = 0;
-	const char *ropts = "e:f:hiIDlmno:pqrsvFRW0xT:";
-	const char *sopts = "c:de:f:hiIDlmno:pqr:svCEFR:W0T:";
+	const char *ropts = "e:f:hiIDlmno:pqrsvFURW0xT:";
+	const char *sopts = "c:de:f:hiIDlmno:pqr:svCEFUR:W0T:";
 	const char *opts;
 	union selinux_callback cb;
 	long unsigned skipped_errors;
@@ -297,6 +297,10 @@ int main(int argc, char **argv)
 		case 'F':
 			r_opts.set_specctx =
 					   SELINUX_RESTORECON_SET_SPECFILE_CTX;
+			break;
+		case 'U':
+			r_opts.set_user_role =
+					   SELINUX_RESTORECON_SET_USER_ROLE;
 			break;
 		case 'm':
 			r_opts.ignore_mounts =
