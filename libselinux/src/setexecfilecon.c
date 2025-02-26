@@ -34,7 +34,7 @@ int setexecfilecon(const char *filename, const char *fallback_type)
 		if (context_type_set(con, fallback_type))
 			goto out;
 		freecon(newcon);
-		newcon = strdup(context_str(con));
+		newcon = context_to_str(con);
 		if (!newcon)
 			goto out;
 	}

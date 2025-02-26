@@ -257,3 +257,8 @@ LIBSELINUX_3.8 {
   global:
     matchpathcon_filespec_add64;
 } LIBSELINUX_3.5;
+
+LIBSELINUX_3.9 {
+  global:
+    context_to_str;
+} LIBSELINUX_3.8;

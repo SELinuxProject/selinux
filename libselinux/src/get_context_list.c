@@ -145,7 +145,7 @@ static int get_context_user(FILE * fp,
 	char *linerole, *linetype;
 	char **new_reachable = NULL;
 	char *usercon_str;
-	const char *usercon_str2;
+	char *usercon_str2;
 	context_t usercon;
 
 	int rc;
@@ -255,7 +255,7 @@ static int get_context_user(FILE * fp,
 			rc = -1;
 			goto out;
 		}
-		usercon_str2 = context_str(usercon);
+		usercon_str2 = context_to_str(usercon);
 		if (!usercon_str2) {
 			context_free(usercon);
 			rc = -1;
@@ -264,6 +264,7 @@ static int get_context_user(FILE * fp,
 
 		/* check whether usercon is already in reachable */
 		if (is_in_reachable(*reachable, usercon_str2)) {
+			free(usercon_str2);
 			context_free(usercon);
 			start = end;
 			continue;
@@ -271,20 +272,18 @@ static int get_context_user(FILE * fp,
 		if (security_check_context(usercon_str2) == 0) {
 			new_reachable = reallocarray(*reachable, *nreachable + 2, sizeof(char *));
 			if (!new_reachable) {
+				free(usercon_str2);
 				context_free(usercon);
 				rc = -1;
 				goto out;
 			}
 			*reachable = new_reachable;
-			new_reachable[*nreachable] = strdup(usercon_str2);
-			if (new_reachable[*nreachable] == NULL) {
-				context_free(usercon);
-				rc = -1;
-				goto out;
-			}
+			new_reachable[*nreachable] = usercon_str2;
+			usercon_str2 = NULL;
 			new_reachable[*nreachable + 1] = 0;
 			*nreachable += 1;
 		}
+		free(usercon_str2);
 		context_free(usercon);
 		start = end;
 	}

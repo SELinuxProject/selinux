@@ -633,7 +633,7 @@ static int compare_portions(const char *curcon, const char *newcon,
 	}
 
 	if (update) {
-		*newtypecon = strdup(context_str(curctx));
+		*newtypecon = context_to_str(curctx);
 		if (!*newtypecon) {
 			rc = -1;
 			goto err;
