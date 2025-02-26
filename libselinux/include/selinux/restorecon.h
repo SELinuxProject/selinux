@@ -128,6 +128,12 @@ extern int selinux_restorecon_parallel(const char *pathname,
  */
 #define SELINUX_RESTORECON_COUNT_ERRORS			0x20000
 
+/*
+ * In addition to the type component also change the user and
+ * role component of security contexts.
+ */
+#define SELINUX_RESTORECON_SET_USER_ROLE		0x40000
+
 /**
  * selinux_restorecon_set_sehandle - Set the global fc handle.
  * @hndl: specifies handle to set as the global fc handle.
