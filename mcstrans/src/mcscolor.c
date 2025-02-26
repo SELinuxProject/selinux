@@ -101,7 +101,7 @@ static int check_dominance(const char *pattern, const char *raw) {
 	ctx = NULL;
 	if (context_range_set(my_tmp, pattern))
 		goto out;
-	ctx = strdup(context_str(my_tmp));
+	ctx = context_to_str(my_tmp);
 	if (!ctx)
 		goto out;
 
