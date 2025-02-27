@@ -5,6 +5,8 @@ SBINDIR ?= $(PREFIX)/sbin
 MANDIR = $(PREFIX)/share/man
 
 CFLAGS ?= -Werror -Wall -W
+override CFLAGS += -I../../libselinux/include -I../../libsemanage/include
+override LDFLAGS+= -L../../libselinux/src     -L../../libsemanage/src
 override LDLIBS += -lsemanage -lsepol $(LIBSELINUX_LDLIBS)
 SEMODULE_OBJS = semodule.o
 

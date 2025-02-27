@@ -24,7 +24,8 @@ VERSION = $(shell cat ../VERSION)
 
 CFLAGS ?= -Werror -Wall -W
 EXTRA_OBJS =
-override CFLAGS += -DVERSION=\"$(VERSION)\" -DUSE_NLS -DLOCALEDIR="\"$(LOCALEDIR)\"" -DPACKAGE="\"policycoreutils\""
+override CFLAGS += -I../../libselinux/include -DVERSION=\"$(VERSION)\" -DUSE_NLS -DLOCALEDIR="\"$(LOCALEDIR)\"" -DPACKAGE="\"policycoreutils\""
+override LDFLAGS+= -L../../libselinux/src
 override LDLIBS += $(LIBSELINUX_LDLIBS)
 ifeq ($(PAMH), y)
 	override CFLAGS += -DUSE_PAM
