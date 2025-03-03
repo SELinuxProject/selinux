@@ -10,7 +10,8 @@ PAMH ?= $(shell test -f /usr/include/security/pam_appl.h && echo y)
 AUDITH ?= $(shell test -f /usr/include/libaudit.h && echo y)
 
 CFLAGS ?= -Werror -Wall -W
-override CFLAGS += -DUSE_NLS -DLOCALEDIR="\"$(LOCALEDIR)\"" -DPACKAGE="\"policycoreutils\""
+override CFLAGS += -I../../libselinux/include -DUSE_NLS -DLOCALEDIR="\"$(LOCALEDIR)\"" -DPACKAGE="\"policycoreutils\""
+override LDFLAGS+= -L../../libselinux/src
 override LDLIBS += -lselinux
 ifeq ($(PAMH), y)
 	override CFLAGS += -DUSE_PAM
