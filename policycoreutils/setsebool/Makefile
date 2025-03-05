@@ -6,6 +6,8 @@ MANDIR = $(PREFIX)/share/man
 BASHCOMPLETIONDIR ?= $(PREFIX)/share/bash-completion/completions
 
 CFLAGS ?= -Werror -Wall -W
+override CFLAGS += -I../../libselinux/include -I../../libsemanage/include
+override LDFLAGS+= -L../../libselinux/src     -L../../libsemanage/src
 override LDLIBS += -lselinux -lsemanage
 SETSEBOOL_OBJS = setsebool.o
 

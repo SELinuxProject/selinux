@@ -261,7 +261,7 @@ int matchpathcon_filespec_add(ino_t ino, int specind, const char *file)
 	return -1;
 }
 
-#if defined(_FILE_OFFSET_BITS) && _FILE_OFFSET_BITS == 64 && __BITS_PER_LONG < 64
+#if defined(_FILE_OFFSET_BITS) && _FILE_OFFSET_BITS == 64 && __BITS_PER_LONG < 64 && !defined(__x86_64__)
 /* alias defined in the public header but we undefine it here */
 #undef matchpathcon_filespec_add
 
@@ -282,7 +282,7 @@ int matchpathcon_filespec_add(unsigned long ino, int specind,
 }
 #else
 
-static_assert(sizeof(unsigned long) == sizeof(ino_t), "inode size mismatch");
+static_assert(sizeof(uint64_t) == sizeof(ino_t), "inode size mismatch");
 
 #endif
 
