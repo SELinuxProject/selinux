@@ -5,6 +5,7 @@ BINDIR ?= $(PREFIX)/bin
 SBINDIR ?= $(PREFIX)/sbin
 MANDIR = $(PREFIX)/share/man
 ETCDIR ?= /etc
+LIBECONFH ?= $(shell test -f /usr/include/libeconf.h && echo y)
 
 CFLAGS ?= -Werror -Wall -W
 override CFLAGS += -D_FILE_OFFSET_BITS=64
@@ -13,6 +14,13 @@ override LDLIBS += -lselinux
 all: sestatus
 
 sestatus: sestatus.o
+ifdef VENDORDIR
+ifneq ($(LIBECONFH), y)
+	(echo "VENDORDIR defined but libeconf not available."; exit 1)
+endif
+override CFLAGS += -DVENDORDIR='"${VENDORDIR}"'
+override LDLIBS += -leconf
+endif
 
 install: all
 	[ -d $(DESTDIR)$(MANDIR)/man8 ] || mkdir -p $(DESTDIR)$(MANDIR)/man8
