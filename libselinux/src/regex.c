@@ -30,32 +30,38 @@
 #endif
 
 #ifdef USE_PCRE2
-char const *regex_arch_string(void)
+static pthread_once_t once = PTHREAD_ONCE_INIT;
+static char arch_string_buffer[32];
+
+static void regex_arch_string_init(void)
 {
-	static char arch_string_buffer[32];
-	static char const *arch_string = "";
-	char const *endianness = NULL;
+	char const *endianness;
 	int rc;
 
-	if (arch_string[0] == '\0') {
-		if (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
-			endianness = "el";
-		else if (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)
-			endianness = "eb";
-
-		if (!endianness)
-			return NULL;
-
-		rc = snprintf(arch_string_buffer, sizeof(arch_string_buffer),
-				"%zu-%zu-%s", sizeof(void *),
-				sizeof(REGEX_ARCH_SIZE_T),
-				endianness);
-		if (rc < 0)
-			abort();
-
-		arch_string = &arch_string_buffer[0];
+	if (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
+		endianness = "el";
+	else if (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)
+		endianness = "eb";
+	else {
+		arch_string_buffer[0] = '\0';
+		return;
 	}
-	return arch_string;
+
+	rc = snprintf(arch_string_buffer, sizeof(arch_string_buffer),
+			"%zu-%zu-%s", sizeof(void *),
+			sizeof(REGEX_ARCH_SIZE_T),
+			endianness);
+	if (rc < 0 || (size_t)rc >= sizeof(arch_string_buffer)) {
+		arch_string_buffer[0] = '\0';
+		return;
+	}
+}
+
+const char *regex_arch_string(void)
+{
+	__selinux_once(once, regex_arch_string_init);
+
+	return arch_string_buffer[0] != '\0' ? arch_string_buffer : NULL;
 }
 
 struct regex_data {
