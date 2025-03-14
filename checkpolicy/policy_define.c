@@ -1700,6 +1700,8 @@ static int define_compute_type_helper(int which, avrule_t ** rule)
 		return -1;
 	}
 
+	ebitmap_init(&tclasses);
+
 	while ((id = queue_remove(id_queue))) {
 		if (set_types(&avrule->stypes, id, &add, 0))
 			goto bad;
@@ -1719,7 +1721,6 @@ static int define_compute_type_helper(int which, avrule_t ** rule)
 			goto bad;
 	}
 
-	ebitmap_init(&tclasses);
 	if (read_classes(&tclasses))
 		goto bad;
 
@@ -1760,6 +1761,7 @@ static int define_compute_type_helper(int which, avrule_t ** rule)
 	return 0;
 
       bad:
+	ebitmap_destroy(&tclasses);
 	avrule_destroy(avrule);
 	free(avrule);
 	return -1;
