@@ -439,6 +439,14 @@ static inline int compile_regex(struct regex_spec *spec, char *errbuf, size_t er
 	reg_buf = spec->regex_str;
 	/* Anchor the regular expression. */
 	len = strlen(reg_buf);
+	/* Use a sufficient large upper bound for regular expression lengths
+	 * to limit the compilation time on malformed inputs. */
+	if (len >= 4096) {
+		__pthread_mutex_unlock(&spec->regex_lock);
+		snprintf(errbuf, errbuf_size, "regex of length %zu too long", len);
+		errno = EINVAL;
+		return -1;
+	}
 	cp = anchored_regex = malloc(len + 3);
 	if (!anchored_regex) {
 		__pthread_mutex_unlock(&spec->regex_lock);
