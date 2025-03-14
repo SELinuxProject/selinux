@@ -1662,7 +1662,7 @@ static struct lookup_result *lookup_check_node(struct spec_node *node, const cha
 		for (uint32_t i = n->regex_specs_num; i > 0; i--) {
 			/* search in reverse order */
 			struct regex_spec *rspec = &n->regex_specs[i - 1];
-			const char *errbuf = NULL;
+			char errbuf[256];
 			int rc;
 
 			if (child_regex_match &&
@@ -1673,7 +1673,7 @@ static struct lookup_result *lookup_check_node(struct spec_node *node, const cha
 			if (file_kind != LABEL_FILE_KIND_ALL && rspec->file_kind != LABEL_FILE_KIND_ALL && file_kind != rspec->file_kind)
 				continue;
 
-			if (compile_regex(rspec, &errbuf) < 0) {
+			if (compile_regex(rspec, errbuf, sizeof(errbuf)) < 0) {
 				COMPAT_LOG(SELINUX_ERROR, "Failed to compile regular expression '%s':  %s\n",
 					   rspec->regex_str, errbuf);
 				goto fail;

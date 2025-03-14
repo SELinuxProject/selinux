@@ -388,15 +388,21 @@ static inline void sort_specs(struct saved_data *data)
 	sort_spec_node(data->root, NULL);
 }
 
-static inline int compile_regex(struct regex_spec *spec, const char **errbuf)
+static inline int compile_regex(struct regex_spec *spec, char *errbuf, size_t errbuf_size)
 {
 	const char *reg_buf;
 	char *anchored_regex, *cp;
 	struct regex_error_data error_data;
-	static char regex_error_format_buffer[256];
 	size_t len;
 	int rc;
 	bool regex_compiled;
+
+	if (!errbuf || errbuf_size == 0) {
+	    errno = EINVAL;
+	    return -1;
+	}
+
+	*errbuf = '\0';
 
 	/* We really want pthread_once() here, but since its
 	 * init_routine does not take a parameter, it's not possible
@@ -435,9 +441,8 @@ static inline int compile_regex(struct regex_spec *spec, const char **errbuf)
 	len = strlen(reg_buf);
 	cp = anchored_regex = malloc(len + 3);
 	if (!anchored_regex) {
-		if (errbuf)
-			*errbuf = "out of memory";
 		__pthread_mutex_unlock(&spec->regex_lock);
+		snprintf(errbuf, errbuf_size, "out of memory");
 		return -1;
 	}
 
@@ -452,12 +457,7 @@ static inline int compile_regex(struct regex_spec *spec, const char **errbuf)
 	rc = regex_prepare_data(&spec->regex, anchored_regex, &error_data);
 	free(anchored_regex);
 	if (rc < 0) {
-		if (errbuf) {
-			regex_format_error(&error_data,
-					regex_error_format_buffer,
-					sizeof(regex_error_format_buffer));
-			*errbuf = &regex_error_format_buffer[0];
-		}
+		regex_format_error(&error_data, errbuf, errbuf_size);
 		__pthread_mutex_unlock(&spec->regex_lock);
 		errno = EINVAL;
 		return -1;
@@ -624,9 +624,9 @@ static int insert_spec(const struct selabel_handle *rec, struct saved_data *data
 		data->num_specs++;
 
 		if (rec->validating) {
-			const char *errbuf = NULL;
+			char errbuf[256];
 
-			if (compile_regex(&node->regex_specs[id], &errbuf)) {
+			if (compile_regex(&node->regex_specs[id], errbuf, sizeof(errbuf))) {
 				COMPAT_LOG(SELINUX_ERROR,
 					   "%s:  line %u has invalid regex %s:  %s\n",
 					   path, lineno, regex, errbuf);
