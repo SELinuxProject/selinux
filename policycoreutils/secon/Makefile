@@ -7,7 +7,8 @@ MANDIR ?= $(PREFIX)/share/man
 WARNS=-Werror -W -Wall -Wundef -Wshadow -Wpointer-arith -Wbad-function-cast -Wcast-align -Wwrite-strings -Waggregate-return -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wno-format-zero-length -Wformat-nonliteral -Wformat-security -Wfloat-equal
 VERSION = $(shell cat ../VERSION)
 CFLAGS ?= $(WARNS) -O1
-override CFLAGS += -DVERSION=\"$(VERSION)\"
+override CFLAGS += -I../../libselinux/include -DVERSION=\"$(VERSION)\"
+override LDFLAGS+= -L../../libselinux/src
 override LDLIBS += -lselinux
 
 all: secon

@@ -2,6 +2,9 @@
 PREFIX ?= /usr
 SBINDIR ?= $(PREFIX)/sbin
 
+override CFLAGS += -I../../libselinux/include
+override LDFLAGS+= -L../../libselinux/src
+
 TARGETS=transcon untranscon
 
 # If no specific libsepol.a is specified, fall back on LDFLAGS search path
