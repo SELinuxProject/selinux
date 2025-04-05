@@ -622,6 +622,23 @@ static int read_from_pipe_to_data(semanage_handle_t *sh, size_t initial_len, int
 	return 0;
 }
 
+// Forward error messages to redirected stderr pipe
+#define ERR_CHILD_STDERR(handle, ...) \
+	{ \
+		char buf[2048]; \
+		int errsv = errno, n; \
+		(void)! write_full(err_fd[PIPE_WRITE], "libsemanage.semanage_pipe_data: ", strlen("libsemanage.semanage_pipe_data: ")); \
+		n = snprintf(buf, sizeof(buf), __VA_ARGS__); \
+		(void)! write_full(err_fd[PIPE_WRITE], buf, n); \
+		if (errsv) { \
+			errno = errsv; \
+			n = snprintf(buf, sizeof(buf), " (%m)."); \
+			(void)! write_full(err_fd[PIPE_WRITE], buf, n); \
+		} \
+		(void)! write_full(err_fd[PIPE_WRITE], "\n", strlen("\n")); \
+		(void)! fsync(err_fd[PIPE_WRITE]); \
+	}
+
 static int semanage_pipe_data(semanage_handle_t *sh, const char *path, const char *in_data, size_t in_data_len, char **out_data, size_t *out_data_len, char **err_data, size_t *err_data_len)
 {
 	int input_fd[2] = {-1, -1};
@@ -673,97 +690,100 @@ static int semanage_pipe_data(semanage_handle_t *sh, const char *path, const cha
 		retval = dup2(input_fd[PIPE_READ], STDIN_FILENO);
 		if (retval == -1) {
 			ERR(sh, "Unable to dup2 input pipe.");
-			goto cleanup;
+			goto child_err;
 		}
 		retval = dup2(output_fd[PIPE_WRITE], STDOUT_FILENO);
 		if (retval == -1) {
 			ERR(sh, "Unable to dup2 output pipe.");
-			goto cleanup;
+			goto child_err;
 		}
 		retval = dup2(err_fd[PIPE_WRITE], STDERR_FILENO);
 		if (retval == -1) {
 			ERR(sh, "Unable to dup2 error pipe.");
-			goto cleanup;
+			goto child_err;
 		}
 
 		retval = close(input_fd[PIPE_WRITE]);
 		if (retval == -1) {
-			ERR(sh, "Unable to close input pipe.");
-			goto cleanup;
+			ERR_CHILD_STDERR(sh, "Unable to close input pipe.");
+			goto child_err;
 		}
 		retval = close(output_fd[PIPE_READ]);
 		if (retval == -1) {
-			ERR(sh, "Unable to close output pipe.");
-			goto cleanup;
+			ERR_CHILD_STDERR(sh, "Unable to close output pipe.");
+			goto child_err;
 		}
 		retval = close(err_fd[PIPE_READ]);
 		if (retval == -1) {
-			ERR(sh, "Unable to close error pipe.");
-			goto cleanup;
+			ERR_CHILD_STDERR(sh, "Unable to close error pipe.");
+			goto child_err;
 		}
-		retval = execl(path, path, NULL);
-		if (retval == -1) {
-			ERR(sh, "Unable to execute %s.", path);
-			_exit(EXIT_FAILURE);
-		}
+		execl(path, path, NULL);
+		ERR_CHILD_STDERR(sh, "Unable to execute %s.", path);
+
+child_err:
+		_exit(EXIT_FAILURE);
 	} else {
+		int any_err = 0;
+
 		retval = close(input_fd[PIPE_READ]);
 		input_fd[PIPE_READ] = -1;
 		if (retval == -1) {
 			ERR(sh, "Unable to close read end of input pipe.");
-			goto cleanup;
+			any_err = 1;
 		}
 
 		retval = close(output_fd[PIPE_WRITE]);
 		output_fd[PIPE_WRITE] = -1;
 		if (retval == -1) {
 			ERR(sh, "Unable to close write end of output pipe.");
-			goto cleanup;
+			any_err = 1;
 		}
 
 		retval = close(err_fd[PIPE_WRITE]);
 		err_fd[PIPE_WRITE] = -1;
 		if (retval == -1) {
 			ERR(sh, "Unable to close write end of error pipe.");
-			goto cleanup;
+			any_err = 1;
 		}
 
 		retval = write_full(input_fd[PIPE_WRITE], in_data, in_data_len);
 		if (retval == -1) {
 			ERR(sh, "Failed to write data to input pipe.");
-			goto cleanup;
+			any_err = 1;
 		}
 		retval = close(input_fd[PIPE_WRITE]);
 		input_fd[PIPE_WRITE] = -1;
 		if (retval == -1) {
 			ERR(sh, "Unable to close write end of input pipe.");
-			goto cleanup;
+			any_err = 1;
 		}
 
 		initial_len = 1 << 17;
 		retval = read_from_pipe_to_data(sh, initial_len, output_fd[PIPE_READ], &data_read, &data_read_len);
 		if (retval != 0) {
-			goto cleanup;
+			any_err = 1;
 		}
 		retval = close(output_fd[PIPE_READ]);
 		output_fd[PIPE_READ] = -1;
 		if (retval == -1) {
 			ERR(sh, "Unable to close read end of output pipe.");
-			goto cleanup;
+			any_err = 1;
 		}
 
 		initial_len = 1 << 9;
 		retval = read_from_pipe_to_data(sh, initial_len, err_fd[PIPE_READ], &err_data_read, &err_data_read_len);
 		if (retval != 0) {
-			goto cleanup;
+			any_err = 1;
 		}
 		retval = close(err_fd[PIPE_READ]);
 		err_fd[PIPE_READ] = -1;
 		if (retval == -1) {
 			ERR(sh, "Unable to close read end of error pipe.");
-			goto cleanup;
+			any_err = 1;
 		}
 
+		errno = ENODATA;
 		if (waitpid(pid, &status, 0) == -1 || !WIFEXITED(status)) {
 			ERR(sh, "Child process %s did not exit cleanly.", path);
 			retval = -1;
@@ -771,6 +791,11 @@ static int semanage_pipe_data(semanage_handle_t *sh, const char *path, const cha
 		}
 		if (WEXITSTATUS(status) != 0) {
 			ERR(sh, "Child process %s failed with code: %d.", path, WEXITSTATUS(status));
+			retval = -1;
+			goto cleanup;
+		}
+
+		if (any_err) {
 			retval = -1;
 			goto cleanup;
 		}
@@ -935,9 +960,13 @@ static int semanage_compile_module(semanage_handle_t *sh,
 				    hll_contents.len, &cil_data, &cil_data_len,
 				    &err_data, &err_data_len);
 	if (err_data_len > 0) {
+		int errsv = errno;
+
+		errno = 0;
+
 		for (start = end = err_data; end < err_data + err_data_len; end++) {
 			if (*end == '\n') {
-				ERR(sh, "%s: %.*s.", modinfo->name, (int)(end - start + 1), start);
+				ERR(sh, "%s: %.*s.", modinfo->name, (int)(end - start), start);
 				start = end + 1;
 			}
 		}
@@ -945,6 +974,8 @@ static int semanage_compile_module(semanage_handle_t *sh,
 		if (end != start) {
 			ERR(sh, "%s: %.*s.", modinfo->name, (int)(end - start), start);
 		}
+
+		errno = errsv;
 	}
 	if (status != 0) {
 		goto cleanup;
