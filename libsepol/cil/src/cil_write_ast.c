@@ -1624,6 +1624,10 @@ static int __write_cil_ast_node_helper(struct cil_tree_node *node, uint32_t *fin
 
 	if (node->flavor == CIL_SRC_INFO) {
 		cil_write_src_info_node(args->out, node);
+
+		if (node->cl_head == NULL) {
+			fprintf(args->out, ";;* lme\n");
+		}
 		return SEPOL_OK;
 	}
 
