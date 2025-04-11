@@ -945,6 +945,8 @@ int policydb_init(policydb_t * p)
 	ebitmap_init(&p->policycaps);
 	ebitmap_init(&p->permissive_map);
 
+	p->line_marker_avrules = AVRULE_NEVERALLOW|AVRULE_XPERMS_NEVERALLOW;
+
 	return 0;
 err:
 	hashtab_destroy(p->filename_trans);
