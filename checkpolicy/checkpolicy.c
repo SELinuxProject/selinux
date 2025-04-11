@@ -107,7 +107,7 @@ static __attribute__((__noreturn__)) void usage(const char *progname)
 	printf
 	    ("usage:  %s [-b[F]] [-C] [-d] [-U handle_unknown (allow,deny,reject)] [-M] "
 	     "[-N] [-c policyvers (%d-%d)] [-o output_file|-] [-S] [-O] "
-	     "[-t target_platform (selinux,xen)] [-E] [-V] [input_file]\n",
+	     "[-t target_platform (selinux,xen)] [-E] [-V] [-L] [input_file]\n",
 	     progname, POLICYDB_VERSION_MIN, POLICYDB_VERSION_MAX);
 	exit(1);
 }
@@ -390,6 +390,7 @@ int main(int argc, char **argv)
 	unsigned int i;
 	unsigned int protocol, port;
 	unsigned int binary = 0, debug = 0, sort = 0, cil = 0, conf = 0, optimize = 0, disable_neverallow = 0;
+	unsigned int line_marker_for_allow = 0;
 	struct val_to_name v;
 	int ret, ch, fd, target = SEPOL_TARGET_SELINUX;
 	unsigned int policyvers = 0;
@@ -418,11 +419,12 @@ int main(int argc, char **argv)
 		{"sort", no_argument, NULL, 'S'},
 		{"optimize", no_argument, NULL, 'O'},
 		{"werror", no_argument, NULL, 'E'},
+		{"line-marker-for-allow", no_argument, NULL, 'L'},
 		{"help", no_argument, NULL, 'h'},
 		{NULL, 0, NULL, 0}
 	};
 
-	while ((ch = getopt_long(argc, argv, "o:t:dbU:MNCFSVc:OEh", long_options, NULL)) != -1) {
+	while ((ch = getopt_long(argc, argv, "o:t:dbU:MNCFSVc:OELh", long_options, NULL)) != -1) {
 		switch (ch) {
 		case 'o':
 			outfile = optarg;
@@ -506,6 +508,9 @@ int main(int argc, char **argv)
 		case 'E':
 			 werror = 1;
 			 break;
+		case 'L':
+			line_marker_for_allow = 1;
+			break;
 		case 'h':
 		default:
 			usage(argv[0]);
@@ -532,6 +537,11 @@ int main(int argc, char **argv)
 
 	if (cil && conf) {
 		fprintf(stderr, "Can't convert to CIL and policy.conf at the same time\n");
+		exit(1);
+	}
+
+	if (line_marker_for_allow && !cil) {
+		fprintf(stderr, "Must convert to CIL for line markers to be printed\n");
 		exit(1);
 	}
 
@@ -690,6 +700,9 @@ int main(int argc, char **argv)
 				exit(1);
 			}
 		} else {
+			if (line_marker_for_allow) {
+				policydbp->line_marker_avrules |= AVRULE_ALLOWED | AVRULE_XPERMS_ALLOWED;
+			}
 			if (binary) {
 				ret = sepol_kernel_policydb_to_cil(outfp, policydbp);
 			} else {
