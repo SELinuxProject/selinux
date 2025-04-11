@@ -6164,6 +6164,7 @@ static int check_for_illegal_statement(struct cil_tree_node *parse_current, stru
 			parse_current->data != CIL_KEY_AUDITALLOW &&
 			parse_current->data != CIL_KEY_TYPETRANSITION &&
 			parse_current->data != CIL_KEY_TYPECHANGE &&
+			parse_current->data != CIL_KEY_SRC_INFO &&
 			parse_current->data != CIL_KEY_TYPEMEMBER &&
 			((args->db->policy_version < POLICYDB_VERSION_COND_XPERMS) ||
 			  (parse_current->data != CIL_KEY_ALLOWX &&

@@ -3849,6 +3849,7 @@ static int __cil_resolve_ast_node_helper(struct cil_tree_node *node, uint32_t *f
 			node->flavor != CIL_AVRULE &&
 			node->flavor != CIL_TYPE_RULE &&
 			node->flavor != CIL_NAMETYPETRANSITION &&
+			node->flavor != CIL_SRC_INFO &&
 			((args->db->policy_version < POLICYDB_VERSION_COND_XPERMS) ||
 			 (node->flavor != CIL_AVRULEX))) {
 			rc = SEPOL_ERR;
