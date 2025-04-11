@@ -119,7 +119,7 @@ static int write_binary_policy(policydb_t * p, FILE *outfp, unsigned int policy_
 
 static __attribute__((__noreturn__)) void usage(const char *progname)
 {
-	printf("usage:  %s [-h] [-V] [-b] [-C] [-E] [-U handle_unknown] [-m] [-M] [-N] [-o FILE] [-c VERSION] [INPUT]\n", progname);
+	printf("usage:  %s [-h] [-V] [-b] [-C] [-E] [-U handle_unknown] [-m] [-M] [-N] [-L] [-o FILE] [-c VERSION] [INPUT]\n", progname);
 	printf("Build base and policy modules.\n");
 	printf("Options:\n");
 	printf("  INPUT      build module from INPUT (else read from \"%s\")\n",
@@ -136,6 +136,7 @@ static __attribute__((__noreturn__)) void usage(const char *progname)
 	printf("  -m         build a policy module instead of a base module\n");
 	printf("  -M         enable MLS policy\n");
 	printf("  -N         do not check neverallow rules\n");
+	printf("  -L         output line markers for allow rules\n");
 	printf("  -o FILE    write module to FILE (else just check syntax)\n");
 	printf("  -c VERSION build a policy module targeting a modular policy version (%d-%d)\n",
 	       MOD_POLICYDB_VERSION_MIN, MOD_POLICYDB_VERSION_MAX);
@@ -146,6 +147,7 @@ int main(int argc, char **argv)
 {
 	const char *file = txtfile, *outfile = NULL;
 	unsigned int binary = 0, cil = 0, disable_neverallow = 0;
+	unsigned int line_marker_for_allow = 0;
 	unsigned int policy_type = POLICY_BASE;
 	unsigned int policyvers = MOD_POLICYDB_VERSION_MAX;
 	int ch;
@@ -159,12 +161,13 @@ int main(int argc, char **argv)
 		{"handle-unknown", required_argument, NULL, 'U'},
 		{"mls", no_argument, NULL, 'M'},
 		{"disable-neverallow", no_argument, NULL, 'N'},
+		{"line-marker-for-allow", no_argument, NULL, 'L'},
 		{"cil", no_argument, NULL, 'C'},
 		{"werror", no_argument, NULL, 'E'},
 		{NULL, 0, NULL, 0}
 	};
 
-	while ((ch = getopt_long(argc, argv, "ho:bVEU:mMNCc:", long_options, NULL)) != -1) {
+	while ((ch = getopt_long(argc, argv, "ho:bVEU:mMNCc:L", long_options, NULL)) != -1) {
 		switch (ch) {
 		case 'h':
 			usage(argv[0]);
@@ -231,6 +234,9 @@ int main(int argc, char **argv)
 			policyvers = n;
 			break;
 		}
+		case 'L':
+			line_marker_for_allow = 1;
+			break;
 		default:
 			usage(argv[0]);
 		}
@@ -249,6 +255,11 @@ int main(int argc, char **argv)
 
 	if (binary && (policy_type != POLICY_BASE)) {
 		fprintf(stderr, "%s:  -b and -m are incompatible with each other.\n", argv[0]);
+		exit(1);
+	}
+
+	if (line_marker_for_allow && !cil) {
+		fprintf(stderr, "%s:  -L must be used along with -C.\n", argv[0]);
 		exit(1);
 	}
 
@@ -347,6 +358,9 @@ int main(int argc, char **argv)
 				exit(1);
 			}
 		} else {
+			if (line_marker_for_allow) {
+				modpolicydb.line_marker_avrules |= AVRULE_ALLOWED | AVRULE_XPERMS_ALLOWED;
+			}
 			if (sepol_module_policydb_to_cil(outfp, &modpolicydb, 0) != 0) {
 				fprintf(stderr, "%s:  error writing %s\n", argv[0], outfile);
 				exit(1);
