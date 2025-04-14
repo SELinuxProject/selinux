@@ -64,6 +64,9 @@
 #define PIPE_READ 0
 #define PIPE_WRITE 1
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
+#if !defined(__GLIBC__)
+#define basename(src) (strrchr(src, '/') ? strrchr(src, '/') + 1 : src)
+#endif
 
 static void semanage_direct_destroy(semanage_handle_t * sh);
 static int semanage_direct_disconnect(semanage_handle_t * sh);
