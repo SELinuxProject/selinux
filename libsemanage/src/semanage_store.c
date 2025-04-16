@@ -1823,8 +1823,11 @@ static int semanage_commit_sandbox(semanage_handle_t * sh)
 
       cleanup:
 	semanage_release_active_lock(sh);
-	sehandle = selinux_restorecon_default_handle();
-	selinux_restorecon_set_sehandle(sehandle);
+
+	if (sh->conf->relabel_store) {
+		sehandle = selinux_restorecon_default_handle();
+		selinux_restorecon_set_sehandle(sehandle);
+	}
 	return retval;
 }
 
