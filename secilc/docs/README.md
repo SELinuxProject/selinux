@@ -131,6 +131,7 @@ CIL (Common Intermediate Language)
   * [typemember](cil_type_statements.md#typemember)
   * [typetransition](cil_type_statements.md#typetransition)
   * [typepermissive](cil_type_statements.md#typepermissive)
+  * [typeneveraudit](cil_type_statements.md#typeneveraudit)
 
 * [User Statements](cil_user_statements.md#user-statements)
   * [user](cil_user_statements.md#user)
