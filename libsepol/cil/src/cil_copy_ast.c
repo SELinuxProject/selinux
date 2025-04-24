@@ -608,6 +608,20 @@ int cil_copy_typepermissive(__attribute__((unused)) struct cil_db *db, void *dat
 	return SEPOL_OK;
 }
 
+int cil_copy_typeunconfined(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+{
+	struct cil_typeunconfined *orig = data;
+	struct cil_typeunconfined *new = NULL;
+
+	cil_typeunconfined_init(&new);
+
+	new->type_str = orig->type_str;
+
+	*copy = new;
+
+	return SEPOL_OK;
+}
+
 int cil_copy_typeattribute(__attribute__((unused)) struct cil_db *db, __attribute__((unused)) void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_typeattribute *new;
@@ -1806,6 +1820,9 @@ static int __cil_copy_node_helper(struct cil_tree_node *orig, uint32_t *finished
 		break;
 	case CIL_TYPEPERMISSIVE:
 		copy_func = cil_copy_typepermissive;
+		break;
+	case CIL_TYPEUNCONFINED:
+		copy_func = cil_copy_typeunconfined;
 		break;
 	case CIL_TYPEATTRIBUTE:
 		copy_func = &cil_copy_typeattribute;

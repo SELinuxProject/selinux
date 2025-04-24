@@ -564,6 +564,27 @@ exit:
 
 }
 
+int cil_typeunconfined_to_policydb(policydb_t *pdb, struct cil_typeunconfined *cil_typeperm)
+{
+	int rc = SEPOL_ERR;
+	type_datum_t *sepol_type = NULL;
+
+	rc = __cil_get_sepol_type_datum(pdb, DATUM(cil_typeperm->type), &sepol_type);
+	if (rc != SEPOL_OK) goto exit;
+
+	if (ebitmap_set_bit(&pdb->unconfined_map, sepol_type->s.value, 1)) {
+		goto exit;
+	}
+
+	return SEPOL_OK;
+
+exit:
+	type_datum_destroy(sepol_type);
+	free(sepol_type);
+	return rc;
+
+}
+
 int cil_typeattribute_to_policydb(policydb_t *pdb, struct cil_typeattribute *cil_attr, void *type_value_to_cil[])
 {
 	int rc = SEPOL_ERR;
@@ -4100,6 +4121,9 @@ static int __cil_node_to_policydb(struct cil_tree_node *node, void *extra_args)
 			break;
 		case CIL_TYPEPERMISSIVE:
 			rc = cil_typepermissive_to_policydb(pdb, node->data);
+			break;
+		case CIL_TYPEUNCONFINED:
+			rc = cil_typeunconfined_to_policydb(pdb, node->data);
 			break;
 		case CIL_TYPEATTRIBUTE:
 			rc = cil_typeattribute_to_bitmap(pdb, db, node->data);

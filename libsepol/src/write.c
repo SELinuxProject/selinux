@@ -1261,6 +1261,10 @@ static int type_write(hashtab_key_t key, hashtab_datum_t datum, void *ptr)
 		    && p->policy_type != POLICY_KERN)
 			properties |= TYPEDATUM_PROPERTY_PERMISSIVE;
 
+		if (typdatum->flags & TYPE_FLAGS_UNCONFINED
+		    && p->policy_type != POLICY_KERN)
+			properties |= TYPEDATUM_PROPERTY_UNCONFINED;
+
 		buf[items++] = cpu_to_le32(properties);
 		buf[items++] = cpu_to_le32(typdatum->bounds);
 	} else {
@@ -1269,13 +1273,23 @@ static int type_write(hashtab_key_t key, hashtab_datum_t datum, void *ptr)
 		if (p->policy_type != POLICY_KERN) {
 			buf[items++] = cpu_to_le32(typdatum->flavor);
 
-			if (p->policyvers >= MOD_POLICYDB_VERSION_PERMISSIVE)
+			if (p->policyvers >= MOD_POLICYDB_VERSION_UNCONFINED)
 				buf[items++] = cpu_to_le32(typdatum->flags);
-			else if (typdatum->flags & TYPE_FLAGS_PERMISSIVE)
-				WARN(fp->handle, "Warning! Module policy "
-				     "version %d cannot support permissive "
-				     "types, but one was defined",
-				     p->policyvers);
+			else {
+				if (typdatum->flags & TYPE_FLAGS_UNCONFINED)
+					WARN(fp->handle, "Warning! Module policy "
+						"version %d cannot support unconfined "
+						"types, but one was defined",
+						p->policyvers);
+
+				if (p->policyvers >= MOD_POLICYDB_VERSION_PERMISSIVE)
+					buf[items++] = cpu_to_le32(typdatum->flags & TYPE_FLAGS_UNCONFINED);
+				else if (typdatum->flags & TYPE_FLAGS_PERMISSIVE)
+					WARN(fp->handle, "Warning! Module policy "
+						"version %d cannot support permissive "
+						"types, but one was defined",
+						p->policyvers);
+			}
 		}
 	}
 	items2 = put_entry(buf, sizeof(uint32_t), items, fp);
@@ -2332,9 +2346,27 @@ int policydb_write(policydb_t * p, struct policy_file *fp)
 		}
 	}
 
+	if (p->policyvers < POLICYDB_VERSION_UNCONFINED &&
+	    p->policy_type == POLICY_KERN) {
+		ebitmap_node_t *tnode;
+
+		ebitmap_for_each_positive_bit(&p->unconfined_map, tnode, i) {
+			WARN(fp->handle, "Warning! Policy version %d cannot "
+			     "support unconfined types, but some were defined",
+			     p->policyvers);
+			break;
+		}
+	}
+
 	if (p->policyvers >= POLICYDB_VERSION_PERMISSIVE &&
 	    p->policy_type == POLICY_KERN) {
 		if (ebitmap_write(&p->permissive_map, fp) == -1)
+			return POLICYDB_ERROR;
+	}
+
+	if (p->policyvers >= POLICYDB_VERSION_UNCONFINED &&
+	    p->policy_type == POLICY_KERN) {
+		if (ebitmap_write(&p->unconfined_map, fp) == -1)
 			return POLICYDB_ERROR;
 	}
 

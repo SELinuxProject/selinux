@@ -624,6 +624,34 @@ exit:
 	return rc;
 }
 
+int cil_resolve_typeunconfined(struct cil_tree_node *current, struct cil_db *db)
+{
+	struct cil_typeunconfined *typeperm = current->data;
+	struct cil_symtab_datum *type_datum = NULL;
+	struct cil_tree_node *type_node = NULL;
+	int rc = SEPOL_ERR;
+
+	rc = cil_resolve_name(current, typeperm->type_str, CIL_SYM_TYPES, db, &type_datum);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+
+	type_node = NODE(type_datum);
+
+	if (type_node->flavor != CIL_TYPE && type_node->flavor != CIL_TYPEALIAS) {
+		cil_log(CIL_ERR, "Typeunconfined must be a type or type alias\n");
+		rc = SEPOL_ERR;
+		goto exit;
+	}
+
+	typeperm->type = type_datum;
+
+	return SEPOL_OK;
+
+exit:
+	return rc;
+}
+
 int cil_resolve_nametypetransition(struct cil_tree_node *current, struct cil_db *db)
 {
 	struct cil_nametypetransition *nametypetrans = current->data;
@@ -3651,6 +3679,9 @@ static int __cil_resolve_ast_node(struct cil_tree_node *node, struct cil_args_re
 			break;
 		case CIL_TYPEPERMISSIVE:
 			rc = cil_resolve_typepermissive(node, db);
+			break;
+		case CIL_TYPEUNCONFINED:
+			rc = cil_resolve_typeunconfined(node, db);
 			break;
 		case CIL_NAMETYPETRANSITION:
 			rc = cil_resolve_nametypetransition(node, db);

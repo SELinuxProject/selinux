@@ -170,6 +170,12 @@ static int type_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 			return -1;
 		}
 
+	if (new_type->flags & TYPE_FLAGS_UNCONFINED)
+		if (ebitmap_set_bit(&state->out->unconfined_map, new_type->s.value, 1)) {
+			ERR(state->handle, "Out of memory!");
+			return -1;
+		}
+
 	return 0;
 }
 
@@ -728,6 +734,12 @@ static int alias_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 
 	if (new_alias->flags & TYPE_FLAGS_PERMISSIVE)
 		if (ebitmap_set_bit(&state->out->permissive_map, new_alias->s.value, 1)) {
+			ERR(state->handle, "Out of memory!");
+			return -1;
+		}
+
+	if (new_alias->flags & TYPE_FLAGS_UNCONFINED)
+		if (ebitmap_set_bit(&state->out->unconfined_map, new_alias->s.value, 1)) {
 			ERR(state->handle, "Out of memory!");
 			return -1;
 		}

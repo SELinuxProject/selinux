@@ -137,6 +137,18 @@ int cil_typealias_to_policydb(policydb_t *pdb, struct cil_alias *cil_alias);
 int cil_typepermissive_to_policydb(policydb_t *pdb, struct cil_typepermissive *cil_typeperm);
 
 /**
+ * Insert cil typeunconfined structure into sepol policydb.
+ * The function looks up the previously inserted type and flips the bit
+ * in the unconfined types bitmap that corresponds to that type's value.
+ *
+ * @param[in] pdb The policy database to insert the typeunconfined into.
+ * @param[in] datum The cil_typeunconfined datum.
+ *
+ * @return SEPOL_OK upon success or an error otherwise.
+ */
+int cil_typeunconfined_to_policydb(policydb_t *pdb, struct cil_typeunconfined *cil_typeperm);
+
+/**
  * Insert cil attribute structure into sepol policydb.
  *
  * @param[in] pdb The policy database to insert the attribute into.

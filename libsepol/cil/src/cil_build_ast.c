@@ -3374,6 +3374,50 @@ void cil_destroy_typepermissive(struct cil_typepermissive *typeperm)
 	free(typeperm);
 }
 
+int cil_gen_typeunconfined(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node)
+{
+	enum cil_syntax syntax[] = {
+		CIL_SYN_STRING,
+		CIL_SYN_STRING,
+		CIL_SYN_END
+	};
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
+	struct cil_typeunconfined *typeperm = NULL;
+	int rc = SEPOL_ERR;
+
+	if (db == NULL || parse_current == NULL || ast_node == NULL) {
+		goto exit;
+	}
+
+	rc = __cil_verify_syntax(parse_current, syntax, syntax_len);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+
+	cil_typeunconfined_init(&typeperm);
+
+	typeperm->type_str = parse_current->next->data;
+
+	ast_node->data = typeperm;
+	ast_node->flavor = CIL_TYPEUNCONFINED;
+
+	return SEPOL_OK;
+
+exit:
+	cil_tree_log(parse_current, CIL_ERR, "Bad typeunconfined declaration");
+	cil_destroy_typeunconfined(typeperm);
+	return rc;
+}
+
+void cil_destroy_typeunconfined(struct cil_typeunconfined *typeperm)
+{
+	if (typeperm == NULL) {
+		return;
+	}
+
+	free(typeperm);
+}
+
 int cil_gen_typetransition(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node)
 {
 	int rc = SEPOL_ERR;
@@ -6255,6 +6299,8 @@ static struct cil_tree_node * parse_statement(struct cil_db *db, struct cil_tree
 		rc = cil_gen_bounds(db, parse_current, new_ast_node, CIL_TYPE);
 	} else if (parse_current->data == CIL_KEY_TYPEPERMISSIVE) {
 		rc = cil_gen_typepermissive(db, parse_current, new_ast_node);
+	} else if (parse_current->data == CIL_KEY_TYPEUNCONFINED) {
+		rc = cil_gen_typeunconfined(db, parse_current, new_ast_node);
 	} else if (parse_current->data == CIL_KEY_RANGETRANSITION) {
 		rc = cil_gen_rangetransition(db, parse_current, new_ast_node);
 	} else if (parse_current->data == CIL_KEY_ROLE) {

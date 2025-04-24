@@ -1690,6 +1690,48 @@ exit:
 	return rc;
 }
 
+static int write_type_unconfined_rules_to_conf(FILE *out, struct policydb *pdb)
+{
+	struct strs *strs;
+	char *name;
+	struct ebitmap_node *node;
+	unsigned i, num;
+	int rc = 0;
+
+	rc = strs_init(&strs, pdb->p_types.nprim);
+	if (rc != 0) {
+		goto exit;
+	}
+
+	ebitmap_for_each_positive_bit(&pdb->unconfined_map, node, i) {
+		rc = strs_add(strs, pdb->p_type_val_to_name[i-1]);
+		if (rc != 0) {
+			goto exit;
+		}
+	}
+
+	strs_sort(strs);
+
+	num = strs_num_items(strs);
+	for (i=0; i<num; i++) {
+		name = strs_read_at_index(strs, i);
+		if (!name) {
+			rc = -1;
+			goto exit;
+		}
+		sepol_printf(out, "unconfined %s;\n", name);
+	}
+
+exit:
+	strs_destroy(&strs);
+
+	if (rc != 0) {
+		ERR(NULL, "Error writing typeunconfined rules to policy.conf");
+	}
+
+	return rc;
+}
+
 static char *avtab_node_to_str(struct policydb *pdb, avtab_key_t *key, avtab_datum_t *datum)
 {
 	uint32_t data = datum->data;
@@ -3213,6 +3255,11 @@ int sepol_kernel_policydb_to_conf(FILE *out, struct policydb *pdb)
 	}
 
 	rc = write_type_permissive_rules_to_conf(out, pdb);
+	if (rc != 0) {
+		goto exit;
+	}
+
+	rc = write_type_unconfined_rules_to_conf(out, pdb);
 	if (rc != 0) {
 		goto exit;
 	}

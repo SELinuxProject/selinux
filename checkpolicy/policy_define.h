@@ -45,6 +45,7 @@ int define_ipv6_cidr_node_context(void);
 int define_level(void);
 int define_netif_context(void);
 int define_permissive(void);
+int define_unconfined(void);
 int define_polcap(void);
 int define_ibpkey_context(unsigned int low, unsigned int high);
 int define_ibendport_context(unsigned int port);

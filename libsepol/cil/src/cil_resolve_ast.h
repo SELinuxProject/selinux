@@ -46,6 +46,7 @@ int cil_resolve_typeattributeset(struct cil_tree_node *current, struct cil_db *d
 int cil_resolve_typealias(struct cil_tree_node *current, struct cil_db *db);
 int cil_resolve_typebounds(struct cil_tree_node *current, struct cil_db *db);
 int cil_resolve_typepermissive(struct cil_tree_node *current, struct cil_db *db);
+int cil_resolve_typeunconfined(struct cil_tree_node *current, struct cil_db *db);
 int cil_resolve_nametypetransition(struct cil_tree_node *current, struct cil_db *db);
 int cil_resolve_rangetransition(struct cil_tree_node *current, struct cil_db *db);
 int cil_resolve_classcommon(struct cil_tree_node *current, struct cil_db *db);

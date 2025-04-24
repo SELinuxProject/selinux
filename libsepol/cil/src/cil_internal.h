@@ -188,6 +188,7 @@ extern char *CIL_KEY_TYPEALIAS;
 extern char *CIL_KEY_TYPEALIASACTUAL;
 extern char *CIL_KEY_TYPEBOUNDS;
 extern char *CIL_KEY_TYPEPERMISSIVE;
+extern char *CIL_KEY_TYPEUNCONFINED;
 extern char *CIL_KEY_RANGETRANSITION;
 extern char *CIL_KEY_USERROLE;
 extern char *CIL_KEY_ROLETYPE;
@@ -576,6 +577,11 @@ struct cil_expandtypeattribute {
 };
 
 struct cil_typepermissive {
+	char *type_str;
+	void *type; /* type or alias */
+};
+
+struct cil_typeunconfined {
 	char *type_str;
 	void *type; /* type or alias */
 };
@@ -1045,6 +1051,7 @@ void cil_expandtypeattribute_init(struct cil_expandtypeattribute **expandattr);
 void cil_alias_init(struct cil_alias **alias);
 void cil_aliasactual_init(struct cil_aliasactual **aliasactual);
 void cil_typepermissive_init(struct cil_typepermissive **typeperm);
+void cil_typeunconfined_init(struct cil_typeunconfined **typeperm);
 void cil_nametypetransition_init(struct cil_nametypetransition **nametypetrans);
 void cil_rangetransition_init(struct cil_rangetransition **rangetrans);
 void cil_bool_init(struct cil_bool **cilbool);

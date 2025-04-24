@@ -171,6 +171,7 @@ char *CIL_KEY_TYPEALIAS;
 char *CIL_KEY_TYPEALIASACTUAL;
 char *CIL_KEY_TYPEBOUNDS;
 char *CIL_KEY_TYPEPERMISSIVE;
+char *CIL_KEY_TYPEUNCONFINED;
 char *CIL_KEY_RANGETRANSITION;
 char *CIL_KEY_USERROLE;
 char *CIL_KEY_ROLETYPE;
@@ -320,6 +321,7 @@ static void cil_init_keys(void)
 	CIL_KEY_TYPEALIASACTUAL = cil_strpool_add("typealiasactual");
 	CIL_KEY_TYPEBOUNDS = cil_strpool_add("typebounds");
 	CIL_KEY_TYPEPERMISSIVE = cil_strpool_add("typepermissive");
+	CIL_KEY_TYPEUNCONFINED = cil_strpool_add("typeunconfined");
 	CIL_KEY_RANGETRANSITION = cil_strpool_add("rangetransition");
 	CIL_KEY_USERROLE = cil_strpool_add("userrole");
 	CIL_KEY_ROLETYPE = cil_strpool_add("roletype");
@@ -939,6 +941,9 @@ void cil_destroy_data(void **data, enum cil_flavor flavor)
 	case CIL_TYPEPERMISSIVE:
 		cil_destroy_typepermissive(*data);
 		break;
+	case CIL_TYPEUNCONFINED:
+		cil_destroy_typeunconfined(*data);
+		break;
 	case CIL_SENS:
 		cil_destroy_sensitivity(*data);
 		break;
@@ -1310,6 +1315,8 @@ const char * cil_node_to_string(struct cil_tree_node *node)
 		return CIL_KEY_TYPEBOUNDS;
 	case CIL_TYPEPERMISSIVE:
 		return CIL_KEY_TYPEPERMISSIVE;
+	case CIL_TYPEUNCONFINED:
+		return CIL_KEY_TYPEUNCONFINED;
 	case CIL_SENS:
 		return CIL_KEY_SENSITIVITY;
 	case CIL_SENSALIAS:
@@ -2444,6 +2451,14 @@ void cil_aliasactual_init(struct cil_aliasactual **aliasactual)
 }
 
 void cil_typepermissive_init(struct cil_typepermissive **typeperm)
+{
+	*typeperm = cil_malloc(sizeof(**typeperm));
+
+	(*typeperm)->type_str = NULL;
+	(*typeperm)->type = NULL;
+}
+
+void cil_typeunconfined_init(struct cil_typeunconfined **typeperm)
 {
 	*typeperm = cil_malloc(sizeof(**typeperm));
 

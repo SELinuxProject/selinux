@@ -2277,6 +2277,10 @@ static int type_to_cil(int indent, struct policydb *pdb, struct avrule_block *UN
 			cil_println(indent, "(typepermissive %s)", key);
 		}
 
+		if (type->flags & TYPE_FLAGS_UNCONFINED) {
+			cil_println(indent, "(typeunconfined %s)", key);
+		}
+
 		if (type->bounds > 0) {
 			cil_println(indent, "(typebounds %s %s)", pdb->p_type_val_to_name[type->bounds - 1], key);
 		}

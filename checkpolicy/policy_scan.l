@@ -270,6 +270,8 @@ policycap |
 POLICYCAP			{ return(POLICYCAP); }
 permissive |
 PERMISSIVE			{ return(PERMISSIVE); }
+unconfined |
+UNCONFINED			{ return(UNCONFINED); }
 default_user |
 DEFAULT_USER			{ return(DEFAULT_USER); }
 default_role |

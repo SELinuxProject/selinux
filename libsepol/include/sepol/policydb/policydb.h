@@ -188,6 +188,7 @@ typedef struct type_datum {
 #define TYPE_FLAGS_EXPAND_ATTR_FALSE	(1 << 2)
 #define TYPE_FLAGS_EXPAND_ATTR (TYPE_FLAGS_EXPAND_ATTR_TRUE | \
 				TYPE_FLAGS_EXPAND_ATTR_FALSE)
+#define TYPE_FLAGS_UNCONFINED		(1 << 3)
 	uint32_t flags;
 	uint32_t bounds;	/* bounds type, if exist */
 } type_datum_t;
@@ -200,6 +201,7 @@ typedef struct type_datum {
 #define TYPEDATUM_PROPERTY_ATTRIBUTE	0x0002
 #define TYPEDATUM_PROPERTY_ALIAS	0x0004	/* userspace only */
 #define TYPEDATUM_PROPERTY_PERMISSIVE	0x0008	/* userspace only */
+#define TYPEDATUM_PROPERTY_UNCONFINED	0x0010	/* userspace only */
 
 /* User attributes */
 typedef struct user_datum {
@@ -607,6 +609,9 @@ typedef struct policydb {
 	   bitmaps.  Someday the 0 bit may be used for global permissive */
 	ebitmap_t permissive_map;
 
+	/* ditto */
+	ebitmap_t unconfined_map;
+
 	unsigned policyvers;
 
 	unsigned handle_unknown;
@@ -760,10 +765,11 @@ extern int policydb_set_target_platform(policydb_t *p, int platform);
 #define POLICYDB_VERSION_GLBLUB		32
 #define POLICYDB_VERSION_COMP_FTRANS	33 /* compressed filename transitions */
 #define POLICYDB_VERSION_COND_XPERMS	34 /* extended permissions in conditional policies */
+#define POLICYDB_VERSION_UNCONFINED	35 /* unconfined domains */
 
 /* Range of policy versions we understand*/
 #define POLICYDB_VERSION_MIN	POLICYDB_VERSION_BASE
-#define POLICYDB_VERSION_MAX	POLICYDB_VERSION_COND_XPERMS
+#define POLICYDB_VERSION_MAX	POLICYDB_VERSION_UNCONFINED
 
 /* Module versions and specific changes*/
 #define MOD_POLICYDB_VERSION_BASE		4
@@ -787,9 +793,10 @@ extern int policydb_set_target_platform(policydb_t *p, int platform);
 #define MOD_POLICYDB_VERSION_GLBLUB		20
 #define MOD_POLICYDB_VERSION_SELF_TYPETRANS	21
 #define MOD_POLICYDB_VERSION_COND_XPERMS	22
+#define MOD_POLICYDB_VERSION_UNCONFINED		23
 
 #define MOD_POLICYDB_VERSION_MIN MOD_POLICYDB_VERSION_BASE
-#define MOD_POLICYDB_VERSION_MAX MOD_POLICYDB_VERSION_COND_XPERMS
+#define MOD_POLICYDB_VERSION_MAX MOD_POLICYDB_VERSION_UNCONFINED
 
 #define POLICYDB_CONFIG_MLS    1
 
