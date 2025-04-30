@@ -57,6 +57,7 @@ void yyfatal(const char *msg)
 #endif
 
 void set_source_file(const char *name);
+static void set_source_line_and_file(const char *line);
 
 char source_file[PATH_MAX];
 unsigned long source_lineno = 1;
@@ -297,7 +298,7 @@ GLBLUB				{ return(GLBLUB); }
 {hexval}{0,4}":"{hexval}{0,4}":"({hexval}|[:.])*  { return(IPV6_ADDR); }
 {hexval}{0,4}":"{hexval}{0,4}":"({hexval}|[:.])*"/"{digit}{1,3}	{ return(IPV6_CIDR); }
 {digit}+(\.({alnum}|[_.])*)?    { return(VERSION_IDENTIFIER); }
-#line[ ]1[ ]\"[^\n]*\"		{ set_source_file(yytext+9); }
+#line[ ]{digit}+[ ]\"[^\n]*\"	{ set_source_line_and_file(yytext+6); }
 #line[ ]{digit}+	        {
 				  errno = 0;
 				  source_lineno = strtoul(yytext+6, NULL, 10) - 1;
@@ -394,4 +395,22 @@ void set_source_file(const char *name)
 	source_file[sizeof(source_file)-1] = '\0';
 	if (strlen(source_file) && source_file[strlen(source_file)-1] == '"')
 		source_file[strlen(source_file)-1] = '\0';
+}
+
+void set_source_line_and_file(const char *line)
+{
+	char *name;
+	unsigned long lineno;
+	errno = 0;
+	lineno = strtoul(line, &name, 10) - 1;
+	if (errno) {
+		yywarn("source line number too big");
+	}
+	set_source_file(name + 2 /* skip a space and a quote */ );
+
+	/*
+	 * set_source_file sets source_lineno to 1.
+	 * Assign source_lineno after calling set_source_file.
+	 */
+	source_lineno = lineno;
 }
