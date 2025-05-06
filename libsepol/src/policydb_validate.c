@@ -593,7 +593,9 @@ static int validate_type_datum(sepol_handle_t *handle, const type_datum_t *type,
 
 	switch (type->flags) {
 	case 0:
+	case TYPE_FLAGS_NEVERAUDIT:
 	case TYPE_FLAGS_PERMISSIVE:
+	case TYPE_FLAGS_NEVERAUDIT|TYPE_FLAGS_PERMISSIVE:
 	case TYPE_FLAGS_EXPAND_ATTR_TRUE:
 	case TYPE_FLAGS_EXPAND_ATTR_FALSE:
 	case TYPE_FLAGS_EXPAND_ATTR:
@@ -1600,6 +1602,23 @@ bad:
 	return -1;
 }
 
+static int validate_neveraudit(sepol_handle_t *handle, const policydb_t *p, validate_t flavors[])
+{
+	ebitmap_node_t *node;
+	uint32_t i;
+
+	ebitmap_for_each_positive_bit(&p->neveraudit_map, node, i) {
+		if (validate_simpletype(i, p, flavors))
+			goto bad;
+	}
+
+	return 0;
+
+bad:
+	ERR(handle, "Invalid neveraudit type");
+	return -1;
+}
+
 static int validate_range_transition(hashtab_key_t key, hashtab_datum_t data, void *args)
 {
 	const range_trans_t *rt = (const range_trans_t *)key;
@@ -1803,6 +1822,9 @@ int policydb_validate(sepol_handle_t *handle, const policydb_t *p)
 		goto bad;
 
 	if (validate_permissives(handle, p, flavors))
+		goto bad;
+
+	if (validate_neveraudit(handle, p, flavors))
 		goto bad;
 
 	if (validate_range_transitions(handle, p, flavors))

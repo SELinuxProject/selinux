@@ -96,6 +96,7 @@
             <item>typechange</item>
             <item>typemember</item>
             <item>typepermissive</item>
+            <item>typeneveraudit</item>
             <item>typetransition</item>
             <item>unordered</item>
             <item>user</item>

@@ -152,6 +152,7 @@ typedef int (* require_func_t)(int pass);
 %token MODULE VERSION_IDENTIFIER REQUIRE OPTIONAL
 %token POLICYCAP
 %token PERMISSIVE
+%token NEVERAUDIT
 %token FILESYSTEM
 %token DEFAULT_USER DEFAULT_ROLE DEFAULT_TYPE DEFAULT_RANGE
 %token LOW_HIGH LOW HIGH GLBLUB
@@ -330,6 +331,7 @@ te_decl			: attribute_def
                         | range_trans_def
                         | te_avtab_def
 			| permissive_def
+			| neveraudit_def
 			;
 attribute_def           : ATTRIBUTE identifier ';'
                         { if (define_attrib()) YYABORT;}
@@ -934,6 +936,8 @@ policycap_def		: POLICYCAP identifier ';'
 			;
 permissive_def		: PERMISSIVE identifier ';'
 			{if (define_permissive()) YYABORT;}
+neveraudit_def		: NEVERAUDIT identifier ';'
+			{if (define_neveraudit()) YYABORT;}
 
 /*********** module grammar below ***********/
 
