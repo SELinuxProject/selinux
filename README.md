@@ -16,9 +16,8 @@ and system libraries which allow for the configuration and management of an
 SELinux-based system.
 
 Please submit all bug reports and patches to the <selinux@vger.kernel.org>
-mailing list. You can subscribe by sending "subscribe selinux" in the body of
-an email to <majordomo@vger.kernel.org>. Archives of the mailing list are
-available at https://lore.kernel.org/selinux.
+mailing list. You can subscribe by sending an email to <selinux+subscribe@vger.kernel.org>
+Archives of the mailing list are available at https://lore.kernel.org/selinux.
 
 Installation
 ------------
