@@ -601,3 +601,41 @@ This example will allow SELinux to run the `healthd.process` domain in permissiv
         (allow ...)
     )
 ```
+
+typeneveraudit
+--------------
+
+Policy database version 35 introduced the neveraudit statement to suppress all AVC auditing on the named domain. This rules silences both permission denied and permission granted AVC audit messages irrespective of any auditallow, auditdeny, or dontaudit AV rules.
+
+**Statement definition:**
+
+```secil
+    (typeneveraudit source_type_id)
+```
+
+**Where:**
+
+<table>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><p><code>typeneveraudit</code></p></td>
+<td align="left"><p>The <code>typeneveraudit</code> keyword.</p></td>
+</tr>
+<tr class="even">
+<td align="left"><p><code>source_type_id</code></p></td>
+<td align="left"><p>A single previously declared <code>type</code> or <code>typealias</code> identifier.</p></td>
+</tr>
+</tbody>
+</table>
+
+**Example:**
+
+This example will silence SELinux AVC audit messages for the `unconfined_t` domain:
+
+```secil
+    (typeneveraudit unconfined_t)
+```

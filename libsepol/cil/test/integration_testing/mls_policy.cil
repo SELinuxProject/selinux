@@ -88,6 +88,7 @@
 (nametypetransition string typea_t typeb_t fooclass foo_t)
 
 (typepermissive foo_t)
+(typeneveraudit foo_t)
 
 (typebounds typea_t typeb_t)
 

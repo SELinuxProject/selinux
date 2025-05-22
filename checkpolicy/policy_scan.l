@@ -271,6 +271,8 @@ policycap |
 POLICYCAP			{ return(POLICYCAP); }
 permissive |
 PERMISSIVE			{ return(PERMISSIVE); }
+neveraudit |
+NEVERAUDIT			{ return(NEVERAUDIT); }
 default_user |
 DEFAULT_USER			{ return(DEFAULT_USER); }
 default_role |
