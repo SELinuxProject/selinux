@@ -1240,6 +1240,16 @@ static int type_write(hashtab_key_t key, hashtab_datum_t datum, void *ptr)
 	items = 0;
 	buf[items++] = cpu_to_le32(len);
 	buf[items++] = cpu_to_le32(typdatum->s.value);
+
+
+	if (p->policy_type != POLICY_KERN
+	    && p->policyvers < MOD_POLICYDB_VERSION_NEVERAUDIT
+	    && typdatum->flags & TYPE_FLAGS_NEVERAUDIT)
+		WARN(fp->handle, "Warning! Module policy "
+			"version %d cannot support neveraudit "
+			"types, but one was defined",
+			p->policyvers);
+
 	if (policydb_has_boundary_feature(p)) {
 		uint32_t properties = 0;
 
@@ -1261,6 +1271,11 @@ static int type_write(hashtab_key_t key, hashtab_datum_t datum, void *ptr)
 		    && p->policy_type != POLICY_KERN)
 			properties |= TYPEDATUM_PROPERTY_PERMISSIVE;
 
+		if (typdatum->flags & TYPE_FLAGS_NEVERAUDIT
+		    && p->policy_type != POLICY_KERN
+		    && p->policyvers >= MOD_POLICYDB_VERSION_NEVERAUDIT)
+			properties |= TYPEDATUM_PROPERTY_NEVERAUDIT;
+
 		buf[items++] = cpu_to_le32(properties);
 		buf[items++] = cpu_to_le32(typdatum->bounds);
 	} else {
@@ -1270,7 +1285,7 @@ static int type_write(hashtab_key_t key, hashtab_datum_t datum, void *ptr)
 			buf[items++] = cpu_to_le32(typdatum->flavor);
 
 			if (p->policyvers >= MOD_POLICYDB_VERSION_PERMISSIVE)
-				buf[items++] = cpu_to_le32(typdatum->flags);
+				buf[items++] = cpu_to_le32(typdatum->flags & ~TYPE_FLAGS_NEVERAUDIT);
 			else if (typdatum->flags & TYPE_FLAGS_PERMISSIVE)
 				WARN(fp->handle, "Warning! Module policy "
 				     "version %d cannot support permissive "
@@ -2320,21 +2335,29 @@ int policydb_write(policydb_t * p, struct policy_file *fp)
 			return POLICYDB_ERROR;
 	}
 
-	if (p->policyvers < POLICYDB_VERSION_PERMISSIVE &&
-	    p->policy_type == POLICY_KERN) {
-		ebitmap_node_t *tnode;
+	if (p->policy_type == POLICY_KERN) {
+		if (p->policyvers < POLICYDB_VERSION_PERMISSIVE) {
+			ebitmap_node_t *tnode;
 
-		ebitmap_for_each_positive_bit(&p->permissive_map, tnode, i) {
-			WARN(fp->handle, "Warning! Policy version %d cannot "
-			     "support permissive types, but some were defined",
-			     p->policyvers);
-			break;
-		}
-	}
+			ebitmap_for_each_positive_bit(&p->permissive_map, tnode, i) {
+				WARN(fp->handle, "Warning! Policy version %d cannot "
+					"support permissive types, but some were defined",
+					p->policyvers);
+				break;
+			}
+		} else if (ebitmap_write(&p->permissive_map, fp) == -1)
+			return POLICYDB_ERROR;
 
-	if (p->policyvers >= POLICYDB_VERSION_PERMISSIVE &&
-	    p->policy_type == POLICY_KERN) {
-		if (ebitmap_write(&p->permissive_map, fp) == -1)
+		if (p->policyvers < POLICYDB_VERSION_NEVERAUDIT) {
+			ebitmap_node_t *tnode;
+
+			ebitmap_for_each_positive_bit(&p->neveraudit_map, tnode, i) {
+				WARN(fp->handle, "Warning! Policy version %d cannot "
+					"support neveraudit types, but some were defined",
+					p->policyvers);
+				break;
+			}
+		} else if (ebitmap_write(&p->neveraudit_map, fp) == -1)
 			return POLICYDB_ERROR;
 	}
 
