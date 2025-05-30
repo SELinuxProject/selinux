@@ -1350,6 +1350,15 @@ static int selabel_subs_init(const char *path, struct selabel_digest *digest,
 	if (digest_add_specfile(digest, cfg, NULL, sb.st_size, path) < 0)
 		goto err;
 
+	/* LIFO order for backward compatibility */
+	for (uint32_t i = 0; i < tmp_num/2; i++) {
+		struct selabel_sub swap;
+
+		swap = tmp[i];
+		tmp[i] = tmp[tmp_num - i - 1];
+		tmp[tmp_num - i - 1] = swap;
+	}
+
 	*out_subs = tmp;
 	*out_num = tmp_num;
 	*out_alloc = tmp_alloc;
