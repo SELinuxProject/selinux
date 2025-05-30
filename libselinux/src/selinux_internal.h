@@ -150,4 +150,6 @@ static inline void fclose_errno_safe(FILE *stream)
 # define unlikely(x)			(x)
 #endif /* __GNUC__ */
 
+#define spaceship_cmp(a, b)		(((a) > (b)) - ((a) < (b)))
+
 #endif /* SELINUX_INTERNAL_H_ */

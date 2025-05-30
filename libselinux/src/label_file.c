@@ -480,7 +480,7 @@ static int load_mmap_ctxarray(struct mmap_area *mmap_area, const char *path, str
 	return 0;
 }
 
-static int load_mmap_literal_spec(struct mmap_area *mmap_area, bool validating,
+static int load_mmap_literal_spec(struct mmap_area *mmap_area, bool validating, uint8_t inputno,
 				  struct literal_spec *lspec, const struct context_array *ctx_array)
 {
 	uint32_t data_u32, ctx_id;
@@ -489,6 +489,7 @@ static int load_mmap_literal_spec(struct mmap_area *mmap_area, bool validating,
 	int rc;
 
 	lspec->from_mmap = true;
+	lspec->inputno = inputno;
 
 
 	/*
@@ -742,7 +743,7 @@ static int load_mmap_spec_node(struct mmap_area *mmap_area, const char *path, bo
 		node->literal_specs_alloc = lspec_num;
 
 		for (uint32_t i = 0; i < lspec_num; i++) {
-			rc = load_mmap_literal_spec(mmap_area, validating, &node->literal_specs[i], ctx_array);
+			rc = load_mmap_literal_spec(mmap_area, validating, inputno, &node->literal_specs[i], ctx_array);
 			if (rc)
 				return -1;
 		}

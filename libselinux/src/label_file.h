@@ -96,6 +96,7 @@ struct literal_spec {
 	char *regex_str;			/* original regular expression string for diagnostics */
 	char *literal_match;			/* simplified string from regular expression */
 	uint16_t prefix_len;			/* length of fixed path prefix, i.e. length of the literal match */
+	uint8_t inputno;			/* Input number of source file */
 	uint8_t file_kind;			/* file type */
 	bool any_matches;			/* whether any pathname match */
 	bool from_mmap;				/* whether this spec is from an mmap of the data */
@@ -367,8 +368,9 @@ static inline int compare_literal_spec(const void *p1, const void *p2)
 	if (ret)
 		return ret;
 
-	/* Order wildcard mode (0) last */
-	return (l1->file_kind < l2->file_kind) - (l1->file_kind > l2->file_kind);
+	/* Order by input number (higher number means added later, means higher priority) */
+	ret = spaceship_cmp(l1->inputno, l2->inputno);
+	return -ret;
 }
 
 static inline int compare_spec_node(const void *p1, const void *p2)
@@ -754,6 +756,7 @@ static int insert_spec(const struct selabel_handle *rec, struct saved_data *data
 			.regex_str = regex,
 			.prefix_len = prefix_len,
 			.literal_match = literal_regex,
+			.inputno = inputno,
 			.file_kind = file_kind,
 			.any_matches = false,
 			.lr.ctx_raw = context,
