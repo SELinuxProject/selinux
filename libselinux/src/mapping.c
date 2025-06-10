@@ -31,7 +31,7 @@ static security_class_t current_mapping_size = 0;
  */
 
 int
-selinux_set_mapping(struct security_class_mapping *map)
+selinux_set_mapping(const struct security_class_mapping *map)
 {
 	size_t size = sizeof(struct selinux_mapping);
 	security_class_t i, j;
@@ -64,7 +64,7 @@ selinux_set_mapping(struct security_class_mapping *map)
 	/* Store the raw class and permission values */
 	j = 0;
 	while (map[j].name) {
-		struct security_class_mapping *p_in = map + (j++);
+		const struct security_class_mapping *p_in = map + (j++);
 		struct selinux_mapping *p_out = current_mapping + j;
 
 		p_out->value = string_to_security_class(p_in->name);

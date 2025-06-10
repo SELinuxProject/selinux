@@ -593,10 +593,17 @@ static int avrule_to_cil(int indent, struct policydb *pdb, uint32_t type, const 
 				rc = -1;
 				goto exit;
 			}
+			if (*perms == '\0') {
+				ERR(NULL, "No permissions in permission string");
+				free(perms);
+				rc = -1;
+				goto exit;
+			}
 			cil_println(indent, "(%s %s %s (%s (%s)))",
 					rule, src, tgt,
 					pdb->p_class_val_to_name[classperm->tclass - 1],
 					perms + 1);
+			free(perms);
 		} else {
 			cil_println(indent, "(%s %s %s %s %s)",
 					rule, src, tgt,
@@ -623,7 +630,8 @@ static int xperms_to_cil(const av_extended_perms_t *xperms)
 	int first = 1;
 
 	if ((xperms->specified != AVTAB_XPERMS_IOCTLFUNCTION)
-		&& (xperms->specified != AVTAB_XPERMS_IOCTLDRIVER))
+		&& (xperms->specified != AVTAB_XPERMS_IOCTLDRIVER)
+		&& (xperms->specified != AVTAB_XPERMS_NLMSG))
 		return -1;
 
 	for (bit = 0; bit < sizeof(xperms->perms)*8; bit++) {
@@ -645,7 +653,8 @@ static int xperms_to_cil(const av_extended_perms_t *xperms)
 		else
 			first = 0;
 
-		if (xperms->specified & AVTAB_XPERMS_IOCTLFUNCTION) {
+		if ((xperms->specified == AVTAB_XPERMS_IOCTLFUNCTION)
+		 || (xperms->specified == AVTAB_XPERMS_NLMSG)) {
 			value = xperms->driver<<8 | bit;
 			if (in_range) {
 				low_value = xperms->driver<<8 | low_bit;
@@ -654,7 +663,7 @@ static int xperms_to_cil(const av_extended_perms_t *xperms)
 			} else {
 				cil_printf("0x%hx", value);
 			}
-		} else if (xperms->specified & AVTAB_XPERMS_IOCTLDRIVER) {
+		} else if (xperms->specified == AVTAB_XPERMS_IOCTLDRIVER) {
 			value = bit << 8;
 			if (in_range) {
 				low_value = low_bit << 8;
@@ -673,6 +682,7 @@ static int avrulex_to_cil(int indent, struct policydb *pdb, uint32_t type, const
 {
 	int rc = -1;
 	const char *rule;
+	const char *xperm;
 	const struct class_perm_node *classperm;
 
 	switch (type) {
@@ -694,10 +704,19 @@ static int avrulex_to_cil(int indent, struct policydb *pdb, uint32_t type, const
 		goto exit;
 	}
 
+	if (xperms->specified == AVTAB_XPERMS_IOCTLFUNCTION || xperms->specified == AVTAB_XPERMS_IOCTLDRIVER) {
+		xperm = "ioctl";
+	} else if (xperms->specified == AVTAB_XPERMS_NLMSG) {
+		xperm = "nlmsg";
+	} else {
+		ERR(NULL, "Unknown avrule xperms->specified: %i", xperms->specified);
+		rc = -1;
+		goto exit;
+	}
 	for (classperm = classperms; classperm != NULL; classperm = classperm->next) {
 		cil_indent(indent);
 		cil_printf("(%s %s %s (%s %s (", rule, src, tgt,
-			   "ioctl", pdb->p_class_val_to_name[classperm->tclass - 1]);
+			   xperm, pdb->p_class_val_to_name[classperm->tclass - 1]);
 		xperms_to_cil(xperms);
 		cil_printf(")))\n");
 	}
@@ -1177,8 +1196,7 @@ static int avrule_list_to_cil(int indent, struct policydb *pdb, struct avrule *a
 	struct type_set *ts;
 
 	for (avrule = avrule_list; avrule != NULL; avrule = avrule->next) {
-		if ((avrule->specified & (AVRULE_NEVERALLOW|AVRULE_XPERMS_NEVERALLOW)) &&
-		    avrule->source_filename) {
+		if ((avrule->specified & pdb->line_marker_avrules) && avrule->source_filename) {
 			cil_println(0, ";;* lmx %lu %s\n",avrule->source_line, avrule->source_filename);
 		}
 
@@ -1245,8 +1263,7 @@ static int avrule_list_to_cil(int indent, struct policydb *pdb, struct avrule *a
 		names_destroy(&snames, &num_snames);
 		names_destroy(&tnames, &num_tnames);
 
-		if ((avrule->specified & (AVRULE_NEVERALLOW|AVRULE_XPERMS_NEVERALLOW)) &&
-		    avrule->source_filename) {
+		if ((avrule->specified & pdb->line_marker_avrules) && avrule->source_filename) {
 			cil_println(0, ";;* lme\n");
 		}
 	}
@@ -1680,7 +1697,7 @@ static int class_perm_cmp(const void *a, const void *b)
 	const struct class_perm_datum *aa = a;
 	const struct class_perm_datum *bb = b;
 
-	return aa->val - bb->val;
+	return spaceship_cmp(aa->val, bb->val);
 }
 
 static int common_to_cil(char *key, void *data, void *UNUSED(arg))
@@ -1967,7 +1984,19 @@ static int constraints_to_cil(int indent, struct policydb *pdb, char *classkey, 
 
 		if (is_constraint) {
 			perms = sepol_av_to_string(pdb, class->s.value, node->permissions);
+			if (perms == NULL) {
+				ERR(NULL, "Failed to generate permission string");
+				rc = -1;
+				goto exit;
+			}
+			if (*perms == '\0') {
+				ERR(NULL, "No permissions in permission string");
+				free(perms);
+				rc = -1;
+				goto exit;
+			}
 			cil_println(indent, "(%sconstrain (%s (%s)) %s)", mls, classkey, perms + 1, expr);
+			free(perms);
 		} else {
 			cil_println(indent, "(%svalidatetrans %s %s)", mls, classkey, expr);
 		}
@@ -2143,39 +2172,7 @@ static int role_to_cil(int indent, struct policydb *pdb, struct avrule_block *UN
 	switch (role->flavor) {
 	case ROLE_ROLE:
 		if (scope == SCOPE_DECL) {
-			// Only declare certain roles if we are reading a base module.
-			// These roles are defined in the base module and sometimes in
-			// other non-base modules. If we generated the roles regardless of
-			// the policy type, it would result in duplicate declarations,
-			// which isn't allowed in CIL. Patches have been made to refpolicy
-			// to remove these duplicate role declarations, but we need to be
-			// backwards compatible and support older policies. Since we know
-			// these roles are always declared in base, only print them when we
-			// see them in the base module. If the declarations appear in a
-			// non-base module, ignore their declarations.
-			//
-			// Note that this is a hack, and if a policy author does not define
-			// one of these roles in base, the declaration will not appear in
-			// the resulting policy, likely resulting in a compilation error in
-			// CIL.
-			//
-			// To make things more complicated, the auditadm_r and secadm_r
-			// roles could actually be in either the base module or a non-base
-			// module, or both. So we can't rely on this same behavior. So for
-			// these roles, don't declare them here, even if they are in a base
-			// or non-base module. Instead we will just declare them in the
-			// base module elsewhere.
-			int is_base_role = (!strcmp(key, "user_r") ||
-			                    !strcmp(key, "staff_r") ||
-			                    !strcmp(key, "sysadm_r") ||
-			                    !strcmp(key, "system_r") ||
-			                    !strcmp(key, "unconfined_r"));
-			int is_builtin_role = (!strcmp(key, "auditadm_r") ||
-			                       !strcmp(key, "secadm_r"));
-			if ((is_base_role && pdb->policy_type == SEPOL_POLICY_BASE) ||
-			    (!is_base_role && !is_builtin_role)) {
-				cil_println(indent, "(role %s)", key);
-			}
+			cil_println(indent, "(role %s)", key);
 		}
 
 		if (ebitmap_cardinality(&role->dominates) > 1) {
@@ -2276,6 +2273,10 @@ static int type_to_cil(int indent, struct policydb *pdb, struct avrule_block *UN
 
 		if (type->flags & TYPE_FLAGS_PERMISSIVE) {
 			cil_println(indent, "(typepermissive %s)", key);
+		}
+
+		if (type->flags & TYPE_FLAGS_NEVERAUDIT) {
+			cil_println(indent, "(typeneveraudit %s)", key);
 		}
 
 		if (type->bounds > 0) {
@@ -2390,7 +2391,7 @@ static int boolean_to_cil(int indent, struct policydb *UNUSED(pdb), struct avrul
 
 static int sens_to_cil(int indent, struct policydb *pdb, struct avrule_block *UNUSED(block), struct stack *UNUSED(decl_stack), char *key, void *datum, int scope)
 {
-	struct level_datum *level = datum;
+	level_datum_t *level = datum;
 
 	if (scope == SCOPE_DECL) {
 		if (!level->isalias) {
@@ -2932,8 +2933,8 @@ static int ocontexts_to_cil(struct policydb *pdb)
 	int rc = -1;
 	int ocon;
 
-	static int (**ocon_funcs)(struct policydb *pdb, struct ocontext *ocon);
-	static int (*ocon_selinux_funcs[OCON_NUM])(struct policydb *pdb, struct ocontext *ocon) = {
+	static int (*const *ocon_funcs)(struct policydb *pdb, struct ocontext *ocon);
+	static int (*const ocon_selinux_funcs[OCON_NUM])(struct policydb *pdb, struct ocontext *ocon) = {
 		ocontext_selinux_isid_to_cil,
 		ocontext_selinux_fs_to_cil,
 		ocontext_selinux_port_to_cil,
@@ -2944,7 +2945,7 @@ static int ocontexts_to_cil(struct policydb *pdb)
 		ocontext_selinux_ibpkey_to_cil,
 		ocontext_selinux_ibendport_to_cil,
 	};
-	static int (*ocon_xen_funcs[OCON_NUM])(struct policydb *pdb, struct ocontext *ocon) = {
+	static int (*const ocon_xen_funcs[OCON_NUM])(struct policydb *pdb, struct ocontext *ocon) = {
 		ocontext_xen_isid_to_cil,
 		ocontext_xen_pirq_to_cil,
 		ocontext_xen_ioport_to_cil,
@@ -3385,7 +3386,7 @@ exit:
 }
 
 
-static int (*func_to_cil[SYM_NUM])(int indent, struct policydb *pdb, struct avrule_block *block, struct stack *decl_stack, char *key, void *datum, int scope) = {
+static int (*const func_to_cil[SYM_NUM])(int indent, struct policydb *pdb, struct avrule_block *block, struct stack *decl_stack, char *key, void *datum, int scope) = {
 	NULL,	// commons, only stored in the global symtab, handled elsewhere
 	class_to_cil,
 	role_to_cil,
@@ -3961,17 +3962,6 @@ static int generate_default_object(void)
 	return 0;
 }
 
-static int generate_builtin_roles(void)
-{
-	// due to inconsistentencies between policies and CIL not allowing
-	// duplicate roles, some roles are always created, regardless of if they
-	// are declared in modules or not
-	cil_println(0, "(role auditadm_r)");
-	cil_println(0, "(role secadm_r)");
-
-	return 0;
-}
-
 static int generate_gen_require_attribute(void)
 {
 	cil_println(0, "(typeattribute " GEN_REQUIRE_ATTR ")");
@@ -4052,11 +4042,6 @@ int sepol_module_policydb_to_cil(FILE *fp, struct policydb *pdb, int linked)
 		// object_r is implicit in checkmodule, but not with CIL, create it
 		// as part of base
 		rc = generate_default_object();
-		if (rc != 0) {
-			goto exit;
-		}
-
-		rc = generate_builtin_roles();
 		if (rc != 0) {
 			goto exit;
 		}

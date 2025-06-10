@@ -45,9 +45,9 @@ FS="`cat /proc/self/mounts | sort | uniq | awk '{print $2}'`"
 for i in $FS; do
 	if [ `useseclabel` -ge 0 ]
 	then
-		grep " $i " /proc/self/mounts | awk '{print $4}' | grep -E --silent '(^|,)seclabel(,|$)' && echo $i
+		grep -F " $i " /proc/self/mounts | awk '{print $4}' | grep -E --silent '(^|,)seclabel(,|$)' && echo $i
 	else
-		grep " $i " /proc/self/mounts | grep -v "context=" | grep -E --silent '(ext[234]| ext4dev | gfs2 | xfs | jfs | btrfs )' && echo $i
+		grep -F " $i " /proc/self/mounts | grep -v "context=" | grep -E --silent '(ext[234]| ext4dev | gfs2 | xfs | jfs | btrfs )' && echo $i
 	fi
 done
 }
@@ -55,14 +55,14 @@ done
 get_rw_labeled_mounts() {
 FS=`get_all_labeled_mounts | sort | uniq`
 for i in $FS; do
-	grep " $i " /proc/self/mounts | awk '{print $4}' | grep -E --silent '(^|,)rw(,|$)' && echo $i
+	grep -F " $i " /proc/self/mounts | awk '{print $4}' | grep -E --silent '(^|,)rw(,|$)' && echo $i
 done
 }
 
 get_ro_labeled_mounts() {
 FS=`get_all_labeled_mounts | sort | uniq`
 for i in $FS; do
-	grep " $i " /proc/self/mounts | awk '{print $4}' | grep -E --silent '(^|,)ro(,|$)' && echo $i
+	grep -F " $i " /proc/self/mounts | awk '{print $4}' | grep -E --silent '(^|,)ro(,|$)' && echo $i
 done
 }
 
@@ -173,10 +173,10 @@ if [ -f ${PREFC} -a -x /usr/bin/diff ]; then
 	test -z "$TEMPFILE" && exit
 	PREFCTEMPFILE=`mktemp ${PREFC}.XXXXXXXXXX`
 	sed -r -e 's,:s0, ,g' $PREFC | sort -u > ${PREFCTEMPFILE}
-	sed -r -e 's,:s0, ,g' $FC | sort -u | \
-	/usr/bin/diff -b ${PREFCTEMPFILE} - | \
-	    grep '^[<>]'|cut -c3-| grep ^/ | \
-	    grep -Ev '(^/home|^/root|^/tmp)' |\
+	sed -r -e 's,:s0, ,g' $FC | sort -u |
+	/usr/bin/diff -b ${PREFCTEMPFILE} - |
+	    grep '^[<>]'|cut -c3-| grep ^/ |
+	    grep -Ev '(^/home|^/root|^/tmp)' |
 	sed -r -e 's,[[:blank:]].*,,g' \
 	       -e 's|\(([/[:alnum:]]+)\)\?|{\1,}|g' \
 	       -e 's|([/[:alnum:]])\?|{\1,}|g' \
@@ -185,19 +185,19 @@ if [ -f ${PREFC} -a -x /usr/bin/diff ]; then
 	       -e 's|\(.*|*|g' \
 	       -e 's|\[.*|*|g' \
 	       -e 's|\.\*.*|*|g' \
-	       -e 's|\.\+.*|*|g' | \
-	    # These two sorts need to be separate commands \
-	sort -u | \
-	sort -d | \
-	while read pattern ; \
-	    do if ! echo "$pattern" | grep -q -f ${TEMPFILE} 2>/dev/null; then \
-		  echo "$pattern"; \
-		  case "$pattern" in *"*") \
+	       -e 's|\.\+.*|*|g' |
+	    # These two sorts need to be separate commands
+	sort -u |
+	sort -d |
+	while read pattern ;
+	    do if ! echo "$pattern" | grep -q -f ${TEMPFILE} 2>/dev/null; then
+		  echo "$pattern";
+		  case "$pattern" in *"*")
 		       echo "$pattern" | sed -e 's,^,^,' -e 's,\*$,,g' >> ${TEMPFILE};;
-		  esac; \
-	       fi; \
-	    done | \
-	${RESTORECON} ${VERBOSE} ${EXCLUDEDIRS} ${FORCEFLAG} ${THREADS} $* -i -R -f -; \
+		  esac;
+	       fi;
+	    done |
+	${RESTORECON} ${VERBOSE} ${EXCLUDEDIRS} ${FORCEFLAG} ${THREADS} $* -i -R -f -;
 	rm -f ${TEMPFILE} ${PREFCTEMPFILE}
 fi
 }

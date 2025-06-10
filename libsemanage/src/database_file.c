@@ -1,7 +1,7 @@
 /* Copyright (C) 2005 Red Hat, Inc. */
 
 /* Object: dbase_file_t (File)
- * Extends: dbase_llist_t (Linked List) 
+ * Extends: dbase_llist_t (Linked List)
  * Implements: dbase_t (Database)
  */
 
@@ -25,7 +25,7 @@ typedef struct dbase_file dbase_t;
 /* FILE dbase */
 struct dbase_file {
 
-	/* Parent object - must always be 
+	/* Parent object - must always be
 	 * the first field - here we are using
 	 * a linked list to store the records */
 	dbase_llist_t llist;
@@ -34,14 +34,14 @@ struct dbase_file {
 	const char *path[2];
 
 	/* FILE extension */
-	record_file_table_t *rftable;
+	const record_file_table_t *rftable;
 };
 
 static int dbase_file_cache(semanage_handle_t * handle, dbase_file_t * dbase)
 {
 
-	record_table_t *rtable = dbase_llist_get_rtable(&dbase->llist);
-	record_file_table_t *rftable = dbase->rftable;
+	const record_table_t *rtable = dbase_llist_get_rtable(&dbase->llist);
+	const record_file_table_t *rftable = dbase->rftable;
 
 	record_t *process_record = NULL;
 	int pstatus = STATUS_SUCCESS;
@@ -114,7 +114,7 @@ static int dbase_file_cache(semanage_handle_t * handle, dbase_file_t * dbase)
 static int dbase_file_flush(semanage_handle_t * handle, dbase_file_t * dbase)
 {
 
-	record_file_table_t *rftable = dbase->rftable;
+	const record_file_table_t *rftable = dbase->rftable;
 
 	cache_entry_t *ptr;
 	const char *fname = NULL;
@@ -127,11 +127,11 @@ static int dbase_file_flush(semanage_handle_t * handle, dbase_file_t * dbase)
 	fname = dbase->path[handle->is_in_transaction];
 
 	mask = umask(0077);
-	str = fopen(fname, "w");
+	str = fopen(fname, "we");
 	umask(mask);
 	if (!str) {
-		ERR(handle, "could not open %s for writing: %s",
-		    fname, strerror(errno));
+		ERR(handle, "could not open %s for writing",
+		    fname);
 		goto err;
 	}
 	__fsetlocking(str, FSETLOCKING_BYCALLER);
@@ -149,7 +149,10 @@ static int dbase_file_flush(semanage_handle_t * handle, dbase_file_t * dbase)
 	}
 
 	dbase_llist_set_modified(&dbase->llist, 0);
-	fclose(str);
+	if (fclose(str) != 0 && errno != EINTR) {
+		str = NULL;
+		goto err;
+	}
 	return STATUS_SUCCESS;
 
       err:
@@ -163,8 +166,8 @@ static int dbase_file_flush(semanage_handle_t * handle, dbase_file_t * dbase)
 int dbase_file_init(semanage_handle_t * handle,
 		    const char *path_ro,
 		    const char *path_rw,
-		    record_table_t * rtable,
-		    record_file_table_t * rftable, dbase_file_t ** dbase)
+		    const record_table_t * rtable,
+		    const record_file_table_t * rftable, dbase_file_t ** dbase)
 {
 
 	dbase_file_t *tmp_dbase = (dbase_file_t *) malloc(sizeof(dbase_file_t));
@@ -191,12 +194,15 @@ int dbase_file_init(semanage_handle_t * handle,
 void dbase_file_release(dbase_file_t * dbase)
 {
 
+	if (!dbase)
+		return;
+
 	dbase_llist_drop_cache(&dbase->llist);
 	free(dbase);
 }
 
 /* FILE dbase - method table implementation */
-dbase_table_t SEMANAGE_FILE_DTABLE = {
+dbase_table_t const SEMANAGE_FILE_DTABLE = {
 
 	/* Cache/Transactions */
 	.cache = dbase_file_cache,

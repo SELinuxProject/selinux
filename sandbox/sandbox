@@ -285,15 +285,12 @@ class Sandbox:
             fd.write("""#! /bin/sh
 #TITLE: %s
 # /usr/bin/test -r ~/.xmodmap && /usr/bin/xmodmap ~/.xmodmap
-%s &
-WM_PID=$!
 if which dbus-run-session >/dev/null 2>&1; then
     dbus-run-session -- %s
 else
     dbus-launch --exit-with-session %s
 fi
-kill -TERM $WM_PID  2> /dev/null
-""" % (command, wm, command, command))
+""" % (command, command, command))
         fd.close()
         os.chmod(execfile, 0o700)
 
@@ -346,6 +343,10 @@ sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile ] [-
         parser.add_option("-X", dest="X_ind",
                           action="callback", callback=self.__x_callback,
                           default=False, help=_("run X application within a sandbox"))
+
+        parser.add_option("-Y", dest="Y_ind",
+                          action="callback", callback=self.__x_callback,
+                          default=False, help=_("run Wayland application within a sandbox"))
 
         parser.add_option("-H", "--homedir",
                           action="callback", callback=self.__validdir,
@@ -460,6 +461,16 @@ sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile ] [-
         selinux.chcon(self.__runuserdir, self.__filecon, recursive=True)
         selinux.setfscreatecon(None)
 
+    def __is_wayland_app(self):
+        binary = shutil.which(self.__paths[0])
+        if binary is None:
+            return True
+        output = subprocess.run(['ldd', binary], capture_output=True)
+        for line in str(output.stdout, "utf-8").split('\n'):
+            if line.find("libwayland") != -1:
+                return True
+        return False
+
     def __execute(self):
         try:
             cmds = [SEUNSHARE, "-Z", self.__execcon]
@@ -468,7 +479,7 @@ sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile ] [-
             if self.__mount:
                 cmds += ["-t", self.__tmpdir, "-h", self.__homedir, "-r", self.__runuserdir]
 
-                if self.__options.X_ind:
+                if self.__options.X_ind or self.__options.Y_ind:
                     if self.__options.dpi:
                         dpi = self.__options.dpi
                     else:
@@ -477,14 +488,25 @@ sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile ] [-
                         from gi.repository import Gtk
                         dpi = str(Gtk.Settings.get_default().props.gtk_xft_dpi / 1024)
 
+                    if os.environ.get('WAYLAND_DISPLAY') is not None:
+                        cmds += ["-W", os.environ["WAYLAND_DISPLAY"]]
+
                     xmodmapfile = self.__homedir + "/.xmodmap"
                     xd = open(xmodmapfile, "w")
-                    subprocess.Popen(["/usr/bin/xmodmap", "-pke"], stdout=xd).wait()
+                    try:
+                        subprocess.Popen(["/usr/bin/xmodmap", "-pke"], stdout=xd).wait()
+                    except:
+                        pass
                     xd.close()
 
                     self.__setup_sandboxrc(self.__options.wm)
 
-                    cmds += ["--", SANDBOXSH, self.__options.windowsize, dpi]
+                    if self.__options.Y_ind or self.__is_wayland_app():
+                        WN = "yes"
+                    else:
+                        WN = "no"
+
+                    cmds += ["--", SANDBOXSH, WN, self.__options.windowsize, dpi]
                 else:
                     cmds += ["--"] + self.__paths
                 return subprocess.Popen(cmds).wait()

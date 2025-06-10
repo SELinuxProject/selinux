@@ -43,7 +43,7 @@ static const char *type_str(int type)
 }
 
 static int fcontext_print(semanage_handle_t * handle,
-			  semanage_fcontext_t * fcontext, FILE * str)
+			  const semanage_fcontext_t * fcontext, FILE * str)
 {
 
 	char *con_str = NULL;
@@ -158,7 +158,7 @@ static int fcontext_parse(semanage_handle_t * handle,
 }
 
 /* FCONTEXT RECORD: FILE extension: method table */
-record_file_table_t SEMANAGE_FCONTEXT_FILE_RTABLE = {
+static const record_file_table_t SEMANAGE_FCONTEXT_FILE_RTABLE = {
 	.parse = fcontext_parse,
 	.print = fcontext_print,
 };

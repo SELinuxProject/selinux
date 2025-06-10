@@ -23,7 +23,7 @@ struct semanage_seuser {
 	/* This user's name */
 	char *name;
 
-	/* This user's corresponding 
+	/* This user's corresponding
 	 * seuser ("role set") */
 	char *sename;
 
@@ -99,11 +99,12 @@ int semanage_seuser_compare2(const semanage_seuser_t * seuser,
 }
 
 
-static int semanage_seuser_compare2_qsort(const semanage_seuser_t ** seuser,
-					  const semanage_seuser_t ** seuser2)
+static int semanage_seuser_compare2_qsort(const void *p1, const void *p2)
 {
+	const semanage_seuser_t *const *seuser1 = p1;
+	const semanage_seuser_t *const *seuser2 = p2;
 
-	return strcmp((*seuser)->name, (*seuser2)->name);
+	return semanage_seuser_compare2(*seuser1, *seuser2);
 }
 
 /* Name */
@@ -246,7 +247,7 @@ void semanage_seuser_free(semanage_seuser_t * seuser)
 
 
 /* Record base functions */
-record_table_t SEMANAGE_SEUSER_RTABLE = {
+const record_table_t SEMANAGE_SEUSER_RTABLE = {
 	.create = semanage_seuser_create,
 	.key_extract = semanage_seuser_key_extract,
 	.key_free = semanage_seuser_key_free,

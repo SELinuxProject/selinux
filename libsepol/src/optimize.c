@@ -189,6 +189,11 @@ static int process_avtab_datum(uint16_t specified,
 
 			if (x2->specified == AVTAB_XPERMS_IOCTLDRIVER)
 				return process_xperms(x1->perms, x2->perms);
+		} else if (x1->specified == AVTAB_XPERMS_NLMSG
+				&& x2->specified == AVTAB_XPERMS_NLMSG) {
+			if (x1->driver != x2->driver)
+				return 0;
+			return process_xperms(x1->perms, x2->perms);
 		}
 		return 0;
 	}

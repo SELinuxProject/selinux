@@ -8,7 +8,7 @@
 #include "handle.h"
 
 /* NODE RECORD: method table */
-extern record_table_t SEMANAGE_NODE_RTABLE;
+extern const record_table_t SEMANAGE_NODE_RTABLE;
 
 extern int node_file_dbase_init(semanage_handle_t * handle,
 				const char *path_ro,
@@ -26,7 +26,6 @@ extern int semanage_node_validate_local(semanage_handle_t * handle);
 
 /* ==== Internal (to nodes) API === */
 
- int semanage_node_compare2_qsort(const semanage_node_t ** node,
-					const semanage_node_t ** node2);
+ int semanage_node_compare2_qsort(const void *p1, const void *p2);
 
 #endif

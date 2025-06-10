@@ -44,7 +44,6 @@
 #define IPPROTO_SCTP 132
 #endif
 #include <arpa/inet.h>
-#include <stdlib.h>
 #include <limits.h>
 #include <inttypes.h>
 #include <ctype.h>
@@ -56,11 +55,10 @@
 #include <sepol/policydb/hierarchy.h>
 #include <sepol/policydb/polcaps.h>
 #include "queue.h"
-#include "checkpolicy.h"
 #include "module_compiler.h"
 #include "policy_define.h"
 
-extern void init_parser(int pass_number);
+extern void init_parser(int pass_number, const char *input_name);
 __attribute__ ((format(printf, 1, 2)))
 extern void yyerror2(const char *fmt, ...);
 
@@ -73,17 +71,20 @@ extern unsigned long policydb_lineno;
 extern unsigned long source_lineno;
 extern unsigned int policydb_errors;
 extern char source_file[PATH_MAX];
+extern void set_source_file(const char *name);
 
 extern int yywarn(const char *msg);
 extern int yyerror(const char *msg);
 
 /* initialize all of the state variables for the scanner/parser */
-void init_parser(int pass_number)
+void init_parser(int pass_number, const char *input_name)
 {
 	policydb_lineno = 1;
 	source_lineno = 1;
 	policydb_errors = 0;
 	pass = pass_number;
+	set_source_file(input_name);
+	queue_clear(id_queue);
 }
 
 void yyerror2(const char *fmt, ...)
@@ -93,6 +94,17 @@ void yyerror2(const char *fmt, ...)
 	va_start(ap, fmt);
 	vsnprintf(errormsg, sizeof(errormsg), fmt, ap);
 	yyerror(errormsg);
+	va_end(ap);
+}
+
+__attribute__ ((format(printf, 1, 2)))
+static void yywarn2(const char *fmt, ...)
+{
+	char warnmsg[256];
+	va_list ap;
+	va_start(ap, fmt);
+	vsnprintf(warnmsg, sizeof(warnmsg), fmt, ap);
+	yywarn(warnmsg);
 	va_end(ap);
 }
 
@@ -147,9 +159,9 @@ static int id_has_dot(const char *id)
 
 int define_class(void)
 {
-	char *id = 0;
-	class_datum_t *datum = 0;
-	int ret;
+	char *id = NULL;
+	class_datum_t *datum = NULL;
+	int ret = -1;
 	uint32_t value;
 
 	if (pass == 2) {
@@ -166,26 +178,28 @@ int define_class(void)
 	datum = (class_datum_t *) malloc(sizeof(class_datum_t));
 	if (!datum) {
 		yyerror("out of memory");
-		goto bad;
+		goto cleanup;
 	}
 	memset(datum, 0, sizeof(class_datum_t));
 	ret = declare_symbol(SYM_CLASSES, id, datum, &value, &value);
 	switch (ret) {
 	case -3:{
 			yyerror("Out of memory!");
-			goto bad;
+			goto cleanup;
 		}
 	case -2:{
 			yyerror2("duplicate declaration of class %s", id);
-			goto bad;
+			goto cleanup;
 		}
 	case -1:{
 			yyerror("could not declare class here");
-			goto bad;
+			goto cleanup;
 		}
-	case 0:
-	case 1:{
+	case 0: {
 			break;
+		}
+	case 1:{
+			goto cleanup;
 		}
 	default:{
 			assert(0);	/* should never get here */
@@ -194,12 +208,10 @@ int define_class(void)
 	datum->s.value = value;
 	return 0;
 
-      bad:
-	if (id)
-		free(id);
-	if (datum)
-		free(datum);
-	return -1;
+      cleanup:
+	free(id);
+	free(datum);
+	return ret == 1 ? 0 : -1;
 }
 
 int define_permissive(void)
@@ -233,12 +245,55 @@ int define_permissive(void)
 	}
 
 	if (t->flavor == TYPE_ATTRIB) {
-		yyerror2("attributes may not be permissive: %s\n", type);
+		yyerror2("attributes may not be permissive: %s", type);
 		rc = -1;
 		goto out;
 	}
 
 	t->flags |= TYPE_FLAGS_PERMISSIVE;
+
+out:
+	free(type);
+	return rc;
+}
+
+int define_neveraudit(void)
+{
+	char *type = NULL;
+	struct type_datum *t;
+	int rc = 0;
+
+	type = queue_remove(id_queue);
+
+	if (!type) {
+		yyerror2("forgot to include type in neveraudit definition?");
+		rc = -1;
+		goto out;
+	}
+
+	if (pass == 1)
+		goto out;
+
+	if (!is_id_in_scope(SYM_TYPES, type)) {
+		yyerror2("type %s is not within scope", type);
+		rc = -1;
+		goto out;
+	}
+
+	t = hashtab_search(policydbp->p_types.table, type);
+	if (!t) {
+		yyerror2("type is not defined: %s", type);
+		rc = -1;
+		goto out;
+	}
+
+	if (t->flavor == TYPE_ATTRIB) {
+		yyerror2("attributes may not be neveraudit: %s", type);
+		rc = -1;
+		goto out;
+	}
+
+	t->flags |= TYPE_FLAGS_NEVERAUDIT;
 
 out:
 	free(type);
@@ -342,6 +397,7 @@ static int read_classes(ebitmap_t *e_classes)
 	while ((id = queue_remove(id_queue))) {
 		if (!is_id_in_scope(SYM_CLASSES, id)) {
 			yyerror2("class %s is not within scope", id);
+			free(id);
 			return -1;
 		}
 		cladatum = hashtab_search(policydbp->p_classes.table, id);
@@ -373,15 +429,18 @@ int define_default_user(int which)
 	while ((id = queue_remove(id_queue))) {
 		if (!is_id_in_scope(SYM_CLASSES, id)) {
 			yyerror2("class %s is not within scope", id);
+			free(id);
 			return -1;
 		}
 		cladatum = hashtab_search(policydbp->p_classes.table, id);
 		if (!cladatum) {
 			yyerror2("unknown class %s", id);
+			free(id);
 			return -1;
 		}
 		if (cladatum->default_user && cladatum->default_user != which) {
 			yyerror2("conflicting default user information for class %s", id);
+			free(id);
 			return -1;
 		}
 		cladatum->default_user = which;
@@ -405,15 +464,18 @@ int define_default_role(int which)
 	while ((id = queue_remove(id_queue))) {
 		if (!is_id_in_scope(SYM_CLASSES, id)) {
 			yyerror2("class %s is not within scope", id);
+			free(id);
 			return -1;
 		}
 		cladatum = hashtab_search(policydbp->p_classes.table, id);
 		if (!cladatum) {
 			yyerror2("unknown class %s", id);
+			free(id);
 			return -1;
 		}
 		if (cladatum->default_role && cladatum->default_role != which) {
 			yyerror2("conflicting default role information for class %s", id);
+			free(id);
 			return -1;
 		}
 		cladatum->default_role = which;
@@ -437,15 +499,18 @@ int define_default_type(int which)
 	while ((id = queue_remove(id_queue))) {
 		if (!is_id_in_scope(SYM_CLASSES, id)) {
 			yyerror2("class %s is not within scope", id);
+			free(id);
 			return -1;
 		}
 		cladatum = hashtab_search(policydbp->p_classes.table, id);
 		if (!cladatum) {
 			yyerror2("unknown class %s", id);
+			free(id);
 			return -1;
 		}
 		if (cladatum->default_type && cladatum->default_type != which) {
 			yyerror2("conflicting default type information for class %s", id);
+			free(id);
 			return -1;
 		}
 		cladatum->default_type = which;
@@ -469,15 +534,18 @@ int define_default_range(int which)
 	while ((id = queue_remove(id_queue))) {
 		if (!is_id_in_scope(SYM_CLASSES, id)) {
 			yyerror2("class %s is not within scope", id);
+			free(id);
 			return -1;
 		}
 		cladatum = hashtab_search(policydbp->p_classes.table, id);
 		if (!cladatum) {
 			yyerror2("unknown class %s", id);
+			free(id);
 			return -1;
 		}
 		if (cladatum->default_range && cladatum->default_range != which) {
 			yyerror2("conflicting default range information for class %s", id);
+			free(id);
 			return -1;
 		}
 		cladatum->default_range = which;
@@ -507,7 +575,8 @@ int define_common_perms(void)
 	}
 	comdatum = hashtab_search(policydbp->p_commons.table, id);
 	if (comdatum) {
-		yyerror2("duplicate declaration for common %s\n", id);
+		yyerror2("duplicate declaration for common %s", id);
+		free(id);
 		return -1;
 	}
 	comdatum = (common_datum_t *) malloc(sizeof(common_datum_t));
@@ -543,8 +612,8 @@ int define_common_perms(void)
 		perdatum->s.value = comdatum->permissions.nprim + 1;
 
 		if (perdatum->s.value > (sizeof(sepol_access_vector_t) * 8)) {
-			yyerror
-			    ("too many permissions to fit in an access vector");
+			yyerror2
+			    ("too many permissions (%d) to fit in an access vector", perdatum->s.value);
 			goto bad_perm;
 		}
 		ret = hashtab_insert(comdatum->permissions.table,
@@ -605,12 +674,15 @@ int define_av_perms(int inherits)
 		yyerror2("class %s is not defined", id);
 		goto bad;
 	}
-	free(id);
 
 	if (cladatum->comdatum || cladatum->permissions.nprim) {
-		yyerror("duplicate access vector definition");
-		return -1;
+		yyerror2("duplicate access vector definition for class %s", id);
+		goto bad;
 	}
+
+	free(id);
+	id = NULL;
+
 	if (symtab_init(&cladatum->permissions, PERM_SYMTAB_SIZE)) {
 		yyerror("out of memory");
 		return -1;
@@ -650,8 +722,8 @@ int define_av_perms(int inherits)
 		perdatum->s.value = ++cladatum->permissions.nprim;
 
 		if (perdatum->s.value > (sizeof(sepol_access_vector_t) * 8)) {
-			yyerror
-			    ("too many permissions to fit in an access vector");
+			yyerror2
+			    ("too many permissions (%d) to fit in an access vector", perdatum->s.value);
 			goto bad;
 		}
 		if (inherits) {
@@ -723,7 +795,7 @@ int define_sens(void)
 		return -1;
 	}
 	if (id_has_dot(id)) {
-		yyerror("sensitivity identifiers may not contain periods");
+		yyerror2("sensitivity identifier %s may not contain periods", id);
 		goto bad;
 	}
 	level = (mls_level_t *) malloc(sizeof(mls_level_t));
@@ -743,6 +815,7 @@ int define_sens(void)
 	level_datum_init(datum);
 	datum->isalias = FALSE;
 	datum->level = level;
+	datum->notdefined = TRUE;
 
 	ret = declare_symbol(SYM_LEVELS, id, datum, &value, &value);
 	switch (ret) {
@@ -751,15 +824,20 @@ int define_sens(void)
 			goto bad;
 		}
 	case -2:{
-			yyerror("duplicate declaration of sensitivity level");
+			yyerror2("duplicate declaration of sensitivity level %s", id);
 			goto bad;
 		}
 	case -1:{
-			yyerror("could not declare sensitivity level here");
+			yyerror2("could not declare sensitivity level %s here", id);
 			goto bad;
 		}
-	case 0:
+	case 0: {
+			break;
+		}
 	case 1:{
+			level_datum_destroy(datum);
+			free(datum);
+			free(id);
 			break;
 		}
 	default:{
@@ -769,17 +847,20 @@ int define_sens(void)
 
 	while ((id = queue_remove(id_queue))) {
 		if (id_has_dot(id)) {
-			yyerror("sensitivity aliases may not contain periods");
-			goto bad_alias;
+			yyerror2("sensitivity alias %s may not contain periods", id);
+			free(id);
+			return -1;
 		}
 		aliasdatum = (level_datum_t *) malloc(sizeof(level_datum_t));
 		if (!aliasdatum) {
 			yyerror("out of memory");
-			goto bad_alias;
+			free(id);
+			return -1;
 		}
 		level_datum_init(aliasdatum);
 		aliasdatum->isalias = TRUE;
 		aliasdatum->level = level;
+		aliasdatum->notdefined = TRUE;
 
 		ret = declare_symbol(SYM_LEVELS, id, aliasdatum, NULL, &value);
 		switch (ret) {
@@ -788,17 +869,22 @@ int define_sens(void)
 				goto bad_alias;
 			}
 		case -2:{
-				yyerror
-				    ("duplicate declaration of sensitivity alias");
+				yyerror2
+				    ("duplicate declaration of sensitivity alias %s", id);
 				goto bad_alias;
 			}
 		case -1:{
-				yyerror
-				    ("could not declare sensitivity alias here");
+				yyerror2
+				    ("could not declare sensitivity alias %s here", id);
 				goto bad_alias;
 			}
-		case 0:
+		case 0: {
+				break;
+			}
 		case 1:{
+				level_datum_destroy(aliasdatum);
+				free(aliasdatum);
+				free(id);
 				break;
 			}
 		default:{
@@ -902,7 +988,7 @@ int define_category(void)
 		return -1;
 	}
 	if (id_has_dot(id)) {
-		yyerror("category identifiers may not contain periods");
+		yyerror2("category identifier %s may not contain periods", id);
 		goto bad;
 	}
 	datum = (cat_datum_t *) malloc(sizeof(cat_datum_t));
@@ -920,57 +1006,69 @@ int define_category(void)
 			goto bad;
 		}
 	case -2:{
-			yyerror("duplicate declaration of category");
+			yyerror2("duplicate declaration of category %s", id);
 			goto bad;
 		}
 	case -1:{
-			yyerror("could not declare category here");
+			yyerror2("could not declare category %s here", id);
 			goto bad;
 		}
-	case 0:
+	case 0:{
+			datum->s.value = value;
+			break;
+		}
 	case 1:{
+			cat_datum_destroy(datum);
+			free(datum);
+			free(id);
 			break;
 		}
 	default:{
 			assert(0);	/* should never get here */
 		}
 	}
-	datum->s.value = value;
 
 	while ((id = queue_remove(id_queue))) {
 		if (id_has_dot(id)) {
-			yyerror("category aliases may not contain periods");
-			goto bad_alias;
+			yyerror2("category alias %s may not contain periods", id);
+			free(id);
+			return -1;
 		}
 		aliasdatum = (cat_datum_t *) malloc(sizeof(cat_datum_t));
 		if (!aliasdatum) {
 			yyerror("out of memory");
-			goto bad_alias;
+			free(id);
+			return -1;
 		}
 		cat_datum_init(aliasdatum);
 		aliasdatum->isalias = TRUE;
-		aliasdatum->s.value = datum->s.value;
+		aliasdatum->s.value = value;
 
 		ret =
 		    declare_symbol(SYM_CATS, id, aliasdatum, NULL,
-				   &datum->s.value);
+				   &value);
 		switch (ret) {
 		case -3:{
 				yyerror("Out of memory!");
 				goto bad_alias;
 			}
 		case -2:{
-				yyerror
-				    ("duplicate declaration of category aliases");
+				yyerror2
+				    ("duplicate declaration of category alias %s", id);
 				goto bad_alias;
 			}
 		case -1:{
-				yyerror
-				    ("could not declare category aliases here");
+				yyerror2
+				    ("could not declare category alias %s here", id);
 				goto bad_alias;
 			}
-		case 0:
+		case 0:{
+				break;
+			}
 		case 1:{
+				cat_datum_destroy(aliasdatum);
+				free(aliasdatum);
+				free(id);
 				break;
 			}
 		default:{
@@ -1005,10 +1103,11 @@ static int clone_level(hashtab_key_t key __attribute__ ((unused)), hashtab_datum
 	level_datum_t *levdatum = (level_datum_t *) datum;
 	mls_level_t *level = (mls_level_t *) arg, *newlevel;
 
-	if (levdatum->level == level) {
-		levdatum->defined = 1;
-		if (!levdatum->isalias)
+	if (levdatum->notdefined && levdatum->level == level) {
+		if (!levdatum->isalias) {
+			levdatum->notdefined = FALSE;
 			return 0;
+		}
 		newlevel = (mls_level_t *) malloc(sizeof(mls_level_t));
 		if (!newlevel)
 			return -1;
@@ -1017,6 +1116,7 @@ static int clone_level(hashtab_key_t key __attribute__ ((unused)), hashtab_datum
 			return -1;
 		}
 		levdatum->level = newlevel;
+		levdatum->notdefined = FALSE;
 	}
 	return 0;
 }
@@ -1057,11 +1157,9 @@ int define_level(void)
 	}
 	free(id);
 
-	levdatum->defined = 1;
-
 	while ((id = queue_remove(id_queue))) {
 		cat_datum_t *cdatum;
-		int range_start, range_end, i;
+		uint32_t range_start, range_end, i;
 
 		if (id_has_dot(id)) {
 			char *id_start = id;
@@ -1093,7 +1191,7 @@ int define_level(void)
 			range_end = cdatum->s.value - 1;
 
 			if (range_end < range_start) {
-				yyerror2("category range is invalid");
+				yyerror2("category range %d-%d is invalid", range_start, range_end);
 				free(id);
 				return -1;
 			}
@@ -1149,6 +1247,7 @@ int expand_attrib(void)
 	ebitmap_t attrs;
 	type_datum_t *attr;
 	ebitmap_node_t *node;
+	const char *name;
 	uint32_t i;
 	int rc = -1;
 	int flags = 0;
@@ -1201,13 +1300,13 @@ int expand_attrib(void)
 	}
 
 	ebitmap_for_each_positive_bit(&attrs, node, i) {
-		attr = hashtab_search(policydbp->p_types.table,
-				policydbp->sym_val_to_name[SYM_TYPES][i]);
+		name = policydbp->sym_val_to_name[SYM_TYPES][i];
+		attr = hashtab_search(policydbp->p_types.table, name);
 		attr->flags |= flags;
 		if ((attr->flags & TYPE_FLAGS_EXPAND_ATTR_TRUE) &&
 				(attr->flags & TYPE_FLAGS_EXPAND_ATTR_FALSE)) {
-			yywarn("Expandattribute option was set to both true and false. "
-				"Resolving to false.");
+			yywarn2("Expandattribute option of attribute %s was set to both true and false; "
+				"Resolving to false.", name);
 			attr->flags &= ~TYPE_FLAGS_EXPAND_ATTR_TRUE;
 		}
 	}
@@ -1226,9 +1325,9 @@ static int add_aliases_to_type(type_datum_t * type)
 	int ret;
 	while ((id = queue_remove(id_queue))) {
 		if (id_has_dot(id)) {
+			yyerror2
+			    ("type alias identifier %s may not contain periods", id);
 			free(id);
-			yyerror
-			    ("type alias identifiers may not contain periods");
 			return -1;
 		}
 		aliasdatum = (type_datum_t *) malloc(sizeof(type_datum_t));
@@ -1253,7 +1352,7 @@ static int add_aliases_to_type(type_datum_t * type)
 				goto cleanup;
 			}
 		case -1:{
-				yyerror("could not declare alias here");
+				yyerror2("could not declare alias %s here", id);
 				goto cleanup;
 			}
 		case 0:	 	break;
@@ -1269,6 +1368,7 @@ static int add_aliases_to_type(type_datum_t * type)
 				aliasdatum->primary = type->s.value;
 				aliasdatum->flavor = TYPE_ALIAS;
 
+				free(id);
 				break;
 			}
 		default:{
@@ -1381,7 +1481,7 @@ int define_typeattribute(void)
 	return 0;
 }
 
-static int define_typebounds_helper(char *bounds_id, char *type_id)
+static int define_typebounds_helper(const char *bounds_id, const char *type_id)
 {
 	type_datum_t *bounds, *type;
 
@@ -1392,7 +1492,7 @@ static int define_typebounds_helper(char *bounds_id, char *type_id)
 
 	bounds = hashtab_search(policydbp->p_types.table, bounds_id);
 	if (!bounds || bounds->flavor == TYPE_ATTRIB) {
-		yyerror2("hoge unknown type %s", bounds_id);
+		yyerror2("type %s is not declared", bounds_id);
 		return -1;
 	}
 
@@ -1443,8 +1543,12 @@ int define_typebounds(void)
 	}
 
 	while ((id = queue_remove(id_queue))) {
-		if (define_typebounds_helper(bounds, id))
+		if (define_typebounds_helper(bounds, id)) {
+			free(bounds);
+			free(id);
 			return -1;
+		}
+
 		free(id);
 	}
 	free(bounds);
@@ -1464,15 +1568,26 @@ int define_type(int alias)
 		 * old name based hierarchy.
 		 */
 		if ((id = queue_remove(id_queue))) {
-			char *bounds, *delim;
+			const char *delim;
 
-			if ((delim = strrchr(id, '.'))
-			    && (bounds = strdup(id))) {
+			if ((delim = strrchr(id, '.'))) {
+				int ret;
+				char *bounds = strdup(id);
+				if (!bounds) {
+					yyerror("out of memory");
+					free(id);
+					return -1;
+				}
+
 				bounds[(size_t)(delim - id)] = '\0';
 
-				if (define_typebounds_helper(bounds, id))
-					return -1;
+				ret = define_typebounds_helper(bounds, id);
 				free(bounds);
+				if (ret) {
+					free(id);
+					return -1;
+				}
+
 			}
 			free(id);
 		}
@@ -1538,7 +1653,8 @@ struct val_to_name {
 
 /* Adds a type, given by its textual name, to a typeset.  If *add is
    0, then add the type to the negative set; otherwise if *add is 1
-   then add it to the positive side. */
+   then add it to the positive side.
+   The identifier `id` is always consumed. */
 static int set_types(type_set_t * set, char *id, int *add, char starallowed)
 {
 	type_datum_t *t;
@@ -1627,6 +1743,8 @@ static int define_compute_type_helper(int which, avrule_t ** rule)
 		return -1;
 	}
 
+	ebitmap_init(&tclasses);
+
 	while ((id = queue_remove(id_queue))) {
 		if (set_types(&avrule->stypes, id, &add, 0))
 			goto bad;
@@ -1646,7 +1764,6 @@ static int define_compute_type_helper(int which, avrule_t ** rule)
 			goto bad;
 	}
 
-	ebitmap_init(&tclasses);
 	if (read_classes(&tclasses))
 		goto bad;
 
@@ -1687,6 +1804,7 @@ static int define_compute_type_helper(int which, avrule_t ** rule)
 	return 0;
 
       bad:
+	ebitmap_destroy(&tclasses);
 	avrule_destroy(avrule);
 	free(avrule);
 	return -1;
@@ -1758,8 +1876,8 @@ int define_bool_tunable(int is_tunable)
 		return -1;
 	}
 	if (id_has_dot(id)) {
+		yyerror2("boolean identifier %s may not contain periods", id);
 		free(id);
-		yyerror("boolean identifiers may not contain periods");
 		return -1;
 	}
 	datum = (cond_bool_datum_t *) malloc(sizeof(cond_bool_datum_t));
@@ -1782,12 +1900,14 @@ int define_bool_tunable(int is_tunable)
 			goto cleanup;
 		}
 	case -1:{
-			yyerror("could not declare boolean here");
+			yyerror2("could not declare boolean %s here", id);
 			goto cleanup;
 		}
-	case 0:
-	case 1:{
+	case 0:{
 			break;
+		}
+	case 1:{
+			goto cleanup;
 		}
 	default:{
 			assert(0);	/* should never get here */
@@ -1806,11 +1926,13 @@ int define_bool_tunable(int is_tunable)
 	return 0;
       cleanup:
 	cond_destroy_bool(id, datum, NULL);
-	return -1;
+	return ret == 1 ? 0 : -1;
 }
 
 avrule_t *define_cond_pol_list(avrule_t * avlist, avrule_t * sl)
 {
+	avrule_t *last;
+
 	if (pass == 1) {
 		/* return something so we get through pass 1 */
 		return (avrule_t *) 1;
@@ -1821,32 +1943,36 @@ avrule_t *define_cond_pol_list(avrule_t * avlist, avrule_t * sl)
 		return avlist;
 	}
 
-	/* prepend the new avlist to the pre-existing one */
-	sl->next = avlist;
+	/* Prepend the new avlist to the pre-existing one.
+	 * An extended permission statement might consist of multiple av
+	 * rules. */
+	for (last = sl; last->next; last = last->next)
+		;
+	last->next = avlist;
 	return sl;
 }
 
-typedef struct av_ioctl_range {
+typedef struct av_xperm_range {
 	uint16_t low;
 	uint16_t high;
-} av_ioctl_range_t;
+} av_xperm_range_t;
 
-struct av_ioctl_range_list {
+struct av_xperm_range_list {
 	uint8_t omit;
-	av_ioctl_range_t range;
-	struct av_ioctl_range_list *next;
+	av_xperm_range_t range;
+	struct av_xperm_range_list *next;
 };
 
-static int avrule_sort_ioctls(struct av_ioctl_range_list **rangehead)
+static int avrule_sort_xperms(struct av_xperm_range_list **rangehead)
 {
-	struct av_ioctl_range_list *r, *r2, *sorted, *sortedhead = NULL;
+	struct av_xperm_range_list *r, *r2, *sorted, *sortedhead = NULL;
 
 	/* order list by range.low */
 	for (r = *rangehead; r != NULL; r = r->next) {
-		sorted = malloc(sizeof(struct av_ioctl_range_list));
+		sorted = malloc(sizeof(struct av_xperm_range_list));
 		if (sorted == NULL)
 			goto error;
-		memcpy(sorted, r, sizeof(struct av_ioctl_range_list));
+		memcpy(sorted, r, sizeof(struct av_xperm_range_list));
 		sorted->next = NULL;
 		if (sortedhead == NULL) {
 			sortedhead = sorted;
@@ -1885,9 +2011,9 @@ error:
 	return -1;
 }
 
-static int avrule_merge_ioctls(struct av_ioctl_range_list **rangehead)
+static void avrule_merge_xperms(struct av_xperm_range_list **rangehead)
 {
-	struct av_ioctl_range_list *r, *tmp;
+	struct av_xperm_range_list *r, *tmp;
 	r = *rangehead;
 	while (r != NULL && r->next != NULL) {
 		/* merge */
@@ -1902,18 +2028,17 @@ static int avrule_merge_ioctls(struct av_ioctl_range_list **rangehead)
 		}
 		r = r->next;
 	}
-	return 0;
 }
 
-static int avrule_read_ioctls(struct av_ioctl_range_list **rangehead)
+static int avrule_read_xperm_ranges(struct av_xperm_range_list **rangehead)
 {
 	char *id;
-	struct av_ioctl_range_list *rnew, *r = NULL;
+	struct av_xperm_range_list *rnew, *r = NULL;
 	uint8_t omit = 0;
 
 	*rangehead = NULL;
 
-	/* read in all the ioctl commands */
+	/* read in all the ioctl/netlink commands */
 	while ((id = queue_remove(id_queue))) {
 		if (strcmp(id,"~") == 0) {
 			/* these are values to be omitted */
@@ -1925,13 +2050,14 @@ static int avrule_read_ioctls(struct av_ioctl_range_list **rangehead)
 			id = queue_remove(id_queue);
 			r->range.high = (uint16_t) strtoul(id,NULL,0);
 			if (r->range.high < r->range.low) {
-				yyerror("Ioctl ranges must be in ascending order.");
+				yyerror2("extended permission range %#x-%#x must be in ascending order.",
+					 r->range.low, r->range.high);
 				return -1;
 			}
 			free(id);
 		} else {
 			/* read in new low value */
-			rnew = malloc(sizeof(struct av_ioctl_range_list));
+			rnew = malloc(sizeof(struct av_xperm_range_list));
 			if (rnew == NULL)
 				goto error;
 			rnew->next = NULL;
@@ -1958,11 +2084,11 @@ error:
 }
 
 /* flip to included ranges */
-static int avrule_omit_ioctls(struct av_ioctl_range_list **rangehead)
+static int avrule_omit_xperms(struct av_xperm_range_list **rangehead)
 {
-	struct av_ioctl_range_list *rnew, *r, *newhead, *r2;
+	struct av_xperm_range_list *rnew, *r, *newhead, *r2;
 
-	rnew = calloc(1, sizeof(struct av_ioctl_range_list));
+	rnew = calloc(1, sizeof(struct av_xperm_range_list));
 	if (!rnew)
 		goto error;
 
@@ -1980,7 +2106,7 @@ static int avrule_omit_ioctls(struct av_ioctl_range_list **rangehead)
 
 	while (r) {
 		r2->range.high = r->range.low - 1;
-		rnew = calloc(1, sizeof(struct av_ioctl_range_list));
+		rnew = calloc(1, sizeof(struct av_xperm_range_list));
 		if (!rnew)
 			goto error;
 		r2->next = rnew;
@@ -2006,27 +2132,26 @@ error:
 	return -1;
 }
 
-static int avrule_ioctl_ranges(struct av_ioctl_range_list **rangelist)
+static int avrule_xperm_ranges(struct av_xperm_range_list **rangelist)
 {
-	struct av_ioctl_range_list *rangehead;
+	struct av_xperm_range_list *rangehead;
 	uint8_t omit;
 
 	/* read in ranges to include and omit */
-	if (avrule_read_ioctls(&rangehead))
+	if (avrule_read_xperm_ranges(&rangehead))
 		return -1;
 	if (rangehead == NULL) {
-		yyerror("error processing ioctl commands");
+		yyerror("error processing ioctl/netlink commands");
 		return -1;
 	}
 	omit = rangehead->omit;
-	/* sort and merge the input ioctls */
-	if (avrule_sort_ioctls(&rangehead))
+	/* sort and merge the input ranges */
+	if (avrule_sort_xperms(&rangehead))
 		return -1;
-	if (avrule_merge_ioctls(&rangehead))
-		return -1;
+	avrule_merge_xperms(&rangehead);
 	/* flip ranges if these are omitted */
 	if (omit) {
-		if (avrule_omit_ioctls(&rangehead))
+		if (avrule_omit_xperms(&rangehead))
 			return -1;
 	}
 
@@ -2038,18 +2163,17 @@ static int define_te_avtab_xperms_helper(int which, avrule_t ** rule)
 {
 	char *id;
 	class_perm_node_t *perms, *tail = NULL, *cur_perms = NULL;
-	class_datum_t *cladatum;
-	perm_datum_t *perdatum = NULL;
+	const class_datum_t *cladatum;
+	const perm_datum_t *perdatum;
 	ebitmap_t tclasses;
 	ebitmap_node_t *node;
 	avrule_t *avrule;
 	unsigned int i;
-	int add = 1, ret = 0;
+	int add = 1, ret;
 
 	avrule = (avrule_t *) malloc(sizeof(avrule_t));
 	if (!avrule) {
 		yyerror("out of memory");
-		ret = -1;
 		goto out;
 	}
 	avrule_init(avrule);
@@ -2060,14 +2184,13 @@ static int define_te_avtab_xperms_helper(int which, avrule_t ** rule)
 	avrule->xperms = NULL;
 	if (!avrule->source_filename) {
 		yyerror("out of memory");
-		return -1;
+		goto out;
 	}
 
 	while ((id = queue_remove(id_queue))) {
 		if (set_types
 		    (&avrule->stypes, id, &add,
 		     which == AVRULE_XPERMS_NEVERALLOW ? 1 : 0)) {
-			ret = -1;
 			goto out;
 		}
 	}
@@ -2077,13 +2200,11 @@ static int define_te_avtab_xperms_helper(int which, avrule_t ** rule)
 			free(id);
 			if (add == 0 && which != AVRULE_XPERMS_NEVERALLOW) {
 				yyerror("-self is only supported in neverallow and neverallowxperm rules");
-				ret = -1;
 				goto out;
 			}
 			avrule->flags |= (add ? RULE_SELF : RULE_NOTSELF);
 			if ((avrule->flags & RULE_SELF) && (avrule->flags & RULE_NOTSELF)) {
 				yyerror("self and -self are mutual exclusive");
-				ret = -1;
 				goto out;
 			}
 			continue;
@@ -2091,7 +2212,6 @@ static int define_te_avtab_xperms_helper(int which, avrule_t ** rule)
 		if (set_types
 		    (&avrule->ttypes, id, &add,
 		     which == AVRULE_XPERMS_NEVERALLOW ? 1 : 0)) {
-			ret = -1;
 			goto out;
 		}
 	}
@@ -2099,7 +2219,6 @@ static int define_te_avtab_xperms_helper(int which, avrule_t ** rule)
 	if ((avrule->ttypes.flags & TYPE_COMP)) {
 		if (avrule->flags & RULE_NOTSELF) {
 			yyerror("-self is not supported in complements");
-			ret = -1;
 			goto out;
 		}
 		if (avrule->flags & RULE_SELF) {
@@ -2111,7 +2230,7 @@ static int define_te_avtab_xperms_helper(int which, avrule_t ** rule)
 	ebitmap_init(&tclasses);
 	ret = read_classes(&tclasses);
 	if (ret)
-		goto out;
+		goto out2;
 
 	perms = NULL;
 	id = queue_head(id_queue);
@@ -2120,8 +2239,7 @@ static int define_te_avtab_xperms_helper(int which, avrule_t ** rule)
 		    (class_perm_node_t *) malloc(sizeof(class_perm_node_t));
 		if (!cur_perms) {
 			yyerror("out of memory");
-			ret = -1;
-			goto out;
+			goto out2;
 		}
 		class_perm_node_init(cur_perms);
 		cur_perms->tclass = i + 1;
@@ -2159,9 +2277,14 @@ static int define_te_avtab_xperms_helper(int which, avrule_t ** rule)
 
 	avrule->perms = perms;
 	*rule = avrule;
+	return 0;
 
+out2:
+	ebitmap_destroy(&tclasses);
 out:
-	return ret;
+	avrule_destroy(avrule);
+	free(avrule);
+	return -1;
 }
 
 /* index of the u32 containing the permission */
@@ -2214,11 +2337,11 @@ static int avrule_xperms_used(const av_extended_perms_t *xperms)
 #define IOC_DRIV(x) ((x) >> 8)
 #define IOC_FUNC(x) ((x) & 0xff)
 #define IOC_CMD(driver, func) (((driver) << 8) + (func))
-static int avrule_ioctl_partialdriver(struct av_ioctl_range_list *rangelist,
+static int avrule_xperm_partialdriver(struct av_xperm_range_list *rangelist,
 				av_extended_perms_t *complete_driver,
 				av_extended_perms_t **extended_perms)
 {
-	struct av_ioctl_range_list *r;
+	struct av_xperm_range_list *r;
 	av_extended_perms_t *xperms;
 	uint8_t low, high;
 
@@ -2253,10 +2376,10 @@ static int avrule_ioctl_partialdriver(struct av_ioctl_range_list *rangelist,
 
 }
 
-static int avrule_ioctl_completedriver(struct av_ioctl_range_list *rangelist,
+static int avrule_ioctl_completedriver(struct av_xperm_range_list *rangelist,
 			av_extended_perms_t **extended_perms)
 {
-	struct av_ioctl_range_list *r;
+	struct av_xperm_range_list *r;
 	av_extended_perms_t *xperms;
 	uint16_t low, high;
 	xperms = calloc(1, sizeof(av_extended_perms_t));
@@ -2295,10 +2418,10 @@ static int avrule_ioctl_completedriver(struct av_ioctl_range_list *rangelist,
 	return 0;
 }
 
-static int avrule_ioctl_func(struct av_ioctl_range_list *rangelist,
-		av_extended_perms_t **extended_perms, unsigned int driver)
+static int avrule_xperm_func(struct av_xperm_range_list *rangelist,
+		av_extended_perms_t **extended_perms, unsigned int driver, uint8_t specified)
 {
-	struct av_ioctl_range_list *r;
+	struct av_xperm_range_list *r;
 	av_extended_perms_t *xperms;
 	uint16_t low, high;
 
@@ -2332,7 +2455,7 @@ static int avrule_ioctl_func(struct av_ioctl_range_list *rangelist,
 		high = IOC_FUNC(high);
 		avrule_xperm_setrangebits(low, high, xperms);
 		xperms->driver = driver;
-		xperms->specified = AVRULE_XPERMS_IOCTLFUNCTION;
+		xperms->specified = specified;
 		r = r->next;
 	}
 
@@ -2407,16 +2530,16 @@ static int avrule_cpy(avrule_t *dest, const avrule_t *src)
 	return 0;
 }
 
-static int define_te_avtab_ioctl(const avrule_t *avrule_template)
+static int define_te_avtab_ioctl(const avrule_t *avrule_template, avrule_t **ret_avrules)
 {
-	avrule_t *avrule;
-	struct av_ioctl_range_list *rangelist, *r;
+	avrule_t *avrule, *ret = NULL, **last = &ret;
+	struct av_xperm_range_list *rangelist, *r;
 	av_extended_perms_t *complete_driver, *partial_driver, *xperms;
 	unsigned int i;
 
 
 	/* organize ioctl ranges */
-	if (avrule_ioctl_ranges(&rangelist))
+	if (avrule_xperm_ranges(&rangelist))
 		return -1;
 
 	/* create rule for ioctl driver types that are entirely enabled */
@@ -2431,11 +2554,17 @@ static int define_te_avtab_ioctl(const avrule_t *avrule_template)
 		if (avrule_cpy(avrule, avrule_template))
 			return -1;
 		avrule->xperms = complete_driver;
-		append_avrule(avrule);
+
+		if (ret_avrules) {
+			*last = avrule;
+			last = &(avrule->next);
+		} else {
+			append_avrule(avrule);
+		}
 	}
 
 	/* flag ioctl driver codes that are partially enabled */
-	if (avrule_ioctl_partialdriver(rangelist, complete_driver, &partial_driver))
+	if (avrule_xperm_partialdriver(rangelist, complete_driver, &partial_driver))
 		return -1;
 
 	if (!partial_driver || !avrule_xperms_used(partial_driver))
@@ -2448,7 +2577,7 @@ static int define_te_avtab_ioctl(const avrule_t *avrule_template)
 	 */
 	i = 0;
 	while (xperms_for_each_bit(&i, partial_driver)) {
-		if (avrule_ioctl_func(rangelist, &xperms, i))
+		if (avrule_xperm_func(rangelist, &xperms, i, AVRULE_XPERMS_IOCTLFUNCTION))
 			return -1;
 
 		if (xperms) {
@@ -2460,7 +2589,13 @@ static int define_te_avtab_ioctl(const avrule_t *avrule_template)
 			if (avrule_cpy(avrule, avrule_template))
 				return -1;
 			avrule->xperms = xperms;
-			append_avrule(avrule);
+
+			if (ret_avrules) {
+				*last = avrule;
+				last = &(avrule->next);
+			} else {
+				append_avrule(avrule);
+			}
 		}
 	}
 
@@ -2474,7 +2609,125 @@ done:
 		free(r);
 	}
 
+	if (ret_avrules)
+		*ret_avrules = ret;
+
 	return 0;
+}
+
+static int define_te_avtab_netlink(const avrule_t *avrule_template, avrule_t **ret_avrules)
+{
+	avrule_t *avrule, *ret = NULL, **last = &ret;
+	struct av_xperm_range_list *rangelist, *r;
+	av_extended_perms_t *partial_driver, *xperms;
+	unsigned int i;
+
+	/* organize ranges */
+	if (avrule_xperm_ranges(&rangelist))
+		return -1;
+
+	/* flag driver codes that are partially enabled */
+	if (avrule_xperm_partialdriver(rangelist, NULL, &partial_driver))
+		return -1;
+
+	if (!partial_driver || !avrule_xperms_used(partial_driver))
+		goto done;
+
+	/*
+	 * create rule for each partially used driver codes
+	 * "partially used" meaning that the code number e.g. socket 0x89
+	 * has some permission bits set and others not set.
+	 */
+	i = 0;
+	while (xperms_for_each_bit(&i, partial_driver)) {
+		if (avrule_xperm_func(rangelist, &xperms, i, AVRULE_XPERMS_NLMSG))
+			return -1;
+
+		if (xperms) {
+			avrule = (avrule_t *) calloc(1, sizeof(avrule_t));
+			if (!avrule) {
+				yyerror("out of memory");
+				return -1;
+			}
+			if (avrule_cpy(avrule, avrule_template))
+				return -1;
+			avrule->xperms = xperms;
+
+			if (ret_avrules) {
+				*last = avrule;
+				last = &(avrule->next);
+			} else {
+				append_avrule(avrule);
+			}
+		}
+	}
+
+done:
+	if (partial_driver)
+		free(partial_driver);
+
+	while (rangelist != NULL) {
+		r = rangelist;
+		rangelist = rangelist->next;
+		free(r);
+	}
+
+	if (ret_avrules)
+		*ret_avrules = ret;
+
+	return 0;
+}
+
+avrule_t *define_cond_te_avtab_extended_perms(int which)
+{
+	char *id;
+	unsigned int i;
+	avrule_t *avrule_template, *rules = NULL;
+	int rc = 0;
+
+	if (policydbp->policy_type == POLICY_KERN && policydbp->policyvers < POLICYDB_VERSION_COND_XPERMS) {
+		yyerror2("extended permissions in conditional policies are only supported since policy version %d, found policy version %d",
+			POLICYDB_VERSION_COND_XPERMS, policydbp->policyvers);
+		return COND_ERR;
+	}
+	if (policydbp->policy_type != POLICY_KERN && policydbp->policyvers < MOD_POLICYDB_VERSION_COND_XPERMS) {
+		yyerror2("extended permissions in conditional policies are only supported since module policy version %d, found module policy version %d",
+			MOD_POLICYDB_VERSION_COND_XPERMS, policydbp->policyvers);
+		return COND_ERR;
+	}
+
+	if (pass == 1) {
+		for (i = 0; i < 4; i++) {
+			while ((id = queue_remove(id_queue)))
+				free(id);
+		}
+		return (avrule_t *) 1; /* any non-NULL value */
+	}
+
+	/* populate avrule template with source/target/tclass */
+	if (define_te_avtab_xperms_helper(which, &avrule_template))
+		return COND_ERR;
+
+	id = queue_remove(id_queue);
+	if (strcmp(id, "ioctl") == 0) {
+		rc = define_te_avtab_ioctl(avrule_template, &rules);
+	} else if (strcmp(id, "nlmsg") == 0) {
+		rc = define_te_avtab_netlink(avrule_template, &rules);
+	} else {
+		yyerror2("only ioctl and nlmsg extended permissions are supported, found %s", id);
+		rc = -1;
+	}
+
+	free(id);
+	avrule_destroy(avrule_template);
+	free(avrule_template);
+
+	if (rc) {
+		avrule_destroy(rules);
+		return NULL;
+	}
+
+	return rules;
 }
 
 int define_te_avtab_extended_perms(int which)
@@ -2498,9 +2751,11 @@ int define_te_avtab_extended_perms(int which)
 
 	id = queue_remove(id_queue);
 	if (strcmp(id,"ioctl") == 0) {
-		rc = define_te_avtab_ioctl(avrule_template);
+		rc = define_te_avtab_ioctl(avrule_template, NULL);
+	} else if (strcmp(id,"nlmsg") == 0) {
+		rc = define_te_avtab_netlink(avrule_template, NULL);
 	} else {
-		yyerror("only ioctl extended permissions are supported");
+		yyerror2("only ioctl and nlmsg extended permissions are supported, found %s", id);
 		rc = -1;
 	}
 
@@ -2525,6 +2780,8 @@ static int define_te_avtab_helper(int which, avrule_t ** rule)
 	unsigned int i;
 	int add = 1, ret = 0;
 	int suppress = 0;
+
+	ebitmap_init(&tclasses);
 
 	avrule = (avrule_t *) malloc(sizeof(avrule_t));
 	if (!avrule) {
@@ -2589,7 +2846,6 @@ static int define_te_avtab_helper(int which, avrule_t ** rule)
 		}
 	}
 
-	ebitmap_init(&tclasses);
 	ret = read_classes(&tclasses);
 	if (ret)
 		goto out;
@@ -2675,8 +2931,6 @@ static int define_te_avtab_helper(int which, avrule_t ** rule)
 		free(id);
 	}
 
-	ebitmap_destroy(&tclasses);
-
 	avrule->perms = perms;
 	*rule = avrule;
 
@@ -2685,6 +2939,9 @@ static int define_te_avtab_helper(int which, avrule_t ** rule)
 		avrule_destroy(avrule);
 		free(avrule);
 	}
+
+	ebitmap_destroy(&tclasses);
+
 	return ret;
 
 }
@@ -2969,10 +3226,10 @@ static int set_roles(role_set_t * set, char *id)
 int define_role_trans(int class_specified)
 {
 	char *id;
-	role_datum_t *role;
+	const role_datum_t *role;
 	role_set_t roles;
 	type_set_t types;
-	class_datum_t *cladatum;
+	const class_datum_t *cladatum;
 	ebitmap_t e_types, e_roles, e_classes;
 	ebitmap_node_t *tnode, *rnode, *cnode;
 	struct role_trans *tr = NULL;
@@ -3001,29 +3258,29 @@ int define_role_trans(int class_specified)
 
 	while ((id = queue_remove(id_queue))) {
 		if (set_roles(&roles, id))
-			return -1;
+			goto bad;
 	}
 	add = 1;
 	while ((id = queue_remove(id_queue))) {
 		if (set_types(&types, id, &add, 0))
-			return -1;
+			goto bad;
 	}
 
 	if (class_specified) {
 		if (read_classes(&e_classes))
-			return -1;
+			goto bad;
 	} else {
 		cladatum = hashtab_search(policydbp->p_classes.table,
 					  "process");
 		if (!cladatum) {
 			yyerror2("could not find process class for "
 				 "legacy role_transition statement");
-			return -1;
+			goto bad;
 		}
 
 		if (ebitmap_set_bit(&e_classes, cladatum->s.value - 1, TRUE)) {
 			yyerror("out of memory");
-			return -1;
+			goto bad;
 		}
 	}
 
@@ -3079,7 +3336,7 @@ int define_role_trans(int class_specified)
 				tr = malloc(sizeof(struct role_trans));
 				if (!tr) {
 					yyerror("out of memory");
-					return -1;
+					goto bad;
 				}
 				memset(tr, 0, sizeof(struct role_trans));
 				tr->role = i + 1;
@@ -3095,7 +3352,7 @@ int define_role_trans(int class_specified)
 	rule = malloc(sizeof(struct role_trans_rule));
 	if (!rule) {
 		yyerror("out of memory");
-		return -1;
+		goto bad;
 	}
 	memset(rule, 0, sizeof(struct role_trans_rule));
 	rule->roles = roles;
@@ -3111,6 +3368,11 @@ int define_role_trans(int class_specified)
 	return 0;
 
       bad:
+	role_set_destroy(&roles);
+	type_set_destroy(&types);
+	ebitmap_destroy(&e_roles);
+	ebitmap_destroy(&e_types);
+	ebitmap_destroy(&e_classes);
 	return -1;
 }
 
@@ -3136,6 +3398,7 @@ int define_role_allow(void)
 
 	while ((id = queue_remove(id_queue))) {
 		if (set_roles(&ra->roles, id)) {
+			role_allow_rule_destroy(ra);
 			free(ra);
 			return -1;
 		}
@@ -3143,6 +3406,7 @@ int define_role_allow(void)
 
 	while ((id = queue_remove(id_queue))) {
 		if (set_roles(&ra->new_roles, id)) {
+			role_allow_rule_destroy(ra);
 			free(ra);
 			return -1;
 		}
@@ -3155,7 +3419,7 @@ int define_role_allow(void)
 avrule_t *define_cond_filename_trans(void)
 {
 	yyerror("type transitions with a filename not allowed inside "
-		"conditionals\n");
+		"conditionals");
 	return COND_ERR;
 }
 
@@ -3397,20 +3661,22 @@ int define_constraint(constraint_expr_t * expr)
 		return 0;
 	}
 
+	ebitmap_init(&classmap);
+
 	depth = -1;
 	for (e = expr; e; e = e->next) {
 		switch (e->expr_type) {
 		case CEXPR_NOT:
 			if (depth < 0) {
 				yyerror("illegal constraint expression");
-				return -1;
+				goto bad;
 			}
 			break;
 		case CEXPR_AND:
 		case CEXPR_OR:
 			if (depth < 1) {
 				yyerror("illegal constraint expression");
-				return -1;
+				goto bad;
 			}
 			depth--;
 			break;
@@ -3418,51 +3684,48 @@ int define_constraint(constraint_expr_t * expr)
 		case CEXPR_NAMES:
 			if (e->attr & CEXPR_XTARGET) {
 				yyerror("illegal constraint expression");
-				return -1;	/* only for validatetrans rules */
+				goto bad;	/* only for validatetrans rules */
 			}
 			if (depth == (CEXPR_MAXDEPTH - 1)) {
 				yyerror("constraint expression is too deep");
-				return -1;
+				goto bad;
 			}
 			depth++;
 			break;
 		default:
 			yyerror("illegal constraint expression");
-			return -1;
+			goto bad;
 		}
 	}
 	if (depth != 0) {
 		yyerror("illegal constraint expression");
-		return -1;
+		goto bad;
 	}
 
-	ebitmap_init(&classmap);
 	while ((id = queue_remove(id_queue))) {
 		if (!is_id_in_scope(SYM_CLASSES, id)) {
 			yyerror2("class %s is not within scope", id);
 			free(id);
-			return -1;
+			goto bad;
 		}
 		cladatum =
 		    (class_datum_t *) hashtab_search(policydbp->p_classes.table,
 						     (hashtab_key_t) id);
 		if (!cladatum) {
 			yyerror2("class %s is not defined", id);
-			ebitmap_destroy(&classmap);
 			free(id);
-			return -1;
+			goto bad;
 		}
 		if (ebitmap_set_bit(&classmap, cladatum->s.value - 1, TRUE)) {
 			yyerror("out of memory");
-			ebitmap_destroy(&classmap);
 			free(id);
-			return -1;
+			goto bad;
 		}
 		node = malloc(sizeof(struct constraint_node));
 		if (!node) {
 			yyerror("out of memory");
 			free(node);
-			return -1;
+			goto bad;
 		}
 		memset(node, 0, sizeof(constraint_node_t));
 		if (useexpr) {
@@ -3474,7 +3737,7 @@ int define_constraint(constraint_expr_t * expr)
 		if (!node->expr) {
 			yyerror("out of memory");
 			free(node);
-			return -1;
+			goto bad;
 		}
 		node->permissions = 0;
 
@@ -3526,8 +3789,7 @@ int define_constraint(constraint_expr_t * expr)
 					yyerror2("permission %s is not"
 						 " defined for class %s", id, policydbp->p_class_val_to_name[i]);
 					free(id);
-					ebitmap_destroy(&classmap);
-					return -1;
+					goto bad;
 				}
 			}
 			node->permissions |= (UINT32_C(1) << (perdatum->s.value - 1));
@@ -3538,6 +3800,13 @@ int define_constraint(constraint_expr_t * expr)
 	ebitmap_destroy(&classmap);
 
 	return 0;
+
+bad:
+	ebitmap_destroy(&classmap);
+	if (useexpr)
+		constraint_expr_destroy(expr);
+
+	return -1;
 }
 
 int define_validatetrans(constraint_expr_t * expr)
@@ -3556,20 +3825,22 @@ int define_validatetrans(constraint_expr_t * expr)
 		return 0;
 	}
 
+	ebitmap_init(&classmap);
+
 	depth = -1;
 	for (e = expr; e; e = e->next) {
 		switch (e->expr_type) {
 		case CEXPR_NOT:
 			if (depth < 0) {
 				yyerror("illegal validatetrans expression");
-				return -1;
+				goto bad;
 			}
 			break;
 		case CEXPR_AND:
 		case CEXPR_OR:
 			if (depth < 1) {
 				yyerror("illegal validatetrans expression");
-				return -1;
+				goto bad;
 			}
 			depth--;
 			break;
@@ -3577,47 +3848,45 @@ int define_validatetrans(constraint_expr_t * expr)
 		case CEXPR_NAMES:
 			if (depth == (CEXPR_MAXDEPTH - 1)) {
 				yyerror("validatetrans expression is too deep");
-				return -1;
+				goto bad;
 			}
 			depth++;
 			break;
 		default:
 			yyerror("illegal validatetrans expression");
-			return -1;
+			goto bad;
 		}
 	}
 	if (depth != 0) {
 		yyerror("illegal validatetrans expression");
-		return -1;
+		goto bad;
 	}
 
-	ebitmap_init(&classmap);
 	while ((id = queue_remove(id_queue))) {
 		if (!is_id_in_scope(SYM_CLASSES, id)) {
 			yyerror2("class %s is not within scope", id);
 			free(id);
-			return -1;
+			goto bad;
 		}
 		cladatum =
 		    (class_datum_t *) hashtab_search(policydbp->p_classes.table,
 						     (hashtab_key_t) id);
 		if (!cladatum) {
 			yyerror2("class %s is not defined", id);
-			ebitmap_destroy(&classmap);
 			free(id);
-			return -1;
+			goto bad;
 		}
 		if (ebitmap_set_bit(&classmap, (cladatum->s.value - 1), TRUE)) {
 			yyerror("out of memory");
-			ebitmap_destroy(&classmap);
 			free(id);
-			return -1;
+			goto bad;
 		}
 
 		node = malloc(sizeof(struct constraint_node));
 		if (!node) {
 			yyerror("out of memory");
-			return -1;
+			free(id);
+			goto bad;
 		}
 		memset(node, 0, sizeof(constraint_node_t));
 		if (useexpr) {
@@ -3637,6 +3906,13 @@ int define_validatetrans(constraint_expr_t * expr)
 	ebitmap_destroy(&classmap);
 
 	return 0;
+
+bad:
+	ebitmap_destroy(&classmap);
+	if (useexpr)
+		constraint_expr_destroy(expr);
+
+	return -1;
 }
 
 uintptr_t define_cexpr(uint32_t expr_type, uintptr_t arg1, uintptr_t arg2)
@@ -3722,6 +3998,7 @@ uintptr_t define_cexpr(uint32_t expr_type, uintptr_t arg1, uintptr_t arg2)
 				if (!is_id_in_scope(SYM_USERS, id)) {
 					yyerror2("user %s is not within scope",
 						 id);
+					free(id);
 					constraint_expr_destroy(expr);
 					return 0;
 				}
@@ -3733,6 +4010,7 @@ uintptr_t define_cexpr(uint32_t expr_type, uintptr_t arg1, uintptr_t arg2)
 								    id);
 				if (!user) {
 					yyerror2("unknown user %s", id);
+					free(id);
 					constraint_expr_destroy(expr);
 					return 0;
 				}
@@ -3742,6 +4020,7 @@ uintptr_t define_cexpr(uint32_t expr_type, uintptr_t arg1, uintptr_t arg2)
 					yyerror2("role %s is not within scope",
 						 id);
 					constraint_expr_destroy(expr);
+					free(id);
 					return 0;
 				}
 				role =
@@ -3753,6 +4032,7 @@ uintptr_t define_cexpr(uint32_t expr_type, uintptr_t arg1, uintptr_t arg2)
 				if (!role) {
 					yyerror2("unknown role %s", id);
 					constraint_expr_destroy(expr);
+					free(id);
 					return 0;
 				}
 				val = role->s.value;
@@ -3765,11 +4045,13 @@ uintptr_t define_cexpr(uint32_t expr_type, uintptr_t arg1, uintptr_t arg2)
 			} else {
 				yyerror("invalid constraint expression");
 				constraint_expr_destroy(expr);
+				free(id);
 				return 0;
 			}
 			if (ebitmap_set_bit(&expr->names, val - 1, TRUE)) {
 				yyerror("out of memory");
 				ebitmap_destroy(&expr->names);
+				free(id);
 				constraint_expr_destroy(expr);
 				return 0;
 			}
@@ -3786,7 +4068,7 @@ uintptr_t define_cexpr(uint32_t expr_type, uintptr_t arg1, uintptr_t arg2)
 	return 0;
 }
 
-int define_conditional(cond_expr_t * expr, avrule_t * t, avrule_t * f)
+int define_conditional(cond_expr_t * expr, avrule_t * t_list, avrule_t * f_list)
 {
 	cond_expr_t *e;
 	int depth, booleans, tunables;
@@ -3798,18 +4080,18 @@ int define_conditional(cond_expr_t * expr, avrule_t * t, avrule_t * f)
 		yyerror("illegal conditional expression");
 		return -1;
 	}
-	if (!t) {
-		if (!f) {
+	if (!t_list) {
+		if (!f_list) {
 			/* empty is fine, destroy expression and return */
 			cond_expr_destroy(expr);
 			return 0;
 		}
 		/* Invert */
-		t = f;
-		f = 0;
+		t_list = f_list;
+		f_list = NULL;
 		expr = define_cond_expr(COND_NOT, expr, 0);
 		if (!expr) {
-			yyerror("unable to invert");
+			yyerror("unable to invert conditional expression");
 			return -1;
 		}
 	}
@@ -3872,8 +4154,8 @@ int define_conditional(cond_expr_t * expr, avrule_t * t, avrule_t * f)
 	/*  use tmp conditional node to partially build new node */
 	memset(&cn, 0, sizeof(cn));
 	cn.expr = expr;
-	cn.avtrue_list = t;
-	cn.avfalse_list = f;
+	cn.avtrue_list = t_list;
+	cn.avfalse_list = f_list;
 
 	/* normalize/precompute expression */
 	if (cond_normalize_expr(policydbp, &cn) < 0) {
@@ -3969,6 +4251,7 @@ cond_expr_t *define_cond_expr(uint32_t expr_type, void *arg1, void *arg2)
 		if (!e1 || e1->next) {
 			yyerror
 			    ("illegal right side of conditional binary op expression");
+			cond_expr_destroy(arg1);
 			free(expr);
 			return NULL;
 		}
@@ -4049,7 +4332,7 @@ static int set_user_roles(role_set_t * set, char *id)
 static int parse_categories(char *id, level_datum_t * levdatum, ebitmap_t * cats)
 {
 	cat_datum_t *cdatum;
-	int range_start, range_end, i;
+	uint32_t range_start, range_end, i;
 
 	if (id_has_dot(id)) {
 		char *id_start = id;
@@ -4074,7 +4357,7 @@ static int parse_categories(char *id, level_datum_t * levdatum, ebitmap_t * cats
 		range_end = cdatum->s.value - 1;
 
 		if (range_end < range_start) {
-			yyerror2("category range is invalid");
+			yyerror2("category range %d-%d is invalid", range_start, range_end);
 			return -1;
 		}
 	} else {
@@ -4098,6 +4381,50 @@ static int parse_categories(char *id, level_datum_t * levdatum, ebitmap_t * cats
 			return -1;
 		}
 		if (ebitmap_set_bit(cats, i, TRUE)) {
+			yyerror("out of memory");
+			return -1;
+		}
+	}
+
+	return 0;
+}
+
+static int mls_semantic_cats_merge(mls_semantic_cat_t ** dst,
+								   const mls_semantic_cat_t * src)
+{
+	mls_semantic_cat_t *new;
+
+	while (src) {
+		new = (mls_semantic_cat_t *) malloc(sizeof(mls_semantic_cat_t));
+		if (!new)
+			return -1;
+
+		mls_semantic_cat_init(new);
+		new->low = src->low;
+		new->high = src->high;
+		new->next = *dst;
+		*dst = new;
+
+		src = src->next;
+	}
+
+	return 0;
+}
+
+static int mls_add_or_check_level(mls_semantic_level_t *dst, const mls_semantic_level_t *src)
+{
+	if (!dst->sens) {
+		if (mls_semantic_level_cpy(dst, src) < 0) {
+			yyerror("out of memory");
+			return -1;
+		}
+	} else {
+		if (dst->sens != src->sens) {
+			return -1;
+		}
+		/* Duplicate cats won't cause problems, but different cats will
+		 * result in an error during expansion */
+		if (mls_semantic_cats_merge(&dst->cat, src->cat) < 0) {
 			yyerror("out of memory");
 			return -1;
 		}
@@ -4163,8 +4490,9 @@ static int parse_semantic_categories(char *id, level_datum_t * levdatum __attrib
 
 int define_user(void)
 {
+	const char *username;
 	char *id;
-	user_datum_t *usrdatum;
+	user_datum_t *usrdatum, *usr_global;
 	level_datum_t *levdatum;
 	int l;
 
@@ -4189,13 +4517,25 @@ int define_user(void)
 		return 0;
 	}
 
-	if ((usrdatum = declare_user()) == NULL) {
+	username = queue_head(id_queue);
+	if (!username) {
+		yyerror("no user name");
 		return -1;
 	}
 
+	id = strdup(username);
+
+	if ((usrdatum = declare_user()) == NULL) {
+		free(id);
+		return -1;
+	}
+
+	usr_global = hashtab_search(policydbp->p_users.table, (hashtab_key_t) id);
+	free(id);
+
 	while ((id = queue_remove(id_queue))) {
 		if (set_user_roles(&usrdatum->roles, id))
-			continue;
+			return -1;
 	}
 
 	if (mlspol) {
@@ -4219,6 +4559,7 @@ int define_user(void)
 		usrdatum->dfltlevel.sens = levdatum->level->sens;
 
 		while ((id = queue_remove(id_queue))) {
+			/* This will add to any already existing categories */
 			if (parse_semantic_categories(id, levdatum,
 			                            &usrdatum->dfltlevel.cat)) {
 				free(id);
@@ -4244,6 +4585,7 @@ int define_user(void)
 			usrdatum->range.level[l].sens = levdatum->level->sens;
 
 			while ((id = queue_remove(id_queue))) {
+				/* This will add to any already existing categories */
 				if (parse_semantic_categories(id, levdatum,
 				               &usrdatum->range.level[l].cat)) {
 					free(id);
@@ -4261,6 +4603,24 @@ int define_user(void)
 			if (mls_semantic_level_cpy(&usrdatum->range.level[1],
 			                           &usrdatum->range.level[0])) {
 				yyerror("out of memory");
+				return -1;
+			}
+		}
+
+		if (usr_global && usr_global != usrdatum) {
+			if (mls_add_or_check_level(&usr_global->dfltlevel,
+									   &usrdatum->dfltlevel)) {
+				yyerror("Problem with user default level");
+				return -1;
+			}
+			if (mls_add_or_check_level(&usr_global->range.level[0],
+									   &usrdatum->range.level[0])) {
+				yyerror("Problem with user low level");
+				return -1;
+			}
+			if (mls_add_or_check_level(&usr_global->range.level[1],
+									   &usrdatum->range.level[1])) {
+				yyerror("Problem with user high level");
 				return -1;
 			}
 		}
@@ -4379,14 +4739,13 @@ static int parse_security_context(context_struct_t * c)
 
 	if (mlspol) {
 		/* extract the low sensitivity */
-		id = (char *)queue_head(id_queue);
+		id = (char *)queue_remove(id_queue);
 		if (!id) {
 			yyerror("no sensitivity name for sid context"
 				" definition?");
 			return -1;
 		}
 
-		id = (char *)queue_remove(id_queue);
 		for (l = 0; l < 2; l++) {
 			levdatum = (level_datum_t *)
 			    hashtab_search(policydbp->p_levels.table,
@@ -4544,7 +4903,6 @@ int define_fs_context(unsigned int major, unsigned int minor)
 int define_pirq_context(unsigned int pirq)
 {
 	ocontext_t *newc, *c, *l, *head;
-	char *id;
 
 	if (policydbp->target_platform != SEPOL_TARGET_XEN) {
 		yyerror("pirqcon not supported for target");
@@ -4552,8 +4910,6 @@ int define_pirq_context(unsigned int pirq)
 	}
 
 	if (pass == 1) {
-		id = (char *) queue_remove(id_queue);
-		free(id);
 		parse_security_context(NULL);
 		return 0;
 	}
@@ -4598,7 +4954,6 @@ bad:
 int define_iomem_context(uint64_t low, uint64_t high)
 {
 	ocontext_t *newc, *c, *l, *head;
-	char *id;
 
 	if (policydbp->target_platform != SEPOL_TARGET_XEN) {
 		yyerror("iomemcon not supported for target");
@@ -4606,8 +4961,6 @@ int define_iomem_context(uint64_t low, uint64_t high)
 	}
 
 	if (pass == 1) {
-		id = (char *)queue_remove(id_queue);
-		free(id);
 		parse_security_context(NULL);
 		return 0;
 	}
@@ -4662,7 +5015,6 @@ bad:
 int define_ioport_context(unsigned long low, unsigned long high)
 {
 	ocontext_t *newc, *c, *l, *head;
-	char *id;
 
 	if (policydbp->target_platform != SEPOL_TARGET_XEN) {
 		yyerror("ioportcon not supported for target");
@@ -4670,8 +5022,6 @@ int define_ioport_context(unsigned long low, unsigned long high)
 	}
 
 	if (pass == 1) {
-		id = (char *)queue_remove(id_queue);
-		free(id);
 		parse_security_context(NULL);
 		return 0;
 	}
@@ -4726,7 +5076,6 @@ bad:
 int define_pcidevice_context(unsigned long device)
 {
 	ocontext_t *newc, *c, *l, *head;
-	char *id;
 
 	if (policydbp->target_platform != SEPOL_TARGET_XEN) {
 		yyerror("pcidevicecon not supported for target");
@@ -4734,8 +5083,6 @@ int define_pcidevice_context(unsigned long device)
 	}
 
 	if (pass == 1) {
-		id = (char *) queue_remove(id_queue);
-		free(id);
 		parse_security_context(NULL);
 		return 0;
 	}
@@ -4967,7 +5314,7 @@ int define_ibpkey_context(unsigned int low, unsigned int high)
 		goto out;
 	}
 
-	if (subnet_prefix.s6_addr[2] || subnet_prefix.s6_addr[3]) {
+	if (subnet_prefix.s6_addr32[2] || subnet_prefix.s6_addr32[3]) {
 		yyerror("subnet prefix should be 0's in the low order 64 bits.");
 		rc = -1;
 		goto out;
@@ -5050,7 +5397,7 @@ int define_ibendport_context(unsigned int port)
 	}
 
 	if (port > 0xff || port == 0) {
-		yyerror("Invalid ibendport port number, should be 0 < port < 256");
+		yyerror2("Invalid ibendport port number %d, should be 0 < port < 256", port);
 		return -1;
 	}
 
@@ -5069,7 +5416,7 @@ int define_ibendport_context(unsigned int port)
 	}
 
 	if (strlen(newc->u.ibendport.dev_name) > IB_DEVICE_NAME_MAX - 1) {
-		yyerror("infiniband device name exceeds max length of 63.");
+		yyerror2("infiniband device name %s exceeds max length of 63.", newc->u.ibendport.dev_name);
 		rc = -1;
 		goto out;
 	}
@@ -5169,12 +5516,45 @@ int define_netif_context(void)
 	return 0;
 }
 
+static int insert_ipv4_node(ocontext_t *newc)
+{
+	ocontext_t *c, *l;
+	char addr[INET_ADDRSTRLEN];
+	char mask[INET_ADDRSTRLEN];
+
+	/* Create order of most specific to least retaining
+	   the order specified in the configuration. */
+	for (l = NULL, c = policydbp->ocontexts[OCON_NODE]; c; l = c, c = c->next) {
+		if (newc->u.node.mask == c->u.node.mask &&
+		    newc->u.node.addr == c->u.node.addr) {
+			yyerror2("duplicate entry for network node %s %s",
+				 inet_ntop(AF_INET, &newc->u.node.addr, addr, INET_ADDRSTRLEN) ?: "<invalid>",
+				 inet_ntop(AF_INET, &newc->u.node.mask, mask, INET_ADDRSTRLEN) ?: "<invalid>");
+			context_destroy(&newc->context[0]);
+			free(newc);
+			return -1;
+		}
+
+		if (newc->u.node.mask > c->u.node.mask)
+			break;
+	}
+
+	newc->next = c;
+
+	if (l)
+		l->next = newc;
+	else
+		policydbp->ocontexts[OCON_NODE] = newc;
+
+	return 0;
+}
+
 int define_ipv4_node_context(void)
 {	
 	char *id;
 	int rc = 0;
 	struct in_addr addr, mask;
-	ocontext_t *newc, *c, *l, *head;
+	ocontext_t *newc;
 
 	if (policydbp->target_platform != SEPOL_TARGET_SELINUX) {
 		yyerror("nodecon not supported for target");
@@ -5185,42 +5565,39 @@ int define_ipv4_node_context(void)
 		free(queue_remove(id_queue));
 		free(queue_remove(id_queue));
 		parse_security_context(NULL);
-		goto out;
+		return 0;
 	}
 
 	id = queue_remove(id_queue);
 	if (!id) {
 		yyerror("failed to read ipv4 address");
-		rc = -1;
-		goto out;
+		return -1;
 	}
 
 	rc = inet_pton(AF_INET, id, &addr);
-	free(id);
 	if (rc < 1) {
-		yyerror("failed to parse ipv4 address");
-		if (rc == 0)
-			rc = -1;
-		goto out;
+		yyerror2("failed to parse ipv4 address %s", id);
+		free(id);
+		return -1;
 	}
+	free(id);
 
 	id = queue_remove(id_queue);
 	if (!id) {
 		yyerror("failed to read ipv4 address");
-		rc = -1;
-		goto out;
+		return -1;
 	}
 
 	rc = inet_pton(AF_INET, id, &mask);
-	free(id);
 	if (rc < 1) {
-		yyerror("failed to parse ipv4 mask");
-		if (rc == 0)
-			rc = -1;
-		goto out;
+		yyerror2("failed to parse ipv4 mask %s", id);
+		free(id);
+		return -1;
 	}
 
-	if (mask.s_addr != 0 && ((~mask.s_addr + 1) & ~mask.s_addr) != 0) {
+	free(id);
+
+	if (mask.s_addr != 0 && ((~be32toh(mask.s_addr) + 1) & ~be32toh(mask.s_addr)) != 0) {
 		yywarn("ipv4 mask is not contiguous");
 	}
 
@@ -5231,8 +5608,7 @@ int define_ipv4_node_context(void)
 	newc = malloc(sizeof(ocontext_t));
 	if (!newc) {
 		yyerror("out of memory");
-		rc = -1;
-		goto out;
+		return -1;
 	}
 
 	memset(newc, 0, sizeof(ocontext_t));
@@ -5244,23 +5620,86 @@ int define_ipv4_node_context(void)
 		return -1;
 	}
 
-	/* Create order of most specific to least retaining
-	   the order specified in the configuration. */
-	head = policydbp->ocontexts[OCON_NODE];
-	for (l = NULL, c = head; c; l = c, c = c->next) {
-		if (newc->u.node.mask > c->u.node.mask)
-			break;
+	return insert_ipv4_node(newc);
+}
+
+int define_ipv4_cidr_node_context(void)
+{
+	char *endptr, *id, *split;
+	unsigned long mask_bits;
+	uint32_t mask;
+	struct in_addr addr;
+	ocontext_t *newc;
+	int rc;
+
+	if (policydbp->target_platform != SEPOL_TARGET_SELINUX) {
+		yyerror("nodecon not supported for target");
+		return -1;
 	}
 
-	newc->next = c;
+	if (pass == 1) {
+		free(queue_remove(id_queue));
+		parse_security_context(NULL);
+		return 0;
+	}
 
-	if (l)
-		l->next = newc;
-	else
-		policydbp->ocontexts[OCON_NODE] = newc;
-	rc = 0;
-out:
-	return rc;
+	id = queue_remove(id_queue);
+	if (!id) {
+		yyerror("failed to read IPv4 address");
+		return -1;
+	}
+
+	split = strchr(id, '/');
+	if (!split) {
+		yyerror2("invalid IPv4 CIDR notation: %s", id);
+		free(id);
+		return -1;
+	}
+	*split = '\0';
+
+	rc = inet_pton(AF_INET, id, &addr);
+	if (rc < 1) {
+		yyerror2("failed to parse IPv4 address %s", id);
+		free(id);
+		return -1;
+	}
+
+	errno = 0;
+	mask_bits = strtoul(split + 1, &endptr, 10);
+	if (errno || *endptr != '\0' || mask_bits > 32) {
+		yyerror2("invalid mask in IPv4 CIDR notation: %s", split + 1);
+		free(id);
+		return -1;
+	}
+
+	free(id);
+
+	if (mask_bits == 0) {
+		yywarn("IPv4 CIDR mask of 0, matching all IPs");
+		mask = 0;
+	} else {
+		mask = ~((UINT32_C(1) << (32 - mask_bits)) - 1);
+		mask = htobe32(mask);
+	}
+
+	if ((~mask & addr.s_addr) != 0)
+		yywarn("host bits in IPv4 address set");
+
+	newc = calloc(1, sizeof(ocontext_t));
+	if (!newc) {
+		yyerror("out of memory");
+		return -1;
+	}
+
+	newc->u.node.addr = addr.s_addr & mask;
+	newc->u.node.mask = mask;
+
+	if (parse_security_context(&newc->context[0])) {
+		free(newc);
+		return -1;
+	}
+
+	return insert_ipv4_node(newc);
 }
 
 static int ipv6_is_mask_contiguous(const struct in6_addr *mask)
@@ -5297,12 +5736,73 @@ static int ipv6_has_host_bits_set(const struct in6_addr *addr, const struct in6_
 	return 0;
 }
 
+static void ipv6_cidr_bits_to_mask(unsigned long cidr_bits, struct in6_addr *mask)
+{
+	unsigned i;
+
+	for (i = 0; i < 4; i++) {
+		if (cidr_bits == 0) {
+			mask->s6_addr32[i] = 0;
+		} else if (cidr_bits >= 32) {
+			mask->s6_addr32[i] = ~UINT32_C(0);
+		} else {
+			mask->s6_addr32[i] = htobe32(~((UINT32_C(1) << (32 - cidr_bits)) - 1));
+		}
+
+		if (cidr_bits >= 32)
+			cidr_bits -= 32;
+		else
+			cidr_bits = 0;
+	}
+}
+
+static void ipv6_apply_mask(struct in6_addr *restrict addr, const struct in6_addr *restrict mask)
+{
+	unsigned i;
+
+	for (i = 0; i < 4; i++)
+		addr->s6_addr32[i] &= mask->s6_addr32[i];
+}
+
+static int insert_ipv6_node(ocontext_t *newc)
+{
+	ocontext_t *c, *l;
+	char addr[INET6_ADDRSTRLEN];
+	char mask[INET6_ADDRSTRLEN];
+
+	/* Create order of most specific to least retaining
+	   the order specified in the configuration. */
+	for (l = NULL, c = policydbp->ocontexts[OCON_NODE6]; c; l = c, c = c->next) {
+		if (memcmp(&newc->u.node6.mask, &c->u.node6.mask, 16) == 0 &&
+		    memcmp(&newc->u.node6.addr, &c->u.node6.addr, 16) == 0) {
+			yyerror2("duplicate entry for network node %s %s",
+				 inet_ntop(AF_INET6, &newc->u.node6.addr, addr, INET6_ADDRSTRLEN) ?: "<invalid>",
+				 inet_ntop(AF_INET6, &newc->u.node6.mask, mask, INET6_ADDRSTRLEN) ?: "<invalid>");
+			context_destroy(&newc->context[0]);
+			free(newc);
+			return -1;
+		}
+
+		if (memcmp(&newc->u.node6.mask, &c->u.node6.mask, 16) > 0)
+			break;
+	}
+
+	newc->next = c;
+
+	if (l)
+		l->next = newc;
+	else
+		policydbp->ocontexts[OCON_NODE6] = newc;
+
+	return 0;
+}
+
 int define_ipv6_node_context(void)
 {
 	char *id;
 	int rc = 0;
 	struct in6_addr addr, mask;
-	ocontext_t *newc, *c, *l, *head;
+	ocontext_t *newc;
 
 	if (policydbp->target_platform != SEPOL_TARGET_SELINUX) {
 		yyerror("nodecon not supported for target");
@@ -5313,40 +5813,38 @@ int define_ipv6_node_context(void)
 		free(queue_remove(id_queue));
 		free(queue_remove(id_queue));
 		parse_security_context(NULL);
-		goto out;
+		return 0;
 	}
 
 	id = queue_remove(id_queue);
 	if (!id) {
 		yyerror("failed to read ipv6 address");
-		rc = -1;
-		goto out;
+		return -1;
 	}
 
 	rc = inet_pton(AF_INET6, id, &addr);
-	free(id);
 	if (rc < 1) {
-		yyerror("failed to parse ipv6 address");
-		if (rc == 0)
-			rc = -1;
-		goto out;
+		yyerror2("failed to parse ipv6 address %s", id);
+		free(id);
+		return -1;
 	}
+
+	free(id);
 
 	id = queue_remove(id_queue);
 	if (!id) {
 		yyerror("failed to read ipv6 address");
-		rc = -1;
-		goto out;
+		return -1;
 	}
 
 	rc = inet_pton(AF_INET6, id, &mask);
-	free(id);
 	if (rc < 1) {
-		yyerror("failed to parse ipv6 mask");
-		if (rc == 0)
-			rc = -1;
-		goto out;
+		yyerror2("failed to parse ipv6 mask %s", id);
+		free(id);
+		return -1;
 	}
+
+	free(id);
 
 	if (!ipv6_is_mask_contiguous(&mask)) {
 		yywarn("ipv6 mask is not contiguous");
@@ -5359,8 +5857,7 @@ int define_ipv6_node_context(void)
 	newc = malloc(sizeof(ocontext_t));
 	if (!newc) {
 		yyerror("out of memory");
-		rc = -1;
-		goto out;
+		return -1;
 	}
 
 	memset(newc, 0, sizeof(ocontext_t));
@@ -5369,28 +5866,88 @@ int define_ipv6_node_context(void)
 
 	if (parse_security_context(&newc->context[0])) {
 		free(newc);
-		rc = -1;
-		goto out;
+		return -1;
 	}
 
-	/* Create order of most specific to least retaining
-	   the order specified in the configuration. */
-	head = policydbp->ocontexts[OCON_NODE6];
-	for (l = NULL, c = head; c; l = c, c = c->next) {
-		if (memcmp(&newc->u.node6.mask, &c->u.node6.mask, 16) > 0)
-			break;
+	return insert_ipv6_node(newc);
+}
+
+int define_ipv6_cidr_node_context(void)
+{
+	char *endptr, *id, *split;
+	unsigned long mask_bits;
+	int rc;
+	struct in6_addr addr, mask;
+	ocontext_t *newc;
+
+	if (policydbp->target_platform != SEPOL_TARGET_SELINUX) {
+		yyerror("nodecon not supported for target");
+		return -1;
 	}
 
-	newc->next = c;
+	if (pass == 1) {
+		free(queue_remove(id_queue));
+		parse_security_context(NULL);
+		return 0;
+	}
 
-	if (l)
-		l->next = newc;
-	else
-		policydbp->ocontexts[OCON_NODE6] = newc;
+	id = queue_remove(id_queue);
+	if (!id) {
+		yyerror("failed to read IPv6 address");
+		return -1;
+	}
 
-	rc = 0;
-      out:
-	return rc;
+	split = strchr(id, '/');
+	if (!split) {
+		yyerror2("invalid IPv6 CIDR notation: %s", id);
+		free(id);
+		return -1;
+	}
+	*split = '\0';
+
+	rc = inet_pton(AF_INET6, id, &addr);
+	if (rc < 1) {
+		yyerror2("failed to parse IPv6 address %s", id);
+		free(id);
+		return -1;
+	}
+
+	errno = 0;
+	mask_bits = strtoul(split + 1, &endptr, 10);
+	if (errno || *endptr != '\0' || mask_bits > 128) {
+		yyerror2("invalid mask in IPv6 CIDR notation: %s", split + 1);
+		free(id);
+		return -1;
+	}
+
+	if (mask_bits == 0) {
+		yywarn("IPv6 CIDR mask of 0, matching all IPs");
+	}
+
+	ipv6_cidr_bits_to_mask(mask_bits, &mask);
+
+	if (ipv6_has_host_bits_set(&addr, &mask)) {
+		yywarn("host bits in ipv6 address set");
+	}
+
+	free(id);
+
+	newc = calloc(1, sizeof(ocontext_t));
+	if (!newc) {
+		yyerror("out of memory");
+		return -1;
+	}
+
+	ipv6_apply_mask(&addr, &mask);
+	memcpy(&newc->u.node6.addr[0], &addr.s6_addr[0], 16);
+	memcpy(&newc->u.node6.mask[0], &mask.s6_addr[0], 16);
+
+	if (parse_security_context(&newc->context[0])) {
+		free(newc);
+		return -1;
+	}
+
+	return insert_ipv6_node(newc);
 }
 
 int define_fs_use(int behavior)
@@ -5452,7 +6009,7 @@ static int define_genfs_context_helper(char *fstype, int has_type)
 	class_datum_t *cladatum;
 	char *type = NULL;
 	const char *sclass;
-	int len, len2;
+	size_t len, len2;
 
 	if (policydbp->target_platform != SEPOL_TARGET_SELINUX) {
 		yyerror("genfs not supported for target");

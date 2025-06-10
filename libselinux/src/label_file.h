@@ -1,8 +1,12 @@
 #ifndef _SELABEL_FILE_H_
 #define _SELABEL_FILE_H_
 
+#include <assert.h>
+#include <ctype.h>
 #include <errno.h>
 #include <pthread.h>
+#include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 
 #include <sys/stat.h>
@@ -28,46 +32,120 @@
 #define SELINUX_COMPILED_FCONTEXT_MODE		3
 #define SELINUX_COMPILED_FCONTEXT_PREFIX_LEN	4
 #define SELINUX_COMPILED_FCONTEXT_REGEX_ARCH	5
+#define SELINUX_COMPILED_FCONTEXT_TREE_LAYOUT	6
 
 #define SELINUX_COMPILED_FCONTEXT_MAX_VERS \
-	SELINUX_COMPILED_FCONTEXT_REGEX_ARCH
+	SELINUX_COMPILED_FCONTEXT_TREE_LAYOUT
 
 /* Required selinux_restorecon and selabel_get_digests_all_partial_matches() */
 #define RESTORECON_PARTIAL_MATCH_DIGEST  "security.sehash"
 
+#define LABEL_FILE_KIND_INVALID		255
+#define LABEL_FILE_KIND_ALL		0
+#define LABEL_FILE_KIND_DIR		1
+#define LABEL_FILE_KIND_CHR		2
+#define LABEL_FILE_KIND_BLK		3
+#define LABEL_FILE_KIND_SOCK		4
+#define LABEL_FILE_KIND_FIFO		5
+#define LABEL_FILE_KIND_LNK		6
+#define LABEL_FILE_KIND_REG		7
+
+/* Only exported for fuzzing */
+struct lookup_result {
+	const char *regex_str;
+	struct selabel_lookup_rec *lr;
+	uint16_t prefix_len;
+	uint8_t file_kind;
+	bool has_meta_chars;
+	struct lookup_result *next;
+};
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+extern int load_mmap(FILE *fp, const size_t len, struct selabel_handle *rec, const char *path, uint8_t inputno);
+extern int process_text_file(FILE *fp, const char *prefix, struct selabel_handle *rec, const char *path, uint8_t inputno);
+extern void free_lookup_result(struct lookup_result *result);
+extern struct lookup_result *lookup_all(struct selabel_handle *rec, const char *key, int type, bool partial, bool find_all, struct lookup_result *buf);
+extern enum selabel_cmp_result cmp(const struct selabel_handle *h1, const struct selabel_handle *h2);
+#endif  /* FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION */
+
+/* A path substitution entry */
 struct selabel_sub {
-	char *src;
-	int slen;
-	char *dst;
-	struct selabel_sub *next;
+	char *src;				/* source path prefix */
+	char *dst;				/* substituted path prefix */
+	uint32_t slen;				/* length of source path prefix */
+	uint32_t dlen;				/* length of substituted path prefix */
 };
 
-/* A file security context specification. */
-struct spec {
-	struct selabel_lookup_rec lr;	/* holds contexts for lookup result */
-	char *regex_str;	/* regular expression string for diagnostics */
-	char *type_str;		/* type string for diagnostic messages */
-	struct regex_data * regex; /* backend dependent regular expression data */
-	bool regex_compiled; /* bool to indicate if the regex is compiled */
-	pthread_mutex_t regex_lock; /* lock for lazy compilation of regex */
-	mode_t mode;		/* mode format value */
-	bool any_matches;	/* did any pathname match? */
-	int stem_id;		/* indicates which stem-compression item */
-	char hasMetaChars;	/* regular expression has meta-chars */
-	char from_mmap;		/* this spec is from an mmap of the data */
-	size_t prefix_len;      /* length of fixed path prefix */
+/* A regular expression file security context specification */
+struct regex_spec {
+	struct selabel_lookup_rec lr;		/* contexts for lookup result */
+	char *regex_str;			/* original regular expression string for diagnostics */
+	struct regex_data *regex;		/* backend dependent regular expression data */
+	pthread_mutex_t regex_lock;		/* lock for lazy compilation of regex */
+	uint32_t lineno;			/* Line number in source file */
+	uint16_t prefix_len;			/* length of fixed path prefix */
+	uint8_t inputno;			/* Input number of source file */
+	uint8_t file_kind;			/* file type */
+	bool regex_compiled;			/* whether the regex is compiled */
+	bool any_matches;			/* whether any pathname match */
+	bool from_mmap;				/* whether this spec is from an mmap of the data */
 };
 
-/* A regular expression stem */
-struct stem {
-	char *buf;
-	int len;
-	char from_mmap;
+/* A literal file security context specification */
+struct literal_spec {
+	struct selabel_lookup_rec lr;		/* contexts for lookup result */
+	char *regex_str;			/* original regular expression string for diagnostics */
+	char *literal_match;			/* simplified string from regular expression */
+	uint16_t prefix_len;			/* length of fixed path prefix, i.e. length of the literal match */
+	uint8_t file_kind;			/* file type */
+	bool any_matches;			/* whether any pathname match */
+	bool from_mmap;				/* whether this spec is from an mmap of the data */
+};
+
+/*
+ * Max depth of specification nodes
+ *
+ * Measure before changing:
+ *   - 2  leads to slower lookup
+ *   - >4 require more memory (and allocations) for no performance gain
+ */
+#define SPEC_NODE_MAX_DEPTH 3
+
+/* A specification node */
+struct spec_node {
+	/* stem of the node, or NULL for root node */
+	char *stem;
+
+	/* parent node */
+	struct spec_node *parent;
+
+	/*
+	 * Array of literal specifications (ordered alphabetically)
+	 */
+	struct literal_spec *literal_specs;
+	uint32_t literal_specs_num, literal_specs_alloc;
+
+	/*
+	 * Array of regular expression specifications (order preserved from input)
+	 */
+	struct regex_spec *regex_specs;
+	uint32_t regex_specs_num, regex_specs_alloc;
+
+	/*
+	 * Array of child nodes (ordered alphabetically)
+	 */
+	struct spec_node *children;
+	uint32_t children_num, children_alloc;
+
+	/* length of the stem (reordered to minimize padding) */
+	uint16_t stem_len;
+
+	/* whether this node is from an mmap of the data */
+	bool from_mmap;
 };
 
 /* Where we map the file in during selabel_open() */
 struct mmap_area {
-	void *addr;	/* Start addr + len used to release memory at close */
+	void *addr;		/* Start addr + len used to release memory at close */
 	size_t len;
 	void *next_addr;	/* Incremented by next_entry() */
 	size_t next_len;	/* Decremented by next_entry() */
@@ -76,94 +154,89 @@ struct mmap_area {
 
 /* Our stored configuration */
 struct saved_data {
-	/*
-	 * The array of specifications, initially in the same order as in
-	 * the specification file. Sorting occurs based on hasMetaChars.
-	 */
-	struct spec *spec_arr;
-	unsigned int nspec;
-	unsigned int alloc_specs;
+	/* Root specification node */
+	struct spec_node *root;
 
-	/*
-	 * The array of regular expression stems.
-	 */
-	struct stem *stem_arr;
-	int num_stems;
-	int alloc_stems;
+	/* Number of file specifications */
+	uint64_t num_specs;
+
 	struct mmap_area *mmap_areas;
 
-	/* substitution support */
+	/*
+	 * Array of distribution substitutions
+	 */
 	struct selabel_sub *dist_subs;
+	uint32_t dist_subs_num, dist_subs_alloc;
+
+	/*
+	 * Array of local substitutions
+	 */
 	struct selabel_sub *subs;
+	uint32_t subs_num, subs_alloc;
 };
 
-static inline mode_t string_to_mode(const char *mode)
+void free_spec_node(struct spec_node *node);
+void sort_spec_node(struct spec_node *node, struct spec_node *parent);
+
+static inline mode_t string_to_file_kind(const char *mode)
 {
 	if (mode[0] != '-' || mode[1] == '\0' || mode[2] != '\0')
-		return (mode_t)-1;
+		return LABEL_FILE_KIND_INVALID;
 	switch (mode[1]) {
 	case 'b':
-		return S_IFBLK;
+		return LABEL_FILE_KIND_BLK;
 	case 'c':
-		return S_IFCHR;
+		return LABEL_FILE_KIND_CHR;
 	case 'd':
-		return S_IFDIR;
+		return LABEL_FILE_KIND_DIR;
 	case 'p':
-		return S_IFIFO;
+		return LABEL_FILE_KIND_FIFO;
 	case 'l':
-		return S_IFLNK;
+		return LABEL_FILE_KIND_LNK;
 	case 's':
-		return S_IFSOCK;
+		return LABEL_FILE_KIND_SOCK;
 	case '-':
-		return S_IFREG;
+		return LABEL_FILE_KIND_REG;
 	default:
-		return (mode_t)-1;
+		return LABEL_FILE_KIND_INVALID;
 	}
 }
 
-static inline int grow_specs(struct saved_data *data)
+static inline const char* file_kind_to_string(uint8_t file_kind)
 {
-	struct spec *specs;
-	size_t new_specs, total_specs;
-
-	if (data->nspec < data->alloc_specs)
-		return 0;
-
-	new_specs = data->nspec + 16;
-	total_specs = data->nspec + new_specs;
-
-	specs = realloc(data->spec_arr, total_specs * sizeof(*specs));
-	if (!specs) {
-		perror("realloc");
-		return -1;
+	switch (file_kind) {
+	case LABEL_FILE_KIND_BLK:
+		return "block-device";
+	case LABEL_FILE_KIND_CHR:
+		return "character-device";
+	case LABEL_FILE_KIND_DIR:
+		return "directory";
+	case LABEL_FILE_KIND_FIFO:
+		return "fifo-file";
+	case LABEL_FILE_KIND_LNK:
+		return "symlink";
+	case LABEL_FILE_KIND_SOCK:
+		return "sock-file";
+	case LABEL_FILE_KIND_REG:
+		return "regular-file";
+	case LABEL_FILE_KIND_ALL:
+		return "wildcard";
+	default:
+		return "(invalid)";
 	}
-
-	/* blank the new entries */
-	memset(&specs[data->nspec], 0, new_specs * sizeof(*specs));
-
-	data->spec_arr = specs;
-	data->alloc_specs = total_specs;
-	return 0;
 }
 
-/* Determine if the regular expression specification has any meta characters. */
-static inline void spec_hasMetaChars(struct spec *spec)
+/*
+ * Determine whether the regular expression specification has any meta characters
+ * or any unsupported escape sequence.
+ */
+static bool regex_has_meta_chars(const char *regex, size_t *prefix_len, const char *path, unsigned int lineno)
 {
-	char *c;
-	int len;
-	char *end;
+	const char *p = regex;
+	size_t plen = 0;
 
-	c = spec->regex_str;
-	len = strlen(spec->regex_str);
-	end = c + len;
-
-	spec->hasMetaChars = 0;
-	spec->prefix_len = len;
-
-	/* Look at each character in the RE specification string for a
-	 * meta character. Return when any meta character reached. */
-	while (c < end) {
-		switch (*c) {
+	for (;*p != '\0'; p++, plen++) {
+		switch(*p) {
 		case '.':
 		case '^':
 		case '$':
@@ -174,177 +247,162 @@ static inline void spec_hasMetaChars(struct spec *spec)
 		case '[':
 		case '(':
 		case '{':
-			spec->hasMetaChars = 1;
-			spec->prefix_len = c - spec->regex_str;
-			return;
-		case '\\':	/* skip the next character */
-			c++;
+		case ']':
+		case ')':
+		case '}':
+			*prefix_len = plen;
+			return true;
+		case '\\':
+			p++;
+			switch (*p) {
+			/* curated list of supported characters */
+			case '.':
+			case '^':
+			case '$':
+			case '?':
+			case '*':
+			case '+':
+			case '|':
+			case '[':
+			case '(':
+			case '{':
+			case ']':
+			case ')':
+			case '}':
+			case '-':
+			case '_':
+			case ',':
+				continue;
+			default:
+				COMPAT_LOG(SELINUX_INFO, "%s:  line %u has unsupported escaped character %c (%#x) for literal matching, continuing using regex\n",
+					   path, lineno, isprint((unsigned char)*p) ? *p : '?', *p);
+				*prefix_len = plen;
+				return true;
+			}
+		}
+	}
+
+	*prefix_len = plen;
+	return false;
+}
+
+static int regex_simplify(const char *regex, size_t len, char **out, const char *path, unsigned int lineno)
+{
+	char *result, *p;
+	size_t i = 0;
+
+	result = malloc(len + 1);
+	if (!result)
+		return -1;
+
+	p = result;
+	while (i < len) {
+		switch(regex[i]) {
+		case '.':
+		case '^':
+		case '$':
+		case '?':
+		case '*':
+		case '+':
+		case '|':
+		case '[':
+		case '(':
+		case '{':
+		case ']':
+		case ')':
+		case '}':
+			free(result);
+			return 0;
+		case '\\':
+			i++;
+			if (i >= len) {
+				COMPAT_LOG(SELINUX_WARNING, "%s:  line %u has unsupported final escape character\n",
+					   path, lineno);
+				free(result);
+				return 0;
+			}
+			switch (regex[i]) {
+			/* curated list of supported characters */
+			case '.':
+			case '^':
+			case '$':
+			case '?':
+			case '*':
+			case '+':
+			case '|':
+			case '[':
+			case '(':
+			case '{':
+			case ']':
+			case ')':
+			case '}':
+			case '-':
+			case '_':
+			case ',':
+				*p++ = regex[i++];
+				break;
+			default:
+				/* regex_has_meta_chars() reported already the notable occurrences */
+				free(result);
+				return 0;
+			}
 			break;
 		default:
-			break;
-
+			*p++ = regex[i++];
 		}
-		c++;
-	}
-}
-
-/* Move exact pathname specifications to the end. */
-static inline int sort_specs(struct saved_data *data)
-{
-	struct spec *spec_copy;
-	struct spec spec;
-	unsigned int i;
-	int front, back;
-	size_t len = sizeof(*spec_copy);
-
-	spec_copy = malloc(len * data->nspec);
-	if (!spec_copy)
-		return -1;
-
-	/* first move the exact pathnames to the back */
-	front = 0;
-	back = data->nspec - 1;
-	for (i = 0; i < data->nspec; i++) {
-		if (data->spec_arr[i].hasMetaChars)
-			memcpy(&spec_copy[front++], &data->spec_arr[i], len);
-		else
-			memcpy(&spec_copy[back--], &data->spec_arr[i], len);
 	}
 
-	/*
-	 * now the exact pathnames are at the end, but they are in the reverse
-	 * order. Since 'front' is now the first of the 'exact' we can run
-	 * that part of the array switching the front and back element.
-	 */
-	back = data->nspec - 1;
-	while (front < back) {
-		/* save the front */
-		memcpy(&spec, &spec_copy[front], len);
-		/* move the back to the front */
-		memcpy(&spec_copy[front], &spec_copy[back], len);
-		/* put the old front in the back */
-		memcpy(&spec_copy[back], &spec, len);
-		front++;
-		back--;
-	}
-
-	free(data->spec_arr);
-	data->spec_arr = spec_copy;
-
-	return 0;
+	*p = '\0';
+	*out = result;
+	return 1;
 }
 
-/* Return the length of the text that can be considered the stem, returns 0
- * if there is no identifiable stem */
-static inline int get_stem_from_spec(const char *const buf)
+static inline int compare_literal_spec(const void *p1, const void *p2)
 {
-	const char *tmp = strchr(buf + 1, '/');
-	const char *ind;
+	const struct literal_spec *l1 = p1;
+	const struct literal_spec *l2 = p2;
+	int ret;
 
-	if (!tmp)
-		return 0;
+	ret = strcmp(l1->literal_match, l2->literal_match);
+	if (ret)
+		return ret;
 
-	for (ind = buf; ind < tmp; ind++) {
-		if (strchr(".^$?*+|[({", (int)*ind))
-			return 0;
-	}
-	return tmp - buf;
+	/* Order wildcard mode (0) last */
+	return (l1->file_kind < l2->file_kind) - (l1->file_kind > l2->file_kind);
 }
 
-/*
- * return the stemid given a string and a length
- */
-static inline int find_stem(struct saved_data *data, const char *buf,
-						    int stem_len)
+static inline int compare_spec_node(const void *p1, const void *p2)
 {
-	int i;
+	const struct spec_node *n1 = p1;
+	const struct spec_node *n2 = p2;
+	int rc;
 
-	for (i = 0; i < data->num_stems; i++) {
-		if (stem_len == data->stem_arr[i].len &&
-		    !strncmp(buf, data->stem_arr[i].buf, stem_len))
-			return i;
-	}
-
-	return -1;
+	rc = strcmp(n1->stem, n2->stem);
+	/* There should not be two nodes with the same stem in the same array */
+	assert(rc != 0);
+	return rc;
 }
 
-/* returns the index of the new stored object */
-static inline int store_stem(struct saved_data *data, char *buf, int stem_len)
+static inline void sort_specs(struct saved_data *data)
 {
-	int num = data->num_stems;
-
-	if (data->alloc_stems == num) {
-		struct stem *tmp_arr;
-		int alloc_stems = data->alloc_stems * 2 + 16;
-		tmp_arr = realloc(data->stem_arr,
-				  sizeof(*tmp_arr) * alloc_stems);
-		if (!tmp_arr) {
-			return -1;
-		}
-		data->alloc_stems = alloc_stems;
-		data->stem_arr = tmp_arr;
-	}
-	data->stem_arr[num].len = stem_len;
-	data->stem_arr[num].buf = buf;
-	data->stem_arr[num].from_mmap = 0;
-	data->num_stems++;
-
-	return num;
+	sort_spec_node(data->root, NULL);
 }
 
-/* find the stem of a file spec, returns the index into stem_arr for a new
- * or existing stem, (or -1 if there is no possible stem - IE for a file in
- * the root directory or a regex that is too complex for us). */
-static inline int find_stem_from_spec(struct saved_data *data, const char *buf)
+static inline int compile_regex(struct regex_spec *spec, char *errbuf, size_t errbuf_size)
 {
-	int stem_len = get_stem_from_spec(buf);
-	int stemid;
-	char *stem;
-	int r;
-
-	if (!stem_len)
-		return -1;
-
-	stemid = find_stem(data, buf, stem_len);
-	if (stemid >= 0)
-		return stemid;
-
-	/* not found, allocate a new one */
-	stem = strndup(buf, stem_len);
-	if (!stem)
-		return -1;
-
-	r = store_stem(data, stem, stem_len);
-	if (r < 0)
-		free(stem);
-
-	return r;
-}
-
-/* This will always check for buffer over-runs and either read the next entry
- * if buf != NULL or skip over the entry (as these areas are mapped in the
- * current buffer). */
-static inline int next_entry(void *buf, struct mmap_area *fp, size_t bytes)
-{
-	if (bytes > fp->next_len)
-		return -1;
-
-	if (buf)
-		memcpy(buf, fp->next_addr, bytes);
-
-	fp->next_addr = (char *)fp->next_addr + bytes;
-	fp->next_len -= bytes;
-	return 0;
-}
-
-static inline int compile_regex(struct spec *spec, const char **errbuf)
-{
-	char *reg_buf, *anchored_regex, *cp;
+	const char *reg_buf;
+	char *anchored_regex, *cp;
 	struct regex_error_data error_data;
-	static char regex_error_format_buffer[256];
 	size_t len;
 	int rc;
 	bool regex_compiled;
+
+	if (!errbuf || errbuf_size == 0) {
+	    errno = EINVAL;
+	    return -1;
+	}
+
+	*errbuf = '\0';
 
 	/* We really want pthread_once() here, but since its
 	 * init_routine does not take a parameter, it's not possible
@@ -381,11 +439,18 @@ static inline int compile_regex(struct spec *spec, const char **errbuf)
 	reg_buf = spec->regex_str;
 	/* Anchor the regular expression. */
 	len = strlen(reg_buf);
+	/* Use a sufficient large upper bound for regular expression lengths
+	 * to limit the compilation time on malformed inputs. */
+	if (len >= 4096) {
+		__pthread_mutex_unlock(&spec->regex_lock);
+		snprintf(errbuf, errbuf_size, "regex of length %zu too long", len);
+		errno = EINVAL;
+		return -1;
+	}
 	cp = anchored_regex = malloc(len + 3);
 	if (!anchored_regex) {
-		if (errbuf)
-			*errbuf = "out of memory";
 		__pthread_mutex_unlock(&spec->regex_lock);
+		snprintf(errbuf, errbuf_size, "out of memory");
 		return -1;
 	}
 
@@ -400,12 +465,7 @@ static inline int compile_regex(struct spec *spec, const char **errbuf)
 	rc = regex_prepare_data(&spec->regex, anchored_regex, &error_data);
 	free(anchored_regex);
 	if (rc < 0) {
-		if (errbuf) {
-			regex_format_error(&error_data,
-					regex_error_format_buffer,
-					sizeof(regex_error_format_buffer));
-			*errbuf = &regex_error_format_buffer[0];
-		}
+		regex_format_error(&error_data, errbuf, errbuf_size);
 		__pthread_mutex_unlock(&spec->regex_lock);
 		errno = EINVAL;
 		return -1;
@@ -423,29 +483,347 @@ static inline int compile_regex(struct spec *spec, const char **errbuf)
 	return 0;
 }
 
+#define GROW_ARRAY(arr) ({                                                                  \
+	int ret_;                                                                           \
+	if ((arr ## _num) < (arr ## _alloc)) {                                              \
+		ret_ = 0;                                                                   \
+	} else {                                                                            \
+		size_t addedsize_ = ((arr ## _alloc) >> 1) + ((arr ## _alloc >> 4)) + 4;    \
+		size_t newsize_ = addedsize_ + (arr ## _alloc);                             \
+		if (newsize_ < (arr ## _alloc) || newsize_ >= (typeof(arr ## _alloc))-1) {  \
+			errno = EOVERFLOW;                                                  \
+			ret_ = -1;                                                          \
+		} else {                                                                    \
+			typeof(arr) tmp_ = reallocarray(arr, newsize_, sizeof(*(arr)));     \
+			if (!tmp_) {                                                        \
+				ret_ = -1;                                                  \
+			} else {                                                            \
+				(arr) = tmp_;                                               \
+				(arr ## _alloc) = newsize_;                                 \
+				ret_ = 0;                                                   \
+			}                                                                   \
+		}                                                                           \
+	}                                                                                   \
+	ret_;                                                                               \
+})
+
+static int insert_spec(const struct selabel_handle *rec, struct saved_data *data,
+		       const char *prefix, char *regex, uint8_t file_kind, char *context,
+		       const char *path, uint8_t inputno, uint32_t lineno)
+{
+	size_t prefix_len;
+	bool has_meta;
+
+	if (data->num_specs == UINT64_MAX) {
+		free(regex);
+		free(context);
+		errno = EOVERFLOW;
+		return -1;
+	}
+
+	has_meta = regex_has_meta_chars(regex, &prefix_len, path, lineno);
+
+	/* Ensured by read_spec_entry() */
+	assert(prefix_len < UINT16_MAX);
+
+	if (has_meta) {
+		struct spec_node *node = data->root;
+		const char *p = regex;
+		uint32_t id;
+		int depth = 0, rc;
+
+		while (depth < SPEC_NODE_MAX_DEPTH) {
+			const char *q;
+			size_t regex_stem_len, stem_len;
+			char *stem = NULL;
+			bool child_found;
+
+			q = strchr(p + 1, '/');
+			if (!q)
+				break;
+
+			regex_stem_len = q - p - 1;
+			/* Double slashes */
+			if (regex_stem_len == 0) {
+				p = q;
+				continue;
+			}
+
+			rc = regex_simplify(p + 1, regex_stem_len, &stem, path, lineno);
+			if (rc < 0) {
+				free(regex);
+				free(context);
+				return -1;
+			}
+			if (rc == 0)
+				break;
+
+			stem_len = strlen(stem);
+			if (stem_len >= UINT16_MAX) {
+				free(stem);
+				break;
+			}
+
+			if (depth == 0 && prefix && strcmp(prefix + 1, stem) != 0) {
+				free(stem);
+				free(regex);
+				free(context);
+				return 0;
+			}
+
+			child_found = false;
+			for (uint32_t i = 0; i < node->children_num; i++) {
+				if (node->children[i].stem_len == stem_len && strncmp(node->children[i].stem, stem, stem_len) == 0) {
+					child_found = true;
+					node = &node->children[i];
+					break;
+				}
+			}
+
+			if (!child_found) {
+				rc = GROW_ARRAY(node->children);
+				if (rc) {
+					free(stem);
+					free(regex);
+					free(context);
+					return -1;
+				}
+
+				id = node->children_num++;
+				node->children[id] = (struct spec_node) {
+					.stem = stem,
+					.stem_len = stem_len,
+				};
+
+				node = &node->children[id];
+			} else {
+				free(stem);
+			}
+
+			p += regex_stem_len + 1;
+			depth++;
+		}
+
+		rc = GROW_ARRAY(node->regex_specs);
+		if (rc) {
+			free(regex);
+			free(context);
+			return -1;
+		}
+
+		id = node->regex_specs_num++;
+
+		node->regex_specs[id] = (struct regex_spec) {
+			.regex_str = regex,
+			.prefix_len = prefix_len,
+			.regex_compiled = false,
+			.regex_lock = PTHREAD_MUTEX_INITIALIZER,
+			.file_kind = file_kind,
+			.any_matches = false,
+			.inputno = inputno,
+			.lineno = lineno,
+			.lr.ctx_raw = context,
+			.lr.ctx_trans = NULL,
+			.lr.lineno = lineno,
+			.lr.validated = false,
+			.lr.lock = PTHREAD_MUTEX_INITIALIZER,
+		};
+
+		data->num_specs++;
+
+		if (rec->validating) {
+			char errbuf[256];
+
+			if (compile_regex(&node->regex_specs[id], errbuf, sizeof(errbuf))) {
+				COMPAT_LOG(SELINUX_ERROR,
+					   "%s:  line %u has invalid regex %s:  %s\n",
+					   path, lineno, regex, errbuf);
+				return -1;
+			}
+
+			if (strcmp(context, "<<none>>") != 0) {
+				rc = compat_validate(rec, &node->regex_specs[id].lr, path, lineno);
+				if (rc < 0)
+					return rc;
+			}
+		}
+	} else { /* !has_meta */
+		struct spec_node *node = data->root;
+		char *literal_regex = NULL;
+		const char *p;
+		uint32_t id;
+		int depth = 0, rc;
+
+		rc = regex_simplify(regex, strlen(regex), &literal_regex, path, lineno);
+		if (rc != 1) {
+			if (rc == 0) {
+				COMPAT_LOG(SELINUX_ERROR,
+					   "%s:  line %u failed to simplify regex %s\n",
+					   path, lineno, regex);
+				errno = EINVAL;
+			}
+			free(regex);
+			free(context);
+			return -1;
+		}
+
+		p = literal_regex;
+
+		while (depth < SPEC_NODE_MAX_DEPTH) {
+			const char *q;
+			size_t length;
+			char *stem;
+			bool child_found;
+
+			if (*p != '/')
+				break;
+
+			q = strchr(p + 1, '/');
+			if (!q)
+				break;
+
+			length = q - p - 1;
+			/* Double slashes */
+			if (length == 0) {
+				p = q;
+				continue;
+			}
+
+			/* Ensured by read_spec_entry() */
+			assert(length < UINT16_MAX);
+
+			if (depth == 0 && prefix && strncmp(prefix + 1, p + 1, length) != 0) {
+				free(literal_regex);
+				free(regex);
+				free(context);
+				return 0;
+			}
+
+			child_found = false;
+			for (uint32_t i = 0; i < node->children_num; i++) {
+				if (node->children[i].stem_len == length && strncmp(node->children[i].stem, p + 1, length) == 0) {
+					child_found = true;
+					node = &node->children[i];
+					break;
+				}
+			}
+
+			if (!child_found) {
+				rc = GROW_ARRAY(node->children);
+				if (rc) {
+					free(literal_regex);
+					free(regex);
+					free(context);
+					return -1;
+				}
+
+				stem = strndup(p + 1, length);
+				if (!stem) {
+					free(literal_regex);
+					free(regex);
+					free(context);
+					return -1;
+				}
+
+				id = node->children_num++;
+				node->children[id] = (struct spec_node) {
+					.stem = stem,
+					.stem_len = length,
+				};
+
+				node = &node->children[id];
+			}
+
+			p = q;
+			depth++;
+		}
+
+		rc = GROW_ARRAY(node->literal_specs);
+		if (rc) {
+			free(literal_regex);
+			free(regex);
+			free(context);
+			return -1;
+		}
+
+		id = node->literal_specs_num++;
+
+		assert(prefix_len == strlen(literal_regex));
+
+		node->literal_specs[id] = (struct literal_spec) {
+			.regex_str = regex,
+			.prefix_len = prefix_len,
+			.literal_match = literal_regex,
+			.file_kind = file_kind,
+			.any_matches = false,
+			.lr.ctx_raw = context,
+			.lr.ctx_trans = NULL,
+			.lr.lineno = lineno,
+			.lr.validated = false,
+			.lr.lock = PTHREAD_MUTEX_INITIALIZER,
+		};
+
+		data->num_specs++;
+
+		if (rec->validating && strcmp(context, "<<none>>") != 0) {
+			rc = compat_validate(rec, &node->literal_specs[id].lr, path, lineno);
+			if (rc < 0)
+				return rc;
+		}
+
+	}
+
+	return 0;
+}
+
+/* This will always check for buffer over-runs and either read the next entry
+ * if buf != NULL or skip over the entry (as these areas are mapped in the
+ * current buffer). */
+static inline int next_entry(void *buf, struct mmap_area *fp, size_t bytes)
+{
+	if (bytes > fp->next_len)
+		return -1;
+
+	if (buf)
+		memcpy(buf, fp->next_addr, bytes);
+
+	fp->next_addr = (unsigned char *)fp->next_addr + bytes;
+	fp->next_len -= bytes;
+	return 0;
+}
+
 /* This service is used by label_file.c process_file() and
  * utils/sefcontext_compile.c */
 static inline int process_line(struct selabel_handle *rec,
-			const char *path, const char *prefix,
-			char *line_buf, unsigned lineno)
+			       const char *path, const char *prefix,
+			       char *line_buf, size_t nread,
+			       uint8_t inputno, uint32_t lineno)
 {
-	int items, len, rc;
+	int items;
 	char *regex = NULL, *type = NULL, *context = NULL;
-	struct saved_data *data = (struct saved_data *)rec->data;
-	struct spec *spec_arr;
-	unsigned int nspec = data->nspec;
+	struct saved_data *data = rec->data;
 	const char *errbuf = NULL;
+	uint8_t file_kind = LABEL_FILE_KIND_ALL;
 
-	items = read_spec_entries(line_buf, &errbuf, 3, &regex, &type, &context);
+	if (prefix) {
+		if (prefix[0] != '/' ||
+		    prefix[1] == '\0' ||
+		    strchr(prefix + 1, '/') != NULL) {
+			errno = EINVAL;
+			return -1;
+		}
+	}
+
+	items = read_spec_entries(line_buf, nread, &errbuf, 3, &regex, &type, &context);
 	if (items < 0) {
 		if (errbuf) {
-			selinux_log(SELINUX_ERROR,
-				    "%s:  line %u error due to: %s\n", path,
-				    lineno, errbuf);
+			COMPAT_LOG(SELINUX_ERROR,
+				   "%s:  line %u error due to: %s\n", path,
+				   lineno, errbuf);
 		} else {
-			selinux_log(SELINUX_ERROR,
-				    "%s:  line %u error due to: %m\n", path,
-				    lineno);
+			COMPAT_LOG(SELINUX_ERROR,
+				   "%s:  line %u error due to: %m\n", path,
+				   lineno);
 		}
 		free(regex);
 		free(type);
@@ -458,81 +836,38 @@ static inline int process_line(struct selabel_handle *rec,
 
 	if (items < 2) {
 		COMPAT_LOG(SELINUX_ERROR,
-			    "%s:  line %u is missing fields\n", path,
-			    lineno);
+			   "%s:  line %u is missing fields\n", path,
+			   lineno);
 		if (items == 1)
 			free(regex);
 		errno = EINVAL;
 		return -1;
-	} else if (items == 2) {
+	}
+
+	if (items == 2) {
 		/* The type field is optional. */
 		context = type;
-		type = 0;
-	}
-
-	len = get_stem_from_spec(regex);
-	if (len && prefix && strncmp(prefix, regex, len)) {
-		/* Stem of regex does not match requested prefix, discard. */
-		free(regex);
-		free(type);
-		free(context);
-		return 0;
-	}
-
-	rc = grow_specs(data);
-	if (rc)
-		return rc;
-
-	spec_arr = data->spec_arr;
-
-	/* process and store the specification in spec. */
-	spec_arr[nspec].stem_id = find_stem_from_spec(data, regex);
-	spec_arr[nspec].regex_str = regex;
-	__pthread_mutex_init(&spec_arr[nspec].regex_lock, NULL);
-	spec_arr[nspec].regex_compiled = false;
-
-	spec_arr[nspec].type_str = type;
-	spec_arr[nspec].mode = 0;
-
-	spec_arr[nspec].lr.ctx_raw = context;
-	spec_arr[nspec].lr.lineno = lineno;
-
-	/*
-	 * bump data->nspecs to cause closef() to cover it in its free
-	 * but do not bump nspec since it's used below.
-	 */
-	data->nspec++;
-
-	if (rec->validating
-			&& compile_regex(&spec_arr[nspec], &errbuf)) {
-		COMPAT_LOG(SELINUX_ERROR,
-			   "%s:  line %u has invalid regex %s:  %s\n",
-			   path, lineno, regex, errbuf);
-		errno = EINVAL;
-		return -1;
+		type = NULL;
 	}
 
 	if (type) {
-		mode_t mode = string_to_mode(type);
+		file_kind = string_to_file_kind(type);
 
-		if (mode == (mode_t)-1) {
+		if (file_kind == LABEL_FILE_KIND_INVALID) {
 			COMPAT_LOG(SELINUX_ERROR,
 				   "%s:  line %u has invalid file type %s\n",
 				   path, lineno, type);
+			free(regex);
+			free(type);
+			free(context);
 			errno = EINVAL;
 			return -1;
 		}
-		spec_arr[nspec].mode = mode;
+
+		free(type);
 	}
 
-	/* Determine if specification has
-	 * any meta characters in the RE */
-	spec_hasMetaChars(&spec_arr[nspec]);
-
-	if (strcmp(context, "<<none>>") && rec->validating)
-		return compat_validate(rec, &spec_arr[nspec].lr, path, lineno);
-
-	return 0;
+	return insert_spec(rec, data, prefix, regex, file_kind, context, path, inputno, lineno);
 }
 
 #endif /* _SELABEL_FILE_H_ */

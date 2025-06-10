@@ -1,0 +1,48 @@
+/ci:
+  summary: Run the testsuite with userspace from git
+  # Environment for the testsuite setup
+  environment:
+    STS_ROOT_DOMAIN: unconfined_t
+    STS_KERNEL: latest
+  discover:
+    - how: shell
+      tests:
+        - name: /prepare-selinux-userspace
+          summary: Build and install SELinux userspace from git
+          order: 0
+          duration: 10m
+          require:
+            - audit-libs-devel
+            - bison
+            - bzip2-devel
+            - CUnit-devel
+            - diffutils
+            - flex
+            - gcc
+            - gettext
+            - glib2-devel
+            - make
+            - libcap-devel
+            - libcap-ng-devel
+            - pam-devel
+            - pcre2-devel
+            - python3-devel
+            - python3-pip
+            - python3-setuptools
+            - python3-wheel
+            - swig
+            - xmlto
+          test: |
+            set -ex
+
+            # Build and replace userspace components
+            make clean distclean
+            make -j"$(nproc)" LIBDIR=/usr/lib64 SHLIBDIR=/lib64 install
+            make -j"$(nproc)" LIBDIR=/usr/lib64 SHLIBDIR=/lib64 install-pywrap
+            make -j"$(nproc)" LIBDIR=/usr/lib64 SHLIBDIR=/lib64 relabel
+    - how: fmf
+      url: https://github.com/SELinuxProject/selinux-testsuite
+      ref: main
+      filter: tag:-ci & tag:-nfs
+  execute:
+    how: tmt

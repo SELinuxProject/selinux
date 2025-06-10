@@ -45,10 +45,10 @@ static int bzip(semanage_handle_t *sh, const char *filename, void *data,
 	size_t  size = 1<<16;
 	int     bzerror;
 	size_t  total = 0;
-	size_t len = 0;
+	size_t len;
 	FILE *f;
 
-	if ((f = fopen(filename, "wb")) == NULL) {
+	if ((f = fopen(filename, "wbe")) == NULL) {
 		return -1;
 	}
 
@@ -104,7 +104,7 @@ static ssize_t bunzip(semanage_handle_t *sh, FILE *f, void **data)
 	size_t   total = 0;
 	uint8_t* uncompress = NULL;
 	uint8_t* tmpalloc = NULL;
-	int      ret = -1;
+	ssize_t  ret = -1;
 
 	buf = malloc(bufsize);
 	if (buf == NULL) {
@@ -114,7 +114,12 @@ static ssize_t bunzip(semanage_handle_t *sh, FILE *f, void **data)
 
 	/* Check if the file is bzipped */
 	bzerror = fread(buf, 1, BZ2_MAGICLEN, f);
-	rewind(f);
+
+	if (fseek(f, 0L, SEEK_SET) == -1) {
+		ERR(sh, "Failure rewinding file.");
+		goto exit;
+	}
+
 	if ((bzerror != BZ2_MAGICLEN) || memcmp(buf, BZ2_MAGICSTR, BZ2_MAGICLEN)) {
 		goto exit;
 	}
@@ -172,15 +177,15 @@ int map_compressed_file(semanage_handle_t *sh, const char *path,
 	int ret = 0, fd = -1;
 	FILE *file = NULL;
 
-	fd = open(path, O_RDONLY);
+	fd = open(path, O_RDONLY | O_CLOEXEC);
 	if (fd == -1) {
-		ERR(sh, "Unable to open %s\n", path);
+		ERR(sh, "Unable to open %s.", path);
 		return -1;
 	}
 
 	file = fdopen(fd, "r");
 	if (file == NULL) {
-		ERR(sh, "Unable to open %s\n", path);
+		ERR(sh, "Unable to open %s.", path);
 		close(fd);
 		return -1;
 	}

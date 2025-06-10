@@ -47,8 +47,9 @@
 
 (block policy
 	(class file (execute_no_trans entrypoint execmod open audit_access a b c d e))
-	; order should be: file char b c a dir d e f
-	(classorder (file char))
+	(class socket (nlmsg))
+	; order should be: file socket char b c a dir d e f
+	(classorder (file socket char))
 	(classorder (unordered dir))
 	(classorder (unordered c a b d e f))
 	(classorder (char b c a))
@@ -127,7 +128,8 @@
 	(typeattributeset not_bad_type (not bad_t))
 	(typealias sbin_t)
 	(typealiasactual sbin_t bin_t)
-	(typepermissive device_t) 
+	(typepermissive device_t)
+	(typeneveraudit device_t)
 	(typemember device_t bin_t file exec_t)
 	(typemember exec_type self file exec_t)
 	(typetransition device_t console_t files console_device_t)
@@ -161,7 +163,10 @@
 	;;(allow bad_t not_bad_type (file (execute)))
 	;;(allow bad_t exec_t (file (execute)))
 	(neverallow bad_t not_bad_type (file (execute)))
-			
+
+	(auditallowx getty_t console_device_t (ioctl file (range 0x1000 0x10FF)))
+	(auditallowx getty_t kernel_t (nlmsg socket (range 0x1000 0x10FF)))
+
 	(booleanif secure_mode
 		(true
 			(auditallow device_t exec_t (file (read write)))
@@ -172,9 +177,12 @@
 		(true
 			(typechange auditadm_t console_device_t file user_tty_device_t)
 			(allow getty_t console_device_t (file (getattr open read write append)))
+			(auditallowx getty_t console_device_t (ioctl file (range 0x2000 0x21FF)))
+			(auditallowx getty_t kernel_t (nlmsg socket (0x1)))
 		)
 		(false
 			(dontaudit getty_t console_device_t (file (getattr open read write append)))
+			(dontauditx getty_t console_device_t (ioctl file (range 0x3000 0x31FF)))
 		)
 	)
 

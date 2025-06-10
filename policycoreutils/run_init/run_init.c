@@ -37,6 +37,8 @@
  *
  *************************************************************************/
 
+#define _GNU_SOURCE
+
 #include <stdio.h>
 #include <stdlib.h>		/* for malloc(), realloc(), free() */
 #include <pwd.h>		/* for getpwuid() */

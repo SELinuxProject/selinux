@@ -3,7 +3,7 @@ SELinux Userspace
 
 ![SELinux logo](https://github.com/SELinuxProject.png)
 [![Run Tests](https://github.com/SELinuxProject/selinux/actions/workflows/run_tests.yml/badge.svg)](https://github.com/SELinuxProject/selinux/actions/workflows/run_tests.yml)
-[![Run SELinux testsuite in a virtual machine](https://github.com/SELinuxProject/selinux/actions/workflows/vm_testsuite.yml/badge.svg)](https://github.com/SELinuxProject/selinux/actions/workflows/vm_testsuite.yml)
+[![Run SELinux testsuite in Testing Farm](https://github.com/SELinuxProject/selinux/actions/workflows/tf_testsuite.yml/badge.svg)](https://github.com/SELinuxProject/selinux/actions/workflows/tf_testsuite.yml)
 [![OSS-Fuzz Status](https://oss-fuzz-build-logs.storage.googleapis.com/badges/selinux.svg)](https://oss-fuzz-build-logs.storage.googleapis.com/index.html#selinux)
 [![CIFuzz Status](https://github.com/SELinuxProject/selinux/actions/workflows/cifuzz.yml/badge.svg)](https://github.com/SELinuxProject/selinux/actions/workflows/cifuzz.yml)
 
@@ -16,9 +16,8 @@ and system libraries which allow for the configuration and management of an
 SELinux-based system.
 
 Please submit all bug reports and patches to the <selinux@vger.kernel.org>
-mailing list. You can subscribe by sending "subscribe selinux" in the body of
-an email to <majordomo@vger.kernel.org>. Archives of the mailing list are
-available at https://lore.kernel.org/selinux.
+mailing list. You can subscribe by sending an email to <selinux+subscribe@vger.kernel.org>
+Archives of the mailing list are available at https://lore.kernel.org/selinux.
 
 Installation
 ------------

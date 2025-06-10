@@ -6,9 +6,13 @@
 #include <stdio_ext.h>
 #include <ctype.h>
 #include <errno.h>
+#include <limits.h>
+
 #include <selinux/selinux.h>
 #include <selinux/context.h>
+
 #include "selinux_internal.h"
+#include "callbacks.h"
 
 /* Process line from seusers.conf and split into its fields.
    Returns 0 on success, -1 on comments, and -2 on error. */
@@ -95,17 +99,32 @@ int require_seusers  = 0;
 
 static gid_t get_default_gid(const char *name) {
 	struct passwd pwstorage, *pwent = NULL;
-	gid_t gid = -1;
+	gid_t gid = (gid_t)-1;
 	/* Allocate space for the getpwnam_r buffer */
+	char *rbuf = NULL;
 	long rbuflen = sysconf(_SC_GETPW_R_SIZE_MAX);
-	if (rbuflen <= 0) return -1;
-	char *rbuf = malloc(rbuflen);
-	if (rbuf == NULL) return -1;
+	if (rbuflen <= 0)
+		rbuflen = 1024;
 
-	int retval = getpwnam_r(name, &pwstorage, rbuf, rbuflen, &pwent);
-	if (retval == 0 && pwent) {
-		gid = pwent->pw_gid;
+	for (;;) {
+		int rc;
+
+		rbuf = malloc(rbuflen);
+		if (rbuf == NULL)
+			break;
+
+		rc = getpwnam_r(name, &pwstorage, rbuf, rbuflen, &pwent);
+		if (rc == ERANGE && rbuflen < LONG_MAX / 2) {
+			free(rbuf);
+			rbuflen *= 2;
+			continue;
+		}
+		if (rc == 0 && pwent)
+			gid = pwent->pw_gid;
+
+		break;
 	}
+
 	free(rbuf);
 	return gid;
 }
@@ -118,7 +137,7 @@ static int check_group(const char *group, const char *name, const gid_t gid) {
 
 	long rbuflen = sysconf(_SC_GETGR_R_SIZE_MAX);
 	if (rbuflen <= 0)
-		return 0;
+		rbuflen = 1024;
 	char *rbuf;
 
 	while(1) {
@@ -127,7 +146,7 @@ static int check_group(const char *group, const char *name, const gid_t gid) {
 			return 0;
 		int retval = getgrnam_r(group, &gbuf, rbuf, 
 				rbuflen, &grent);
-		if ( retval == ERANGE )
+		if (retval == ERANGE && rbuflen < LONG_MAX / 2)
 		{
 			free(rbuf);
 			rbuflen = rbuflen * 2;
@@ -197,8 +216,8 @@ int getseuserbyname(const char *name, char **r_seuser, char **r_level)
 		if (rc == -1)
 			continue;	/* comment, skip */
 		if (rc == -2) {
-			fprintf(stderr, "%s:  error on line %lu, skipping...\n",
-				selinux_usersconf_path(), lineno);
+			selinux_log(SELINUX_ERROR, "%s:  error on line %lu, skipping...\n",
+						   selinux_usersconf_path(), lineno);
 			continue;
 		}
 

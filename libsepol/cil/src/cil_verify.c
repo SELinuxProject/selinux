@@ -1101,7 +1101,8 @@ static int __cil_verify_booleanif_helper(struct cil_tree_node *node, __attribute
 	struct cil_booleanif *bif = node->parent->parent->data;
 
 	switch (rule_node->flavor) {
-	case CIL_AVRULE: {
+	case CIL_AVRULE:
+	case CIL_AVRULEX: {
 		struct cil_avrule *avrule = NULL;
 		avrule = rule_node->data;
 		if (avrule->rule_kind == CIL_AVRULE_NEVERALLOW) {
@@ -1174,6 +1175,9 @@ static int __cil_verify_booleanif_helper(struct cil_tree_node *node, __attribute
 		/* While type transitions with file component are not allowed in
 		   booleanif statements if they don't have "*" as the file. We
 		   can't check that here. Or at least we won't right now. */
+		break;
+	case CIL_SRC_INFO:
+		//Fall through
 		break;
 	default: {
 		const char * flavor = cil_node_to_string(node);
@@ -1513,6 +1517,9 @@ static int __cil_verify_permissionx(struct cil_permissionx *permx, struct cil_tr
 		case CIL_PERMX_KIND_IOCTL:
 			kind_str = CIL_KEY_IOCTL;
 			break;
+		case CIL_PERMX_KIND_NLMSG:
+			kind_str = CIL_KEY_NLMSG;
+			break;
 		default:
 			cil_tree_log(node, CIL_ERR, "Invalid permissionx kind (%d)", permx->kind);
 			rc = SEPOL_ERR;
@@ -1842,6 +1849,9 @@ static int __cil_verify_perms(struct cil_class *class, struct cil_list *perms, s
 				int count2 = 0;
 				cil_list_init(&perm_list, CIL_MAP_PERM);
 				cil_symtab_map(&class->perms, __add_perm_to_list, perm_list);
+				if (class->common != NULL) {
+					cil_symtab_map(&class->common->perms, __add_perm_to_list, perm_list);
+				}
 				cil_list_for_each(j, perm_list) {
 					count2++;
 					struct cil_perm *perm = j->data;

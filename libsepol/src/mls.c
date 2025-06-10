@@ -672,8 +672,10 @@ int sepol_mls_contains(sepol_handle_t * handle,
 	context_struct_t *ctx1 = NULL, *ctx2 = NULL;
 	ctx1 = malloc(sizeof(context_struct_t));
 	ctx2 = malloc(sizeof(context_struct_t));
-	if (ctx1 == NULL || ctx2 == NULL)
+	if (ctx1 == NULL || ctx2 == NULL){
+		ERR(handle, "out of memory");
 		goto omem;
+	}
 	context_init(ctx1);
 	context_init(ctx2);
 
@@ -690,16 +692,14 @@ int sepol_mls_contains(sepol_handle_t * handle,
 	free(ctx2);
 	return STATUS_SUCCESS;
 
-      omem:
-	ERR(handle, "out of memory");
-
       err:
-	ERR(handle, "could not check if mls context %s contains %s",
-	    mls1, mls2);
 	context_destroy(ctx1);
 	context_destroy(ctx2);
+      omem:
 	free(ctx1);
 	free(ctx2);
+	ERR(handle, "could not check if mls context %s contains %s",
+	    mls1, mls2);
 	return STATUS_ERR;
 }
 

@@ -209,6 +209,20 @@ static const struct policydb_compat_info policydb_compat[] = {
 	 .target_platform = SEPOL_TARGET_SELINUX,
 	},
 	{
+	 .type = POLICY_KERN,
+	 .version = POLICYDB_VERSION_COND_XPERMS,
+	 .sym_num = SYM_NUM,
+	 .ocon_num = OCON_IBENDPORT + 1,
+	 .target_platform = SEPOL_TARGET_SELINUX,
+	},
+	{
+	 .type = POLICY_KERN,
+	 .version = POLICYDB_VERSION_NEVERAUDIT,
+	 .sym_num = SYM_NUM,
+	 .ocon_num = OCON_IBENDPORT + 1,
+	 .target_platform = SEPOL_TARGET_SELINUX,
+	},
+	{
 	 .type = POLICY_BASE,
 	 .version = MOD_POLICYDB_VERSION_BASE,
 	 .sym_num = SYM_NUM,
@@ -335,6 +349,20 @@ static const struct policydb_compat_info policydb_compat[] = {
 	 .target_platform = SEPOL_TARGET_SELINUX,
 	},
 	{
+	 .type = POLICY_BASE,
+	 .version = MOD_POLICYDB_VERSION_COND_XPERMS,
+	 .sym_num = SYM_NUM,
+	 .ocon_num = OCON_IBENDPORT + 1,
+	 .target_platform = SEPOL_TARGET_SELINUX,
+	},
+	{
+	 .type = POLICY_BASE,
+	 .version = MOD_POLICYDB_VERSION_NEVERAUDIT,
+	 .sym_num = SYM_NUM,
+	 .ocon_num = OCON_IBENDPORT + 1,
+	 .target_platform = SEPOL_TARGET_SELINUX,
+	},
+	{
 	 .type = POLICY_MOD,
 	 .version = MOD_POLICYDB_VERSION_BASE,
 	 .sym_num = SYM_NUM,
@@ -456,6 +484,20 @@ static const struct policydb_compat_info policydb_compat[] = {
 	{
 	 .type = POLICY_MOD,
 	 .version = MOD_POLICYDB_VERSION_SELF_TYPETRANS,
+	 .sym_num = SYM_NUM,
+	 .ocon_num = 0,
+	 .target_platform = SEPOL_TARGET_SELINUX,
+	},
+	{
+	 .type = POLICY_MOD,
+	 .version = MOD_POLICYDB_VERSION_COND_XPERMS,
+	 .sym_num = SYM_NUM,
+	 .ocon_num = 0,
+	 .target_platform = SEPOL_TARGET_SELINUX,
+	},
+	{
+	 .type = POLICY_MOD,
+	 .version = MOD_POLICYDB_VERSION_NEVERAUDIT,
 	 .sym_num = SYM_NUM,
 	 .ocon_num = 0,
 	 .target_platform = SEPOL_TARGET_SELINUX,
@@ -923,6 +965,9 @@ int policydb_init(policydb_t * p)
 
 	ebitmap_init(&p->policycaps);
 	ebitmap_init(&p->permissive_map);
+	ebitmap_init(&p->neveraudit_map);
+
+	p->line_marker_avrules = AVRULE_NEVERALLOW|AVRULE_XPERMS_NEVERALLOW;
 
 	return 0;
 err:
@@ -1126,7 +1171,7 @@ static int cat_index(hashtab_key_t key, hashtab_datum_t datum, void *datap)
 	return 0;
 }
 
-static int (*index_f[SYM_NUM]) (hashtab_key_t key, hashtab_datum_t datum,
+static int (*const index_f[SYM_NUM]) (hashtab_key_t key, hashtab_datum_t datum,
 				void *datap) = {
 common_index, class_index, role_index, type_index, user_index,
 	    cond_index_bool, sens_index, cat_index,};
@@ -1390,8 +1435,10 @@ static int sens_destroy(hashtab_key_t key, hashtab_datum_t datum, void *p
 	if (key)
 		free(key);
 	levdatum = (level_datum_t *) datum;
-	mls_level_destroy(levdatum->level);
-	free(levdatum->level);
+	if (!levdatum->isalias || !levdatum->notdefined) {
+		mls_level_destroy(levdatum->level);
+		free(levdatum->level);
+	}
 	level_datum_destroy(levdatum);
 	free(levdatum);
 	return 0;
@@ -1407,7 +1454,7 @@ static int cat_destroy(hashtab_key_t key, hashtab_datum_t datum, void *p
 	return 0;
 }
 
-static int (*destroy_f[SYM_NUM]) (hashtab_key_t key, hashtab_datum_t datum,
+static int (*const destroy_f[SYM_NUM]) (hashtab_key_t key, hashtab_datum_t datum,
 				  void *datap) = {
 common_destroy, class_destroy, role_destroy, type_destroy, user_destroy,
 	    cond_destroy_bool, sens_destroy, cat_destroy,};
@@ -1498,6 +1545,8 @@ void policydb_destroy(policydb_t * p)
 	ebitmap_destroy(&p->policycaps);
 
 	ebitmap_destroy(&p->permissive_map);
+
+	ebitmap_destroy(&p->neveraudit_map);
 
 	symtabs_destroy(p->symtab);
 
@@ -1639,7 +1688,7 @@ int policydb_load_isids(policydb_t * p, sidtab_t * s)
  *
  * arguments:
  *   policydb_t *pol       module policy to modify
- *   uint32_t sym          the symbole table for insertion (SYM_*)
+ *   uint32_t sym          the symbol table for insertion (SYM_*)
  *   hashtab_key_t key     the key for the symbol - not cloned
  *   hashtab_datum_t data  the data for the symbol - not cloned
  *   scope                 scope of this symbol, either SCOPE_REQ or SCOPE_DECL
@@ -2460,6 +2509,9 @@ static int type_read(policydb_t * p, hashtab_t h, struct policy_file *fp)
 		if (properties & TYPEDATUM_PROPERTY_PERMISSIVE
 		    && p->policy_type != POLICY_KERN)
 			typdatum->flags |= TYPE_FLAGS_PERMISSIVE;
+		if (properties & TYPEDATUM_PROPERTY_NEVERAUDIT
+		    && p->policy_type != POLICY_KERN)
+			typdatum->flags |= TYPE_FLAGS_NEVERAUDIT;
 
 		typdatum->bounds = le32_to_cpu(buf[++pos]);
 	} else {
@@ -3408,7 +3460,7 @@ static int cat_read(policydb_t * p
 	return -1;
 }
 
-static int (*read_f[SYM_NUM]) (policydb_t * p, hashtab_t h,
+static int (*const read_f[SYM_NUM]) (policydb_t * p, hashtab_t h,
 			       struct policy_file * fp) = {
 common_read, class_read, role_read, type_read, user_read,
 	    cond_read_bool, sens_read, cat_read,};
@@ -4314,6 +4366,12 @@ int policydb_read(policydb_t * p, struct policy_file *fp, unsigned verbose)
 			goto bad;
 	}
 
+	if (p->policyvers >= POLICYDB_VERSION_NEVERAUDIT &&
+	    p->policy_type == POLICY_KERN) {
+		if (ebitmap_read(&p->neveraudit_map, fp))
+			goto bad;
+	}
+
 	for (i = 0; i < info->sym_num; i++) {
 		rc = next_entry(buf, fp, sizeof(uint32_t) * 2);
 		if (rc < 0)
@@ -4448,7 +4506,7 @@ int policydb_read(policydb_t * p, struct policy_file *fp, unsigned verbose)
 				}
 			}
 			/* add the type itself as the degenerate case */
-			if (ebitmap_set_bit(&p->type_attr_map[i], i, 1))
+			if (p->type_val_to_struct[i] && ebitmap_set_bit(&p->type_attr_map[i], i, 1))
 				goto bad;
 			if (p->type_val_to_struct[i] && p->type_val_to_struct[i]->flavor != TYPE_ATTRIB) {
 				if (ebitmap_set_bit(&p->attr_type_map[i], i, 1))

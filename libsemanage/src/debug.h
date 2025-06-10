@@ -23,6 +23,7 @@
 #ifndef _SEMANAGE_INTERNAL_DEBUG_H_
 #define _SEMANAGE_INTERNAL_DEBUG_H_
 
+#include <errno.h>
 #include <stdio.h>
 #include <semanage/debug.h>
 #include <sepol/debug.h>
@@ -36,6 +37,8 @@
 	          channel_arg, func_arg, ...) do {         \
 	                                                   \
         if ((handle_arg)->msg_callback) {                  \
+                int errsv__ = errno;                       \
+                                                           \
                 (handle_arg)->msg_fname = func_arg;        \
                 (handle_arg)->msg_channel = channel_arg;   \
                 (handle_arg)->msg_level = level_arg;       \
@@ -43,6 +46,8 @@
                 (handle_arg)->msg_callback(                \
                         (handle_arg)->msg_callback_arg,    \
                         handle_arg, __VA_ARGS__);          \
+                                                           \
+                errno = errsv__;                           \
         }                                                  \
 } while(0)
 

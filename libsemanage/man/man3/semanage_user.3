@@ -1,6 +1,6 @@
 .TH semanage_user 3 "16 March 2006" "ivg2@cornell.edu" "Libsemanage API documentation"
 
-.SH "NAME" 
+.SH "NAME"
 semanage_user \- SELinux User Management API
 
 .SH "SYNOPSIS"
@@ -11,20 +11,20 @@ semanage_user \- SELinux User Management API
 .B #include <semanage/users_local.h>
 
 .PP
-This object contains properties associated with a SELinux user. 
-Typically many Unix users are mapped to the same SELinux user. See 
+This object contains properties associated with a SELinux user.
+Typically many Unix users are mapped to the same SELinux user. See
 .BR semanage_seuser "(3)"
-for overview of the Unix user API. 
+for overview of the Unix user API.
 
 .PP
 For details on a specific function, see its manual page.
 
 .SH "Record API Overview"
 
-.HP 
-.BR semanage_user_create "(3)" \- 
+.HP
+.BR semanage_user_create "(3)" \-
 .br
-create a user 
+create a user
 
 .HP
 .BR semanage_user_free "(3)" \-
@@ -42,17 +42,17 @@ create a key, which can be used to identify a user
 release resources for this user key
 
 .HP
-.BR semanage_user_key_extract "(3)" \- 
+.BR semanage_user_key_extract "(3)" \-
 .br
 create a key matching this user
 
 .HP
-.BR semanage_user_clone "(3)" \- 
+.BR semanage_user_clone "(3)" \-
 .br
 create an identical user (deep-copy clone)
 
 .HP
-.BR semanage_user_compare "(3)" \- 
+.BR semanage_user_compare "(3)" \-
 .br
 compare this user to the provided key
 
@@ -64,7 +64,7 @@ compare this user to another
 .SH "Properties API Overview"
 
 .HP
-.BR semanage_user_get_name "(3)" \- 
+.BR semanage_user_get_name "(3)" \-
 .br
 return the name of this user
 
@@ -135,7 +135,7 @@ set the roles for this user
 .SH "Record Store API Overview"
 
 .HP
-.BR semanage_user_modify_local "(3)" \- 
+.BR semanage_user_modify_local "(3)" \-
 .br
 add or update a user in the local store
 
@@ -160,7 +160,7 @@ check if a user is defined in the local store
 query a user in the persistent policy
 
 .HP
-.BR semanage_user_query_local "(3)" \- 
+.BR semanage_user_query_local "(3)" \-
 .br
 query a user in the local store
 

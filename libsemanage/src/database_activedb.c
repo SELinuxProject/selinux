@@ -1,7 +1,7 @@
 /* Copyright (C) 2005 Red Hat, Inc. */
 
 /* Object: dbase_activedb_t (Active/Kernel)
- * Extends: dbase_llist_t (Linked List) 
+ * Extends: dbase_llist_t (Linked List)
  * Implements: dbase_t (Database)
  */
 
@@ -20,21 +20,21 @@ typedef struct dbase_activedb dbase_t;
 /* ACTIVEDB dbase */
 struct dbase_activedb {
 
-	/* Parent object - must always be 
+	/* Parent object - must always be
 	 * the first field - here we are using
 	 * a linked list to store the records */
 	dbase_llist_t llist;
 
 	/* ACTIVEDB extension */
-	record_activedb_table_t *ratable;
+	const record_activedb_table_t *ratable;
 };
 
 static int dbase_activedb_cache(semanage_handle_t * handle,
 				dbase_activedb_t * dbase)
 {
 
-	record_table_t *rtable = dbase_llist_get_rtable(&dbase->llist);
-	record_activedb_table_t *ratable = dbase->ratable;
+	const record_table_t *rtable = dbase_llist_get_rtable(&dbase->llist);
+	const record_activedb_table_t *ratable = dbase->ratable;
 
 	record_t **records = NULL;
 	unsigned int rcount = 0;
@@ -77,8 +77,8 @@ static int dbase_activedb_flush(semanage_handle_t * handle,
 				dbase_activedb_t * dbase)
 {
 
-	record_table_t *rtable = dbase_llist_get_rtable(&dbase->llist);
-	record_activedb_table_t *ratable = dbase->ratable;
+	const record_table_t *rtable = dbase_llist_get_rtable(&dbase->llist);
+	const record_activedb_table_t *ratable = dbase->ratable;
 
 	record_t **records = NULL;
 	unsigned int rcount = 0;
@@ -111,8 +111,8 @@ static int dbase_activedb_flush(semanage_handle_t * handle,
 }
 
 int dbase_activedb_init(semanage_handle_t * handle,
-			record_table_t * rtable,
-			record_activedb_table_t * ratable,
+			const record_table_t * rtable,
+			const record_activedb_table_t * ratable,
 			dbase_activedb_t ** dbase)
 {
 
@@ -139,12 +139,15 @@ int dbase_activedb_init(semanage_handle_t * handle,
 void dbase_activedb_release(dbase_activedb_t * dbase)
 {
 
+	if (!dbase)
+		return;
+
 	dbase_llist_drop_cache(&dbase->llist);
 	free(dbase);
 }
 
 /* ACTIVEDB dbase - method table implementation */
-dbase_table_t SEMANAGE_ACTIVEDB_DTABLE = {
+const dbase_table_t SEMANAGE_ACTIVEDB_DTABLE = {
 
 	/* Cache/Transactions */
 	.cache = dbase_activedb_cache,

@@ -58,10 +58,10 @@ static int nodups_specs(struct saved_data *data, const char *path)
 		for (jj = ii + 1; jj < data->nspec; jj++) {
 			if (!strcmp(spec_arr[jj].property_key,
 					    curr_spec->property_key)) {
-				rc = -1;
-				errno = EINVAL;
 				if (strcmp(spec_arr[jj].lr.ctx_raw,
 						    curr_spec->lr.ctx_raw)) {
+					rc = -1;
+					errno = EINVAL;
 					selinux_log
 						(SELINUX_ERROR,
 						 "%s: Multiple different specifications for %s  (%s and %s).\n",
@@ -70,7 +70,7 @@ static int nodups_specs(struct saved_data *data, const char *path)
 						 curr_spec->lr.ctx_raw);
 				} else {
 					selinux_log
-						(SELINUX_ERROR,
+						(SELINUX_WARNING,
 						 "%s: Multiple same specifications for %s.\n",
 						 path, curr_spec->property_key);
 				}
@@ -91,7 +91,7 @@ static int process_line(struct selabel_handle *rec,
 	unsigned int nspec = data->nspec;
 	const char *errbuf = NULL;
 
-	items = read_spec_entries(line_buf, &errbuf, 2, &prop, &context);
+	items = read_spec_entries(line_buf, strlen(line_buf), &errbuf, 2, &prop, &context);
 	if (items < 0) {
 		if (errbuf) {
 			selinux_log(SELINUX_ERROR,
@@ -152,12 +152,21 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 	struct stat sb;
 
 	/* Process arguments */
-	while (n--)
+	while (n) {
+		n--;
 		switch (opts[n].type) {
 		case SELABEL_OPT_PATH:
 			path = opts[n].value;
 			break;
+		case SELABEL_OPT_UNUSED:
+		case SELABEL_OPT_VALIDATE:
+		case SELABEL_OPT_DIGEST:
+			break;
+		default:
+			errno = EINVAL;
+			return -1;
 		}
+	}
 
 	if (!path)
 		return -1;
@@ -237,6 +246,9 @@ static void closef(struct selabel_handle *rec)
 	struct spec *spec;
 	unsigned int i;
 
+	if (!data)
+		return;
+
 	for (i = 0; i < data->nspec; i++) {
 		spec = &data->spec_arr[i];
 		free(spec->property_key);
@@ -248,6 +260,7 @@ static void closef(struct selabel_handle *rec)
 		free(data->spec_arr);
 
 	free(data);
+	rec->data = NULL;
 }
 
 static struct selabel_lookup_rec *property_lookup(struct selabel_handle *rec,

@@ -37,10 +37,12 @@ int semanage_ibpkey_compare2(const semanage_ibpkey_t *ibpkey,
 }
 
 
- int semanage_ibpkey_compare2_qsort(const semanage_ibpkey_t **ibpkey,
-					  const semanage_ibpkey_t **ibpkey2)
+ int semanage_ibpkey_compare2_qsort(const void *p1, const void *p2)
 {
-	return sepol_ibpkey_compare2(*ibpkey, *ibpkey2);
+	const semanage_ibpkey_t *const *ibpkey1 = p1;
+	const semanage_ibpkey_t *const *ibpkey2 = p2;
+
+	return sepol_ibpkey_compare2(*ibpkey1, *ibpkey2);
 }
 
 int semanage_ibpkey_key_create(semanage_handle_t *handle,
@@ -153,7 +155,7 @@ void semanage_ibpkey_free(semanage_ibpkey_t *ibpkey)
 
 
 /* key base functions */
-record_table_t SEMANAGE_IBPKEY_RTABLE = {
+const record_table_t SEMANAGE_IBPKEY_RTABLE = {
 	.create = semanage_ibpkey_create,
 	.key_extract = semanage_ibpkey_key_extract,
 	.key_free = semanage_ibpkey_key_free,

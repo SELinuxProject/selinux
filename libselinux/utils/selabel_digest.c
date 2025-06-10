@@ -6,12 +6,10 @@
 #include <selinux/selinux.h>
 #include <selinux/label.h>
 
-static size_t digest_len;
-
 static __attribute__ ((__noreturn__)) void usage(const char *progname)
 {
 	fprintf(stderr,
-		"usage: %s -b backend [-d] [-v] [-B] [-i] [-f file]\n\n"
+		"usage: %s -b backend [-v] [-B] [-i] [-f file]\n\n"
 		"Where:\n\t"
 		"-b  The backend - \"file\", \"media\", \"x\", \"db\" or "
 			"\"prop\"\n\t"
@@ -25,11 +23,11 @@ static __attribute__ ((__noreturn__)) void usage(const char *progname)
 	exit(1);
 }
 
-static int run_check_digest(char *cmd, char *selabel_digest)
+static int run_check_digest(const char *cmd, const char *selabel_digest, size_t digest_len)
 {
 	FILE *fp;
 	char files_digest[128];
-	char *files_ptr;
+	const char *files_ptr;
 	int rc = 0;
 
 	fp = popen(cmd, "r");
@@ -64,17 +62,17 @@ int main(int argc, char **argv)
 	char *baseonly = NULL, *file = NULL, *digest = (char *)1;
 	char **specfiles = NULL;
 	unsigned char *sha1_digest = NULL;
-	size_t i, num_specfiles;
+	size_t digest_len, i, num_specfiles;
 
 	char cmd_buf[4096];
 	char *cmd_ptr;
-	char *sha1_buf;
+	char *sha1_buf = NULL;
 
 	struct selabel_handle *hnd;
 	struct selinux_opt selabel_option[] = {
 		{ SELABEL_OPT_PATH, file },
-		{ SELABEL_OPT_BASEONLY, baseonly },
-		{ SELABEL_OPT_DIGEST, digest }
+		{ SELABEL_OPT_DIGEST, digest },
+		{ SELABEL_OPT_BASEONLY, baseonly }
 	};
 
 	if (argc < 3)
@@ -121,10 +119,10 @@ int main(int argc, char **argv)
 	memset(cmd_buf, 0, sizeof(cmd_buf));
 
 	selabel_option[0].value = file;
-	selabel_option[1].value = baseonly;
-	selabel_option[2].value = digest;
+	selabel_option[1].value = digest;
+	selabel_option[2].value = baseonly;
 
-	hnd = selabel_open(backend, selabel_option, 3);
+	hnd = selabel_open(backend, selabel_option, backend == SELABEL_CTX_FILE ? 3 : 2);
 	if (!hnd) {
 		switch (errno) {
 		case EOVERFLOW:
@@ -169,23 +167,50 @@ int main(int argc, char **argv)
 	printf("calculated using the following specfile(s):\n");
 
 	if (specfiles) {
-		cmd_ptr = &cmd_buf[0];
-		sprintf(cmd_ptr, "/usr/bin/cat ");
-		cmd_ptr = &cmd_buf[0] + strlen(cmd_buf);
+		size_t cmd_rem = sizeof(cmd_buf);
+		int ret;
+
+		if (validate) {
+			cmd_ptr = &cmd_buf[0];
+			ret = snprintf(cmd_ptr, cmd_rem, "/usr/bin/cat ");
+			if (ret < 0 || (size_t)ret >= cmd_rem) {
+				fprintf(stderr, "Could not format validate command\n");
+				rc = -1;
+				goto err;
+			}
+			cmd_ptr += ret;
+			cmd_rem -= ret;
+		}
 
 		for (i = 0; i < num_specfiles; i++) {
-			sprintf(cmd_ptr, "%s ", specfiles[i]);
-			cmd_ptr += strlen(specfiles[i]) + 1;
+			if (validate) {
+				ret = snprintf(cmd_ptr, cmd_rem, "%s ", specfiles[i]);
+				if (ret < 0 || (size_t)ret >= cmd_rem) {
+					fprintf(stderr, "Could not format validate command\n");
+					rc = -1;
+					goto err;
+				}
+				cmd_ptr += ret;
+				cmd_rem -= ret;
+			}
+
 			printf("%s\n", specfiles[i]);
 		}
-		sprintf(cmd_ptr, "| /usr/bin/openssl dgst -sha1 -hex");
 
-		if (validate)
-			rc = run_check_digest(cmd_buf, sha1_buf);
+		if (validate) {
+			ret = snprintf(cmd_ptr, cmd_rem, "| /usr/bin/openssl dgst -sha1 -hex");
+			if (ret < 0 || (size_t)ret >= cmd_rem) {
+				fprintf(stderr, "Could not format validate command\n");
+				rc = -1;
+				goto err;
+			}
+
+			rc = run_check_digest(cmd_buf, sha1_buf, digest_len);
+		}
 	}
 
-	free(sha1_buf);
 err:
+	free(sha1_buf);
 	selabel_close(hnd);
 	return rc;
 }

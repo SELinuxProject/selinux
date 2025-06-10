@@ -45,12 +45,12 @@ extern int parse_assert_noeof(semanage_handle_t * handle, parse_info_t * info);
  * otherwise eat the whitespace */
 extern int parse_assert_space(semanage_handle_t * handle, parse_info_t * info);
 
-/* Throw an error if the specified character 
+/* Throw an error if the specified character
  * does not follow, otherwise eat that character */
 extern int parse_assert_ch(semanage_handle_t * handle,
-			   parse_info_t * info, const char ch);
+			   parse_info_t * info, char ch);
 
-/* Throw an error if the specified string 
+/* Throw an error if the specified string
  * does not follow is not found, otherwise
  * eat the string */
 extern int parse_assert_str(semanage_handle_t * handle,
@@ -58,7 +58,7 @@ extern int parse_assert_str(semanage_handle_t * handle,
 
 /* Eat the optional character, if found,
  * or return STATUS_NODATA */
-extern int parse_optional_ch(parse_info_t * info, const char ch);
+extern int parse_optional_ch(parse_info_t * info, char ch);
 
 /* Eat the optional string, if found,
  * or return STATUS_NODATA */

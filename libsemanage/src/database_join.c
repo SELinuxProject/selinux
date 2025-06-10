@@ -1,7 +1,7 @@
 /* Copyright (C) 2005 Red Hat, Inc. */
 
 /* Object: dbase_join_t (Join)
- * Extends: dbase_llist_t (Linked List) 
+ * Extends: dbase_llist_t (Linked List)
  * Implements: dbase_t (Database)
  */
 
@@ -20,7 +20,7 @@ typedef struct dbase_join dbase_t;
 /* JOIN dbase */
 struct dbase_join {
 
-	/* Parent object - must always be 
+	/* Parent object - must always be
 	 * the first field - here we are using
 	 * a linked list to store the records */
 	dbase_llist_t llist;
@@ -31,7 +31,7 @@ struct dbase_join {
 	dbase_config_t *join2;
 
 	/* JOIN extension */
-	record_join_table_t *rjtable;
+	const record_join_table_t *rjtable;
 };
 
 static int dbase_join_cache(semanage_handle_t * handle, dbase_join_t * dbase)
@@ -40,12 +40,12 @@ static int dbase_join_cache(semanage_handle_t * handle, dbase_join_t * dbase)
 	/* Extract all the object tables information */
 	dbase_t *dbase1 = dbase->join1->dbase;
 	dbase_t *dbase2 = dbase->join2->dbase;
-	dbase_table_t *dtable1 = dbase->join1->dtable;
-	dbase_table_t *dtable2 = dbase->join2->dtable;
-	record_table_t *rtable = dbase_llist_get_rtable(&dbase->llist);
-	record_join_table_t *rjtable = dbase->rjtable;
-	record_table_t *rtable1 = dtable1->get_rtable(dbase1);
-	record_table_t *rtable2 = dtable2->get_rtable(dbase2);
+	const dbase_table_t *dtable1 = dbase->join1->dtable;
+	const dbase_table_t *dtable2 = dbase->join2->dtable;
+	const record_table_t *rtable = dbase_llist_get_rtable(&dbase->llist);
+	const record_join_table_t *rjtable = dbase->rjtable;
+	const record_table_t *rtable1 = dtable1->get_rtable(dbase1);
+	const record_table_t *rtable2 = dtable2->get_rtable(dbase2);
 
 	record_key_t *rkey = NULL;
 	record_t *record = NULL;
@@ -77,13 +77,11 @@ static int dbase_join_cache(semanage_handle_t * handle, dbase_join_t * dbase)
 		goto err;
 
 	/* Sort for quicker merge later */
-	if (rcount1 > 0) {
-		qsort(records1, rcount1, sizeof(record1_t *),
-		      (int (*)(const void *, const void *))rtable1->compare2_qsort);
+	if (rcount1 > 1) {
+		qsort(records1, rcount1, sizeof(record1_t *), rtable1->compare2_qsort);
 	}
-	if (rcount2 > 0) {
-		qsort(records2, rcount2, sizeof(record2_t *),
-		      (int (*)(const void *, const void *))rtable2->compare2_qsort);
+	if (rcount2 > 1) {
+		qsort(records2, rcount2, sizeof(record2_t *), rtable2->compare2_qsort);
 	}
 
 	/* Now merge into this dbase */
@@ -176,12 +174,12 @@ static int dbase_join_flush(semanage_handle_t * handle, dbase_join_t * dbase)
 	/* Extract all the object tables information */
 	dbase_t *dbase1 = dbase->join1->dbase;
 	dbase_t *dbase2 = dbase->join2->dbase;
-	dbase_table_t *dtable1 = dbase->join1->dtable;
-	dbase_table_t *dtable2 = dbase->join2->dtable;
-	record_table_t *rtable = dbase_llist_get_rtable(&dbase->llist);
-	record_join_table_t *rjtable = dbase->rjtable;
-	record_table_t *rtable1 = dtable1->get_rtable(dbase1);
-	record_table_t *rtable2 = dtable2->get_rtable(dbase2);
+	const dbase_table_t *dtable1 = dbase->join1->dtable;
+	const dbase_table_t *dtable2 = dbase->join2->dtable;
+	const record_table_t *rtable = dbase_llist_get_rtable(&dbase->llist);
+	const record_join_table_t *rjtable = dbase->rjtable;
+	const record_table_t *rtable1 = dtable1->get_rtable(dbase1);
+	const record_table_t *rtable2 = dtable2->get_rtable(dbase2);
 
 	cache_entry_t *ptr;
 	record_key_t *rkey = NULL;
@@ -194,7 +192,7 @@ static int dbase_join_flush(semanage_handle_t * handle, dbase_join_t * dbase)
 
 	/* Then clear all records from the cache.
 	 * This is *not* the same as dropping the cache - it's an explicit
-	 * request to delete all current records. We need to do 
+	 * request to delete all current records. We need to do
 	 * this because we don't store delete deltas for the join,
 	 * so we must re-add all records from scratch */
 	if (dtable1->clear(handle, dbase1) < 0)
@@ -240,8 +238,8 @@ static int dbase_join_flush(semanage_handle_t * handle, dbase_join_t * dbase)
 }
 
 int dbase_join_init(semanage_handle_t * handle,
-		    record_table_t * rtable,
-		    record_join_table_t * rjtable,
+		    const record_table_t * rtable,
+		    const record_join_table_t * rjtable,
 		    dbase_config_t * join1,
 		    dbase_config_t * join2, dbase_t ** dbase)
 {
@@ -271,12 +269,15 @@ int dbase_join_init(semanage_handle_t * handle,
 void dbase_join_release(dbase_join_t * dbase)
 {
 
+	if (!dbase)
+		return;
+
 	dbase_llist_drop_cache(&dbase->llist);
 	free(dbase);
 }
 
 /* JOIN dbase - method table implementation */
-dbase_table_t SEMANAGE_JOIN_DTABLE = {
+const dbase_table_t SEMANAGE_JOIN_DTABLE = {
 
 	/* Cache/Transactions */
 	.cache = dbase_join_cache,

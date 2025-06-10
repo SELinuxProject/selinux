@@ -8,7 +8,7 @@
 #include "handle.h"
 
 /* PKEY RECORD: method table */
-extern record_table_t SEMANAGE_IBPKEY_RTABLE;
+extern const record_table_t SEMANAGE_IBPKEY_RTABLE;
 
 extern int ibpkey_file_dbase_init(semanage_handle_t *handle,
 				  const char *path_ro,
@@ -26,7 +26,6 @@ extern int semanage_ibpkey_validate_local(semanage_handle_t *handle);
 
 /* ==== Internal (to ibpkeys) API === */
 
- int semanage_ibpkey_compare2_qsort(const semanage_ibpkey_t **ibpkey,
-					  const semanage_ibpkey_t **ibpkey2);
+ int semanage_ibpkey_compare2_qsort(const void *p1, const void *p2);
 
 #endif

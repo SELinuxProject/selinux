@@ -52,7 +52,8 @@
 
 #define BUF_SIZE 1024
 #define DEFAULT_PATH "/usr/bin:/bin"
-#define USAGE_STRING _("USAGE: seunshare [ -v ] [ -C ] [ -k ] [ -t tmpdir ] [ -h homedir ] [ -r runuserdir ] [ -Z CONTEXT ] -- executable [args] ")
+#define USAGE_STRING _("USAGE: seunshare [ -v ] [ -C ] [ -k ] [ -t tmpdir ] [ -h homedir ] \
+[ -r runuserdir ] [ -P pipewiresocket ] [ -W waylandsocket ] [ -Z CONTEXT ] -- executable [args] ")
 
 static int verbose = 0;
 static int child = 0;
@@ -265,6 +266,10 @@ static int seunshare_mount(const char *src, const char *dst, struct stat *src_st
 		is_tmp = 1;
 	}
 
+	if (strncmp("/run/user", dst, 9) == 0) {
+		flags = flags | MS_REC;
+	}
+
 	/* mount directory */
 	if (mount(src, dst, NULL, MS_BIND | flags, NULL) < 0) {
 		fprintf(stderr, _("Failed to mount %s on %s: %s\n"), src, dst, strerror(errno));
@@ -283,6 +288,31 @@ static int seunshare_mount(const char *src, const char *dst, struct stat *src_st
 			fprintf(stderr, _("Failed to mount /tmp on /var/tmp: %s\n"), strerror(errno));
 			return -1;
 		}
+	}
+
+	return 0;
+
+}
+
+/**
+ * Mount directory and check that we mounted the right directory.
+ */
+static int seunshare_mount_file(const char *src, const char *dst)
+{
+	int flags = 0;
+
+	if (verbose)
+		printf(_("Mounting %s on %s\n"), src, dst);
+
+	if (access(dst, F_OK) == -1) {
+		 FILE *fptr;
+         fptr = fopen(dst, "w");
+		 fclose(fptr);
+	}
+	/* mount file */
+	if (mount(src, dst, NULL, MS_BIND | flags, NULL) < 0) {
+		fprintf(stderr, _("Failed to mount %s on %s: %s\n"), src, dst, strerror(errno));
+		return -1;
 	}
 
 	return 0;
@@ -616,6 +646,8 @@ killall (const char *execcon)
 int main(int argc, char **argv) {
 	int status = -1;
 	const char *execcon = NULL;
+	const char *pipewire_socket = NULL;
+	const char *wayland_display = NULL;
 
 	int clflag;		/* holds codes for command line flags */
 	int kill_all = 0;
@@ -641,6 +673,8 @@ int main(int argc, char **argv) {
 		{"verbose", 1, 0, 'v'},
 		{"context", 1, 0, 'Z'},
 		{"capabilities", 1, 0, 'C'},
+		{"wayland", 1, 0, 'W'},
+		{"pipewire", 1, 0, 'P'},
 		{NULL, 0, 0, 0}
 	};
 
@@ -670,7 +704,7 @@ int main(int argc, char **argv) {
 	}
 
 	while (1) {
-		clflag = getopt_long(argc, argv, "Ccvh:r:t:Z:", long_options, NULL);
+		clflag = getopt_long(argc, argv, "Ccvh:r:t:W:Z:", long_options, NULL);
 		if (clflag == -1)
 			break;
 
@@ -692,6 +726,12 @@ int main(int argc, char **argv) {
 			break;
 		case 'C':
 			cap_set = CAPNG_SELECT_CAPS;
+			break;
+		case 'P':
+			pipewire_socket = optarg;
+			break;
+		case 'W':
+			wayland_display = optarg;
 			break;
 		case 'Z':
 			execcon = optarg;
@@ -767,8 +807,14 @@ int main(int argc, char **argv) {
 		char *display = NULL;
 		char *LANG = NULL;
 		char *RUNTIME_DIR = NULL;
+		char *XDG_SESSION_TYPE = NULL;
 		int rc = -1;
 		char *resolved_path = NULL;
+		char *wayland_path_s = NULL; /* /tmp/.../wayland-0 */
+		char *wayland_path = NULL; /* /run/user/UID/wayland-0 */
+		char *pipewire_path_s = NULL; /* /tmp/.../pipewire-0 */
+		char *pipewire_path = NULL; /* /run/user/UID/pipewire-0 */
+
 
 		if (unshare(CLONE_NEWNS) < 0) {
 			perror(_("Failed to unshare"));
@@ -805,6 +851,42 @@ int main(int argc, char **argv) {
 			}
 		}
 
+		if ((XDG_SESSION_TYPE = getenv("XDG_SESSION_TYPE")) != NULL) {
+			if ((XDG_SESSION_TYPE = strdup(XDG_SESSION_TYPE)) == NULL) {
+				perror(_("Out of memory"));
+				goto childerr;
+			}
+		}
+
+		if (runuserdir_s && (wayland_display || pipewire_socket)) {
+			if (wayland_display) {
+				if (asprintf(&wayland_path_s, "%s/%s", runuserdir_s, wayland_display) == -1) {
+					perror(_("Out of memory"));
+					goto childerr;
+				}
+
+				if (asprintf(&wayland_path, "%s/%s", RUNTIME_DIR, wayland_display) == -1) {
+					perror(_("Out of memory"));
+					goto childerr;
+				}
+
+				if (seunshare_mount_file(wayland_path, wayland_path_s) == -1)
+					goto childerr;
+			}
+
+			if (pipewire_socket) {
+				if (asprintf(&pipewire_path_s, "%s/%s", runuserdir_s, pipewire_socket) == -1) {
+					perror(_("Out of memory"));
+					goto childerr;
+				}
+				if (asprintf(&pipewire_path, "%s/pipewire-0", RUNTIME_DIR) == -1) {
+					perror(_("Out of memory"));
+					goto childerr;
+				}
+				seunshare_mount_file(pipewire_path, pipewire_path_s);
+			}
+		}
+
 		/* mount homedir, runuserdir and tmpdir, in this order */
 		if (runuserdir_s &&	seunshare_mount(runuserdir_s, RUNTIME_DIR,
 			&st_runuserdir_s) != 0) goto childerr;
@@ -816,10 +898,21 @@ int main(int argc, char **argv) {
 		if (drop_privs(uid) != 0) goto childerr;
 
 		/* construct a new environment */
-		if ((display = getenv("DISPLAY")) != NULL) {
-			if ((display = strdup(display)) == NULL) {
-				perror(_("Out of memory"));
-				goto childerr;
+
+		if (XDG_SESSION_TYPE && strcmp(XDG_SESSION_TYPE, "wayland") == 0) {
+			if (wayland_display == NULL && (wayland_display = getenv("WAYLAND_DISPLAY")) != NULL) {
+				if ((wayland_display = strdup(wayland_display)) == NULL) {
+					perror(_("Out of memory"));
+					goto childerr;
+				}
+			}
+		}
+		else {
+			if ((display = getenv("DISPLAY")) != NULL) {
+				if ((display = strdup(display)) == NULL) {
+					perror(_("Out of memory"));
+					goto childerr;
+				}
 			}
 		}
 
@@ -835,8 +928,16 @@ int main(int argc, char **argv) {
 			perror(_("Failed to clear environment"));
 			goto childerr;
 		}
-		if (display)
+		if (display) {
 			rc |= setenv("DISPLAY", display, 1);
+		}
+		if (wayland_display) {
+			rc |= setenv("WAYLAND_DISPLAY", wayland_display, 1);
+		}
+
+		if (XDG_SESSION_TYPE)
+			rc |= setenv("XDG_SESSION_TYPE", XDG_SESSION_TYPE, 1);
+
 		if (LANG)
 			rc |= setenv("LANG", LANG, 1);
 		if (RUNTIME_DIR)
@@ -874,9 +975,14 @@ int main(int argc, char **argv) {
 		fprintf(stderr, _("Failed to execute command %s: %s\n"), argv[optind], strerror(errno));
 childerr:
 		free(resolved_path);
+		free(wayland_path);
+		free(wayland_path_s);
+		free(pipewire_path);
+		free(pipewire_path_s);
 		free(display);
 		free(LANG);
 		free(RUNTIME_DIR);
+		free(XDG_SESSION_TYPE);
 		exit(-1);
 	}
 

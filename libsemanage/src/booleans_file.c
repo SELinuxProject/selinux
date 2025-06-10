@@ -21,7 +21,7 @@ typedef struct dbase_file dbase_t;
 #include "debug.h"
 
 static int bool_print(semanage_handle_t * handle,
-		      semanage_bool_t * boolean, FILE * str)
+		      const semanage_bool_t * boolean, FILE * str)
 {
 
 	const char *name = semanage_bool_get_name(boolean);
@@ -101,7 +101,7 @@ static int bool_parse(semanage_handle_t * handle,
 }
 
 /* BOOL RECORD: FILE extension: method table */
-record_file_table_t SEMANAGE_BOOL_FILE_RTABLE = {
+static const record_file_table_t SEMANAGE_BOOL_FILE_RTABLE = {
 	.parse = bool_parse,
 	.print = bool_print,
 };

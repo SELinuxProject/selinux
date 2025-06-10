@@ -20,7 +20,7 @@ typedef struct dbase_file dbase_t;
 #include "debug.h"
 
 static int port_print(semanage_handle_t * handle,
-		      semanage_port_t * port, FILE * str)
+		      const semanage_port_t * port, FILE * str)
 {
 
 	char *con_str = NULL;
@@ -101,7 +101,7 @@ static int port_parse(semanage_handle_t * handle,
 	if (parse_fetch_int(handle, info, &low, '-') < 0)
 		goto err;
 
-	/* If range (-) does not follow immediately, require a space 
+	/* If range (-) does not follow immediately, require a space
 	 * In other words, the space here is optional, but only
 	 * in the ranged case, not in the single port case,
 	 * so do a custom test */
@@ -161,7 +161,7 @@ static int port_parse(semanage_handle_t * handle,
 }
 
 /* PORT RECORD: FILE extension: method table */
-record_file_table_t SEMANAGE_PORT_FILE_RTABLE = {
+static const record_file_table_t SEMANAGE_PORT_FILE_RTABLE = {
 	.parse = port_parse,
 	.print = port_print,
 };

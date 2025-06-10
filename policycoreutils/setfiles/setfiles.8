@@ -19,6 +19,7 @@ setfiles \- set SELinux file security contexts.
 .RB [ \-v ]
 .RB [ \-W ]
 .RB [ \-F ]
+.RB [ \-U ]
 .RB [ \-I | \-D ]
 .RB [ \-T
 .IR nthreads ]
@@ -52,8 +53,12 @@ context,
 .B setfiles
 will only modify the type portion of the security context.
 The
+.B \-U
+option will also modify the user and role portions of the security context.
+The
 .B \-F
-option will force a replacement of the entire context.
+option will force a replacement of the entire context, including the range
+portion of the security context and modify customizable files.
 .SH "OPTIONS"
 .TP
 .B \-c
@@ -87,6 +92,10 @@ for
 Force reset of context to match file_context for customizable files, and the
 default file context, changing the user, role, range portion as well as the
 type.
+.TP
+.B \-U
+In addition to the type portion also change the user and role portions, but
+not the range portion.
 .TP
 .B \-h, \-?
 display usage information and exit.

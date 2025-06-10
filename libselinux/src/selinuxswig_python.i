@@ -71,7 +71,7 @@ def install(src, dest):
 	for (i = 0; i < *$2; i++) {
 		PyList_SetItem(list, i, PyString_FromString((*$1)[i]));
 	}
-	$result = SWIG_Python_AppendOutput($result, list);
+	$result = SWIG_AppendOutput($result, list);
 }
 
 /* return a sid along with the result */
@@ -108,7 +108,7 @@ def install(src, dest):
 		plist = PyList_New(0);
 	}
 
-	$result = SWIG_Python_AppendOutput($result, plist);
+	$result = SWIG_AppendOutput($result, plist);
 }
 
 /* Makes functions in get_context_list.h return a Python list of contexts */

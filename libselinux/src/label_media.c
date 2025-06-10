@@ -30,12 +30,12 @@ struct saved_data {
 	spec_t *spec_arr;
 };
 
-static int process_line(const char *path, char *line_buf, int pass,
+static int process_line(const char *path, const char *line_buf, int pass,
 			unsigned lineno, struct selabel_handle *rec)
 {
 	struct saved_data *data = (struct saved_data *)rec->data;
 	int items;
-	char *buf_p;
+	const char *buf_p;
 	char *key, *context;
 
 	buf_p = line_buf;
@@ -80,12 +80,21 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 	struct stat sb;
 
 	/* Process arguments */
-	while (n--)
+	while (n) {
+		n--;
 		switch(opts[n].type) {
 		case SELABEL_OPT_PATH:
 			path = opts[n].value;
 			break;
+		case SELABEL_OPT_UNUSED:
+		case SELABEL_OPT_VALIDATE:
+		case SELABEL_OPT_DIGEST:
+			break;
+		default:
+			errno = EINVAL;
+			return -1;
 		}
+}
 
 	/* Open the specification file. */
 	if (!path)
@@ -125,10 +134,9 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 				status = 0;
 				goto finish;
 			}
-			data->spec_arr = malloc(sizeof(spec_t)*data->nspec);
+			data->spec_arr = calloc(data->nspec, sizeof(spec_t));
 			if (data->spec_arr == NULL)
 				goto finish;
-			memset(data->spec_arr, 0, sizeof(spec_t)*data->nspec);
 			maxnspec = data->nspec;
 
 			status = fseek(fp, 0L, SEEK_SET);
@@ -136,7 +144,6 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 				goto finish;
 		}
 	}
-	free(line_buf);
 
 	status = digest_add_specfile(rec->digest, fp, NULL, sb.st_size, path);
 	if (status)
@@ -145,6 +152,7 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 	digest_gen_hash(rec->digest);
 
 finish:
+	free(line_buf);
 	fclose(fp);
 	return status;
 }
@@ -155,20 +163,27 @@ finish:
 static void close(struct selabel_handle *rec)
 {
 	struct saved_data *data = (struct saved_data *)rec->data;
-	struct spec *spec, *spec_arr = data->spec_arr;
+	struct spec *spec, *spec_arr;
 	unsigned int i;
+
+	if (!data)
+		return;
+
+	spec_arr = data->spec_arr;
 
 	for (i = 0; i < data->nspec; i++) {
 		spec = &spec_arr[i];
 		free(spec->key);
 		free(spec->lr.ctx_raw);
 		free(spec->lr.ctx_trans);
+		__pthread_mutex_destroy(&spec->lr.lock);
 	}
 
 	if (spec_arr)
 	    free(spec_arr);
 
 	free(data);
+	rec->data = NULL;
 }
 
 static struct selabel_lookup_rec *lookup(struct selabel_handle *rec,
@@ -214,10 +229,9 @@ int selabel_media_init(struct selabel_handle *rec,
 {
 	struct saved_data *data;
 
-	data = (struct saved_data *)malloc(sizeof(*data));
+	data = (struct saved_data *)calloc(1, sizeof(*data));
 	if (!data)
 		return -1;
-	memset(data, 0, sizeof(*data));
 
 	rec->data = data;
 	rec->func_close = &close;

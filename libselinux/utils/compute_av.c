@@ -44,9 +44,13 @@ int main(int argc, char **argv)
 	print_access_vector(tclass, avd.allowed);
 	printf("\n");
 
-	if (avd.decided != ~0U) {
+	if (~avd.decided) {
 		printf("decided=");
 		print_access_vector(tclass, avd.decided);
+		printf("\n");
+
+		printf("undecided=");
+		print_access_vector(tclass, ~avd.decided);
 		printf("\n");
 	}
 
@@ -56,9 +60,13 @@ int main(int argc, char **argv)
 		printf("\n");
 	}
 
-	if (avd.auditdeny != ~0U) {
-		printf("auditdeny");
+	if (~avd.auditdeny) {
+		printf("auditdeny=");
 		print_access_vector(tclass, avd.auditdeny);
+		printf("\n");
+
+		printf("dontaudit=");
+		print_access_vector(tclass, ~avd.auditdeny);
 		printf("\n");
 	}
 

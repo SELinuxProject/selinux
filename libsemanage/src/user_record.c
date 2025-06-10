@@ -79,11 +79,12 @@ int semanage_user_compare2(const semanage_user_t * user,
 }
 
 
-static int semanage_user_compare2_qsort(const semanage_user_t ** user,
-					const semanage_user_t ** user2)
+static int semanage_user_compare2_qsort(const void *p1, const void *p2)
 {
+	const semanage_user_t *const *user1 = p1;
+	const semanage_user_t *const *user2 = p2;
 
-	return strcmp((*user)->name, (*user2)->name);
+	return semanage_user_compare2(*user1, *user2);
 }
 
 /* Name */
@@ -301,7 +302,7 @@ void semanage_user_free(semanage_user_t * user)
 	if (!tmp_user)
 		goto omem;
 
-	/* Set the shared name from one of the records 
+	/* Set the shared name from one of the records
 	 * (at least one is available) */
 	if (record1 == NULL)
 		name = semanage_user_extra_get_name(record2);
@@ -382,7 +383,7 @@ void semanage_user_free(semanage_user_t * user)
 }
 
 /* Record base functions */
-record_table_t SEMANAGE_USER_RTABLE = {
+const record_table_t SEMANAGE_USER_RTABLE = {
 	.create = semanage_user_create,
 	.key_extract = semanage_user_key_extract,
 	.key_free = semanage_user_key_free,

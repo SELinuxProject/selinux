@@ -292,6 +292,17 @@ static int class_constraint_rules_to_strs(struct policydb *pdb, char *classkey,
 		}
 
 		perms = sepol_av_to_string(pdb, class->s.value, curr->permissions);
+		if (!perms) {
+			ERR(NULL, "Failed to generate permission string");
+			rc = -1;
+			goto exit;
+		}
+		if (*perms == '\0') {
+			ERR(NULL, "No permissions in permission string");
+			free(perms);
+			rc = -1;
+			goto exit;
+		}
 		if (strchr(perms, ' ')) {
 			perm_prefix = "{ ";
 			perm_suffix = " }";
@@ -311,6 +322,7 @@ static int class_constraint_rules_to_strs(struct policydb *pdb, char *classkey,
 					 flavor, classkey,
 					 perm_prefix, perms+1, perm_suffix,
 					 expr);
+		free(perms);
 		free(expr);
 		if (rc != 0) {
 			goto exit;
@@ -811,7 +823,7 @@ static int write_sensitivity_rules_to_conf(FILE *out, struct policydb *pdb)
 	num = strs_num_items(strs);
 
 	if (num > 0) {
-		sens_alias_map = calloc(sizeof(*sens_alias_map), pdb->p_levels.nprim);
+		sens_alias_map = calloc(pdb->p_levels.nprim, sizeof(*sens_alias_map));
 		if (!sens_alias_map) {
 			rc = -1;
 			goto exit;
@@ -942,7 +954,7 @@ static int write_category_rules_to_conf(FILE *out, struct policydb *pdb)
 	num = strs_num_items(strs);
 
 	if (num > 0) {
-		cat_alias_map = calloc(sizeof(*cat_alias_map), pdb->p_cats.nprim);
+		cat_alias_map = calloc(pdb->p_cats.nprim, sizeof(*cat_alias_map));
 		if (!cat_alias_map) {
 			rc = -1;
 			goto exit;
@@ -1407,7 +1419,7 @@ static int map_type_aliases_to_strs(char *key, void *data, void *args)
 static int write_type_alias_rules_to_conf(FILE *out, struct policydb *pdb)
 {
 	type_datum_t *alias;
-	struct strs *strs;
+	struct strs *strs = NULL;
 	char *name;
 	char *type;
 	unsigned i, num = 0;
@@ -1678,11 +1690,53 @@ exit:
 	return rc;
 }
 
+static int write_type_neveraudit_rules_to_conf(FILE *out, struct policydb *pdb)
+{
+	struct strs *strs;
+	char *name;
+	struct ebitmap_node *node;
+	unsigned i, num;
+	int rc = 0;
+
+	rc = strs_init(&strs, pdb->p_types.nprim);
+	if (rc != 0) {
+		goto exit;
+	}
+
+	ebitmap_for_each_positive_bit(&pdb->neveraudit_map, node, i) {
+		rc = strs_add(strs, pdb->p_type_val_to_name[i-1]);
+		if (rc != 0) {
+			goto exit;
+		}
+	}
+
+	strs_sort(strs);
+
+	num = strs_num_items(strs);
+	for (i=0; i<num; i++) {
+		name = strs_read_at_index(strs, i);
+		if (!name) {
+			rc = -1;
+			goto exit;
+		}
+		sepol_printf(out, "neveraudit %s;\n", name);
+	}
+
+exit:
+	strs_destroy(&strs);
+
+	if (rc != 0) {
+		ERR(NULL, "Error writing typeneveraudit rules to policy.conf");
+	}
+
+	return rc;
+}
+
 static char *avtab_node_to_str(struct policydb *pdb, avtab_key_t *key, avtab_datum_t *datum)
 {
 	uint32_t data = datum->data;
 	type_datum_t *type;
-	const char *flavor, *src, *tgt, *class, *perms, *new;
+	const char *flavor, *src, *tgt, *class, *new;
 	char *rule = NULL, *permstring;
 
 	switch (0xFFF & key->specified) {
@@ -1730,13 +1784,19 @@ static char *avtab_node_to_str(struct policydb *pdb, avtab_key_t *key, avtab_dat
 	class = pdb->p_class_val_to_name[key->target_class - 1];
 
 	if (key->specified & AVTAB_AV) {
-		perms = sepol_av_to_string(pdb, key->target_class, data);
-		if (perms == NULL) {
+		permstring = sepol_av_to_string(pdb, key->target_class, data);
+		if (permstring == NULL) {
 			ERR(NULL, "Failed to generate permission string");
 			goto exit;
 		}
+		if (*permstring == '\0') {
+			ERR(NULL, "No permissions in permission string");
+			free(permstring);
+			goto exit;
+		}
 		rule = create_str("%s %s %s:%s { %s };",
-				  flavor, src, tgt, class, perms+1);
+				  flavor, src, tgt, class, permstring+1);
+		free(permstring);
 	} else if (key->specified & AVTAB_XPERMS) {
 		permstring = sepol_extended_perms_to_string(datum->xperms);
 		if (permstring == NULL) {
@@ -2106,7 +2166,7 @@ static int write_cond_nodes_to_conf(FILE *out, struct policydb *pdb)
 		return 0;
 	}
 
-	cond_data = calloc(sizeof(struct cond_data), num);
+	cond_data = calloc(num, sizeof(struct cond_data));
 	if (!cond_data) {
 		rc = -1;
 		goto exit;
@@ -3195,6 +3255,11 @@ int sepol_kernel_policydb_to_conf(FILE *out, struct policydb *pdb)
 	}
 
 	rc = write_type_permissive_rules_to_conf(out, pdb);
+	if (rc != 0) {
+		goto exit;
+	}
+
+	rc = write_type_neveraudit_rules_to_conf(out, pdb);
 	if (rc != 0) {
 		goto exit;
 	}

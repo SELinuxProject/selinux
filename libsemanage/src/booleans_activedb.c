@@ -106,7 +106,7 @@ static int bool_commit_list(semanage_handle_t * handle,
 	for (i = 0; i < count; i++) {
 		name = semanage_bool_get_name(booleans[i]);
 		if (!name)
-			goto omem;	
+			goto omem;
 		newvalue = semanage_bool_get_value(booleans[i]);
 		curvalue = security_get_boolean_active(name);
 		if (newvalue == curvalue)
@@ -141,7 +141,7 @@ static int bool_commit_list(semanage_handle_t * handle,
 }
 
 /* BOOL RECORD: ACTIVEDB extension: method table */
-record_activedb_table_t SEMANAGE_BOOL_ACTIVEDB_RTABLE = {
+static const record_activedb_table_t SEMANAGE_BOOL_ACTIVEDB_RTABLE = {
 	.read_list = bool_read_list,
 	.commit_list = bool_commit_list,
 };

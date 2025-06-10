@@ -20,8 +20,9 @@ typedef struct dbase_file dbase_t;
 #include "debug.h"
 
 static int ibpkey_print(semanage_handle_t *handle,
-			semanage_ibpkey_t *ibpkey, FILE *str)
+			const semanage_ibpkey_t *ibpkey, FILE *str)
 {
+	const semanage_context_t *con;
 	char *con_str = NULL;
 	char *subnet_prefix_str = NULL;
 
@@ -31,7 +32,7 @@ static int ibpkey_print(semanage_handle_t *handle,
 	if (semanage_ibpkey_get_subnet_prefix(handle, ibpkey, &subnet_prefix_str) != 0)
 		goto err;
 
-	semanage_context_t *con = semanage_ibpkey_get_con(ibpkey);
+	con = semanage_ibpkey_get_con(ibpkey);
 
 	if (fprintf(str, "ibpkeycon %s ", subnet_prefix_str) < 0)
 		goto err;
@@ -153,7 +154,7 @@ err:
 }
 
 /* IBPKEY RECORD: FILE extension: method table */
-record_file_table_t SEMANAGE_IBPKEY_FILE_RTABLE = {
+static const record_file_table_t SEMANAGE_IBPKEY_FILE_RTABLE = {
 	.parse = ibpkey_parse,
 	.print = ibpkey_print,
 };

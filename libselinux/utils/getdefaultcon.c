@@ -19,8 +19,9 @@ static __attribute__ ((__noreturn__)) void usage(const char *name, const char *d
 
 int main(int argc, char **argv)
 {
-	char * usercon = NULL, *cur_context = NULL;
-	char *user = NULL, *level = NULL, *role=NULL, *seuser=NULL, *dlevel=NULL;
+	const char *cur_context, *user;
+	char *usercon = NULL, *cur_con = NULL;
+	char *level = NULL, *role=NULL, *seuser=NULL, *dlevel=NULL;
 	char *service = NULL;
 	int ret, opt;
 	int verbose = 0;
@@ -54,6 +55,9 @@ int main(int argc, char **argv)
 	if (!is_selinux_enabled()) {
 		fprintf(stderr,
 			"%s may be used only on a SELinux kernel.\n", argv[0]);
+		free(level);
+		free(role);
+		free(service);
 		return 1;
 	}
 
@@ -61,15 +65,23 @@ int main(int argc, char **argv)
 
 	/* If a context wasn't passed, use the current context. */
 	if ((argc - optind) < 2) {
-		if (getcon(&cur_context) < 0) {
+		if (getcon(&cur_con) < 0) {
 			fprintf(stderr, "%s:  couldn't get current context:  %s\n", argv[0], strerror(errno));
+			free(level);
+			free(role);
+			free(service);
 			return 2;
 		}
+		cur_context = cur_con;
 	} else
 		cur_context = argv[optind + 1];
 
 	if (security_check_context(cur_context)) {
 		fprintf(stderr, "%s:  invalid from context '%s'\n", argv[0], cur_context);
+		free(cur_con);
+		free(level);
+		free(role);
+		free(service);
 		return 3;
 	}
 
@@ -101,6 +113,8 @@ out:
 	if (level != dlevel) free(level);
 	free(dlevel);
 	free(usercon);
+	free(cur_con);
+	free(service);
 
 	return ret >= 0;
 }

@@ -46,8 +46,9 @@ static void test_semanage_rtrim(void);
 static void test_semanage_str_replace(void);
 static void test_semanage_findval(void);
 static void test_slurp_file_filter(void);
+static void test_semanage_basename(void);
 
-char fname[] = {
+static char fname[] = {
 	'T', 'E', 'S', 'T', '_', 'T', 'E', 'M', 'P', '_', 'X', 'X', 'X', 'X',
 	'X', 'X', '\0'
 };
@@ -115,6 +116,10 @@ int semanage_utilities_add_tests(CU_pSuite suite)
 	}
 	if (NULL == CU_add_test(suite, "slurp_file_filter",
 				test_slurp_file_filter)) {
+		goto err;
+	}
+	if (NULL == CU_add_test(suite, "semanage_basename",
+				test_semanage_basename)) {
 		goto err;
 	}
 	return 0;
@@ -345,4 +350,25 @@ static void test_slurp_file_filter(void)
 	CU_ASSERT_EQUAL(cnt, 2);
 
 	semanage_list_destroy(&data);
+}
+
+static void test_semanage_basename(void)
+{
+	char *basename1 = semanage_basename("/foo/bar");
+	CU_ASSERT_STRING_EQUAL(basename1, "bar");
+
+	char *basename2 = semanage_basename("/foo/bar/");
+	CU_ASSERT_STRING_EQUAL(basename2, "");
+
+	char *basename3 = semanage_basename("/foo.bar");
+	CU_ASSERT_STRING_EQUAL(basename3, "foo.bar");
+
+	char *basename5 = semanage_basename(".");
+	CU_ASSERT_STRING_EQUAL(basename5, ".");
+
+	char *basename6 = semanage_basename("");
+	CU_ASSERT_STRING_EQUAL(basename6, "");
+
+	char *basename7 = semanage_basename("/");
+	CU_ASSERT_STRING_EQUAL(basename7, "");
 }

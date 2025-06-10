@@ -9,9 +9,9 @@ getkeycreatecon, setkeycreatecon \- get or set the SELinux security context used
 .sp
 .BI "int getkeycreatecon_raw(char **" con );
 .sp
-.BI "int setkeycreatecon(char *" context );
+.BI "int setkeycreatecon(const char *" context );
 .sp
-.BI "int setkeycreatecon_raw(char *" context );
+.BI "int setkeycreatecon_raw(const char *" context );
 .
 .SH "DESCRIPTION"
 .BR getkeycreatecon ()

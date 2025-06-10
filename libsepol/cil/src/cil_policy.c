@@ -1112,6 +1112,8 @@ static void cil_xperms_to_policy(FILE *out, struct cil_permissionx *permx)
 
 	if (permx->kind == CIL_PERMX_KIND_IOCTL) {
 		kind = "ioctl";
+	} else if (permx->kind == CIL_PERMX_KIND_NLMSG) {
+		kind = "nlmsg";
 	} else {
 		kind = "???";
 	}
@@ -1295,6 +1297,11 @@ static void cil_typepermissive_to_policy(FILE *out, struct cil_typepermissive *r
 	fprintf(out, "permissive %s;\n", DATUM(rule->type)->fqn);
 }
 
+static void cil_typeneveraudit_to_policy(FILE *out, struct cil_typeneveraudit *rule)
+{
+	fprintf(out, "neveraudit %s;\n", DATUM(rule->type)->fqn);
+}
+
 struct block_te_rules_extra {
 	FILE *out;
 	enum cil_flavor flavor;
@@ -1357,6 +1364,11 @@ static int __cil_block_te_rules_to_policy_helper(struct cil_tree_node *node, uin
 			cil_typepermissive_to_policy(args->out, node->data);
 		}
 		break;
+	case CIL_TYPENEVERAUDIT:
+		if (args->flavor == node->flavor) {
+			cil_typeneveraudit_to_policy(args->out, node->data);
+		}
+		break;
 	default:
 		break;
 	}
@@ -1371,6 +1383,10 @@ static void cil_block_te_rules_to_policy(FILE *out, struct cil_tree_node *start,
 	args.out = out;
 
 	args.flavor = CIL_TYPEPERMISSIVE;
+	args.rule_kind = 0;
+	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL, &args);
+
+	args.flavor = CIL_TYPENEVERAUDIT;
 	args.rule_kind = 0;
 	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL, &args);
 

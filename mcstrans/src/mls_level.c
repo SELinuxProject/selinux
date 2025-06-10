@@ -13,6 +13,8 @@ mls_level_t *mls_level_from_string(char *mls_context)
 	}
 
 	l = (mls_level_t *) calloc(1, sizeof(mls_level_t));
+	if (!l)
+		return NULL;
 
 	/* Extract low sensitivity. */
 	scontextp = p = mls_context;
@@ -124,6 +126,9 @@ char *mls_level_to_string(mls_level_t *l)
 	if (len == 0)
 		return NULL;
 	char *result = (char *)malloc(len + 1);
+	if (!result)
+		return NULL;
+
 	char *p = result;
 
 	p += sprintf(p, "s%d", l->sens);

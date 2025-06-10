@@ -8,8 +8,9 @@ ETCDIR ?= /etc
 LIBECONFH ?= $(shell test -f /usr/include/libeconf.h && echo y)
 
 CFLAGS ?= -Werror -Wall -W
-override CFLAGS += -D_FILE_OFFSET_BITS=64
-override LDLIBS += -lselinux
+override CFLAGS += -I../../libselinux/include -D_FILE_OFFSET_BITS=64
+override LDFLAGS+= -L../../libselinux/src
+override LDLIBS += $(LIBSELINUX_LDLIBS)
 
 all: sestatus
 

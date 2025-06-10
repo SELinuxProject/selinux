@@ -30,7 +30,7 @@ typedef struct dbase_policydb dbase_t;
 #include "semanage_store.h"
 
 /* PKEY RECORD (SEPOL): POLICYDB extension : method table */
-record_policydb_table_t SEMANAGE_IBPKEY_POLICYDB_RTABLE = {
+static const record_policydb_table_t SEMANAGE_IBPKEY_POLICYDB_RTABLE = {
 	.add = NULL,
 	.modify = (record_policydb_table_modify_t)sepol_ibpkey_modify,
 	.set = NULL,

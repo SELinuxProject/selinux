@@ -29,10 +29,10 @@ struct dbase_policydb {
         const char *path[2];
 
 	/* Base record table */
-	record_table_t *rtable;
+	const record_table_t *rtable;
 
 	/* Policy extensions */
-	record_policydb_table_t *rptable;
+	const record_policydb_table_t *rptable;
 
 	sepol_policydb_t *policydb;
 
@@ -44,7 +44,7 @@ struct dbase_policydb {
 static void dbase_policydb_drop_cache(dbase_policydb_t * dbase)
 {
 
-	if (dbase->cache_serial >= 0) {
+	if (dbase && dbase->cache_serial >= 0) {
 		sepol_policydb_free(dbase->policydb);
 		dbase->cache_serial = -1;
 		dbase->modified = 0;
@@ -109,12 +109,12 @@ static int dbase_policydb_cache(semanage_handle_t * handle,
 		goto err;
 	}
 
-	/* Try opening file 
+	/* Try opening file
 	 * ENOENT is not fatal - we just create an empty policydb */
-	fp = fopen(fname, "rb");
+	fp = fopen(fname, "rbe");
 	if (fp == NULL && errno != ENOENT) {
-		ERR(handle, "could not open %s for reading: %s",
-		    fname, strerror(errno));
+		ERR(handle, "could not open %s for reading",
+		    fname);
 		goto err;
 	}
 
@@ -178,8 +178,8 @@ static int dbase_policydb_is_modified(dbase_policydb_t * dbase)
 int dbase_policydb_init(semanage_handle_t * handle,
 			const char *path_ro,
 			const char *path_rw,
-			record_table_t * rtable,
-			record_policydb_table_t * rptable,
+			const record_table_t * rtable,
+			const record_policydb_table_t * rptable,
 			dbase_policydb_t ** dbase)
 {
 
@@ -377,7 +377,7 @@ static int dbase_policydb_iterate(semanage_handle_t * handle,
 
 struct list_handler_arg {
 	semanage_handle_t *handle;
-	record_table_t *rtable;
+	const record_table_t *rtable;
 	record_t **records;
 	int pos;
 };
@@ -444,14 +444,14 @@ static int dbase_policydb_list(semanage_handle_t * handle,
 	return STATUS_ERR;
 }
 
-static record_table_t *dbase_policydb_get_rtable(dbase_policydb_t * dbase)
+static const record_table_t *dbase_policydb_get_rtable(dbase_policydb_t * dbase)
 {
 
 	return dbase->rtable;
 }
 
 /* POLICYDB dbase - method table implementation */
-dbase_table_t SEMANAGE_POLICYDB_DTABLE = {
+const dbase_table_t SEMANAGE_POLICYDB_DTABLE = {
 
 	/* Cache/Transactions */
 	.cache = dbase_policydb_cache,

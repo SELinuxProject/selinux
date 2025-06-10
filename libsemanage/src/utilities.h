@@ -98,14 +98,13 @@ int semanage_list_sort(semanage_list_t ** l) WARN_UNUSED;
  * returns strcmp(x->data, y->data)
  * used internally by semanage_list_sort()
  */
-int semanage_cmp_plist_t(const semanage_list_t ** x,
-			 const semanage_list_t ** y);
+int semanage_cmp_plist_t(const void *x, const void *y);
 /**
  * @param      data a target string
  * @param      what  a character
  * @returns    the number of times the char appears in the string
  */
-int semanage_str_count(const char *data, char what);
+size_t semanage_str_count(const char *data, char what);
 /**
  * @param      - a string
  * @param            the character to trim to
@@ -144,4 +143,30 @@ void semanage_keep_until_space(char *data);
 semanage_list_t *semanage_slurp_file_filter(FILE * file,
 					    int (*pred) (const char *))
     WARN_UNUSED;
+
+/**
+ * Wrapper around write(2), which retries on short writes.
+ *
+ * @param fd   file descriptor to write to
+ * @param buf  buffer to be written
+ * @param len  number of bytes to be written from buffer
+ *
+ * @return 0 on success, -1 else (with errno set)
+ */
+
+int write_full(int fd, const void *buf, size_t len) WARN_UNUSED;
+
+/**
+ * Portable implementation of the glibc version of basename(3).
+ *
+ * @param filename  path to find basename of
+ *
+ * @return          basename of filename
+ */
+
+#ifdef __GNUC__
+__attribute__((nonnull))
+#endif
+char *semanage_basename(const char *filename);
+
 #endif

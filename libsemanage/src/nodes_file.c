@@ -20,7 +20,7 @@ typedef struct dbase_file dbase_t;
 #include "debug.h"
 
 static int node_print(semanage_handle_t * handle,
-		      semanage_node_t * node, FILE * str)
+		      const semanage_node_t * node, FILE * str)
 {
 
 	char *con_str = NULL;
@@ -154,7 +154,7 @@ static int node_parse(semanage_handle_t * handle,
 }
 
 /* NODE RECORD: FILE extension: method table */
-record_file_table_t SEMANAGE_NODE_FILE_RTABLE = {
+static const record_file_table_t SEMANAGE_NODE_FILE_RTABLE = {
 	.parse = node_parse,
 	.print = node_print,
 };

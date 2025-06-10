@@ -1,6 +1,6 @@
 .TH semanage_seuser 3 "16 March 2006" "ivg2@cornell.edu" "Libsemanage API documentation"
 
-.SH "NAME" 
+.SH "NAME"
 semanage_seuser \- Linux UID to SELinux User Management API
 
 .SH "SYNOPSIS"
@@ -11,17 +11,17 @@ semanage_seuser \- Linux UID to SELinux User Management API
 .B #include <semanage/seusers_local.h>
 
 .PP
-This object contains properties associated with a Unix user. Typically many Unix users are mapped to the same SELinux user. See 
+This object contains properties associated with a Unix user. Typically many Unix users are mapped to the same SELinux user. See
 .BR semanage_user "(3)"
-for overview of the SELinux user API. 
+for overview of the SELinux user API.
 
 .PP
 For details on a specific function, see its manual page.
 
 .SH "Record API Overview"
 
-.HP 
-.BR semanage_seuser_create "(3)" \- 
+.HP
+.BR semanage_seuser_create "(3)" \-
 .br
 create a seuser
 
@@ -33,7 +33,7 @@ release resources for this seuser
 .HP
 .BR semanage_seuser_key_create "(3)" \-
 .br
-create a key, which can be used to identify a seuser 
+create a key, which can be used to identify a seuser
 
 .HP
 .BR semanage_seuser_key_free "(3)" \-
@@ -41,17 +41,17 @@ create a key, which can be used to identify a seuser
 release resources for this seuser key
 
 .HP
-.BR semanage_seuser_key_extract "(3)" \- 
+.BR semanage_seuser_key_extract "(3)" \-
 .br
-create a key matching this seuser 
+create a key matching this seuser
 
 .HP
-.BR semanage_seuser_clone "(3)" \- 
+.BR semanage_seuser_clone "(3)" \-
 .br
 create an identical seuser (deep-copy clone)
 
 .HP
-.BR semanage_seuser_compare "(3)" \- 
+.BR semanage_seuser_compare "(3)" \-
 .br
 compare this seuser to the provided key
 
@@ -63,7 +63,7 @@ compare this seuser to another
 .SH "Properties API Overview"
 
 .HP
-.BR semanage_seuser_get_name "(3)" \- 
+.BR semanage_seuser_get_name "(3)" \-
 .br
 return the name of this seuser
 
@@ -95,7 +95,7 @@ set the range of valid MLS sensitivities and categories for this user
 .SH "Record Store API Overview"
 
 .HP
-.BR semanage_seuser_modify_local "(3)" \- 
+.BR semanage_seuser_modify_local "(3)" \-
 .br
 add or update a seuser in the local store
 
@@ -120,7 +120,7 @@ check if a seuser is defined in the local store
 query a seuser in the persistent policy
 
 .HP
-.BR semanage_seuser_query_local "(3)" \- 
+.BR semanage_seuser_query_local "(3)" \-
 .br
 query a seuser in the local store
 

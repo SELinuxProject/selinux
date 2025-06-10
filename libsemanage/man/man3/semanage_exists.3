@@ -1,6 +1,6 @@
 .TH semanage_exists 3 "16 March 2006" "ivg2@cornell.edu" "Libsemanage API documentation"
 
-.SH "NAME" 
+.SH "NAME"
 semanage_exists \- SELinux Management API
 
 .SH "SYNOPSIS"
@@ -19,21 +19,21 @@ Replace the function and object name as necessary.
 .SH "DESCRIPTION"
 .TP
 .B Behavior:
-The exists function will return 0 if a matching key is not found, and 1 otherwise. 
+The exists function will return 0 if a matching key is not found, and 1 otherwise.
 
 .TP
 .B Parameters:
-The 
+The
 .I handle
 is used to track persistent state across semanage calls, and for error reporting. The
-.I key 
-identifies the object being checked. The result of the test will be stored in the address pointed by 
+.I key
+identifies the object being checked. The result of the test will be stored in the address pointed by
 .I response
-The key is a property of the caller, and will not be stored or modified internally. 
+The key is a property of the caller, and will not be stored or modified internally.
 
 .TP
 .B Requirements:
-This function requires an semanage connection to be established (see 
+This function requires an semanage connection to be established (see
 .BR semanage_connect "(3)"
 )
 

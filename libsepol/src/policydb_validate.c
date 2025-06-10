@@ -11,6 +11,7 @@
 
 #define bool_xor(a, b) (!(a) != !(b))
 #define bool_xnor(a, b) (!bool_xor(a, b))
+#define PERMISSION_MASK(nprim) ((nprim) == PERM_SYMTAB_SIZE ? (~UINT32_C(0)) : ((UINT32_C(1) << (nprim)) - 1))
 
 typedef struct validate {
 	uint32_t nprim;
@@ -21,7 +22,14 @@ typedef struct map_arg {
 	validate_t *flavors;
 	sepol_handle_t *handle;
 	const policydb_t *policy;
+	int conditional;
 } map_arg_t;
+
+typedef struct perm_arg {
+	uint32_t visited;
+	const uint32_t nprim;
+	const uint32_t inherited_nprim;
+} perm_arg_t;
 
 static int create_gap_ebitmap(char **val_to_name, uint32_t nprim, ebitmap_t *gaps)
 {
@@ -56,7 +64,7 @@ static int validate_array_init(const policydb_t *p, validate_t flavors[])
 		goto bad;
 	if (validate_init(&flavors[SYM_ROLES], p->p_role_val_to_name, p->p_roles.nprim))
 		goto bad;
-	if (p->policyvers < POLICYDB_VERSION_AVTAB || p->policyvers > POLICYDB_VERSION_PERMISSIVE) {
+	if (p->policy_type != POLICY_KERN || p->policyvers < POLICYDB_VERSION_AVTAB || p->policyvers > POLICYDB_VERSION_PERMISSIVE) {
 		if (validate_init(&flavors[SYM_TYPES], p->p_type_val_to_name, p->p_types.nprim))
 			goto bad;
 	} else {
@@ -227,17 +235,21 @@ bad:
 	return -1;
 }
 
-static int validate_constraint_nodes(sepol_handle_t *handle, unsigned int nperms, const constraint_node_t *cons, validate_t flavors[])
+static int validate_constraint_nodes(sepol_handle_t *handle, uint32_t nperms, const constraint_node_t *cons, validate_t flavors[])
 {
 	const constraint_expr_t *cexp;
+	const int is_validatetrans = (nperms == UINT32_MAX);
 	int depth;
 
+	if (cons && nperms == 0)
+		goto bad;
+
 	for (; cons; cons = cons->next) {
-		if (nperms == 0 && cons->permissions != 0)
+		if (is_validatetrans && cons->permissions != 0)
 			goto bad;
-		if (nperms > 0 && cons->permissions == 0)
+		if (!is_validatetrans && cons->permissions == 0)
 			goto bad;
-		if (nperms > 0 && nperms != PERM_SYMTAB_SIZE && cons->permissions >= (UINT32_C(1) << nperms))
+		if (!is_validatetrans && nperms != PERM_SYMTAB_SIZE && cons->permissions >= (UINT32_C(1) << nperms))
 			goto bad;
 
 		if (!cons->expr)
@@ -251,7 +263,7 @@ static int validate_constraint_nodes(sepol_handle_t *handle, unsigned int nperms
 					goto bad;
 				depth++;
 
-				if (cexp->attr & CEXPR_XTARGET && nperms != 0)
+				if (cexp->attr & CEXPR_XTARGET && !is_validatetrans)
 					goto bad;
 				if (!(cexp->attr & CEXPR_TYPE)) {
 					if (validate_empty_type_set(cexp->type_names))
@@ -366,11 +378,49 @@ bad:
 	return -1;
 }
 
+static int perm_visit(__attribute__((__unused__)) hashtab_key_t k, hashtab_datum_t d, void *args)
+{
+	perm_arg_t *pargs = args;
+	const perm_datum_t *perdatum = d;
+
+	if (!value_isvalid(perdatum->s.value, pargs->nprim))
+		return -1;
+
+	if (pargs->inherited_nprim != 0 && value_isvalid(perdatum->s.value, pargs->inherited_nprim))
+		return -1;
+
+	if ((UINT32_C(1) << (perdatum->s.value - 1)) & pargs->visited)
+		return -1;
+
+	pargs->visited |= (UINT32_C(1) << (perdatum->s.value - 1));
+	return 0;
+}
+
+static int validate_permission_symtab(sepol_handle_t *handle, const symtab_t *permissions, uint32_t inherited_nprim)
+{
+	/* Check each entry has a different valid value and is not overriding an inherited one */
+
+	perm_arg_t pargs = { .visited = 0, .nprim = permissions->nprim, .inherited_nprim = inherited_nprim };
+
+	if (hashtab_map(permissions->table, perm_visit, &pargs))
+		goto bad;
+
+	return 0;
+
+bad:
+	ERR(handle, "Invalid permission table");
+	return -1;
+}
+
 static int validate_common_datum(sepol_handle_t *handle, const common_datum_t *common, validate_t flavors[])
 {
 	if (validate_value(common->s.value, &flavors[SYM_COMMONS]))
 		goto bad;
-	if (common->permissions.table->nel == 0 || common->permissions.nprim > PERM_SYMTAB_SIZE)
+	if (common->permissions.nprim == 0 || common->permissions.nprim > PERM_SYMTAB_SIZE)
+		goto bad;
+	if (common->permissions.nprim != common->permissions.table->nel)
+		goto bad;
+	if (validate_permission_symtab(handle, &common->permissions, 0))
 		goto bad;
 
 	return 0;
@@ -393,11 +443,17 @@ static int validate_class_datum(sepol_handle_t *handle, const class_datum_t *cla
 		goto bad;
 	if (class->comdatum && validate_common_datum(handle, class->comdatum, flavors))
 		goto bad;
-	if (class->permissions.nprim > PERM_SYMTAB_SIZE)
+	/* empty classes are permitted */
+	if (class->permissions.nprim > PERM_SYMTAB_SIZE || class->permissions.table->nel > PERM_SYMTAB_SIZE)
+		goto bad;
+	if (class->permissions.nprim !=
+	    (class->permissions.table->nel + (class->comdatum ? class->comdatum->permissions.table->nel : 0)))
+		goto bad;
+	if (validate_permission_symtab(handle, &class->permissions, class->comdatum ? class->comdatum->permissions.nprim : 0))
 		goto bad;
 	if (validate_constraint_nodes(handle, class->permissions.nprim, class->constraints, flavors))
 		goto bad;
-	if (validate_constraint_nodes(handle, 0, class->validatetrans, flavors))
+	if (validate_constraint_nodes(handle, UINT32_MAX, class->validatetrans, flavors))
 		goto bad;
 
 	switch (class->default_user) {
@@ -537,7 +593,9 @@ static int validate_type_datum(sepol_handle_t *handle, const type_datum_t *type,
 
 	switch (type->flags) {
 	case 0:
+	case TYPE_FLAGS_NEVERAUDIT:
 	case TYPE_FLAGS_PERMISSIVE:
+	case TYPE_FLAGS_NEVERAUDIT|TYPE_FLAGS_PERMISSIVE:
 	case TYPE_FLAGS_EXPAND_ATTR_TRUE:
 	case TYPE_FLAGS_EXPAND_ATTR_FALSE:
 	case TYPE_FLAGS_EXPAND_ATTR:
@@ -618,12 +676,37 @@ static int validate_mls_level(const mls_level_t *level, const validate_t *sens, 
 	return -1;
 }
 
-static int validate_level_datum(__attribute__ ((unused)) hashtab_key_t k, hashtab_datum_t d, void *args)
+static int validate_level_datum(sepol_handle_t *handle, const level_datum_t *level, validate_t flavors[], const policydb_t *p)
 {
-	level_datum_t *level = d;
-	validate_t *flavors = args;
+	if (level->notdefined != 0)
+		goto bad;
 
-	return validate_mls_level(level->level, &flavors[SYM_LEVELS], &flavors[SYM_CATS]);
+	if (validate_mls_level(level->level, &flavors[SYM_LEVELS], &flavors[SYM_CATS]))
+		goto bad;
+
+	if (level->isalias) {
+		const mls_level_t *l1 = level->level;
+		const mls_level_t *l2;
+		const level_datum_t *actual = (level_datum_t *) hashtab_search(p->p_levels.table, p->p_sens_val_to_name[l1->sens - 1]);
+		if (!actual)
+			goto bad;
+		l2 = actual->level;
+		if (!ebitmap_cmp(&l1->cat, &l2->cat))
+			goto bad;
+	}
+
+	return 0;
+
+	bad:
+	ERR(handle, "Invalid level datum");
+	return -1;
+}
+
+static int validate_level_datum_wrapper(__attribute__ ((unused)) hashtab_key_t k, hashtab_datum_t d, void *args)
+{
+	map_arg_t *margs = args;
+
+	return validate_level_datum(margs->handle, d, margs->flavors, margs->policy);
 }
 
 static int validate_mls_range(const mls_range_t *range, const validate_t *sens, const validate_t *cats)
@@ -723,7 +806,7 @@ static int validate_datum_array_gaps(sepol_handle_t *handle, const policydb_t *p
 	 * For policy versions between 20 and 23, attributes exist in the policy,
 	 * but only in the type_attr_map, so all gaps must be assumed to be valid.
 	 */
-	if (p->policyvers < POLICYDB_VERSION_AVTAB || p->policyvers > POLICYDB_VERSION_PERMISSIVE) {
+	if (p->policy_type != POLICY_KERN || p->policyvers < POLICYDB_VERSION_AVTAB || p->policyvers > POLICYDB_VERSION_PERMISSIVE) {
 		for (i = 0; i < p->p_types.nprim; i++) {
 			if (bool_xnor(p->type_val_to_struct[i], ebitmap_get_bit(&flavors[SYM_TYPES].gaps, i)))
 				goto bad;
@@ -757,7 +840,7 @@ static int validate_datum(__attribute__ ((unused))hashtab_key_t k, hashtab_datum
 
 static int validate_datum_array_entries(sepol_handle_t *handle, const policydb_t *p, validate_t flavors[])
 {
-	map_arg_t margs = { flavors, handle, p };
+	map_arg_t margs = { flavors, handle, p, 0 };
 
 	if (hashtab_map(p->p_commons.table, validate_common_datum_wrapper, &margs))
 		goto bad;
@@ -774,7 +857,7 @@ static int validate_datum_array_entries(sepol_handle_t *handle, const policydb_t
 	if (hashtab_map(p->p_users.table, validate_user_datum_wrapper, &margs))
 		goto bad;
 
-	if (p->mls && hashtab_map(p->p_levels.table, validate_level_datum, flavors))
+	if (p->mls && hashtab_map(p->p_levels.table, validate_level_datum_wrapper, &margs))
 		goto bad;
 
 	if (hashtab_map(p->p_cats.table, validate_datum, &flavors[SYM_CATS]))
@@ -823,7 +906,7 @@ static int validate_avtab_key(const avtab_key_t *key, int conditional, const pol
 	case AVTAB_XPERMS_DONTAUDIT:
 		if (p->target_platform != SEPOL_TARGET_SELINUX)
 			goto bad;
-		if (conditional)
+		if (conditional && !policydb_has_cond_xperms_feature(p))
 			goto bad;
 		break;
 	default:
@@ -841,6 +924,7 @@ static int validate_xperms(const avtab_extended_perms_t *xperms)
 	switch (xperms->specified) {
 	case AVTAB_XPERMS_IOCTLDRIVER:
 	case AVTAB_XPERMS_IOCTLFUNCTION:
+	case AVTAB_XPERMS_NLMSG:
 		break;
 	default:
 		goto bad;
@@ -851,25 +935,63 @@ static int validate_xperms(const avtab_extended_perms_t *xperms)
 bad:
 	return -1;
 }
+
+static int validate_access_vector(sepol_handle_t *handle, const policydb_t *p, sepol_security_class_t tclass,
+				  sepol_access_vector_t av)
+{
+	const class_datum_t *cladatum = p->class_val_to_struct[tclass - 1];
+
+	/*
+	 * Check that at least one permission bit is valid.
+	 * Older compilers might set invalid bits for the wildcard permission.
+	 */
+	if (!(av & PERMISSION_MASK(cladatum->permissions.nprim)))
+		goto bad;
+
+	return 0;
+
+bad:
+	ERR(handle, "Invalid access vector");
+	return -1;
+}
+
 static int validate_avtab_key_and_datum(avtab_key_t *k, avtab_datum_t *d, void *args)
 {
 	map_arg_t *margs = args;
 
-	if (validate_avtab_key(k, 0, margs->policy, margs->flavors))
+	if (validate_avtab_key(k, margs->conditional, margs->policy, margs->flavors))
 		return -1;
+
+	if (k->specified & AVTAB_AV) {
+		uint32_t data = d->data;
+
+		if ((0xFFF & k->specified) == AVTAB_AUDITDENY)
+			data = ~data;
+
+		if (validate_access_vector(margs->handle, margs->policy, k->target_class, data))
+			return -1;
+	}
 
 	if ((k->specified & AVTAB_TYPE) && validate_simpletype(d->data, margs->policy, margs->flavors))
 		return -1;
 
-	if ((k->specified & AVTAB_XPERMS) && validate_xperms(d->xperms))
-		return -1;
+	if (k->specified & AVTAB_XPERMS) {
+		uint32_t data = d->data;
+
+		/* checkpolicy does not touch data for xperms, CIL sets it. */
+		if (data != 0 && validate_access_vector(margs->handle, margs->policy, k->target_class, data))
+			return -1;
+
+		if (validate_xperms(d->xperms))
+			return -1;
+	}
 
 	return 0;
 }
 
 static int validate_avtab(sepol_handle_t *handle, const avtab_t *avtab, const policydb_t *p, validate_t flavors[])
 {
-	map_arg_t margs = { flavors, handle, p };
+	map_arg_t margs = { flavors, handle, p, 0 };
 
 	if (avtab_map(avtab, validate_avtab_key_and_datum, &margs)) {
 		ERR(handle, "Invalid avtab");
@@ -881,19 +1003,13 @@ static int validate_avtab(sepol_handle_t *handle, const avtab_t *avtab, const po
 
 static int validate_cond_av_list(sepol_handle_t *handle, const cond_av_list_t *cond_av, const policydb_t *p, validate_t flavors[])
 {
-	const struct avtab_node *avtab_ptr;
+	struct avtab_node *avtab_ptr;
+	map_arg_t margs = { flavors, handle, p, 1 };
 
-	for (; cond_av; cond_av = cond_av->next) {
-		for (avtab_ptr = cond_av->node; avtab_ptr; avtab_ptr = avtab_ptr->next) {
-			const avtab_key_t *key = &avtab_ptr->key;
-			const avtab_datum_t *datum = &avtab_ptr->datum;
-
-			if (validate_avtab_key(key, 1, p, flavors))
+	for (; cond_av; cond_av = cond_av->next)
+		for (avtab_ptr = cond_av->node; avtab_ptr; avtab_ptr = avtab_ptr->next)
+			if (validate_avtab_key_and_datum(&avtab_ptr->key, &avtab_ptr->datum, &margs))
 				goto bad;
-			if ((key->specified & AVTAB_TYPE) && validate_simpletype(datum->data, p, flavors))
-				goto bad;
-		}
-	}
 
 	return 0;
 
@@ -926,7 +1042,7 @@ static int validate_avrules(sepol_handle_t *handle, const avrule_t *avrule, int 
 		case AVRULE_XPERMS_AUDITALLOW:
 		case AVRULE_XPERMS_DONTAUDIT:
 		case AVRULE_XPERMS_NEVERALLOW:
-			if (conditional)
+			if (conditional && !policydb_has_cond_xperms_feature(p))
 				goto bad;
 			break;
 		default:
@@ -948,6 +1064,7 @@ static int validate_avrules(sepol_handle_t *handle, const avrule_t *avrule, int 
 			switch (avrule->xperms->specified) {
 			case AVRULE_XPERMS_IOCTLFUNCTION:
 			case AVRULE_XPERMS_IOCTLDRIVER:
+			case AVRULE_XPERMS_NLMSG:
 				break;
 			default:
 				goto bad;
@@ -957,7 +1074,12 @@ static int validate_avrules(sepol_handle_t *handle, const avrule_t *avrule, int 
 
 		switch(avrule->flags) {
 		case 0:
+			break;
 		case RULE_SELF:
+			if (p->policyvers != POLICY_KERN &&
+			    p->policyvers < MOD_POLICYDB_VERSION_SELF_TYPETRANS &&
+			    (avrule->specified & AVRULE_TYPE))
+				goto bad;
 			break;
 		case RULE_NOTSELF:
 			switch(avrule->specified) {
@@ -1152,7 +1274,7 @@ bad:
 
 static int validate_filename_trans_hashtab(sepol_handle_t *handle, const policydb_t *p, validate_t flavors[])
 {
-	map_arg_t margs = { flavors, handle, p };
+	map_arg_t margs = { flavors, handle, p, 0 };
 
 	if (hashtab_map(p->filename_trans, validate_filename_trans, &margs)) {
 		ERR(handle, "Invalid filename trans");
@@ -1344,6 +1466,8 @@ bad:
 
 static int validate_scope_index(sepol_handle_t *handle, const scope_index_t *scope_index, validate_t flavors[])
 {
+	uint32_t i;
+
 	if (!ebitmap_is_empty(&scope_index->scope[SYM_COMMONS]))
 		goto bad;
 	if (validate_ebitmap(&scope_index->p_classes_scope, &flavors[SYM_CLASSES]))
@@ -1360,8 +1484,10 @@ static int validate_scope_index(sepol_handle_t *handle, const scope_index_t *sco
 		goto bad;
 	if (validate_ebitmap(&scope_index->p_cat_scope, &flavors[SYM_CATS]))
 		goto bad;
-	if (scope_index->class_perms_len > flavors[SYM_CLASSES].nprim)
-		goto bad;
+
+	for (i = 0; i < scope_index->class_perms_len; i++)
+		if (validate_value(i + 1, &flavors[SYM_CLASSES]))
+			goto bad;
 
 	return 0;
 
@@ -1384,8 +1510,16 @@ static int validate_filename_trans_rules(sepol_handle_t *handle, const filename_
 			goto bad;
 
 		/* currently only the RULE_SELF flag can be set */
-		if ((filename_trans->flags & ~RULE_SELF) != 0)
+		switch (filename_trans->flags) {
+		case 0:
+			break;
+		case RULE_SELF:
+			if (p->policyvers != POLICY_KERN && p->policyvers < MOD_POLICYDB_VERSION_SELF_TYPETRANS)
+				goto bad;
+			break;
+		default:
 			goto bad;
+		}
 	}
 
 	return 0;
@@ -1468,6 +1602,23 @@ bad:
 	return -1;
 }
 
+static int validate_neveraudit(sepol_handle_t *handle, const policydb_t *p, validate_t flavors[])
+{
+	ebitmap_node_t *node;
+	uint32_t i;
+
+	ebitmap_for_each_positive_bit(&p->neveraudit_map, node, i) {
+		if (validate_simpletype(i, p, flavors))
+			goto bad;
+	}
+
+	return 0;
+
+bad:
+	ERR(handle, "Invalid neveraudit type");
+	return -1;
+}
+
 static int validate_range_transition(hashtab_key_t key, hashtab_datum_t data, void *args)
 {
 	const range_trans_t *rt = (const range_trans_t *)key;
@@ -1493,7 +1644,7 @@ bad:
 
 static int validate_range_transitions(sepol_handle_t *handle, const policydb_t *p, validate_t flavors[])
 {
-	map_arg_t margs = { flavors, handle, p };
+	map_arg_t margs = { flavors, handle, p, 0 };
 
 	if (hashtab_map(p->range_tr, validate_range_transition, &margs)) {
 		ERR(handle, "Invalid range transition");
@@ -1523,16 +1674,40 @@ bad:
 	return -1;
 }
 
+static int validate_attrtype_map(sepol_handle_t *handle, const policydb_t *p, validate_t flavors[])
+{
+	const ebitmap_t *maps = p->attr_type_map;
+	uint32_t i;
+
+	if (p->policy_type == POLICY_KERN) {
+		for (i = 0; i < p->p_types.nprim; i++) {
+			if (validate_ebitmap(&maps[i], &flavors[SYM_TYPES]))
+				goto bad;
+		}
+	} else if (maps)
+		goto bad;
+
+	return 0;
+
+bad:
+	ERR(handle, "Invalid attr type map");
+	return -1;
+}
+
 static int validate_properties(sepol_handle_t *handle, const policydb_t *p)
 {
 	switch (p->policy_type) {
 	case POLICY_KERN:
 		if (p->policyvers < POLICYDB_VERSION_MIN || p->policyvers > POLICYDB_VERSION_MAX)
 			goto bad;
+		if (p->mls && p->policyvers < POLICYDB_VERSION_MLS)
+			goto bad;
 		break;
 	case POLICY_BASE:
 	case POLICY_MOD:
 		if (p->policyvers < MOD_POLICYDB_VERSION_MIN || p->policyvers > MOD_POLICYDB_VERSION_MAX)
+			goto bad;
+		if (p->mls && p->policyvers < MOD_POLICYDB_VERSION_MLS)
 			goto bad;
 		break;
 	default:
@@ -1649,13 +1824,17 @@ int policydb_validate(sepol_handle_t *handle, const policydb_t *p)
 	if (validate_permissives(handle, p, flavors))
 		goto bad;
 
+	if (validate_neveraudit(handle, p, flavors))
+		goto bad;
+
 	if (validate_range_transitions(handle, p, flavors))
 		goto bad;
 
-	if (p->policyvers >= POLICYDB_VERSION_AVTAB) {
-		if (validate_typeattr_map(handle, p, flavors))
-			goto bad;
-	}
+	if (validate_typeattr_map(handle, p, flavors))
+		goto bad;
+
+	if (validate_attrtype_map(handle, p, flavors))
+		goto bad;
 
 	validate_array_destroy(flavors);
 

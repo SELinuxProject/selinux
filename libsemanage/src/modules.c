@@ -40,7 +40,6 @@
 #include <ctype.h>
 
 #include "handle.h"
-#include "modules.h"
 #include "sha256.h"
 #include "debug.h"
 
@@ -820,12 +819,12 @@ int semanage_module_validate_name(const char * name)
 		goto exit;
 	}
 
-	if (!isalpha(*name)) {
+	if (!isalpha((unsigned char)*name)) {
 		status = -1;
 		goto exit;
 	}
 
-#define ISVALIDCHAR(c) (isalnum(c) || c == '_' || c == '-')
+#define ISVALIDCHAR(c) (isalnum((unsigned char)c) || c == '_' || c == '-')
 
 	for (name++; *name; name++) {
 		if (ISVALIDCHAR(*name)) {
@@ -877,12 +876,12 @@ int semanage_module_validate_lang_ext(const char *ext)
 		goto exit;
 	}
 
-	if (!isalnum(*ext)) {
+	if (!isalnum((unsigned char)*ext)) {
 		status = -1;
 		goto exit;
 	}
 
-#define ISVALIDCHAR(c) (isalnum(c) || c == '_' || c == '-')
+#define ISVALIDCHAR(c) (isalnum((unsigned char)c) || c == '_' || c == '-')
 
 	for (ext++; *ext; ext++) {
 		if (ISVALIDCHAR(*ext)) {
@@ -997,7 +996,6 @@ int semanage_module_compute_checksum(semanage_handle_t *sh,
 				     size_t *checksum_len)
 {
 	semanage_module_info_t *extract_info = NULL;
-	Sha256Context context;
 	SHA256_HASH sha256_hash;
 	char *checksum_str;
 	void *data;
@@ -1019,9 +1017,7 @@ int semanage_module_compute_checksum(semanage_handle_t *sh,
 	semanage_module_info_destroy(sh, extract_info);
 	free(extract_info);
 
-	Sha256Initialise(&context);
-	Sha256Update(&context, data, data_len);
-	Sha256Finalise(&context, &sha256_hash);
+	Sha256Calculate(data, data_len, &sha256_hash);
 
 	munmap(data, data_len);
 

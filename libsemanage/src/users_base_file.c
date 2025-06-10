@@ -21,7 +21,7 @@ typedef struct dbase_file dbase_t;
 #include "debug.h"
 
 static int user_base_print(semanage_handle_t * handle,
-			   semanage_user_base_t * user, FILE * str)
+			   const semanage_user_base_t * user, FILE * str)
 {
 
 	const char **roles = NULL;
@@ -66,9 +66,9 @@ static int user_base_parse(semanage_handle_t * handle,
 			   parse_info_t * info, semanage_user_base_t * user)
 {
 
-	int islist = 0;
+	int islist;
 	char *str = NULL;
-	char *start;
+	const char *start;
 	char *name_str = NULL;
 
 	if (parse_skip_space(handle, info) < 0)
@@ -113,7 +113,7 @@ static int user_base_parse(semanage_handle_t * handle,
 		start = info->ptr;
 		while (*(info->ptr) &&
 		       *(info->ptr) != ';' &&
-		       *(info->ptr) != '}' && !isspace(*(info->ptr)))
+		       *(info->ptr) != '}' && !isspace((unsigned char)*(info->ptr)))
 			info->ptr++;
 
 		delim = *(info->ptr);
@@ -122,7 +122,7 @@ static int user_base_parse(semanage_handle_t * handle,
 		if (semanage_user_base_add_role(handle, user, start) < 0)
 			goto err;
 
-		if (delim && !isspace(delim)) {
+		if (delim && !isspace((unsigned char)delim)) {
 			if (islist && delim == '}')
 				break;
 			else if (!islist && delim == ';')
@@ -195,7 +195,7 @@ static int user_base_parse(semanage_handle_t * handle,
 }
 
 /* USER BASE record: FILE extension: method table */
-record_file_table_t SEMANAGE_USER_BASE_FILE_RTABLE = {
+static const record_file_table_t SEMANAGE_USER_BASE_FILE_RTABLE = {
 	.parse = user_base_parse,
 	.print = user_base_print,
 };

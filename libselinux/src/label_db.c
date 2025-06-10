@@ -178,11 +178,15 @@ db_close(struct selabel_handle *rec)
 	spec_t	       *spec;
 	unsigned int	i;
 
+	if (!catalog)
+		return;
+
 	for (i = 0; i < catalog->nspec; i++) {
 		spec = &catalog->specs[i];
 		free(spec->key);
 		free(spec->lr.ctx_raw);
 		free(spec->lr.ctx_trans);
+		__pthread_mutex_destroy(&spec->lr.lock);
 	}
 	free(catalog);
 }
@@ -263,11 +267,20 @@ db_init(const struct selinux_opt *opts, unsigned nopts,
 	 *   the default one. If RDBMS is not SE-PostgreSQL, it may need to
 	 *   specify an explicit specfile for database objects.
 	 */
-	while (nopts--) {
+	while (nopts) {
+		nopts--;
 		switch (opts[nopts].type) {
 		case SELABEL_OPT_PATH:
 			path = opts[nopts].value;
 			break;
+		case SELABEL_OPT_UNUSED:
+		case SELABEL_OPT_VALIDATE:
+		case SELABEL_OPT_DIGEST:
+			break;
+		default:
+			free(catalog);
+			errno = EINVAL;
+			return NULL;
 		}
 	}
 
@@ -346,6 +359,7 @@ out_error:
 		free(spec->key);
 		free(spec->lr.ctx_raw);
 		free(spec->lr.ctx_trans);
+		__pthread_mutex_destroy(&spec->lr.lock);
 	}
 	free(catalog);
 	fclose(filp);

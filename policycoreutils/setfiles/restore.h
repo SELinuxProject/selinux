@@ -24,6 +24,7 @@ struct restore_opts {
 	unsigned int progress;
 	unsigned int mass_relabel;
 	unsigned int set_specctx;
+	unsigned int set_user_role;
 	unsigned int add_assoc;
 	unsigned int ignore_digest;
 	unsigned int recurse;

@@ -39,9 +39,7 @@ static void customizable_init(void)
 	}
 
 	if (ctr) {
-		list =
-		    (char **) calloc(sizeof(char *),
-						  ctr + 1);
+		list = calloc(ctr + 1, sizeof(char *));
 		if (list) {
 			i = 0;
 			while (fgets_unlocked(buf, selinux_page_size, fp)

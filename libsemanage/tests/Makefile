@@ -5,7 +5,7 @@ CILS = $(sort $(wildcard *.cil))
 ###########################################################################
 
 EXECUTABLE = libsemanage-tests
-CFLAGS += -g -O0 -Wall -W -Wundef -Wmissing-noreturn -Wmissing-format-attribute -Wno-unused-parameter
+CFLAGS += -g -O0 -Wall -W -Wundef -Wmissing-noreturn -Wmissing-format-attribute
 override CFLAGS += -I../src -I../include
 override LDLIBS += -lcunit -lbz2 -laudit -lselinux -lsepol
 
@@ -20,9 +20,9 @@ $(EXECUTABLE): $(OBJECTS) ../src/libsemanage.a
 %.policy: %.cil
 	../../secilc/secilc $*.cil -o $*.policy -f /dev/null
 
-clean distclean: 
+clean distclean:
 	rm -rf $(OBJECTS) $(POLICIES) $(EXECUTABLE)
 
-test: all 
+test: all
 	./$(EXECUTABLE)
 

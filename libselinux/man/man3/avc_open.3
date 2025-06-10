@@ -10,7 +10,7 @@ avc_open, avc_destroy, avc_reset, avc_cleanup \- userspace SELinux AVC setup and
 .br
 .B #include <selinux/avc.h>
 .sp
-.BI "int avc_open(struct selinux_opt *" options ", unsigned " nopt ");"
+.BI "int avc_open(const struct selinux_opt *" options ", unsigned " nopt ");"
 .sp
 .BI "void avc_destroy(void);"
 .sp

@@ -45,10 +45,10 @@ void parse_release(parse_info_t * info)
 int parse_open(semanage_handle_t * handle, parse_info_t * info)
 {
 
-	info->file_stream = fopen(info->filename, "r");
+	info->file_stream = fopen(info->filename, "re");
 	if (!info->file_stream && (errno != ENOENT)) {
-		ERR(handle, "could not open file %s: %s",
-		    info->filename, strerror(errno));
+		ERR(handle, "could not open file %s.",
+		    info->filename);
 		return STATUS_ERR;
 	}
 	if (info->file_stream)
@@ -85,12 +85,12 @@ int parse_skip_space(semanage_handle_t * handle, parse_info_t * info)
 
 	size_t buf_len = 0;
 	ssize_t len;
-	int lineno = info->lineno;
+	unsigned int lineno = info->lineno;
 	char *buffer = NULL;
 	char *ptr;
 
 	if (info->ptr) {
-		while (*(info->ptr) && isspace(*(info->ptr)))
+		while (*(info->ptr) && isspace((unsigned char)*(info->ptr)))
 			info->ptr++;
 
 		if (*(info->ptr))
@@ -109,7 +109,7 @@ int parse_skip_space(semanage_handle_t * handle, parse_info_t * info)
 			buffer[len - 1] = '\0';
 
 		ptr = buffer;
-		while (*ptr && isspace(*ptr))
+		while (*ptr && isspace((unsigned char)*ptr))
 			ptr++;
 
 		/* Skip comments and blank lines */
@@ -156,7 +156,7 @@ int parse_assert_space(semanage_handle_t * handle, parse_info_t * info)
 	if (parse_assert_noeof(handle, info) < 0)
 		return STATUS_ERR;
 
-	if (*(info->ptr) && !isspace(*(info->ptr))) {
+	if (*(info->ptr) && !isspace((unsigned char)*(info->ptr))) {
 		ERR(handle, "missing whitespace (%s: %u):\n%s",
 		    info->filename, info->lineno, info->orig_line);
 		return STATUS_ERR;
@@ -242,7 +242,7 @@ int parse_fetch_int(semanage_handle_t * handle,
 	if (parse_fetch_string(handle, info, &str, delim, 0) < 0)
 		goto err;
 
-	if (!isdigit((int)*str)) {
+	if (!isdigit((unsigned char)*str)) {
 		ERR(handle, "expected a numeric value: (%s: %u)\n%s",
 		    info->filename, info->lineno, info->orig_line);
 		goto err;
@@ -270,14 +270,14 @@ int parse_fetch_string(semanage_handle_t * handle,
 		       parse_info_t * info, char **str, char delim, int allow_spaces)
 {
 
-	char *start = info->ptr;
-	int len = 0;
+	const char *start = info->ptr;
+	size_t len = 0;
 	char *tmp_str = NULL;
 
 	if (parse_assert_noeof(handle, info) < 0)
 		goto err;
 
-	while (*(info->ptr) && (allow_spaces || !isspace(*(info->ptr))) &&
+	while (*(info->ptr) && (allow_spaces || !isspace((unsigned char)*(info->ptr))) &&
 	       (*(info->ptr) != delim)) {
 		info->ptr++;
 		len++;
@@ -290,14 +290,12 @@ int parse_fetch_string(semanage_handle_t * handle,
 		goto err;
 	}
 
-	tmp_str = (char *)malloc(len + 1);
+	tmp_str = strndup(start, len);
 	if (!tmp_str) {
 		ERR(handle, "out of memory");
 		goto err;
 	}
 
-	strncpy(tmp_str, start, len);
-	*(tmp_str + len) = '\0';
 	*str = tmp_str;
 	return STATUS_SUCCESS;
 

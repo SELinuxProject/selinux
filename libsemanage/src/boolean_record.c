@@ -64,11 +64,12 @@ int semanage_bool_compare2(const semanage_bool_t * boolean,
 }
 
 
-static int semanage_bool_compare2_qsort(const semanage_bool_t ** boolean,
-					const semanage_bool_t ** boolean2)
+static int semanage_bool_compare2_qsort(const void *p1, const void *p2)
 {
+	const semanage_bool_t *const *boolean1 = p1;
+	const semanage_bool_t *const *boolean2 = p2;
 
-	return sepol_bool_compare2(*boolean, *boolean2);
+	return sepol_bool_compare2(*boolean1, *boolean2);
 }
 
 /* Name */
@@ -107,8 +108,10 @@ int semanage_bool_set_name(semanage_handle_t * handle,
 	end++;
 	*end = '\0';
 	rc = asprintf(&newroot, "%s%s%s", prefix, olddir, storename);
-	if (rc < 0)
+	if (rc < 0) {
+		newroot = NULL;
 		goto out;
+	}
 
 	if (strcmp(oldroot, newroot)) {
 		rc = selinux_set_policy_root(newroot);
@@ -179,7 +182,7 @@ void semanage_bool_free(semanage_bool_t * boolean)
 
 
 /* Record base functions */
-record_table_t SEMANAGE_BOOL_RTABLE = {
+const record_table_t SEMANAGE_BOOL_RTABLE = {
 	.create = semanage_bool_create,
 	.key_extract = semanage_bool_key_extract,
 	.key_free = semanage_bool_key_free,

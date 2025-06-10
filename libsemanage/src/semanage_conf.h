@@ -48,6 +48,8 @@ typedef struct semanage_conf {
 	int remove_hll;
 	int ignore_module_cache;
 	int optimize_policy;
+	int multiple_decls;
+	int relabel_store;
 	char *ignoredirs;	/* ";" separated of list for genhomedircon to ignore */
 	struct external_prog *load_policy;
 	struct external_prog *setfiles;

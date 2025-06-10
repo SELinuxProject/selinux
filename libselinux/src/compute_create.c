@@ -33,7 +33,7 @@ static int object_name_encode(const char *objname, char *buffer, size_t buflen)
 				return -1;
 			buffer[offset++] = '+';
 		} else {
-			static const char *table = "0123456789ABCDEF";
+			static const char *const table = "0123456789ABCDEF";
 			int	l = (code & 0x0f);
 			int	h = (code & 0xf0) >> 4;
 

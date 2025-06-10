@@ -27,6 +27,14 @@ extern "C" {
 
 	extern const char *context_str(context_t con);
 
+/*
+ * Return the string value of the context_t.
+ * Similar to context_str(3), but the client owns the string
+ * and needs to free it via free(3).
+ */
+
+	extern char *context_to_str(context_t con);
+
 /* Free the storage used by a context */
 	extern void context_free(context_t con);
 

@@ -21,9 +21,9 @@ static int clear_obsolete(semanage_handle_t * handle,
 	record_key_t *key = NULL;
 	unsigned int i;
 
-	dbase_table_t *src_dtable = src->dtable;
-	dbase_table_t *dst_dtable = dst->dtable;
-	record_table_t *rtable = src_dtable->get_rtable(src->dbase);
+	const dbase_table_t *src_dtable = src->dtable;
+	const dbase_table_t *dst_dtable = dst->dtable;
+	const record_table_t *rtable = src_dtable->get_rtable(src->dbase);
 
 	for (i = 0; i < nrecords; i++) {
 		int exists;
@@ -65,8 +65,8 @@ static int load_records(semanage_handle_t * handle,
 	record_key_t *rkey = NULL;
 
 	dbase_t *dbase = dst->dbase;
-	dbase_table_t *dtable = dst->dtable;
-	record_table_t *rtable = dtable->get_rtable(dbase);
+	const dbase_table_t *dtable = dst->dtable;
+	const record_table_t *rtable = dtable->get_rtable(dbase);
 
 	for (i = 0; i < nrecords; i++) {
 
@@ -113,9 +113,9 @@ int semanage_base_merge_components(semanage_handle_t * handle)
 	int rc = STATUS_SUCCESS;
 
 	/* Order is important here - change things carefully.
-	 * System components first, local next. Verify runs with 
+	 * System components first, local next. Verify runs with
 	 * mutual dependencies are ran after everything is merged */
-	load_table_t components[] = {
+	const load_table_t components[] = {
 
 		{semanage_user_base_dbase_local(handle),
 		 semanage_user_base_dbase_policy(handle), MODE_MODIFY},
@@ -154,7 +154,7 @@ int semanage_base_merge_components(semanage_handle_t * handle)
 		dbase_config_t *src = components[i].src;
 		dbase_config_t *dst = components[i].dst;
 		int mode = components[i].mode;
-		record_table_t *rtable = src->dtable->get_rtable(src->dbase);
+		const record_table_t *rtable = src->dtable->get_rtable(src->dbase);
 
 		/* Must invoke cache function first */
 		if (src->dtable->cache(handle, src->dbase) < 0)
@@ -168,10 +168,8 @@ int semanage_base_merge_components(semanage_handle_t * handle)
 			goto err;
 
 		/* Sort records on MODE_SORT */
-		if (mode & MODE_SORT) {
-			qsort(records, nrecords, sizeof(record_t *),
-			      (int (*)(const void *, const void *))rtable->
-			      compare2_qsort);
+		if ((mode & MODE_SORT) && nrecords > 1) {
+			qsort(records, nrecords, sizeof(record_t *), rtable->compare2_qsort);
 		}
 
 		/* Clear obsolete ones for MODE_SET */
@@ -210,7 +208,7 @@ int semanage_commit_components(semanage_handle_t * handle)
 {
 
 	int i;
-	dbase_config_t *components[] = {
+	const dbase_config_t *components[] = {
 		semanage_iface_dbase_local(handle),
 		semanage_bool_dbase_local(handle),
 		semanage_user_base_dbase_local(handle),

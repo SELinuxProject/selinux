@@ -188,6 +188,7 @@ extern char *CIL_KEY_TYPEALIAS;
 extern char *CIL_KEY_TYPEALIASACTUAL;
 extern char *CIL_KEY_TYPEBOUNDS;
 extern char *CIL_KEY_TYPEPERMISSIVE;
+extern char *CIL_KEY_TYPENEVERAUDIT;
 extern char *CIL_KEY_RANGETRANSITION;
 extern char *CIL_KEY_USERROLE;
 extern char *CIL_KEY_ROLETYPE;
@@ -238,6 +239,7 @@ extern char *CIL_KEY_DONTAUDITX;
 extern char *CIL_KEY_NEVERALLOWX;
 extern char *CIL_KEY_PERMISSIONX;
 extern char *CIL_KEY_IOCTL;
+extern char *CIL_KEY_NLMSG;
 extern char *CIL_KEY_UNORDERED;
 extern char *CIL_KEY_SRC_INFO;
 extern char *CIL_KEY_SRC_CIL;
@@ -579,6 +581,11 @@ struct cil_typepermissive {
 	void *type; /* type or alias */
 };
 
+struct cil_typeneveraudit {
+	char *type_str;
+	void *type; /* type or alias */
+};
+
 struct cil_nametypetransition {
 	char *src_str;
 	void *src; /* type, alias, or attribute */
@@ -636,6 +643,7 @@ struct cil_avrule {
 };
 
 #define CIL_PERMX_KIND_IOCTL 1
+#define CIL_PERMX_KIND_NLMSG 2
 struct cil_permissionx {
 	struct cil_symtab_datum datum;
 	uint32_t kind;
@@ -1043,6 +1051,7 @@ void cil_expandtypeattribute_init(struct cil_expandtypeattribute **expandattr);
 void cil_alias_init(struct cil_alias **alias);
 void cil_aliasactual_init(struct cil_aliasactual **aliasactual);
 void cil_typepermissive_init(struct cil_typepermissive **typeperm);
+void cil_typeneveraudit_init(struct cil_typeneveraudit **typeperm);
 void cil_nametypetransition_init(struct cil_nametypetransition **nametypetrans);
 void cil_rangetransition_init(struct cil_rangetransition **rangetrans);
 void cil_bool_init(struct cil_bool **cilbool);

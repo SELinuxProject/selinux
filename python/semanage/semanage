@@ -54,7 +54,7 @@ usage_login = "semanage login [-h] [-n] [-N] [-S STORE] ["
 usage_login_dict = {' --add': ('-s SEUSER', '-r RANGE', 'LOGIN',), ' --modify': ('-s SEUSER', '-r RANGE', 'LOGIN',), ' --delete': ('LOGIN',), ' --list': ('-C',), ' --extract': ('',), ' --deleteall': ('',)}
 
 usage_fcontext = "semanage fcontext [-h] [-n] [-N] [-S STORE] ["
-usage_fcontext_dict = {' --add': ('(', '-t TYPE', '-f FTYPE', '-r RANGE', '-s SEUSER', '|', '-e EQUAL', ')', 'FILE_SPEC',), ' --delete': ('(', '-t TYPE', '-f FTYPE', '|', '-e EQUAL', ')', 'FILE_SPEC',), ' --modify': ('(', '-t TYPE', '-f FTYPE', '-r RANGE', '-s SEUSER', '|', '-e EQUAL', ')', 'FILE_SPEC',), ' --list': ('[-C]',), ' --extract': ('',), ' --deleteall': ('',)}
+usage_fcontext_dict = {' --add': ('(', '-t TYPE', '-f FTYPE', '-r RANGE', '-s SEUSER', '|', '-e TARGET_PATH', ')', 'FILE_SPEC',), ' --delete': ('(', '-t TYPE', '-f FTYPE', '|', '-e TARGET_PATH', ')', 'FILE_SPEC',), ' --modify': ('(', '-t TYPE', '-f FTYPE', '-r RANGE', '-s SEUSER', '|', '-e TARGET_PATH', ')', 'FILE_SPEC',), ' --list': ('[-C]',), ' --extract': ('',), ' --deleteall': ('',)}
 
 usage_user = "semanage user [-h] [-n] [-N] [-S STORE] ["
 usage_user_dict = {' --add': ('(', '-L LEVEL', '-R ROLES', '-r RANGE', 'SEUSER', ')'), ' --delete': ('SEUSER',), ' --modify': ('(', '-L LEVEL', '-R ROLES', '-r RANGE', '-s SEUSER', 'SEUSER', ')'), ' --list': ('-C',), ' --extract': ('',), ' --deleteall': ('',)}
@@ -306,7 +306,7 @@ def setupLoginParser(subparsers):
 def handleFcontext(args):
     fcontext_args = {'list': [('equal', 'ftype', 'seuser', 'type'), ('')], 'add': [('locallist'), ('type', 'file_spec')], 'modify': [('locallist'), ('type', 'file_spec')], 'delete': [('locallist'), ('file_spec')], 'extract': [('locallist', 'equal', 'ftype', 'seuser', 'type'), ('')], 'deleteall': [('locallist'), ('')]}
     # we can not use mutually for equal because we can define some actions together with equal
-    fcontext_equal_args = {'equal': [('list', 'locallist', 'type', 'ftype', 'seuser', 'deleteall', 'extract'), ()]}
+    fcontext_equal_args = {'equal': [('list', 'locallist', 'type', 'ftype', 'seuser', 'deleteall', 'extract'), ('file_spec')]}
 
     if args.action and args.equal:
         handle_opts(args, fcontext_equal_args, "equal")
@@ -322,7 +322,7 @@ def handleFcontext(args):
             OBJECT.add(args.file_spec, args.type, args.ftype, args.range, args.seuser)
     if args.action == "modify":
         if args.equal:
-            OBJECT.add_equal(args.file_spec, args.equal)
+            OBJECT.modify_equal(args.file_spec, args.equal)
         else:
             OBJECT.modify(args.file_spec, args.type, args.ftype, args.range, args.seuser)
     if args.action == "delete":
@@ -355,9 +355,10 @@ def setupFcontextParser(subparsers):
     parser_add_extract(fcontext_action, "fcontext")
     parser_add_deleteall(fcontext_action, "fcontext")
 
-    fcontextParser.add_argument('-e', '--equal', help=_(
-        'Substitute target path with sourcepath when generating default label. This is used with fcontext. Requires source and target \
-path arguments. The context labeling for the target subtree is made equivalent to that defined for the source.'
+    fcontextParser.add_argument('-e', '--equal', metavar='TARGET_PATH', help=_(
+        'Substitute FILE_SPEC with TARGET_PATH for file label lookup. This is used with fcontext. Requires source and target \
+path arguments to be path prefixes and does not support regular expressions. \
+The context labeling for the target subtree is made equivalent to that defined for the source.'
     ))
     fcontextParser.add_argument('-f', '--ftype', default="", choices=["a", "f", "d", "c", "b", "s", "l", "p"], help=_(
         'File Type. This is used with fcontext. Requires a file type as shown in the mode field by ls, e.g. use d to match only \
@@ -368,7 +369,7 @@ If you do not specify a file type, the file type will default to "all files".'
     parser_add_seuser(fcontextParser, "fcontext")
     parser_add_type(fcontextParser, "fcontext")
     parser_add_range(fcontextParser, "fcontext")
-    fcontextParser.add_argument('file_spec', nargs='?', default=None, help=_('Path to be labeled (may be in the form of a Perl compatible regular expression)'))
+    fcontextParser.add_argument('file_spec', nargs='?', default=None, metavar='FILE_SPEC', help=_('Path to be labeled (may be in the form of a Perl compatible regular expression)'))
     fcontextParser.set_defaults(func=handleFcontext)
 
 

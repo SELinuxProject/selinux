@@ -141,6 +141,36 @@ const char *context_str(context_t context)
 }
 
 
+/*
+ * Return a new string value of the context.
+ */
+char *context_to_str(context_t context)
+{
+	const context_private_t *n = context->ptr;
+	char *buf;
+	size_t total = 0;
+
+	for (int i = 0; i < 4; i++) {
+		if (n->component[i]) {
+			total += strlen(n->component[i]) + 1;
+		}
+	}
+	buf = malloc(total);
+	if (buf != NULL) {
+		char *cp = buf;
+
+		cp = stpcpy(cp, n->component[0]);
+		for (int i = 1; i < 4; i++) {
+			if (n->component[i]) {
+				*cp++ = ':';
+				cp = stpcpy(cp, n->component[i]);
+			}
+		}
+	}
+	return buf;
+}
+
+
 /* Returns nonzero iff failed */
 static int set_comp(context_private_t * n, int idx, const char *str)
 {

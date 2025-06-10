@@ -54,6 +54,9 @@ lex.yy.c: policy_scan.l y.tab.c
 test: checkpolicy
 	./tests/test_roundtrip.sh
 
+# helper target for fuzzing
+checkobjects: $(CHECKOBJS)
+
 install: all
 	-mkdir -p $(DESTDIR)$(BINDIR)
 	-mkdir -p $(DESTDIR)$(MANDIR)/man8

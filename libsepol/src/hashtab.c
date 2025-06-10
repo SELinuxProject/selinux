@@ -48,12 +48,14 @@ hashtab_t hashtab_create(unsigned int (*hash_value) (hashtab_t h,
 	if (p == NULL)
 		return p;
 
-	memset(p, 0, sizeof(hashtab_val_t));
-	p->size = size;
-	p->nel = 0;
-	p->hash_value = hash_value;
-	p->keycmp = keycmp;
-	p->htable = (hashtab_ptr_t *) calloc(size, sizeof(hashtab_ptr_t));
+	*p = (hashtab_val_t) {
+		.size = size,
+		.nel = 0,
+		.hash_value = hash_value,
+		.keycmp = keycmp,
+		.htable = (hashtab_ptr_t *) calloc(size, sizeof(hashtab_ptr_t)),
+	};
+
 	if (p->htable == NULL) {
 		free(p);
 		return NULL;
@@ -112,22 +114,25 @@ int hashtab_insert(hashtab_t h, hashtab_key_t key, hashtab_datum_t datum)
 	hashtab_check_resize(h);
 
 	hvalue = h->hash_value(h, key);
-	prev = NULL;
-	cur = h->htable[hvalue];
-	while (cur && h->keycmp(h, key, cur->key) > 0) {
-		prev = cur;
-		cur = cur->next;
-	}
 
-	if (cur && (h->keycmp(h, key, cur->key) == 0))
-		return SEPOL_EEXIST;
+	for (prev = NULL, cur = h->htable[hvalue]; cur; prev = cur, cur = cur->next) {
+		int cmp;
+
+		cmp = h->keycmp(h, key, cur->key);
+		if (cmp > 0)
+			continue;
+		if (cmp == 0)
+			return SEPOL_EEXIST;
+		break;
+	}
 
 	newnode = (hashtab_ptr_t) malloc(sizeof(hashtab_node_t));
 	if (newnode == NULL)
 		return SEPOL_ENOMEM;
-	memset(newnode, 0, sizeof(struct hashtab_node));
-	newnode->key = key;
-	newnode->datum = datum;
+	*newnode = (hashtab_node_t) {
+		.key = key,
+		.datum = datum,
+	};
 	if (prev) {
 		newnode->next = prev->next;
 		prev->next = newnode;
@@ -151,14 +156,19 @@ int hashtab_remove(hashtab_t h, hashtab_key_t key,
 		return SEPOL_ENOENT;
 
 	hvalue = h->hash_value(h, key);
-	last = NULL;
-	cur = h->htable[hvalue];
-	while (cur != NULL && h->keycmp(h, key, cur->key) > 0) {
-		last = cur;
-		cur = cur->next;
+
+	for (last = NULL, cur = h->htable[hvalue]; cur; last = cur, cur = cur->next) {
+		int cmp;
+
+		cmp = h->keycmp(h, key, cur->key);
+		if (cmp > 0)
+			continue;
+		if (cmp == 0)
+			break;
+		return SEPOL_ENOENT;
 	}
 
-	if (cur == NULL || (h->keycmp(h, key, cur->key) != 0))
+	if (cur == NULL)
 		return SEPOL_ENOENT;
 
 	if (last == NULL)
@@ -183,14 +193,18 @@ hashtab_datum_t hashtab_search(hashtab_t h, const_hashtab_key_t key)
 		return NULL;
 
 	hvalue = h->hash_value(h, key);
-	cur = h->htable[hvalue];
-	while (cur != NULL && h->keycmp(h, key, cur->key) > 0)
-		cur = cur->next;
+	for (cur = h->htable[hvalue]; cur; cur = cur->next) {
+		int cmp;
 
-	if (cur == NULL || (h->keycmp(h, key, cur->key) != 0))
-		return NULL;
+		cmp = h->keycmp(h, key, cur->key);
+		if (cmp > 0)
+			continue;
+		if (cmp == 0)
+			return cur->datum;
+		break;
+	}
 
-	return cur->datum;
+	return NULL;
 }
 
 void hashtab_destroy(hashtab_t h)
@@ -212,8 +226,6 @@ void hashtab_destroy(hashtab_t h)
 	}
 
 	free(h->htable);
-	h->htable = NULL;
-
 	free(h);
 }
 

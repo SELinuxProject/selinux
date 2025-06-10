@@ -347,9 +347,11 @@ static char *get_class_info(sepol_security_class_t tclass,
 		p += len;
 		buf_used += len;
 		if (state_num < 2) {
+			char *permstr = sepol_av_to_string(policydb, tclass, constraint->permissions);
+
 			len = snprintf(p, class_buf_len - buf_used, "{%s } (",
-			sepol_av_to_string(policydb, tclass,
-				constraint->permissions));
+				       permstr ?: "<format-failure>");
+			free(permstr);
 		} else {
 			len = snprintf(p, class_buf_len - buf_used, "(");
 		}
@@ -1237,7 +1239,25 @@ out:
  const char *sepol_av_perm_to_string(sepol_security_class_t tclass,
 					sepol_access_vector_t av)
 {
-	return sepol_av_to_string(policydb, tclass, av);
+	static char avbuf[1024];
+	char *avstr = sepol_av_to_string(policydb, tclass, av);
+	size_t len;
+
+	memset(avbuf, 0, sizeof(avbuf));
+
+	if (avstr) {
+		len = strlen(avstr);
+		if (len < sizeof(avbuf)) {
+			strcpy(avbuf, avstr);
+		} else {
+			sprintf(avbuf, "<access-vector overflowed buffer>");
+		}
+		free(avstr);
+	} else {
+		sprintf(avbuf, "<format-failure>");
+	}
+
+	return avbuf;
 }
 
 /*
@@ -1342,14 +1362,12 @@ static int sepol_compute_sid(sepol_security_id_t ssid,
 	scontext = sepol_sidtab_search(sidtab, ssid);
 	if (!scontext) {
 		ERR(NULL, "unrecognized SID %d", ssid);
-		rc = -EINVAL;
-		goto out;
+		return -EINVAL;
 	}
 	tcontext = sepol_sidtab_search(sidtab, tsid);
 	if (!tcontext) {
 		ERR(NULL, "unrecognized SID %d", tsid);
-		rc = -EINVAL;
-		goto out;
+		return -EINVAL;
 	}
 
 	if (tclass && tclass <= policydb->p_classes.nprim)

@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <sys/stat.h>
 #include <string.h>
 #include <errno.h>
@@ -202,10 +203,9 @@ int matchpathcon_filespec_add(ino_t ino, int specind, const char *file)
 	struct stat sb;
 
 	if (!fl_head) {
-		fl_head = malloc(sizeof(file_spec_t) * HASH_BUCKETS);
+		fl_head = calloc(HASH_BUCKETS, sizeof(file_spec_t));
 		if (!fl_head)
 			goto oom;
-		memset(fl_head, 0, sizeof(file_spec_t) * HASH_BUCKETS);
 	}
 
 	h = (ino + (ino >> HASH_BITS)) & HASH_MASK;
@@ -260,6 +260,35 @@ int matchpathcon_filespec_add(ino_t ino, int specind, const char *file)
 		 __FUNCTION__, file);
 	return -1;
 }
+
+#if (defined(_FILE_OFFSET_BITS) && _FILE_OFFSET_BITS == 64) && defined(__INO64_T_TYPE) && !defined(__INO_T_MATCHES_INO64_T)
+/* alias defined in the public header but we undefine it here */
+#undef matchpathcon_filespec_add
+
+/* ABI backwards-compatible shim for non-LFS 32-bit systems */
+
+static_assert(sizeof(unsigned long) == sizeof(__ino_t), "inode size mismatch");
+static_assert(sizeof(unsigned long) == sizeof(uint32_t), "inode size mismatch");
+static_assert(sizeof(ino_t) == sizeof(ino64_t), "inode size mismatch");
+static_assert(sizeof(ino64_t) == sizeof(uint64_t), "inode size mismatch");
+
+extern int matchpathcon_filespec_add(unsigned long ino, int specind,
+                                     const char *file);
+
+int matchpathcon_filespec_add(unsigned long ino, int specind,
+                              const char *file)
+{
+	return matchpathcon_filespec_add64(ino, specind, file);
+}
+#elif (defined(_FILE_OFFSET_BITS) && _FILE_OFFSET_BITS == 64) || defined(__INO_T_MATCHES_INO64_T)
+
+static_assert(sizeof(uint64_t) == sizeof(ino_t), "inode size mismatch");
+
+#else
+
+static_assert(sizeof(uint32_t) == sizeof(ino_t), "inode size mismatch");
+
+#endif
 
 /*
  * Evaluate the association hash table distribution.
@@ -524,8 +553,10 @@ int selinux_file_context_verify(const char *path, mode_t mode)
 			return 0;
 	}
 	
-	if (!hnd && (matchpathcon_init_prefix(NULL, NULL) < 0))
+	if (!hnd && (matchpathcon_init_prefix(NULL, NULL) < 0)){
+			freecon(con);
 			return -1;
+	}
 
 	if (selabel_lookup_raw(hnd, &fcontext, path, mode) != 0) {
 		if (errno != ENOENT)

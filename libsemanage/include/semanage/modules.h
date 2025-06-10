@@ -29,7 +29,7 @@
 typedef struct semanage_module_key semanage_module_key_t;
 
 /* High level module management functions. These are all part of
- * a transaction  
+ * a transaction
  */
 
 extern int semanage_module_install(semanage_handle_t *,
@@ -222,7 +222,7 @@ extern int semanage_module_set_enabled(semanage_handle_t *sh,
 
 /* Lookup @modinfo by @modkey. Caller should use
  * semanage_module_info_destroy and free on @modinfo.
- * 
+ *
  * Returns 0 on success and -1 on error.
  */
 extern int semanage_module_get_module_info(semanage_handle_t *sh,
@@ -242,7 +242,7 @@ extern int semanage_module_list_all(semanage_handle_t *sh,
 				    semanage_module_info_t **modinfos,
 				    int *modinfos_len);
 
-/* Install the module indicated by @modinfo with input data from 
+/* Install the module indicated by @modinfo with input data from
  * @module_data with length @data_len.
  *
  * @modinfo must have all values filled in.

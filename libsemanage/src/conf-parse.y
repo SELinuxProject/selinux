@@ -21,11 +21,13 @@
 %{
 
 #include "semanage_conf.h"
+#include "utilities.h"
 
 #include <sepol/policydb.h>
 #include <selinux/selinux.h>
 #include <semanage/handle.h>
 
+#include <errno.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -52,16 +54,16 @@ static int parse_errors;
 
 %}
 
-%name-prefix "semanage_"
+%define api.prefix {semanage_}
 
 %union {
         int d;
         char *s;
 }
 
-%token MODULE_STORE VERSION EXPAND_CHECK FILE_MODE SAVE_PREVIOUS SAVE_LINKED TARGET_PLATFORM COMPILER_DIR IGNORE_MODULE_CACHE STORE_ROOT OPTIMIZE_POLICY
+%token MODULE_STORE VERSION EXPAND_CHECK FILE_MODE SAVE_PREVIOUS SAVE_LINKED TARGET_PLATFORM COMPILER_DIR IGNORE_MODULE_CACHE STORE_ROOT OPTIMIZE_POLICY MULTIPLE_DECLS
 %token LOAD_POLICY_START SETFILES_START SEFCONTEXT_COMPILE_START DISABLE_GENHOMEDIRCON HANDLE_UNKNOWN USEPASSWD IGNOREDIRS
-%token BZIP_BLOCKSIZE BZIP_SMALL REMOVE_HLL
+%token BZIP_BLOCKSIZE BZIP_SMALL RELABEL_STORE REMOVE_HLL
 %token VERIFY_MOD_START VERIFY_LINKED_START VERIFY_KERNEL_START BLOCK_END
 %token PROG_PATH PROG_ARGS
 %token <s> ARG
@@ -95,7 +97,9 @@ single_opt:     module_store
 	|	bzip_blocksize
 	|	bzip_small
 	|	remove_hll
+	|	relabel_store
 	|	optimize_policy
+	|	multiple_decls
         ;
 
 module_store:   MODULE_STORE '=' ARG {
@@ -139,13 +143,15 @@ ignore_module_cache:	IGNORE_MODULE_CACHE '=' ARG  {
         ;
 
 version:        VERSION '=' ARG  {
-                        current_conf->policyvers = atoi($3);
+                        char *endptr;
+                        long value;
+                        errno = 0;
+                        value = strtol($3, &endptr, 10);
+                        if (*endptr != '\0' || errno != 0 || value < sepol_policy_kern_vers_min() || value > sepol_policy_kern_vers_max())
+                                yyerror("policy-version must be a valid policy version");
+                        else
+                                current_conf->policyvers = value;
                         free($3);
-                        if (current_conf->policyvers < sepol_policy_kern_vers_min() ||
-                            current_conf->policyvers > sepol_policy_kern_vers_max()) {
-                                parse_errors++;
-                                YYABORT;
-                        }
                 }
         ;
 
@@ -162,13 +168,27 @@ target_platform: TARGET_PLATFORM '=' ARG  {
         ;
 
 expand_check:   EXPAND_CHECK '=' ARG  {
-                        current_conf->expand_check = atoi($3);
+                        char *endptr;
+                        long value;
+                        errno = 0;
+                        value = strtol($3, &endptr, 10);
+                        if (*endptr != '\0' || errno != 0 || (value != 0 && value != 1))
+                                yyerror("expand-check can only be '1' or '0'");
+                        else
+                                current_conf->expand_check = value;
                         free($3);
                 }
         ;
 
 file_mode:   FILE_MODE '=' ARG  {
-                        current_conf->file_mode = strtoul($3, NULL, 8);
+                        char *endptr;
+                        long value;
+                        errno = 0;
+                        value = strtol($3, &endptr, 8);
+                        if (*endptr != '\0' || errno != 0 || value < 0 || value > 0777)
+                                yyerror("file-mode must be a valid permission mode");
+                        else
+                                current_conf->file_mode = value;
                         free($3);
                 }
         ;
@@ -177,7 +197,7 @@ save_previous:    SAVE_PREVIOUS '=' ARG {
 	                if (strcasecmp($3, "true") == 0)
 		                current_conf->save_previous = 1;
 			else if (strcasecmp($3, "false") == 0)
-				current_conf->save_previous = 0;		
+				current_conf->save_previous = 0;
 			else {
 				yyerror("save-previous can only be 'true' or 'false'");
 			}
@@ -190,7 +210,7 @@ save_linked:    SAVE_LINKED '=' ARG {
 	                if (strcasecmp($3, "true") == 0)
 		                current_conf->save_linked = 1;
 			else if (strcasecmp($3, "false") == 0)
-				current_conf->save_linked = 0;		
+				current_conf->save_linked = 0;
 			else {
 				yyerror("save-linked can only be 'true' or 'false'");
 			}
@@ -239,12 +259,15 @@ handle_unknown: HANDLE_UNKNOWN '=' ARG {
  }
 
 bzip_blocksize:  BZIP_BLOCKSIZE '=' ARG {
-	int blocksize = atoi($3);
-	free($3);
-	if (blocksize > 9)
+	char *endptr;
+	long value;
+	errno = 0;
+	value = strtol($3, &endptr, 10);
+	if (*endptr != '\0' || errno != 0 || value < 0 || value > 9)
 		yyerror("bzip-blocksize can only be in the range 0-9");
 	else
-		current_conf->bzip_blocksize = blocksize;
+		current_conf->bzip_blocksize = value;
+	free($3);
 }
 
 bzip_small:  BZIP_SMALL '=' ARG {
@@ -269,6 +292,17 @@ remove_hll:  REMOVE_HLL'=' ARG {
 	free($3);
 }
 
+relabel_store:  RELABEL_STORE'=' ARG {
+	if (strcasecmp($3, "false") == 0) {
+		current_conf->relabel_store = 0;
+	} else if (strcasecmp($3, "true") == 0) {
+		current_conf->relabel_store = 1;
+	} else {
+		yyerror("relabel_store can only be 'true' or 'false'");
+	}
+	free($3);
+}
+
 optimize_policy:  OPTIMIZE_POLICY '=' ARG {
 	if (strcasecmp($3, "false") == 0) {
 		current_conf->optimize_policy = 0;
@@ -280,7 +314,18 @@ optimize_policy:  OPTIMIZE_POLICY '=' ARG {
 	free($3);
 }
 
-command_block: 
+multiple_decls:  MULTIPLE_DECLS '=' ARG {
+	if (strcasecmp($3, "false") == 0) {
+		current_conf->multiple_decls = 0;
+	} else if (strcasecmp($3, "true") == 0) {
+		current_conf->multiple_decls = 1;
+	} else {
+		yyerror("multiple-decls can only be 'true' or 'false'");
+	}
+	free($3);
+}
+
+command_block:
                 command_start external_opts BLOCK_END  {
                         if (new_external->path == NULL) {
                                 parse_errors++;
@@ -350,7 +395,10 @@ external_opt:   PROG_PATH '=' ARG  { PASSIGN(new_external->path, $3); }
 static int semanage_conf_init(semanage_conf_t * conf)
 {
 	conf->store_type = SEMANAGE_CON_DIRECT;
-	conf->store_path = strdup(basename(selinux_policy_root()));
+	const char *policy_root = selinux_policy_root();
+	if (policy_root != NULL) {
+		conf->store_path = strdup(semanage_basename(policy_root));
+	}
 	conf->ignoredirs = NULL;
 	conf->store_root_path = strdup("/var/lib/selinux");
 	conf->compiler_directory_path = strdup("/usr/libexec/selinux/hll");
@@ -364,10 +412,18 @@ static int semanage_conf_init(semanage_conf_t * conf)
 	conf->bzip_small = 0;
 	conf->ignore_module_cache = 0;
 	conf->remove_hll = 0;
-	conf->optimize_policy = 0;
+	conf->relabel_store = 1;
+	conf->optimize_policy = 1;
+	conf->multiple_decls = 1;
 
 	conf->save_previous = 0;
 	conf->save_linked = 0;
+
+	if (!conf->store_path ||
+	    !conf->store_root_path ||
+	    !conf->compiler_directory_path) {
+		return -1;
+	}
 
 	if ((conf->load_policy =
 	     calloc(1, sizeof(*(current_conf->load_policy)))) == NULL) {
@@ -429,7 +485,7 @@ semanage_conf_t *semanage_conf_parse(const char *config_filename)
 	if (semanage_conf_init(current_conf) == -1) {
 		goto cleanup;
 	}
-	if ((semanage_in = fopen(config_filename, "r")) == NULL) {
+	if ((semanage_in = fopen(config_filename, "re")) == NULL) {
 		/* configuration file does not exist or could not be
 		 * read.  THIS IS NOT AN ERROR.  just rely on the
 		 * defaults. */
@@ -505,8 +561,11 @@ static int parse_module_store(char *arg)
 	free(current_conf->store_path);
 	if (strcmp(arg, "direct") == 0) {
 		current_conf->store_type = SEMANAGE_CON_DIRECT;
-		current_conf->store_path =
-		    strdup(basename(selinux_policy_root()));
+		const char *policy_root = selinux_policy_root();
+		if (policy_root != NULL) {
+			current_conf->store_path =
+			    strdup(semanage_basename(policy_root));
+		}
 		current_conf->server_port = -1;
 	} else if (*arg == '/') {
 		current_conf->store_type = SEMANAGE_CON_POLSERV_LOCAL;

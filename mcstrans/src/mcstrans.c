@@ -477,6 +477,7 @@ add_constraint(char op, char *raw, char *tok) {
 		}
 		if (asprintf(&constraint->text, "%s%c%s", raw, op, tok) < 0) {
 			log_error("asprintf failed %s", strerror(errno));
+			free(constraint);
 			return -1;
 		}
 		constraint->op = op;
@@ -924,7 +925,7 @@ new_context_str(const char *incon, const char *range) {
 		goto exit;
 	}
 	context_range_set(con, range);
-	rcon = strdup(context_str(con));
+	rcon = context_to_str(con);
 	context_free(con);
 	if (!rcon) {
 		goto exit;
@@ -952,9 +953,13 @@ find_in_hashtable(const char *range, domain_t *domain, context_map_node_t **tabl
 	return trans;
 }
 
+#define spaceship_cmp(a, b) (((a) > (b)) - ((a) < (b)))
+
 static int
 string_size(const void *p1, const void *p2) {
-	return strlen(*(char **)p2) - strlen(*(char **)p1);
+	size_t len1 = strlen(*(const char *const *)p2);
+	size_t len2 = strlen(*(const char *const *)p1);
+	return spaceship_cmp(len1, len2);
 }
 
 static int
@@ -965,7 +970,7 @@ word_size(const void *p1, const void *p2) {
 	int w2_len=strlen(w2->text);
 	if (w1_len == w2_len)
 		return strcmp(w1->text, w2->text);
-	return (w2_len - w1_len);
+	return spaceship_cmp(w2_len, w1_len);
 }
 
 static void

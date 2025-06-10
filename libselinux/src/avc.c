@@ -225,17 +225,19 @@ static int avc_init_internal(const char *prefix,
 	return rc;
 }
 
-int avc_open(struct selinux_opt *opts, unsigned nopts)
+int avc_open(const struct selinux_opt *opts, unsigned nopts)
 {
 	avc_setenforce = 0;
 
-	while (nopts--)
+	while (nopts) {
+		nopts--;
 		switch(opts[nopts].type) {
 		case AVC_OPT_SETENFORCE:
 			avc_setenforce = 1;
 			avc_enforcing = !!opts[nopts].value;
 			break;
 		}
+	}
 
 	return avc_init_internal("avc", NULL, NULL, NULL, NULL);
 }

@@ -22,7 +22,7 @@ typedef struct record_file_table {
 
 	/* Print record to stream */
 	int (*print) (semanage_handle_t * handle,
-		      record_t * record, FILE * str);
+		      const record_t * record, FILE * str);
 
 } record_file_table_t;
 
@@ -30,14 +30,14 @@ typedef struct record_file_table {
 extern int dbase_file_init(semanage_handle_t * handle,
 			   const char *path_ro,
 			   const char *path_rw,
-			   record_table_t * rtable,
-			   record_file_table_t * rftable,
+			   const record_table_t * rtable,
+			   const record_file_table_t * rftable,
 			   dbase_file_t ** dbase);
 
 /* FILE - release */
 extern void dbase_file_release(dbase_file_t * dbase);
 
 /* FILE - method table implementation */
-extern dbase_table_t SEMANAGE_FILE_DTABLE;
+extern const dbase_table_t SEMANAGE_FILE_DTABLE;
 
 #endif

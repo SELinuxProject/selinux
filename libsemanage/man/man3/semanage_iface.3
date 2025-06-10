@@ -1,6 +1,6 @@
 .TH semanage_iface 3 "16 March 2006" "ivg2@cornell.edu" "Libsemanage API documentation"
 
-.SH "NAME" 
+.SH "NAME"
 semanage_iface \- SELinux Network Interfaces Management API
 
 .SH "SYNOPSIS"
@@ -11,15 +11,15 @@ semanage_iface \- SELinux Network Interfaces Management API
 .B #include <semanage/interfaces_local.h>
 
 .PP
-This object contains properties associated with a network interface. 
+This object contains properties associated with a network interface.
 
 .PP
 For details on a specific function, see its manual page.
 
 .SH "Record API Overview"
 
-.HP 
-.BR semanage_iface_create "(3)" \- 
+.HP
+.BR semanage_iface_create "(3)" \-
 .br
 create an interface
 
@@ -39,17 +39,17 @@ create a key, which can be used to identify an interface
 release resources for this interface key
 
 .HP
-.BR semanage_iface_key_extract "(3)" \- 
+.BR semanage_iface_key_extract "(3)" \-
 .br
 create a key matching this interface
 
 .HP
-.BR semanage_iface_clone "(3)" \- 
+.BR semanage_iface_clone "(3)" \-
 .br
 create an identical interface (deep-copy clone)
 
 .HP
-.BR semanage_iface_compare "(3)" \- 
+.BR semanage_iface_compare "(3)" \-
 .br
 compare this interface to the provided key
 
@@ -61,14 +61,14 @@ compare this interface to another
 .SH "Properties API Overview"
 
 .HP
-.BR semanage_iface_get_name "(3)" \- 
+.BR semanage_iface_get_name "(3)" \-
 .br
-return the name of this interface 
+return the name of this interface
 
 .HP
 .BR semanage_iface_set_name "(3)" \-
 .br
-set the name of this interface 
+set the name of this interface
 
 .HP
 .BR semanage_iface_get_ifcon "(3)" \-
@@ -93,7 +93,7 @@ set the SELinux context associated with packets sent over this interface
 .SH "Record Store API Overview"
 
 .HP
-.BR semanage_iface_modify_local "(3)" \- 
+.BR semanage_iface_modify_local "(3)" \-
 .br
 add or update an interface in the local store
 
@@ -118,7 +118,7 @@ check if an interface is defined in the local store
 query an interface in the persistent policy
 
 .HP
-.BR semanage_iface_query_local "(3)" \- 
+.BR semanage_iface_query_local "(3)" \-
 .br
 query an interface in the local store
 

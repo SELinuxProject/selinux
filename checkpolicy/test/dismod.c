@@ -118,12 +118,11 @@ static __attribute__((__noreturn__)) void usage(const char *progname)
 static void render_access_mask(uint32_t mask, uint32_t class, policydb_t * p,
 			       FILE * fp)
 {
-	char *perm;
+	char *perm = sepol_av_to_string(p, class, mask);
 	fprintf(fp, "{");
-	perm = sepol_av_to_string(p, class, mask);
-	if (perm)
-		fprintf(fp, "%s ", perm);
+	fprintf(fp, "%s ", perm ?: "<format-failure>");
 	fprintf(fp, "}");
+	free(perm);
 }
 
 static void render_access_bitmap(ebitmap_t * map, uint32_t class,
@@ -135,8 +134,8 @@ static void render_access_bitmap(ebitmap_t * map, uint32_t class,
 	for (i = ebitmap_startbit(map); i < ebitmap_length(map); i++) {
 		if (ebitmap_get_bit(map, i)) {
 			perm = sepol_av_to_string(p, class, UINT32_C(1) << i);
-			if (perm)
-				fprintf(fp, "%s", perm);
+			fprintf(fp, "%s", perm ?: "<format-failure>");
+			free(perm);
 		}
 	}
 	fprintf(fp, " }");
@@ -354,6 +353,8 @@ static int display_avrule(avrule_t * avrule, policydb_t * policy,
 			xperms.specified = AVTAB_XPERMS_IOCTLFUNCTION;
 		else if (avrule->xperms->specified == AVRULE_XPERMS_IOCTLDRIVER)
 			xperms.specified = AVTAB_XPERMS_IOCTLDRIVER;
+		else if (avrule->xperms->specified == AVRULE_XPERMS_NLMSG)
+			xperms.specified = AVTAB_XPERMS_NLMSG;
 		else {
 			fprintf(fp, "     ERROR: no valid xperms specified\n");
 			return -1;

@@ -40,11 +40,12 @@ int semanage_port_compare2(const semanage_port_t * port,
 }
 
 
- int semanage_port_compare2_qsort(const semanage_port_t ** port,
-					const semanage_port_t ** port2)
+ int semanage_port_compare2_qsort(const void *p1, const void *p2)
 {
+	const semanage_port_t *const * port1 = p1;
+	const semanage_port_t *const * port2 = p2;
 
-	return sepol_port_compare2(*port, *port2);
+	return sepol_port_compare2(*port1, *port2);
 }
 
 int semanage_port_key_create(semanage_handle_t * handle,
@@ -164,7 +165,7 @@ void semanage_port_free(semanage_port_t * port)
 
 
 /* Port base functions */
-record_table_t SEMANAGE_PORT_RTABLE = {
+const record_table_t SEMANAGE_PORT_RTABLE = {
 	.create = semanage_port_create,
 	.key_extract = semanage_port_key_extract,
 	.key_free = semanage_port_key_free,

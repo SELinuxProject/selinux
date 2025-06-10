@@ -153,7 +153,6 @@ static int setpolicytype(const char *type)
 }
 
 static char *selinux_policyroot = NULL;
-static const char *selinux_rootpath = SELINUXDIR;
 
 static void init_selinux_config(void)
 {
@@ -312,7 +311,7 @@ int selinux_set_policy_root(const char *path)
 
 const char *selinux_path(void)
 {
-	return selinux_rootpath;
+	return SELINUXDIR;
 }
 
 

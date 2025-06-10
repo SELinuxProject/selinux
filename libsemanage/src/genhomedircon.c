@@ -130,7 +130,7 @@ typedef struct IgnoreDir {
 	char *dir;
 } ignoredir_t;
 
-ignoredir_t *ignore_head = NULL;
+static ignoredir_t *ignore_head = NULL;
 
 static void ignore_free(void) {
 	ignoredir_t *next;
@@ -144,10 +144,10 @@ static void ignore_free(void) {
 }
 
 static int ignore_setup(char *ignoredirs) {
-	char *tok;
-	ignoredir_t *ptr = NULL; 
+	char *tok, *saveptr = NULL;
+	ignoredir_t *ptr = NULL;
 
-	tok = strtok(ignoredirs, ";");
+	tok = strtok_r(ignoredirs, ";", &saveptr);
 	while(tok) {
 		ptr = calloc(1, sizeof(ignoredir_t));
 		if (!ptr)
@@ -159,7 +159,7 @@ static int ignore_setup(char *ignoredirs) {
 		ptr->next = ignore_head;
 		ignore_head = ptr;
 
-		tok = strtok(NULL, ";");
+		tok = strtok_r(NULL, ";", &saveptr);
 	}
 
 	return 0;
@@ -170,7 +170,7 @@ err:
 }
 
 static int ignore(const char *homedir) {
-	ignoredir_t *ptr = ignore_head;
+	const ignoredir_t *ptr = ignore_head;
 	while (ptr) {
 		if (strcmp(ptr->dir, homedir) == 0) {
 			return 1;
@@ -192,15 +192,23 @@ static semanage_list_t *default_shell_list(void)
 	semanage_list_t *list = NULL;
 
 	if (semanage_list_push(&list, "/bin/csh")
+	    || semanage_list_push(&list, "/usr/bin/csh")
 	    || semanage_list_push(&list, "/bin/tcsh")
+	    || semanage_list_push(&list, "/usr/bin/tcsh")
 	    || semanage_list_push(&list, "/bin/ksh")
-	    || semanage_list_push(&list, "/bin/bsh")
-	    || semanage_list_push(&list, "/bin/ash")
 	    || semanage_list_push(&list, "/usr/bin/ksh")
+	    || semanage_list_push(&list, "/bin/bsh")
+	    || semanage_list_push(&list, "/usr/bin/bsh")
+	    || semanage_list_push(&list, "/bin/ash")
+	    || semanage_list_push(&list, "/usr/bin/ash")
+	    || semanage_list_push(&list, "/bin/pdksh")
 	    || semanage_list_push(&list, "/usr/bin/pdksh")
 	    || semanage_list_push(&list, "/bin/zsh")
+	    || semanage_list_push(&list, "/usr/bin/zsh")
 	    || semanage_list_push(&list, "/bin/sh")
-	    || semanage_list_push(&list, "/bin/bash"))
+	    || semanage_list_push(&list, "/usr/bin/sh")
+	    || semanage_list_push(&list, "/bin/bash")
+	    || semanage_list_push(&list, "/usr/bin/bash"))
 		goto fail;
 
 	return list;
@@ -208,6 +216,12 @@ static semanage_list_t *default_shell_list(void)
       fail:
 	semanage_list_destroy(&list);
 	return NULL;
+}
+
+static bool is_nologin_shell(const char *path)
+{
+	return strcmp(path, PATH_NOLOGIN_SHELL) == 0 ||
+	       strcmp(path, "/usr" PATH_NOLOGIN_SHELL) == 0;
 }
 
 static semanage_list_t *get_shell_list(void)
@@ -218,20 +232,22 @@ static semanage_list_t *get_shell_list(void)
 	size_t buff_len = 0;
 	ssize_t len;
 
-	shells = fopen(PATH_SHELLS_FILE, "r");
+	shells = fopen(PATH_SHELLS_FILE, "re");
 	if (!shells)
 		return default_shell_list();
 	while ((len = getline(&temp, &buff_len, shells)) > 0) {
 		if (temp[len-1] == '\n') temp[len-1] = 0;
-		if (strcmp(temp, PATH_NOLOGIN_SHELL)) {
-			if (semanage_list_push(&list, temp)) {
-				free(temp);
-				semanage_list_destroy(&list);
-				return default_shell_list();
-			}
+		if (is_nologin_shell(temp))
+			continue;
+		if (semanage_list_push(&list, temp)) {
+			free(temp);
+			semanage_list_destroy(&list);
+			fclose(shells);
+			return NULL;
 		}
 	}
 	free(temp);
+	fclose(shells);
 
 	return list;
 }
@@ -331,7 +347,10 @@ static semanage_list_t *get_home_dirs(genhomedircon_settings_t * s)
 		return homedir_list;
 
 	shells = get_shell_list();
-	assert(shells);
+	if (!shells) {
+		ERR(s->h_semanage, "Allocation failure!");
+		goto fail;
+	}
 
 	path = semanage_findval(PATH_ETC_LOGIN_DEFS, "UID_MIN", NULL);
 	if (path && *path) {
@@ -470,10 +489,10 @@ static int HOME_DIR_PRED(const char *string)
 /* new names */
 static int USERNAME_CONTEXT_PRED(const char *string)
 {
-	return (int)(
-		(strstr(string, TEMPLATE_USERNAME) != NULL) ||
-		(strstr(string, TEMPLATE_USERID) != NULL)
-	);
+	return
+		strstr(string, TEMPLATE_USERNAME) != NULL ||
+		strstr(string, TEMPLATE_USERID) != NULL
+	;
 }
 
 /* This will never match USER if USERNAME or USERID are found. */
@@ -482,7 +501,7 @@ static int USER_CONTEXT_PRED(const char *string)
 	if (USERNAME_CONTEXT_PRED(string))
 		return 0;
 
-	return (int)(strstr(string, TEMPLATE_USER) != NULL);
+	return strstr(string, TEMPLATE_USER) != NULL;
 }
 
 static int STR_COMPARATOR(const void *a, const void *b)
@@ -503,7 +522,7 @@ static semanage_list_t *make_template(genhomedircon_settings_t * s,
 	FILE *template_file = NULL;
 	semanage_list_t *template_data = NULL;
 
-	template_file = fopen(s->homedir_template_path, "r");
+	template_file = fopen(s->homedir_template_path, "re");
 	if (!template_file)
 		return NULL;
 	template_data = semanage_slurp_file_filter(template_file, pred);
@@ -541,14 +560,14 @@ static const char *extract_context(const char *line)
 	while (off > 0) {
 		p--;
 		off--;
-		if (!isspace(*p))
+		if (!isspace((unsigned char)*p))
 			break;
 	}
 	if (off == 0)
 		return NULL;
 
 	/* find the last field in line */
-	while (off > 0 && !isspace(*(p - 1))) {
+	while (off > 0 && !isspace((unsigned char)*(p - 1))) {
 		p--;
 		off--;
 	}
@@ -683,7 +702,7 @@ fail:
 static int write_home_dir_context(genhomedircon_settings_t * s, FILE * out,
 				  semanage_list_t * tpl, const genhomedircon_user_entry_t *user)
 {
-	replacement_pair_t repl[] = {
+	const replacement_pair_t repl[] = {
 		{.search_for = TEMPLATE_HOME_DIR,.replace_with = user->home},
 		{.search_for = TEMPLATE_ROLE,.replace_with = user->prefix},
 		{NULL, NULL}
@@ -701,9 +720,9 @@ static int write_home_dir_context(genhomedircon_settings_t * s, FILE * out,
 }
 
 static int write_home_root_context(genhomedircon_settings_t * s, FILE * out,
-				   semanage_list_t * tpl, char *homedir)
+				   semanage_list_t * tpl, const char *homedir)
 {
-	replacement_pair_t repl[] = {
+	const replacement_pair_t repl[] = {
 		{.search_for = TEMPLATE_HOME_ROOT,.replace_with = homedir},
 		{NULL, NULL}
 	};
@@ -715,7 +734,7 @@ static int write_username_context(genhomedircon_settings_t * s, FILE * out,
 				  semanage_list_t * tpl,
 				  const genhomedircon_user_entry_t *user)
 {
-	replacement_pair_t repl[] = {
+	const replacement_pair_t repl[] = {
 		{.search_for = TEMPLATE_USERNAME,.replace_with = user->name},
 		{.search_for = TEMPLATE_USERID,.replace_with = user->uid},
 		{.search_for = TEMPLATE_ROLE,.replace_with = user->prefix},
@@ -728,7 +747,7 @@ static int write_username_context(genhomedircon_settings_t * s, FILE * out,
 static int write_user_context(genhomedircon_settings_t * s, FILE * out,
 			      semanage_list_t * tpl, const genhomedircon_user_entry_t *user)
 {
-	replacement_pair_t repl[] = {
+	const replacement_pair_t repl[] = {
 		{.search_for = TEMPLATE_USER,.replace_with = user->name},
 		{.search_for = TEMPLATE_ROLE,.replace_with = user->prefix},
 		{NULL, NULL}
@@ -739,8 +758,8 @@ static int write_user_context(genhomedircon_settings_t * s, FILE * out,
 
 static int seuser_sort_func(const void *arg1, const void *arg2)
 {
-	const semanage_seuser_t **u1 = (const semanage_seuser_t **) arg1;
-	const semanage_seuser_t **u2 = (const semanage_seuser_t **) arg2;
+	const semanage_seuser_t *const *u1 = (const semanage_seuser_t *const *) arg1;
+	const semanage_seuser_t *const *u2 = (const semanage_seuser_t *const *) arg2;
 	const char *name1 = semanage_seuser_get_name(*u1);
 	const char *name2 = semanage_seuser_get_name(*u2);
 
@@ -755,14 +774,20 @@ static int seuser_sort_func(const void *arg1, const void *arg2)
 	return strcmp(name1, name2);
 }
 
-static int user_sort_func(semanage_user_t ** arg1, semanage_user_t ** arg2)
+static int user_sort_func(const void *arg1, const void *arg2)
 {
-	return strcmp(semanage_user_get_name(*arg1),
-		      semanage_user_get_name(*arg2));
+	const semanage_user_t *const *user1 = arg1;
+	const semanage_user_t *const *user2 = arg2;
+
+	return strcmp(semanage_user_get_name(*user1),
+		      semanage_user_get_name(*user2));
 }
 
-static int name_user_cmp(char *key, semanage_user_t ** val)
+static int name_user_cmp(const void *arg1, const void *arg2)
 {
+	const char *key = arg1;
+	const semanage_user_t *const *val = arg2;
+
 	return strcmp(key, semanage_user_get_name(*val));
 }
 
@@ -985,9 +1010,6 @@ static int add_user(genhomedircon_settings_t * s,
 		rbuflen = 1024;
 	else if (rbuflen <= 0)
 		goto cleanup;
-	rbuf = malloc(rbuflen);
-	if (rbuf == NULL)
-		goto cleanup;
 
 	if (user) {
 		prefix = semanage_user_get_prefix(user);
@@ -1005,7 +1027,17 @@ static int add_user(genhomedircon_settings_t * s,
 		homedir_role = prefix;
 	}
 
+retry:
+	rbuf = malloc(rbuflen);
+	if (rbuf == NULL)
+		goto cleanup;
+
 	retval = getpwnam_r(name, &pwstorage, rbuf, rbuflen, &pwent);
+	if (retval == ERANGE && rbuflen < LONG_MAX / 2) {
+		free(rbuf);
+		rbuflen *= 2;
+		goto retry;
+	}
 	if (retval != 0 || pwent == NULL) {
 		if (retval != 0 && retval != ENOENT) {
 			goto cleanup;
@@ -1099,7 +1131,7 @@ static int get_group_users(genhomedircon_settings_t * s,
 		goto cleanup;
 
 	if (group == NULL) {
-		ERR(s->h_semanage, "Can't find group named %s\n", grname);
+		ERR(s->h_semanage, "Can't find group named %s.", grname);
 		goto cleanup;
 	}
 
@@ -1175,8 +1207,7 @@ static genhomedircon_user_entry_t *get_users(genhomedircon_settings_t * s,
 
 	qsort(seuser_list, nseusers, sizeof(semanage_seuser_t *),
 	      &seuser_sort_func);
-	qsort(user_list, nusers, sizeof(semanage_user_t *),
-	      (int (*)(const void *, const void *))&user_sort_func);
+	qsort(user_list, nusers, sizeof(semanage_user_t *), user_sort_func);
 
 	for (i = 0; i < nseusers; i++) {
 		seuname = semanage_seuser_get_sename(seuser_list[i]);
@@ -1186,9 +1217,7 @@ static genhomedircon_user_entry_t *get_users(genhomedircon_settings_t * s,
 			continue;
 
 		/* find the user structure given the name */
-		u = bsearch(seuname, user_list, nusers, sizeof(semanage_user_t *),
-			    (int (*)(const void *, const void *))
-			    &name_user_cmp);
+		u = bsearch(seuname, user_list, nusers, sizeof(semanage_user_t *), name_user_cmp);
 
 		/* %groupname syntax */
 		if (name[0] == '%') {
@@ -1365,7 +1394,7 @@ done:
 
 int semanage_genhomedircon(semanage_handle_t * sh,
 			   sepol_policydb_t * policydb,
-			   int usepasswd, 
+			   int usepasswd,
 			   char *ignoredirs)
 {
 	genhomedircon_settings_t s;
@@ -1403,7 +1432,7 @@ int semanage_genhomedircon(semanage_handle_t * sh,
 	s.h_semanage = sh;
 	s.policydb = policydb;
 
-	if (!(out = fopen(s.fcfilepath, "w"))) {
+	if (!(out = fopen(s.fcfilepath, "we"))) {
 		/* couldn't open output file */
 		ERR(sh, "Could not open the file_context file for writing");
 		retval = STATUS_ERR;
@@ -1414,7 +1443,8 @@ int semanage_genhomedircon(semanage_handle_t * sh,
 
 done:
 	if (out != NULL)
-		fclose(out);
+		if (fclose(out) != 0 && errno != EINTR)
+			retval = STATUS_ERR;
 
 	while (s.fallback)
 		pop_user_entry(&(s.fallback));

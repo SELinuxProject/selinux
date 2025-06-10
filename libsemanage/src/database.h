@@ -30,7 +30,7 @@ typedef struct record_table {
 	/* Free record key */
 	void (*key_free) (record_key_t * key);
 
-	/* Return 0 if the record matches the key, 
+	/* Return 0 if the record matches the key,
 	 * -1 if the key represents a record that should
 	 * be ordered before this record, and 1 if vice-versa */
 	int (*compare) (const record_t * rec, const record_key_t * key);
@@ -43,7 +43,7 @@ typedef struct record_table {
 	/* Same as above, but dereferences the pointer first.
 	 * This function is intenteded to be used as a qsort
 	 * comparator. */
-	int (*compare2_qsort) (const record_t ** rec, const record_t ** rec2);
+	int (*compare2_qsort) (const void * rec, const void * rec2);
 
 	/* Deep-copy clone of this record */
 	int (*clone) (struct semanage_handle * handle,
@@ -60,7 +60,7 @@ typedef struct dbase_table {
 	/* --------------- Database Functionality ----------- */
 
 	/* Note: In all the functions below, the key is property
-	 * of the caller, and will not be modified by the database. 
+	 * of the caller, and will not be modified by the database.
 	 * In add/set/modify, the data is also property of the caller */
 
 	/* Add the specified record to
@@ -69,8 +69,8 @@ typedef struct dbase_table {
 		    dbase_t * dbase,
 		    const record_key_t * key, const record_t * data);
 
-	/* Add the specified record to the  
-	 * database if it not present. 
+	/* Add the specified record to the
+	 * database if it not present.
 	 * If it's present, replace it
 	 */
 	int (*modify) (struct semanage_handle * handle,
@@ -89,12 +89,12 @@ typedef struct dbase_table {
 		    dbase_t * dbase, const record_key_t * key);
 
 	/* Clear all records, and leave the database in
-	 * cached, modified state. This function does 
+	 * cached, modified state. This function does
 	 * not require a call to cache() */
 	int (*clear) (struct semanage_handle * handle, dbase_t * dbase);
 
-	/* Retrieve a record 
-	 * 
+	/* Retrieve a record
+	 *
 	 * Note: the resultant record
 	 * becomes property of the caller, and
 	 * must be freed accordingly */
@@ -112,17 +112,17 @@ typedef struct dbase_table {
 	int (*count) (struct semanage_handle * handle,
 		      dbase_t * dbase, unsigned int *response);
 
-	/* Execute the specified handler over 
+	/* Execute the specified handler over
 	 * the records of this database. The handler
 	 * can signal a successful exit by returning 1,
 	 * an error exit by returning -1, and continue by
 	 * returning 0
-	 * 
+	 *
 	 * Note: The record passed into the iterate handler
 	 * may or may not persist after the handler invocation,
 	 * and writing to it has unspecified behavior. It *must*
 	 * be cloned if modified, or preserved.
-	 * 
+	 *
 	 * Note: The iterate handler may not invoke any other
 	 * semanage read functions outside a transaction. It is only
 	 * reentrant while in transaction. The iterate handler may
@@ -134,9 +134,9 @@ typedef struct dbase_table {
 				   void *varg), void *fn_arg);
 
 	/* Construct a list of all records in this database
-	 * 
+	 *
 	 * Note: The list returned becomes property of the caller,
-	 * and must be freed accordingly. 
+	 * and must be freed accordingly.
 	 */
 	int (*list) (struct semanage_handle * handle,
 		     dbase_t * dbase,
@@ -166,7 +166,7 @@ typedef struct dbase_table {
 	/* Retrieves the record table for this database,
 	 * which specifies how to perform basic operations
 	 * on each record. */
-	record_table_t *(*get_rtable) (dbase_t * dbase);
+	const record_table_t *(*get_rtable) (dbase_t * dbase);
 
 } dbase_table_t;
 
@@ -176,7 +176,7 @@ typedef struct dbase_config {
 	dbase_t *dbase;
 
 	/* Database methods */
-	dbase_table_t *dtable;
+	const dbase_table_t *dtable;
 
 } dbase_config_t;
 

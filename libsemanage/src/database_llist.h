@@ -17,8 +17,8 @@ typedef struct cache_entry {
 typedef struct dbase_llist {
 
 	/* Method tables */
-	record_table_t *rtable;
-	dbase_table_t *dtable;
+	const record_table_t *rtable;
+	const dbase_table_t *dtable;
 
 	/* In-memory representation (cache) */
 	cache_entry_t *cache;
@@ -42,8 +42,8 @@ static inline void dbase_llist_cache_init(dbase_llist_t * dbase)
 }
 
 static inline void dbase_llist_init(dbase_llist_t * dbase,
-				    record_table_t * rtable,
-				    dbase_table_t * dtable)
+				    const record_table_t * rtable,
+				    const dbase_table_t * dtable)
 {
 
 	dbase->rtable = rtable;
@@ -69,14 +69,14 @@ static inline void dbase_llist_set_modified(dbase_llist_t * dbase, int status)
 /* LLIST - cache/transactions */
 extern void dbase_llist_drop_cache(dbase_llist_t * dbase);
 
-static inline int dbase_llist_is_modified(dbase_llist_t * dbase)
+static inline int dbase_llist_is_modified(const dbase_llist_t * dbase)
 {
 
 	return dbase->modified;
 }
 
 /* LLIST - polymorphism */
-static inline record_table_t *dbase_llist_get_rtable(dbase_llist_t * dbase)
+static inline const record_table_t *dbase_llist_get_rtable(const dbase_llist_t * dbase)
 {
 	return dbase->rtable;
 }

@@ -6,7 +6,9 @@ MANDIR = $(PREFIX)/share/man
 AUDITH ?= $(shell test -f /usr/include/libaudit.h && echo y)
 
 CFLAGS ?= -g -Werror -Wall -W
-override LDLIBS += -lselinux -lsepol -lpthread
+override CFLAGS += -I../../libselinux/include
+override LDFLAGS+= -L../../libselinux/src
+override LDLIBS += $(LIBSELINUX_LDLIBS) -lsepol -lpthread
 
 ifeq ($(AUDITH), y)
 	override CFLAGS += -DUSE_AUDIT

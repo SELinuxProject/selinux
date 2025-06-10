@@ -8,7 +8,7 @@
 #include "handle.h"
 
 /* IFACE RECORD: method table */
-extern record_table_t SEMANAGE_IFACE_RTABLE;
+extern const record_table_t SEMANAGE_IFACE_RTABLE;
 
 extern int iface_policydb_dbase_init(semanage_handle_t * handle,
 				     dbase_config_t * dconfig);

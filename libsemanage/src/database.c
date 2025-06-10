@@ -6,7 +6,7 @@
 #include "database.h"
 #include "debug.h"
 
-static int assert_init(semanage_handle_t * handle, dbase_config_t * dconfig)
+static int assert_init(semanage_handle_t * handle, const dbase_config_t * dconfig)
 {
 
 	if (dconfig->dtable == NULL) {

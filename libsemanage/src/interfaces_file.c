@@ -19,7 +19,7 @@ typedef struct dbase_file dbase_t;
 #include "debug.h"
 
 static int iface_print(semanage_handle_t * handle,
-		       semanage_iface_t * iface, FILE * str)
+		       const semanage_iface_t * iface, FILE * str)
 {
 
 	char *con_str = NULL;
@@ -145,7 +145,7 @@ static int iface_parse(semanage_handle_t * handle,
 }
 
 /* IFACE RECORD: FILE extension: method table */
-record_file_table_t SEMANAGE_IFACE_FILE_RTABLE = {
+static const record_file_table_t SEMANAGE_IFACE_FILE_RTABLE = {
 	.parse = iface_parse,
 	.print = iface_print,
 };

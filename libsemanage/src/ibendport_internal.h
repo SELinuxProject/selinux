@@ -8,7 +8,7 @@
 #include "handle.h"
 
 /* IBENDPORT RECORD: method table */
-extern record_table_t SEMANAGE_IBENDPORT_RTABLE;
+extern const record_table_t SEMANAGE_IBENDPORT_RTABLE;
 
 extern int ibendport_file_dbase_init(semanage_handle_t *handle,
 				     const char *path_ro,
@@ -26,7 +26,6 @@ extern int semanage_ibendport_validate_local(semanage_handle_t *handle);
 
 /* ==== Internal (to ibendports) API === */
 
- int semanage_ibendport_compare2_qsort(const semanage_ibendport_t **ibendport,
-					     const semanage_ibendport_t **ibendport2);
+ int semanage_ibendport_compare2_qsort(const void *p1, const void *p2);
 
 #endif

@@ -53,7 +53,11 @@ int security_get_boolean_names(char ***names, int *len)
 
 	snprintf(path, sizeof path, "%s%s", selinux_mnt, SELINUX_BOOL_DIR);
 	*len = scandir(path, &namelist, &filename_select, alphasort);
-	if (*len <= 0) {
+	if (*len < 0) {
+		return -1;
+	}
+	if (*len == 0) {
+		free(namelist);
 		errno = ENOENT;
 		return -1;
 	}

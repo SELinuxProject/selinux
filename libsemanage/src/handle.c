@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2004-2005 Tresys Technology, LLC
  * Copyright (C) 2005 Red Hat, Inc.
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
@@ -45,6 +45,8 @@ int semanage_set_root(const char *root)
 {
 	free(private_semanage_root);
 	private_semanage_root = strdup(root);
+	if (!private_semanage_root)
+		return -1;
 	return 0;
 }
 
@@ -57,17 +59,12 @@ const char * semanage_root(void)
 	return private_semanage_root;
 }
 
-
-semanage_handle_t *semanage_handle_create(void)
+semanage_handle_t *semanage_handle_create_with_path(const char *conf_name)
 {
 	semanage_handle_t *sh = NULL;
-	char *conf_name = NULL;
 
 	/* Allocate handle */
 	if ((sh = calloc(1, sizeof(semanage_handle_t))) == NULL)
-		goto err;
-
-	if ((conf_name = semanage_conf_path()) == NULL)
 		goto err;
 
 	if ((sh->conf = semanage_conf_parse(conf_name)) == NULL)
@@ -104,13 +101,30 @@ semanage_handle_t *semanage_handle_create(void)
 	sh->msg_callback = semanage_msg_default_handler;
 	sh->msg_callback_arg = NULL;
 
+	return sh;
+
+      err:
+	semanage_handle_destroy(sh);
+	return NULL;
+}
+
+semanage_handle_t *semanage_handle_create(void)
+{
+	semanage_handle_t *sh = NULL;
+	char *conf_name = NULL;
+
+	if ((conf_name = semanage_conf_path()) == NULL)
+		goto err;
+
+	if ((sh = semanage_handle_create_with_path(conf_name)) == NULL)
+		goto err;
+
 	free(conf_name);
 
 	return sh;
 
       err:
 	free(conf_name);
-	semanage_handle_destroy(sh);
 	return NULL;
 }
 
@@ -136,22 +150,20 @@ void semanage_set_check_ext_changes(semanage_handle_t * sh, int do_check)
 }
 
 int semanage_get_hll_compiler_path(semanage_handle_t *sh,
-				char *lang_ext,
+				const char *lang_ext,
 				char **compiler_path)
 {
-	assert(sh != NULL);
-	assert(lang_ext != NULL);
-
-	int i;
+	size_t i;
 	int status = 0;
-	int num_printed = 0;
-	size_t len;
 	char *compiler = NULL;
 	char *lower_lang_ext = NULL;
 
+	assert(sh != NULL);
+	assert(lang_ext != NULL);
+
 	lower_lang_ext = strdup(lang_ext);
 	if (lower_lang_ext == NULL) {
-		ERR(sh, "Could not create copy of lang_ext. Out of memory.\n");
+		ERR(sh, "Could not create copy of lang_ext. Out of memory.");
 		status = -1;
 		goto cleanup;
 	}
@@ -160,17 +172,7 @@ int semanage_get_hll_compiler_path(semanage_handle_t *sh,
 		lower_lang_ext[i] = tolower(lower_lang_ext[i]);
 	}
 
-	len = strlen(sh->conf->compiler_directory_path) + strlen("/") + strlen(lower_lang_ext) + 1;
-
-	compiler = malloc(len * sizeof(*compiler));
-	if (compiler == NULL) {
-		ERR(sh, "Error allocating space for compiler path.");
-		status = -1;
-		goto cleanup;
-	}
-
-	num_printed = snprintf(compiler, len, "%s/%s", sh->conf->compiler_directory_path, lower_lang_ext);
-	if (num_printed < 0 || (int)num_printed >= (int)len) {
+	if (asprintf(&compiler, "%s/%s", sh->conf->compiler_directory_path, lower_lang_ext) < 0) {
 		ERR(sh, "Error creating compiler path.");
 		status = -1;
 		goto cleanup;
@@ -181,10 +183,6 @@ int semanage_get_hll_compiler_path(semanage_handle_t *sh,
 
 cleanup:
 	free(lower_lang_ext);
-	if (status != 0) {
-		free(compiler);
-	}
-
 	return status;
 }
 
@@ -194,7 +192,6 @@ void semanage_set_create_store(semanage_handle_t * sh, int create_store)
 	assert(sh != NULL);
 
 	sh->create_store = create_store;
-	return;
 }
 
 int semanage_get_disable_dontaudit(semanage_handle_t * sh)
@@ -207,9 +204,8 @@ int semanage_get_disable_dontaudit(semanage_handle_t * sh)
 void semanage_set_disable_dontaudit(semanage_handle_t * sh, int disable_dontaudit)
 {
 	assert(sh != NULL);
-	
+
 	sepol_set_disable_dontaudit(sh->sepolh, disable_dontaudit);
-	return;
 }
 
 int semanage_get_preserve_tunables(semanage_handle_t * sh)
@@ -244,7 +240,6 @@ void semanage_set_check_contexts(semanage_handle_t * sh, int do_check_contexts)
 	assert(sh != NULL);
 
 	sh->do_check_contexts = do_check_contexts;
-	return;
 }
 
 uint16_t semanage_get_default_priority(semanage_handle_t *sh)
@@ -273,20 +268,18 @@ int semanage_is_connected(semanage_handle_t * sh)
 	return sh->is_connected;
 }
 
-void semanage_select_store(semanage_handle_t * sh, char *storename,
+void semanage_select_store(semanage_handle_t * sh, const char *storename,
 			   enum semanage_connect_type storetype)
 {
 
 	assert(sh != NULL);
 
-	/* This just sets the storename to what the user requests, no 
+	/* This just sets the storename to what the user requests, no
 	   verification of existence will be done until connect */
 	free(sh->conf->store_path);
 	sh->conf->store_path = strdup(storename);
 	assert(sh->conf->store_path); /* no way to return failure */
 	sh->conf->store_type = storetype;
-
-	return;
 }
 
 void semanage_set_store_root(semanage_handle_t *sh, const char *store_root)
@@ -296,8 +289,6 @@ void semanage_set_store_root(semanage_handle_t *sh, const char *store_root)
 	free(sh->conf->store_root_path);
 	sh->conf->store_root_path = strdup(store_root);
 	assert(sh->conf->store_root_path); /* no way to return failure */
-
-	return;
 }
 
 int semanage_is_managed(semanage_handle_t * sh)
@@ -361,19 +352,16 @@ int semanage_access_check(semanage_handle_t * sh)
 	default:
 		return -1;
 	}
-
-	return -1;		/* unreachable */
 }
 
 
 int semanage_disconnect(semanage_handle_t * sh)
 {
-	assert(sh != NULL && sh->funcs != NULL
-	       && sh->funcs->disconnect != NULL);
+	assert(sh != NULL);
 	if (!sh->is_connected) {
 		return 0;
 	}
-	if (sh->funcs->disconnect(sh) < 0) {
+	if (sh->funcs && sh->funcs->disconnect(sh) < 0) {
 		return -1;
 	}
 	sh->is_in_transaction = 0;

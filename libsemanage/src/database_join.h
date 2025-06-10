@@ -33,8 +33,8 @@ typedef struct record_join_table {
 
 /* JOIN - initialization */
 extern int dbase_join_init(semanage_handle_t * handle,
-			   record_table_t * rtable,
-			   record_join_table_t * rjtable,
+			   const record_table_t * rtable,
+			   const record_join_table_t * rjtable,
 			   dbase_config_t * join1,
 			   dbase_config_t * join2, dbase_join_t ** dbase);
 
@@ -42,6 +42,6 @@ extern int dbase_join_init(semanage_handle_t * handle,
 extern void dbase_join_release(dbase_join_t * dbase);
 
 /* JOIN - method table implementation */
-extern dbase_table_t SEMANAGE_JOIN_DTABLE;
+extern const dbase_table_t SEMANAGE_JOIN_DTABLE;
 
 #endif

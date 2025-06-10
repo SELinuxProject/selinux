@@ -43,13 +43,12 @@
 #include <unistd.h>
 #include <CUnit/Basic.h>
 
-extern semanage_handle_t *sh;
-const char *rootpath = "./test-policy";
-const char *polpath = "./test-policy/store/";
-const char *readlockpath = "./test-policy/store/semanage.read.LOCK";
-const char *translockpath = "./test-policy/store/semanage.trans.LOCK";
-const char *actpath = "./test-policy/store/active";
-const char *modpath = "./test-policy/store/active/modules";
+static const char *const rootpath = "./test-policy";
+static const char *const polpath = "./test-policy/store/";
+static const char *const readlockpath = "./test-policy/store/semanage.read.LOCK";
+static const char *const translockpath = "./test-policy/store/semanage.trans.LOCK";
+static const char *const actpath = "./test-policy/store/active";
+static const char *const modpath = "./test-policy/store/active/modules";
 
 /* The suite initialization function.
  * Returns zero on success, non-zero otherwise.
@@ -124,7 +123,7 @@ int semanage_store_test_cleanup(void)
 	return 0;
 }
 
-/* Adds all the tests needed for this suite. 
+/* Adds all the tests needed for this suite.
  */
 int semanage_store_add_tests(CU_pSuite suite)
 {

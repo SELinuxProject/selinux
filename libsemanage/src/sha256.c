@@ -180,7 +180,7 @@ void
     (
         Sha256Context*      Context,        // [in out]
         void const*         Buffer,         // [in]
-        uint32_t            BufferSize      // [in]
+        size_t              BufferSize      // [in]
     )
 {
     uint32_t n;
@@ -194,9 +194,9 @@ void
     {
         if( Context->curlen == 0 && BufferSize >= BLOCK_SIZE )
         {
-           TransformFunction( Context, (uint8_t*)Buffer );
+           TransformFunction( Context, (const uint8_t*)Buffer );
            Context->length += BLOCK_SIZE * 8;
-           Buffer = (uint8_t*)Buffer + BLOCK_SIZE;
+           Buffer = (const uint8_t*)Buffer + BLOCK_SIZE;
            BufferSize -= BLOCK_SIZE;
         }
         else
@@ -204,7 +204,7 @@ void
            n = MIN( BufferSize, (BLOCK_SIZE - Context->curlen) );
            memcpy( Context->buf + Context->curlen, Buffer, (size_t)n );
            Context->curlen += n;
-           Buffer = (uint8_t*)Buffer + n;
+           Buffer = (const uint8_t*)Buffer + n;
            BufferSize -= n;
            if( Context->curlen == BLOCK_SIZE )
            {
@@ -282,7 +282,7 @@ void
     Sha256Calculate
     (
         void  const*        Buffer,         // [in]
-        uint32_t            BufferSize,     // [in]
+        size_t              BufferSize,     // [in]
         SHA256_HASH*        Digest          // [in]
     )
 {

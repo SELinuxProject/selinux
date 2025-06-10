@@ -21,20 +21,14 @@
 #include "queue.h"
 #include "module_compiler.h"
 
-union stack_item_u {
-	avrule_block_t *avrule;
-	cond_list_t *cond_list;
-};
-
 typedef struct scope_stack {
-	union stack_item_u u;
-	int type;		/* for above union: 1 = avrule block, 2 = conditional */
+	int type;		/* 1 = avrule block, 2 = conditional */
 	avrule_decl_t *decl;	/* if in an avrule block, which
 				 * declaration is current */
 	avrule_t *last_avrule;
 	int in_else;		/* if in an avrule block, within ELSE branch */
 	int require_given;	/* 1 if this block had at least one require */
-	struct scope_stack *parent, *child;
+	struct scope_stack *parent;
 } scope_stack_t;
 
 extern policydb_t *policydbp;
@@ -75,7 +69,7 @@ static void print_error_msg(int ret, uint32_t symbol_type)
 		yyerror2("Could not declare %s here", flavor_str[symbol_type]);
 		break;
 	default:
-		yyerror("Unknown error");
+		yyerror2("Unknown error %d", ret);
 	}
 }
 
@@ -86,7 +80,7 @@ int define_policy(int pass, int module_header_given)
 	if (module_header_given) {
 		if (policydbp->policy_type != POLICY_MOD) {
 			yyerror
-			    ("Module specification found while not building a policy module.\n");
+			    ("Module specification found while not building a policy module.");
 			return -1;
 		}
 
@@ -111,7 +105,7 @@ int define_policy(int pass, int module_header_given)
 	} else {
 		if (policydbp->policy_type == POLICY_MOD) {
 			yyerror
-			    ("Building a policy module, but no module specification found.\n");
+			    ("Building a policy module, but no module specification found.");
 			return -1;
 		}
 	}
@@ -196,7 +190,7 @@ static int create_symbol(uint32_t symbol_type, hashtab_key_t key, hashtab_datum_
  * not be restricted pointers. */
 int declare_symbol(uint32_t symbol_type,
 		   hashtab_key_t key, hashtab_datum_t datum,
-		   uint32_t * dest_value, uint32_t * datum_value)
+		   uint32_t * dest_value, const uint32_t * datum_value)
 {
 	avrule_decl_t *decl = stack_top->decl;
 	int ret = create_symbol(symbol_type, key, datum, dest_value, SCOPE_DECL);
@@ -234,6 +228,7 @@ static int role_implicit_bounds(hashtab_t roles_tab,
 	if (!bounds) {
 		yyerror2("role %s doesn't exist, is implicit bounds of %s",
 			 bounds_id, role_id);
+		free(bounds_id);
 		return -1;
 	}
 
@@ -243,6 +238,7 @@ static int role_implicit_bounds(hashtab_t roles_tab,
 		yyerror2("role %s has inconsistent bounds %s/%s",
 			 role_id, bounds_id,
 			 policydbp->p_role_val_to_name[role->bounds - 1]);
+		free(bounds_id);
 		return -1;
 	}
 	free(bounds_id);
@@ -282,9 +278,8 @@ static int create_role(uint32_t scope, unsigned char isattr, role_datum_t **role
 		ret = require_symbol(SYM_ROLES, id, datum, &value, &value);
 	}
 
-	datum->s.value = value;
-
 	if (ret == 0) {
+		datum->s.value = value;
 		*role = datum;
 		*key = strdup(id);
 		if (*key == NULL) {
@@ -296,11 +291,13 @@ static int create_role(uint32_t scope, unsigned char isattr, role_datum_t **role
 		if (*role && (isattr != (*role)->flavor)) {
 			yyerror2("Identifier %s used as both an attribute and a role",
 				 id);
+			*role = NULL;
 			free(id);
 			role_datum_destroy(datum);
 			free(datum);
 			return -1;
 		}
+		datum->s.value = value;
 		*role = datum;
 		*key = id;
 	} else {
@@ -432,6 +429,7 @@ static int create_type(uint32_t scope, unsigned char isattr, type_datum_t **type
 		if (*type && (isattr != (*type)->flavor)) {
 			yyerror2("Identifier %s used as both an attribute and a type",
 				 id);
+			*type = NULL;
 			free(id);
 			return -1;
 		}
@@ -479,6 +477,7 @@ static int user_implicit_bounds(hashtab_t users_tab,
 	if (!bounds) {
 		yyerror2("user %s doesn't exist, is implicit bounds of %s",
 			 bounds_id, user_id);
+		free(bounds_id);
 		return -1;
 	}
 
@@ -488,6 +487,7 @@ static int user_implicit_bounds(hashtab_t users_tab,
 		yyerror2("user %s has inconsistent bounds %s/%s",
 			 user_id, bounds_id,
 			 policydbp->p_role_val_to_name[user->bounds - 1]);
+		free(bounds_id);
 		return -1;
 	}
 	free(bounds_id);
@@ -525,9 +525,8 @@ static int create_user(uint32_t scope, user_datum_t **user, char **key)
 		ret = require_symbol(SYM_USERS, id, datum, &value, &value);
 	}
 
-	datum->s.value = value;
-
 	if (ret == 0) {
+		datum->s.value = value;
 		*user = datum;
 		*key = strdup(id);
 		if (*key == NULL) {
@@ -535,6 +534,7 @@ static int create_user(uint32_t scope, user_datum_t **user, char **key)
 			return -1;
 		}
 	} else if (ret == 1) {
+		datum->s.value = value;
 		*user = datum;
 		*key = id;
 	} else {
@@ -1460,12 +1460,12 @@ static int push_stack(int stack_type, ...)
 	va_start(ap, stack_type);
 	switch (s->type = stack_type) {
 	case 1:{
-			s->u.avrule = va_arg(ap, avrule_block_t *);
+			va_arg(ap, avrule_block_t *);
 			s->decl = va_arg(ap, avrule_decl_t *);
 			break;
 		}
 	case 2:{
-			s->u.cond_list = va_arg(ap, cond_list_t *);
+			va_arg(ap, cond_list_t *);
 			break;
 		}
 	default:
@@ -1474,7 +1474,6 @@ static int push_stack(int stack_type, ...)
 	}
 	va_end(ap);
 	s->parent = stack_top;
-	s->child = NULL;
 	stack_top = s;
 	return 0;
 }
@@ -1486,9 +1485,17 @@ static void pop_stack(void)
 	scope_stack_t *parent;
 	assert(stack_top != NULL);
 	parent = stack_top->parent;
-	if (parent != NULL) {
-		parent->child = NULL;
-	}
 	free(stack_top);
 	stack_top = parent;
 }
+
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+void module_compiler_reset(void)
+{
+	while (stack_top)
+		pop_stack();
+
+	last_block = NULL;
+	next_decl_id = 1;
+}
+#endif
