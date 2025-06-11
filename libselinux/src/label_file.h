@@ -390,7 +390,7 @@ static inline void sort_specs(struct saved_data *data)
 	sort_spec_node(data->root, NULL);
 }
 
-static inline int compile_regex(struct regex_spec *spec, char *errbuf, size_t errbuf_size)
+static int compile_regex(struct regex_spec *spec, char *errbuf, size_t errbuf_size)
 {
 	const char *reg_buf;
 	char *anchored_regex, *cp;
