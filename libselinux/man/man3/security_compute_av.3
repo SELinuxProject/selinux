@@ -181,6 +181,11 @@ function.
 .SH "RETURN VALUE"
 Returns zero on success or \-1 on error.
 .
+.SH "CAVEATS"
+.sp
+These functions are not thread-safe, you have to protect them from
+concurrent calls using exclusive locks when multiple threads are executing.
+.
 .SH "SEE ALSO"
 .BR string_to_security_class (3),
 .BR string_to_av_perm (3),

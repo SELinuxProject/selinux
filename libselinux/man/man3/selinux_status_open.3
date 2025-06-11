@@ -82,10 +82,6 @@ Thus, don't use this value to know actual times of policy reloaded.
 .BR selinux_status_deny_unknown ()
 returns 0 if SELinux treats policy queries on undefined object classes or
 permissions as being allowed, 1 if such queries are denied, or \-1 on error.
-.sp
-Also note that these interfaces are not thread-safe, so you have to protect
-them from concurrent calls using exclusive locks when multiple threads are
-performing.
 .
 .SH "RETURN VALUE"
 .BR selinux_status_open ()
@@ -95,6 +91,11 @@ On error, \-1 shall be returned.
 .sp
 Any other functions with a return value shall return its characteristic
 value as described above, or \-1 on errors.
+.
+.SH "CAVEATS"
+.sp
+These functions are not thread-safe, you have to protect them from
+concurrent calls using exclusive locks when multiple threads are executing.
 .
 .SH "SEE ALSO"
 .ad l
