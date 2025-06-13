@@ -2598,6 +2598,8 @@ static int write_genfscon_rules_to_conf(FILE *out, struct policydb *pdb)
 	uint32_t sclass;
 	const char *file_type;
 	int rc;
+	int wildcard = ebitmap_get_bit(&pdb->policycaps, POLICYDB_CAP_GENFS_SECLABEL_WILDCARD);
+	size_t name_len;
 
 	rc = strs_init(&strs, 32);
 	if (rc != 0) {
@@ -2639,12 +2641,22 @@ static int write_genfscon_rules_to_conf(FILE *out, struct policydb *pdb)
 				goto exit;
 			}
 
+			name_len = strlen(name);
+			if (wildcard) {
+				if (name_len == 0 || name[name_len - 1] != '*') {
+					ERR(NULL, "genfscon path must end with '*' when genfs_seclabel_wildcard");
+					rc = -1;
+					goto exit;
+				}
+				--name_len;
+			}
+
 			if (file_type) {
-				rc = strs_create_and_add(strs, "genfscon %s \"%s\" %s %s",
-										 fstype, name, file_type, ctx);
+				rc = strs_create_and_add(strs, "genfscon %s \"%.*s\" %s %s",
+				                         fstype, (int)name_len, name, file_type, ctx);
 			} else {
-				rc = strs_create_and_add(strs, "genfscon %s \"%s\" %s",
-										 fstype, name, ctx);
+				rc = strs_create_and_add(strs, "genfscon %s \"%.*s\" %s",
+				                         fstype, (int)name_len, name, ctx);
 			}
 			free(ctx);
 			if (rc != 0) {

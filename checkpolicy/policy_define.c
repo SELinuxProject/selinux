@@ -6010,6 +6010,7 @@ static int define_genfs_context_helper(char *fstype, int has_type)
 	char *type = NULL;
 	const char *sclass;
 	size_t len, len2;
+	int wildcard = ebitmap_get_bit(&policydbp->policycaps, POLICYDB_CAP_GENFS_SECLABEL_WILDCARD);
 
 	if (policydbp->target_platform != SEPOL_TARGET_SELINUX) {
 		yyerror("genfs not supported for target");
@@ -6060,6 +6061,19 @@ static int define_genfs_context_helper(char *fstype, int has_type)
 	newc->u.name = (char *)queue_remove(id_queue);
 	if (!newc->u.name)
 		goto fail;
+
+	if (wildcard) {
+		size_t name_len = strlen(newc->u.name);
+		newc->u.name = realloc(newc->u.name, name_len + 2);
+		if (newc->u.name == NULL) {
+			yyerror("out of memory");
+			return -1;
+		}
+
+		newc->u.name[name_len] = '*';
+		newc->u.name[name_len + 1] = '\0';
+	}
+
 	if (has_type) {
 		type = (char *)queue_remove(id_queue);
 		if (!type)
