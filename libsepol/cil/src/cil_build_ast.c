@@ -145,6 +145,9 @@ static int cil_allow_multiple_decls(struct cil_db *db, enum cil_flavor f_new, en
 	case CIL_OPTIONAL:
 		return CIL_TRUE;
 		break;
+	case CIL_POLICYCAP:
+		return CIL_TRUE;
+		break;
 	default:
 		break;
 	}
@@ -5559,8 +5562,14 @@ int cil_gen_policycap(struct cil_db *db, struct cil_tree_node *parse_current, st
 	key = parse_current->next->data;
 
 	rc = cil_gen_node(db, ast_node, (struct cil_symtab_datum*)polcap, (hashtab_key_t)key, CIL_SYM_POLICYCAPS, CIL_POLICYCAP);
-	if (rc != SEPOL_OK)
-		goto exit;
+	if (rc != SEPOL_OK) {
+		if (rc == SEPOL_EEXIST) {
+			cil_destroy_policycap(polcap);
+			polcap = NULL;
+		} else {
+			goto exit;
+		}
+	}
 
 	return SEPOL_OK;
 
