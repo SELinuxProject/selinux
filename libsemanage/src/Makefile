@@ -58,7 +58,7 @@ CFLAGS ?= -Werror -Wall -W -Wundef -Wshadow -Wmissing-noreturn -Wmissing-format-
 	  -fno-semantic-interposition
 
 SWIG_CFLAGS += -Wno-error -Wno-unused-but-set-variable -Wno-unused-variable -Wno-shadow \
-		-Wno-unused-parameter -Wno-missing-prototypes
+		-Wno-unused-parameter -Wno-missing-prototypes -Wno-missing-field-initializers
 
 override CFLAGS += -I../include -I../../libselinux/include -D_GNU_SOURCE
 RANLIB ?= ranlib
