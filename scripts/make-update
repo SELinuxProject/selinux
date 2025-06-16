@@ -30,7 +30,7 @@ echo "Copy $ARCHIVE from $DEST to the server and update its download link and ch
 
 echo ""
 
-echo "[http://userspace.selinuxproject.org/releases/$TAG/$ARCHIVE $ARCHIVE]"
+echo "[https://github.com/selinuxproject/selinux/releases/download/$TAG/$ARCHIVE $ARCHIVE]"
 echo ""
 echo "`sha256sum $ARCHIVE`"
 echo ""

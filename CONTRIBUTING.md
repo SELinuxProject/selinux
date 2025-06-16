@@ -8,8 +8,8 @@ You can find a list of open issues where you might contribute to the SELinux ker
 https://github.com/SELinuxProject/selinux-kernel/issues or to the SELinux userspace code at
 https://github.com/SELinuxProject/selinux/issues.
 
-See the selinuxproject.org [user resources
-page](http://selinuxproject.org/page/User_Resources) for more
+See the SELinux userspace
+[wiki page](https://github.com/selinuxproject/selinux/wiki) for more
 information on mailing lists, documentation, and other resources.
 
 ## Reporting Bugs

@@ -358,7 +358,7 @@ The user `test` cannot have greater privileges than `unconfined.user`:
 userprefix
 ----------
 
-Declare a user prefix that will be replaced by the file labeling utilities described at [http://selinuxproject.org/page/PolicyStoreConfigurationFiles](http://selinuxproject.org/page/PolicyStoreConfigurationFiles#file_contexts.template_File) that details the `file_contexts` entries.
+Declare a user prefix that will be replaced by the file labeling utilities described at [https://github.com/SELinuxProject/selinux-notebook/blob/main/src/policy_store_config_files.md](https://github.com/SELinuxProject/selinux-notebook/blob/main/src/policy_store_config_files.md#building-the-file-labeling-support-files) that details the `file_contexts` entries.
 
 **Statement definition:**
 

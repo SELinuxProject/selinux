@@ -6,7 +6,7 @@ includedir=@includedir@
 Name: libsemanage
 Description: SELinux management library
 Version: @VERSION@
-URL: http://userspace.selinuxproject.org/
+URL: https://github.com/selinuxproject/selinux/wiki/Releases
 Requires.private: libselinux libsepol
 Libs: -L${libdir} -lsemanage
 Libs.private: -lbz2
