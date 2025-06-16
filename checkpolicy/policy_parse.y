@@ -154,6 +154,7 @@ typedef int (* require_func_t)(int pass);
 %token PERMISSIVE
 %token NEVERAUDIT
 %token FILESYSTEM
+%token NETIFNAME
 %token DEFAULT_USER DEFAULT_ROLE DEFAULT_TYPE DEFAULT_RANGE
 %token LOW_HIGH LOW HIGH GLBLUB
 %token INVALID_CHAR
@@ -750,7 +751,7 @@ opt_netif_contexts      : netif_contexts
 netif_contexts		: netif_context_def
 			| netif_contexts netif_context_def
 			;
-netif_context_def	: NETIFCON identifier security_context_def security_context_def
+netif_context_def	: NETIFCON netifname security_context_def security_context_def
 			{if (define_netif_context()) YYABORT;}
 			;
 opt_node_contexts       : node_contexts 
@@ -903,6 +904,13 @@ path     		: PATH
 filename		: FILENAME
 			{ yytext[strlen(yytext) - 1] = '\0'; if (insert_id(yytext + 1,0)) YYABORT; }
 			;
+netifname		: NETIFNAME
+			{ if (insert_id(yytext,0)) YYABORT; }
+			| IDENTIFIER
+			{ if (insert_id(yytext,0)) YYABORT; }
+			| FILESYSTEM
+			{ if (insert_id(yytext,0)) YYABORT; }
+                        ;
 number			: NUMBER 
 			{ unsigned long x;
 			  errno = 0;
