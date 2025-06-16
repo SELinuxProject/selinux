@@ -1242,6 +1242,11 @@ static int __cil_verify_netifcon(struct cil_db *db, struct cil_tree_node *node)
 		}
 	}
 
+	if (strcmp(netif->interface_str, "?") == 0 ||
+	    strcmp(netif->interface_str, "*") == 0) {
+		goto exit;
+	}
+
 	return SEPOL_OK;
 
 exit:
