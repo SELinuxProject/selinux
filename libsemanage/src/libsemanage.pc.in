@@ -9,5 +9,5 @@ Version: @VERSION@
 URL: https://github.com/selinuxproject/selinux/wiki/Releases
 Requires.private: libselinux libsepol
 Libs: -L${libdir} -lsemanage
-Libs.private: -lbz2
+Libs.private: -laudit -lbz2
 Cflags: -I${includedir}
