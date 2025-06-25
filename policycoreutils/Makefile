@@ -3,7 +3,8 @@ SUBDIRS = setfiles load_policy newrole run_init secon sestatus semodule setseboo
 PKG_CONFIG ?= pkg-config
 
 LIBSELINUX_LDLIBS := $(shell $(PKG_CONFIG) --libs libselinux)
-export LIBSELINUX_LDLIBS
+LIBSEMANAGE_LDLIBS := $(shell $(PKG_CONFIG) --libs libsemanage)
+export LIBSELINUX_LDLIBS LIBSEMANAGE_LDLIBS
 
 all install relabel clean indent:
 	@for subdir in $(SUBDIRS); do \

@@ -7,12 +7,11 @@ MANDIR = $(PREFIX)/share/man
 CFLAGS ?= -Werror -Wall -W
 override CFLAGS += -I../../libselinux/include -I../../libsemanage/include
 override LDFLAGS+= -L../../libselinux/src     -L../../libsemanage/src
-override LDLIBS += -lsemanage -lsepol $(LIBSELINUX_LDLIBS)
+override LDLIBS += $(LIBSEMANAGE_LDLIBS) -lsepol $(LIBSELINUX_LDLIBS)
 SEMODULE_OBJS = semodule.o
 
 all: semodule genhomedircon
 
-semodule: LDLIBS += -laudit -lbz2
 semodule: $(SEMODULE_OBJS)
 
 genhomedircon:
