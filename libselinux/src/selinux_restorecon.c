@@ -439,7 +439,7 @@ static int filespec_add(ino_t ino, const char *con, const char *file,
 	file_spec_t *prevfl, *fl;
 	uint32_t h;
 	int ret;
-	struct stat64 sb;
+	struct stat sb;
 
 	__pthread_mutex_lock(&fl_mutex);
 
@@ -453,7 +453,7 @@ static int filespec_add(ino_t ino, const char *con, const char *file,
 	for (prevfl = &fl_head[h], fl = fl_head[h].next; fl;
 	     prevfl = fl, fl = fl->next) {
 		if (ino == fl->ino) {
-			ret = lstat64(fl->file, &sb);
+			ret = lstat(fl->file, &sb);
 			if (ret < 0 || sb.st_ino != ino) {
 				freecon(fl->con);
 				free(fl->file);
