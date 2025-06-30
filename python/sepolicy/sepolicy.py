@@ -25,7 +25,7 @@ import os
 import sys
 import selinux
 import sepolicy
-from multiprocessing import Pool
+import multiprocessing
 from sepolicy import get_os_version, get_conditionals, get_conditionals_format_text
 import argparse
 PROGNAME = "selinux-python"
@@ -350,7 +350,8 @@ def manpage(args):
 
     manpage_domains = set()
     manpage_roles = set()
-    p = Pool()
+    multiprocessing.set_start_method('fork')
+    p = multiprocessing.Pool()
     async_results = []
     for domain in test_domains:
         async_results.append(p.apply_async(manpage_work, [domain, path, args.root, args.source_files, args.web]))
