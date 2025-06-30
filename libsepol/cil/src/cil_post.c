@@ -2265,6 +2265,14 @@ static int __cil_post_db_classperms_helper(struct cil_tree_node *node, uint32_t 
 		}
 		break;
 	}
+	case CIL_DENY_RULE: {
+		struct cil_deny_rule *deny = node->data;
+		rc = __evaluate_classperms_list(deny->classperms, db);
+		if (rc != SEPOL_OK) {
+			goto exit;
+		}
+		break;
+	}
 	case CIL_CONSTRAIN:
 	case CIL_MLSCONSTRAIN: {
 		struct cil_constrain *constrain = node->data;
