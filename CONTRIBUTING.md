@@ -4,18 +4,31 @@ Contributing to the SELinux userspace project is a similar process to
 other open source projects. Bug reports, new features to the existing
 code, additional tools, or updated documentation are all welcome.
 
-You can find a list of open issues where you might contribute to the SELinux kernel code at
-https://github.com/SELinuxProject/selinux-kernel/issues or to the SELinux userspace code at
-https://github.com/SELinuxProject/selinux/issues.
+You can find a list of open issues to the SELinux userspace code at
+https://github.com/SELinuxProject/selinux/issues
 
-See the SELinux userspace
-[wiki page](https://github.com/selinuxproject/selinux/wiki) for more
-information on mailing lists, documentation, and other resources.
+See the SELinux kernel [Getting Started](https://github.com/selinuxproject/selinux-kernel/wiki/Getting-Started)
+guide if you want to contribute to SELinux kernel development instead.
+
+## Mailing list
+
+SELinux has a public mailing list for developers, subscribe by sending an email to
+[selinux+subscribe@vger.kernel.org](mailto:selinux+subscribe@vger.kernel.org).
+It is generally wise to read relevant postings to the list before beginning any
+area of new work. Searchable mailing list archives are available externally at
+https://lore.kernel.org/selinux/ . Patches for SELinux are tracked via
+https://patchwork.kernel.org/project/selinux/list/ .
+
+## IRC
+
+An unofficial SELinux IRC channel is
+[\#selinux](https://web.libera.chat/?channel=#selinux) on [Libera.Chat](https://libera.chat/).
 
 ## Reporting Bugs
 
-All bugs and patches should be submitted to the [SELinux mailing
-list](https://lore.kernel.org/selinux) at selinux@vger.kernel.org.
+All bugs and patches should be submitted to the
+[SELinux mailing list](https://lore.kernel.org/selinux) at
+[selinux@vger.kernel.org](mailto:selinux@vger.kernel.org).
 
 When reporting bugs please include versions of SELinux related libraries and
 tools (libsepol, libselinux, libsemanage, checkpolicy). If you are
@@ -23,17 +36,20 @@ using a custom policy please include it as well.
 
 ## Compiling
 
-See README.md for instructions on how to compile and test this project.
+There are a number of dependencies required to build the userspace
+tools/libraries. Consult the [README.md](https://github.com/SELinuxProject/selinux/blob/main/README.md)
+for the current list of dependencies and how to build the userspace code.
 
 ## Contributing Code
 
-After obtaining the code of the repository (see below), create a patch
-against the repository, and post that patch to the [SELinux mailing
-list](https://lore.kernel.org/selinux) at selinux@vger.kernel.org. When preparing
-patches, please follow these guidelines:
+After cloning the code of the repository (see below), create a patch against the
+repository, and post that patch to the
+[SELinux mailing list](https://lore.kernel.org/selinux) at
+[selinux@vger.kernel.org](mailto:selinux@vger.kernel.org).
+When preparing patches, please follow these guidelines:
 
--   Patches should apply with -p1
--   Must apply against HEAD of the master branch
+-   Patches should apply with git am
+-   Must apply against HEAD of the main branch
 -   Separate large patches into logical patches
 -   Patch descriptions must end with your "Signed-off-by" line. This means your
     code meets the Developer's certificate of origin, see below.
@@ -43,10 +59,7 @@ design on the mailing list prior to submitting the patch.
 
 ## Development Repository
 
-Git is a modern source code management system. For more information
-about Git please see the Git website.
-
-To get an anonymous checkout of the SELinux userland repository you can
+To get a copy of the SELinux userland repository you can
 run:
 
     $ git clone https://github.com/SELinuxProject/selinux.git
