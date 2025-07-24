@@ -19,6 +19,9 @@ Please submit all bug reports and patches to the <selinux@vger.kernel.org>
 mailing list. You can subscribe by sending an email to <selinux+subscribe@vger.kernel.org>
 Archives of the mailing list are available at https://lore.kernel.org/selinux.
 
+See the [SELinux Userspace wiki](https://github.com/SELinuxProject/selinux/wiki)
+for more information.
+
 Installation
 ------------
 
