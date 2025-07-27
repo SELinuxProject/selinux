@@ -153,22 +153,21 @@ static int getprocattrcon_raw(char **context, pid_t pid, const char *attr,
 		ret = read(fd, buf, size - 1);
 	} while (ret < 0 && errno == EINTR);
 	if (ret < 0)
-		goto out2;
+		goto out;
 
 	if (ret == 0) {
 		*context = NULL;
-		goto out2;
+		goto out;
 	}
 
 	*context = strdup(buf);
 	if (!(*context)) {
 		ret = -1;
-		goto out2;
+		goto out;
 	}
 	ret = 0;
-      out2:
-	free(buf);
       out:
+	free(buf);
 	errno_hold = errno;
 	close(fd);
 	errno = errno_hold;

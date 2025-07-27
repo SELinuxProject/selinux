@@ -46,17 +46,16 @@ int security_get_initial_context_raw(const char * name, char ** con)
 	}
 	ret = read(fd, buf, size - 1);
 	if (ret < 0)
-		goto out2;
+		goto out;
 
 	*con = strdup(buf);
 	if (!(*con)) {
 		ret = -1;
-		goto out2;
+		goto out;
 	}
 	ret = 0;
-      out2:
-	free(buf);
       out:
+	free(buf);
 	close(fd);
 	return ret;
 }
