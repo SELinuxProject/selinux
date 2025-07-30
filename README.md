@@ -137,6 +137,12 @@ This may render your system unusable if the upstream SELinux userspace
 lacks library functions or other dependencies relied upon by your
 distribution.  If it breaks, you get to keep both pieces.
 
+A directory for distribution provided configuration files (in e.g. /usr/etc) can be set by:
+
+   make VENDORDIR=/usr/etc
+
+If distribution provided configuration files are used, the library libeconf is
+needed for parsing these files in the correct order.
 
 ## Setting CFLAGS
 
