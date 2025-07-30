@@ -88,47 +88,46 @@ static const uint16_t file_path_suffixes_idx[NEL] = {
 
 int selinux_getenforcemode(int *enforce)
 {
-	int ret = -1;
 	FILE *cfg = fopen(SELINUXCONFIG, "re");
-	if (cfg) {
-		char *buf;
-		char *tag;
-		int len = sizeof(SELINUXTAG) - 1;
-		buf = malloc(selinux_page_size);
-		if (!buf) {
-			fclose(cfg);
-			return -1;
-		}
-		while (fgets_unlocked(buf, selinux_page_size, cfg)) {
-			if (strncmp(buf, SELINUXTAG, len))
-				continue;
-			tag = buf+len;
-			while (isspace((unsigned char)*tag))
-				tag++;
-			if (!strncasecmp
-			    (tag, "enforcing", sizeof("enforcing") - 1)) {
-				*enforce = 1;
-				ret = 0;
-				break;
-			} else
-			    if (!strncasecmp
-				(tag, "permissive",
-				 sizeof("permissive") - 1)) {
-				*enforce = 0;
-				ret = 0;
-				break;
-			} else
-			    if (!strncasecmp
-				(tag, "disabled",
-				 sizeof("disabled") - 1)) {
-				*enforce = -1;
-				ret = 0;
-				break;
-			}
-		}
+	if (!cfg)
+		return -1;
+
+	char *buf = malloc(selinux_page_size);
+	if (!buf) {
 		fclose(cfg);
-		free(buf);
+		return -1;
 	}
+
+	int ret = -1;
+	const int len = sizeof(SELINUXTAG) - 1;
+	while (fgets_unlocked(buf, selinux_page_size, cfg)) {
+		if (strncmp(buf, SELINUXTAG, len))
+			continue;
+
+		char *tag = buf + len;
+		while (isspace((unsigned char)*tag))
+			tag++;
+
+		if (!strncasecmp(tag, "enforcing", sizeof("enforcing") - 1)) {
+			*enforce = 1;
+			ret = 0;
+			break;
+		} else if (!strncasecmp(tag, "permissive",
+					sizeof("permissive") - 1)) {
+			*enforce = 0;
+			ret = 0;
+			break;
+		} else if (!strncasecmp(tag, "disabled",
+					sizeof("disabled") - 1)) {
+			*enforce = -1;
+			ret = 0;
+			break;
+		}
+	}
+
+	fclose(cfg);
+	free(buf);
+
 	return ret;
 }
 
