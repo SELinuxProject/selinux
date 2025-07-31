@@ -103,7 +103,7 @@ static int set_signal_handles(void)
 
 	/* Empty the signal mask in case someone is blocking a signal */
 	if (sigemptyset(&empty)) {
-		fprintf(stderr, "Unable to obtain empty signal set\n");
+		fprintf(stderr, _("Unable to obtain empty signal set\n"));
 		return -1;
 	}
 
@@ -111,12 +111,12 @@ static int set_signal_handles(void)
 
 	/* Terminate on SIGHUP */
 	if (signal(SIGHUP, SIG_DFL) == SIG_ERR) {
-		perror("Unable to set SIGHUP handler");
+		perror(_("Unable to set SIGHUP handler"));
 		return -1;
 	}
 
 	if (signal(SIGINT, handler) == SIG_ERR) {
-		perror("Unable to set SIGINT handler");
+		perror(_("Unable to set SIGINT handler"));
 		return -1;
 	}
 
@@ -353,7 +353,7 @@ static int rsynccmd(const char * src, const char *dst, char **cmdbuf)
 
 	/* match glob for all files in src dir */
 	if (asprintf(&buf, "%s/*", src) == -1) {
-		fprintf(stderr, "Out of memory\n");
+		fprintf(stderr, _("Out of memory\n"));
 		return -1;
 	}
 
@@ -371,12 +371,12 @@ static int rsynccmd(const char * src, const char *dst, char **cmdbuf)
 
 		if (!buf) {
 			if (asprintf(&newbuf, "\'%s\'", path) == -1) {
-				fprintf(stderr, "Out of memory\n");
+				fprintf(stderr, _("Out of memory\n"));
 				goto err;
 			}
 		} else {
 			if (asprintf(&newbuf, "%s  \'%s\'", buf, path) == -1) {
-				fprintf(stderr, "Out of memory\n");
+				fprintf(stderr, _("Out of memory\n"));
 				goto err;
 			}
 		}
@@ -387,7 +387,7 @@ static int rsynccmd(const char * src, const char *dst, char **cmdbuf)
 
 	if (buf) {
 		if (asprintf(&newbuf, "/usr/bin/rsync -trlHDq %s '%s'", buf, dst) == -1) {
-			fprintf(stderr, "Out of memory\n");
+			fprintf(stderr, _("Out of memory\n"));
 			goto err;
 		}
 		*cmdbuf=newbuf;
