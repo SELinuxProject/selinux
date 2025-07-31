@@ -8,7 +8,7 @@ errors = 0
 
 
 def untrans(trans, val):
-    global errors, verbose
+    global errors
     (rc, raw) = selinux.selinux_trans_to_raw_context(trans)
     if raw != val:
         print("untrans: '%s' -> '%s' != '%s' FAILED" % (trans, raw, val))
@@ -19,7 +19,7 @@ def untrans(trans, val):
 
 
 def trans(raw, val):
-    global errors, verbose
+    global errors
     (rc, trans) = selinux.selinux_raw_to_trans_context(raw)
     if trans != val:
         print("trans: '%s' -> '%s' != '%s' FAILED" % (raw, trans, val))

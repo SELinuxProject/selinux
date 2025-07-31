@@ -1038,7 +1038,7 @@ def p_quoted_filename(p):
 #
 
 def p_error(tok):
-    global error, parse_file, success, parser
+    global error, success
     error = "%s: Syntax error on line %d %s [type=%s]" % (parse_file, tok.lineno, tok.value, tok.type)
     print(error)
     success = False

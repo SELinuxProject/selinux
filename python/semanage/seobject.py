@@ -244,7 +244,6 @@ class semanageRecords:
     args = None
 
     def __init__(self, args = None):
-        global handle
         if args:
             # legacy code - args was store originally
             if isinstance(args, str):
