@@ -23,6 +23,7 @@ setfiles \- set SELinux file security contexts.
 .RB [ \-I | \-D ]
 .RB [ \-T
 .IR nthreads ]
+.RB [ \-A ]
 .I spec_file
 .IR pathname \ ...
 
@@ -187,6 +188,10 @@ use up to
 threads.  Specify 0 to create as many threads as there are available
 CPU cores; 1 to use only a single thread (default); or any positive
 number to use the given number of threads (if possible).
+.TP
+.B \-A
+do not track inodes with multiple hard links or bind mounts that would
+match different contexts (saves memory)
 
 .SH "ARGUMENTS"
 .TP

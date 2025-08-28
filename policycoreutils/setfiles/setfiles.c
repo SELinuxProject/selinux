@@ -40,9 +40,9 @@ static __attribute__((__noreturn__)) void usage(const char *const name)
 			name, name);
 	} else {
 		fprintf(stderr,
-			"usage:  %s [-diIDlmnpqvCEFUWT] [-e excludedir] [-r alt_root_path] [-c policyfile] spec_file pathname...\n"
-			"usage:  %s [-diIDlmnpqvCEFUWT] [-e excludedir] [-r alt_root_path] [-c policyfile] spec_file -f filename\n"
-			"usage:  %s -s [-diIDlmnpqvFUWT] spec_file\n",
+			"usage:  %s [-diIDlmnpqvACEFUWT] [-e excludedir] [-r alt_root_path] [-c policyfile] spec_file pathname...\n"
+			"usage:  %s [-diIDlmnpqvACEFUWT] [-e excludedir] [-r alt_root_path] [-c policyfile] spec_file -f filename\n"
+			"usage:  %s -s [-diIDlmnpqvAFUWT] spec_file\n",
 			name, name, name);
 	}
 	exit(-1);
@@ -147,7 +147,7 @@ int main(int argc, char **argv)
 	const char *base;
 	int errors = 0;
 	const char *ropts = "e:f:hiIDlmno:pqrsvFURW0xT:";
-	const char *sopts = "c:de:f:hiIDlmno:pqr:svCEFUR:W0T:";
+	const char *sopts = "c:de:f:hiIDlmno:pqr:svACEFUR:W0T:";
 	const char *opts;
 	union selinux_callback cb;
 	long unsigned skipped_errors;
@@ -374,6 +374,9 @@ int main(int argc, char **argv)
 			nthreads = strtoull(optarg, &endptr, 10);
 			if (*optarg == '\0' || *endptr != '\0')
 				usage(argv[0]);
+			break;
+		case 'A':
+			r_opts.add_assoc = 0;
 			break;
 		case 'h':
 		case '?':
