@@ -19,6 +19,7 @@ static const char * const polcap_names[POLICYDB_CAP_MAX + 1] = {
 	[POLICYDB_CAP_NETIF_WILDCARD]			= "netif_wildcard",
 	[POLICYDB_CAP_GENFS_SECLABEL_WILDCARD]		= "genfs_seclabel_wildcard",
 	[POLICYDB_CAP_FUNCTIONFS_SECLABEL]		= "functionfs_seclabel",
+	[POLICYDB_CAP_MEMFD_CLASS]			= "memfd_class",
 };
 
 int sepol_polcap_getnum(const char *name)
