@@ -40,6 +40,8 @@ LD_SONAME_FLAGS=-soname,$(LIBSO),--version-script=$(LIBMAP),-z,defs
 LN=ln
 OS := $(shell uname)
 ifeq ($(OS), Darwin)
+TARGET=libsepol.dylib
+LIBSO=libsepol.$(LIBVERSION).dylib
 LD_SONAME_FLAGS=-install_name,$(LIBSO)
 LDFLAGS += -undefined dynamic_lookup
 LN=gln
