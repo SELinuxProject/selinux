@@ -64,6 +64,11 @@
 #define PATH_SHELLS_FILE "/etc/shells"
 #define PATH_NOLOGIN_SHELL "/sbin/nologin"
 
+/* fallback values */
+#define FALLBACK_MINUID 1000
+#define FALLBACK_MAXUID 60000
+#define FALLBACK_LU_UIDNUMBER 500
+
 /* comments written to context file */
 #define COMMENT_FILE_CONTEXT_HEADER "#\n#\n# " \
 			"User-specific file contexts, generated via libsemanage\n" \
@@ -352,26 +357,54 @@ static semanage_list_t *get_home_dirs(genhomedircon_settings_t * s)
 		goto fail;
 	}
 
+#define genhomedircon_warn_conv_fail(key, val) \
+	WARN(s->h_semanage, \
+	     "Conversion failed for key " key ", is its value a number?" \
+	     "  Falling back to default value of `%s`.", #val);
+
 	path = semanage_findval(PATH_ETC_LOGIN_DEFS, "UID_MIN", NULL);
 	if (path && *path) {
-		temp = atoi(path);
-		minuid = temp;
-		minuid_set = 1;
+		char *endptr;
+		const unsigned long val = strtoul(path, &endptr, 0);
+		if (endptr != path && *endptr == '\0') {
+			minuid = (uid_t)val;
+			minuid_set = 1;
+		} else {
+			/* we were provided an invalid value, use defaults.  */
+			genhomedircon_warn_conv_fail("UID_MIN", FALLBACK_MINUID);
+			minuid = FALLBACK_MINUID;
+			minuid_set = 1;
+		}
 	}
 	free(path);
 	path = NULL;
 
 	path = semanage_findval(PATH_ETC_LOGIN_DEFS, "UID_MAX", NULL);
 	if (path && *path) {
-		temp = atoi(path);
-		maxuid = temp;
+		char *endptr;
+		const unsigned long val = strtoul(path, &endptr, 0);
+		if (endptr != path && *endptr == '\0') {
+			maxuid = (uid_t)val;
+		} else {
+			/* we were provided an invalid value, use defaults.  */
+			genhomedircon_warn_conv_fail("UID_MAX", FALLBACK_MAXUID);
+			maxuid = FALLBACK_MAXUID;
+		}
 	}
 	free(path);
 	path = NULL;
 
 	path = semanage_findval(PATH_ETC_LIBUSER, "LU_UIDNUMBER", "=");
 	if (path && *path) {
-		temp = atoi(path);
+		char *endptr;
+		const unsigned long val = strtoul(path, &endptr, 0);
+		if (endptr != path && *endptr == '\0') {
+			temp = (uid_t)val;
+		} else {
+			/* we were provided an invalid value, use defaults.  */
+			genhomedircon_warn_conv_fail("LU_UIDNUMBER", FALLBACK_LU_UIDNUMBER);
+			temp = FALLBACK_LU_UIDNUMBER;
+		}
 		if (!minuid_set || temp < minuid) {
 			minuid = temp;
 			minuid_set = 1;
@@ -379,6 +412,8 @@ static semanage_list_t *get_home_dirs(genhomedircon_settings_t * s)
 	}
 	free(path);
 	path = NULL;
+
+#undef genhomedircon_warn_conv_fail
 
 	errno = 0;
 	setpwent();
