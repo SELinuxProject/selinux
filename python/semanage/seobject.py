@@ -2885,7 +2885,15 @@ class booleanRecords(semanageRecords):
         self.__delete(name)
         self.commit()
 
+        # New transaction to reset the boolean to its default value.
+        # Calling __reset_value in the same transaction as the removal of
+        # local customizations does nothing
+        self.begin()
+        self.__reset_value(name)
+        self.commit()
+
     def deleteall(self):
+        deleted = []
         (rc, self.blist) = semanage_bool_list_local(self.sh)
         if rc < 0:
             raise ValueError(_("Could not list booleans"))
@@ -2894,9 +2902,44 @@ class booleanRecords(semanageRecords):
 
         for boolean in self.blist:
             name = semanage_bool_get_name(boolean)
+            deleted.append(name)
             self.__delete(name)
 
         self.commit()
+
+        # New transaction to reset all affected booleans to their default values.
+        # Calling __reset_value in the same transaction as the removal of
+        # local customizations does nothing
+        self.begin()
+
+        for boolean in deleted:
+            self.__reset_value(boolean)
+
+        self.commit()
+
+    # Set active value to default
+    # Note: this needs to be called in a new transaction after removing local customizations
+    # in order for semanage_bool_query to fetch the default value
+    # (as opposed to the current one -- set by the local customizations)
+    def __reset_value(self, name):
+        name = selinux.selinux_boolean_sub(name)
+
+        (rc, k) = semanage_bool_key_create(self.sh, name)
+        if rc < 0:
+            raise ValueError(_("Could not create a key for %s") % name)
+
+        (rc, b) = semanage_bool_query(self.sh, k)
+        if rc < 0:
+            raise ValueError(_("Could not query boolean %s") % name)
+
+        semanage_bool_set_value(b, semanage_bool_get_value(b))
+
+        rc = semanage_bool_set_active(self.sh, k, b)
+        if rc < 0:
+            raise ValueError(_("Could not set active value of boolean %s") % name)
+
+        semanage_bool_key_free(k)
+        semanage_bool_free(b)
 
     def get_all(self, locallist=0):
         ddict = {}
