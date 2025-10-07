@@ -61,6 +61,9 @@ Allow Apache to listen on tcp port 81 (i.e. assign tcp port 81 label http_port_t
 # semanage port \-a \-t http_port_t \-p tcp 81
 Allow sshd to listen on tcp port 8991 (i.e. assign tcp port 8991 label ssh_port_t, which sshd is allowed to listen on)
 # semanage port \-a \-t ssh_port_t \-p tcp 8991
+Add a custom port 9999 with MLS range s0:c0.c255 (MLS/MCS systems only). Verify with seinfo.
+# semanage port \-a \-t http_port_t \-p tcp \-r s0:c0.c255 9999
+# seinfo \-\-portcon \-x | grep 9999
 
 .SH "SEE ALSO"
 .BR selinux (8),

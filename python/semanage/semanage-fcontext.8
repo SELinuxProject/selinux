@@ -100,6 +100,10 @@ execute the following commands.
 # semanage fcontext \-a \-e /home /disk6/home
 # restorecon \-R \-v /disk6
 
+Add file-context with MLS range s0:c0.c255 for /secure directory (MLS/MCS systems only)
+# semanage fcontext \-a \-t admin_home_t \-r s0:c0.c255 "/secure(/.*)?"
+# restorecon \-R \-F \-v /secure
+
 .SH "SEE ALSO"
 .BR selinux (8),
 .BR semanage (8),
