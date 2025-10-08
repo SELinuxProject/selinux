@@ -51,7 +51,7 @@ Authorises a [`role`](cil_role_statements.md#role) to access a [`type`](cil_type
 **Statement definition:**
 
 ```secil
-    (role role_id type_id)
+    (roletype role_id type_id)
 ```
 
 **Where:**
