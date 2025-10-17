@@ -726,6 +726,9 @@ static int restorecon_sb(const char *pathname, const struct stat *sb,
 			    pathname, newcon);
 
 	if (lgetfilecon_raw(pathname, &curcon) < 0) {
+		/* Ignore files removed during relabeling if ignore_noent is set */
+		if (flags->ignore_noent && errno == ENOENT)
+			goto out;
 		if (errno != ENODATA)
 			goto err;
 
@@ -765,8 +768,14 @@ static int restorecon_sb(const char *pathname, const struct stat *sb,
 		}
 
 		if (!flags->nochange) {
-			if (lsetfilecon(pathname, newcon) < 0)
-				goto err;
+			if (lsetfilecon(pathname, newcon) < 0) {
+				/* Ignore files removed during relabeling if ignore_noent is set */
+				if (flags->ignore_noent && errno == ENOENT)
+					goto out;
+				else
+					goto err;
+			}
+
 			updated = true;
 		}
 
@@ -932,9 +941,10 @@ loop_body:
 		case FTS_NS:
 			error = errno;
 			errno = ftsent->fts_errno;
-			selinux_log(SELINUX_ERROR,
-				    "Could not stat %s: %m.\n",
-				    ftsent->fts_path);
+			if (!state->flags.ignore_noent || errno != ENOENT)
+				selinux_log(SELINUX_ERROR,
+					    "Could not stat %s: %m.\n",
+					    ftsent->fts_path);
 			errno = error;
 			fts_set(fts, ftsent, FTS_SKIP);
 			continue;
