@@ -491,6 +491,45 @@ char *semanage_conf_path(void)
 	return semanage_conf;
 }
 
+/* Recursively create a directory from a path string.
+ * Returns 0 on success, -errno on failure.
+ */
+static int mkdir_recursive(const char *path, mode_t mode)
+{
+	if (!path || !*path) {
+		return -EINVAL;
+	}
+
+	char path_buffer[PATH_MAX] = {0};
+	size_t len = strlen(path);
+	/* + 1 for nullterm.  */
+	if (len + 1 > sizeof(path_buffer)) {
+		return -ENAMETOOLONG;
+	}
+
+	/* + 1 for nullterm.  */
+	memcpy(path_buffer, path, len + 1);
+
+	/* trim possible trailing slashes, except if '/' is the entire path.  */
+	while (len > 1 && path_buffer[len - 1] == '/') {
+		path_buffer[--len] = '\0';
+	}
+
+	for (char *pos = path_buffer + 1, *slash; (slash = strchr(pos, '/')); pos = slash + 1) {
+		*slash = '\0';
+		if (mkdir(path_buffer, mode) != 0 && errno != EEXIST) {
+			return -errno;
+		}
+		*slash = '/';
+	}
+
+	if (mkdir(path_buffer, mode) != 0 && errno != EEXIST) {
+		return -errno;
+	}
+
+	return 0;
+}
+
 /**************** functions that create module store ***************/
 
 /* Check that the semanage store exists.  If 'create' is non-zero then
@@ -506,14 +545,20 @@ int semanage_create_store(semanage_handle_t * sh, int create)
 
 	if (stat(path, &sb) == -1) {
 		if (errno == ENOENT && create) {
-			mask = umask(0077);
-			if (mkdir(path, S_IRWXU) == -1) {
-				umask(mask);
-				ERR(sh, "Could not create module store at %s.",
-				    path);
+			/* First we create directories recursively with standard permissions so that
+			   we don't screw up ownership of toplevel dirs such as `/var` in pkgmgr
+			   environments.  */
+			const int r = mkdir_recursive(path, (mode_t)0755);
+			if (r != 0) {
+				ERR(sh, "Could not create module store at %s: %s.", path, strerror(-r));
 				return -2;
 			}
-			umask(mask);
+			/* Now that we've created the directory tree, we set the permissions of the
+			   target path to 0700. */
+			if (chmod(path, (mode_t)0700) != 0) {
+				ERR(sh, "Failed to chown module store at %s: %s.", path, strerror(errno));
+				return -2;
+			}
 		} else {
 			if (create)
 				ERR(sh,
@@ -529,6 +574,8 @@ int semanage_create_store(semanage_handle_t * sh, int create)
 			return -1;
 		}
 	}
+	/* We no longer need to use mkdir_recursive at this point: the toplevel
+	   directory hierarchy has been created by now.  */
 	path = semanage_path(SEMANAGE_ACTIVE, SEMANAGE_TOPLEVEL);
 	if (stat(path, &sb) == -1) {
 		if (errno == ENOENT && create) {
