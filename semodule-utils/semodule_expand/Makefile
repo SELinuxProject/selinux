@@ -27,7 +27,3 @@ relabel:
 
 clean:
 	-rm -f semodule_expand *.o
-
-indent:
-	../../scripts/Lindent $(wildcard *.[ch])
-

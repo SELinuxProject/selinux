@@ -20,8 +20,5 @@ install: all
 clean:
 	-rm -f unsetfiles *.o
 
-indent:
-	../../scripts/Lindent $(wildcard *.[ch])
-
 relabel: install
 	/sbin/restorecon $(DESTDIR)$(SBINDIR)/unsetfiles

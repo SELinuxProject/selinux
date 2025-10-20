@@ -50,7 +50,7 @@ COMPILER := clang
 endif
 export COMPILER
 
-all install relabel clean distclean indent:
+all install relabel clean distclean:
 	@for subdir in $(SUBDIRS); do \
 		(cd $$subdir && $(MAKE) $@) || exit 1; \
 	done

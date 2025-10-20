@@ -43,8 +43,5 @@ install: all
 clean:
 	rm -f setfiles restorecon restorecon_xattr *.o
 
-indent:
-	../../scripts/Lindent $(wildcard *.[ch])
-
 relabel: install
 	$(DESTDIR)$(SBINDIR)/restorecon $(DESTDIR)$(SBINDIR)/setfiles $(DESTDIR)$(SBINDIR)/restorecon_xattr

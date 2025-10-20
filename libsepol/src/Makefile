@@ -105,7 +105,3 @@ relabel:
 
 clean: 
 	-rm -f $(LIBPC) $(LIBMAP) $(OBJS) $(LOBJS) $(LIBA) $(LIBSO) $(TARGET) $(CIL_GENERATED)
-
-indent:
-	../../scripts/Lindent $(wildcard *.[ch])
-

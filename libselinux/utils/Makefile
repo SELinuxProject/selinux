@@ -72,8 +72,4 @@ clean:
 
 distclean: clean
 
-indent:
-	../../scripts/Lindent $(wildcard *.[ch])
-
 relabel:
-

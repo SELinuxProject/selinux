@@ -6,7 +6,7 @@ LIBSELINUX_LDLIBS := $(shell PKG_CONFIG_PATH="$(PKG_CONFIG_PATH):../libselinux/s
 LIBSEMANAGE_LDLIBS := $(shell PKG_CONFIG_PATH="$(PKG_CONFIG_PATH):../libsemanage/src" $(PKG_CONFIG) --libs libsemanage)
 export LIBSELINUX_LDLIBS LIBSEMANAGE_LDLIBS
 
-all install relabel clean indent:
+all install relabel clean:
 	@for subdir in $(SUBDIRS); do \
 		(cd $$subdir && $(MAKE) $@) || exit 1; \
 	done

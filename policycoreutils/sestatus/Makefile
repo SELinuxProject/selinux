@@ -41,7 +41,4 @@ install: all
 clean:
 	rm -f sestatus *.o
 
-indent:
-	../../scripts/Lindent $(wildcard *.[ch])
-
 relabel:

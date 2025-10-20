@@ -29,9 +29,5 @@ clean distclean:
 	$(MAKE) -C src $@
 	$(MAKE) -C tests $@
 
-indent:
-	$(MAKE) -C src $@
-	$(MAKE) -C include $@
-
 test: all
 	$(MAKE) -C tests test

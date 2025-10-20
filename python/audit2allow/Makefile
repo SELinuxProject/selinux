@@ -51,7 +51,4 @@ install: all
 clean:
 	rm -f *~ *.o sepolgen-ifgen-attr-helper test_dummy_policy
 
-indent:
-	../../scripts/Lindent $(wildcard *.[ch])
-
 relabel: ;

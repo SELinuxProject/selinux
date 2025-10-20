@@ -36,7 +36,7 @@ ifneq ($(DESTDIR),)
 	export LIBSEPOLA
 endif
 
-all install relabel clean test indent:
+all install relabel clean test:
 	@for subdir in $(SUBDIRS); do \
 		(cd $$subdir && $(MAKE) $@) || exit 1; \
 	done
@@ -50,3 +50,12 @@ distclean:
 	@for subdir in $(DISTCLEANSUBDIRS); do \
 		(cd $$subdir && $(MAKE) $@) || exit 1; \
 	done
+
+# We shouldn't have any unformatted files in the repo without an explicit exception.
+FORMAT_SOURCE_FILES := $(shell find $(SUBDIRS) -type f \( -name '*.c' -o -name '*.h' \))
+
+format:
+	clang-format -i $(FORMAT_SOURCE_FILES)
+
+check-format:
+	clang-format --dry-run -Werror $(FORMAT_SOURCE_FILES)

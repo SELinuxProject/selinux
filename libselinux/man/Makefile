@@ -35,4 +35,4 @@ install: all
 
 relabel:
 
-indent distclean clean:
+format distclean clean:

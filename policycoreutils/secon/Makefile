@@ -35,9 +35,6 @@ relabel:
 clean:
 	rm -f *.o core* secon *~ *.bak
 
-indent:
-	../../scripts/Lindent $(wildcard *.[ch])
-
 bare: clean
 
 .PHONY: clean bare

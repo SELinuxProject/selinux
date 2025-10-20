@@ -35,6 +35,4 @@ test:
 	@$(PYTHON) test-semanage.py -a
 clean:
 
-indent:
-
 relabel:

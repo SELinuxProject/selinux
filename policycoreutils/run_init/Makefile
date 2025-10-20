@@ -53,8 +53,5 @@ endif
 clean:
 	-rm -f $(TARGETS) *.o 
 
-indent:
-	../../scripts/Lindent $(wildcard *.[ch])
-
 relabel: install
 	/sbin/restorecon $(DESTDIR)$(SBINDIR)/run_init $(DESTDIR)$(SBINDIR)/open_init_pty

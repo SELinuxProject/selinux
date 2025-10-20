@@ -35,7 +35,3 @@ relabel:
 
 clean:
 	-rm -f setsebool *.o
-
-indent:
-	../../scripts/Lindent $(wildcard *.[ch])
-

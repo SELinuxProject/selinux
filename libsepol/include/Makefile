@@ -12,6 +12,3 @@ install: all
 	install -m 644 $(wildcard sepol/*.h) $(DESTDIR)$(INCDIR)
 	install -m 644 $(wildcard sepol/policydb/*.h) $(DESTDIR)$(INCDIR)/policydb
 	install -m 644 $(wildcard $(CILDIR)/include/cil/*.h) $(DESTDIR)$(INCDIR)/cil
-
-indent:
-	../../scripts/Lindent $(wildcard sepol/*.h)

@@ -167,7 +167,4 @@ clean:
 distclean: clean
 	rm -f $(GENERATED) $(SWIGFILES)
 
-indent:
-	../../scripts/Lindent $(filter-out $(GENERATED),$(wildcard *.[ch]))
-
 .PHONY: all clean pywrap rubywrap swigify install install-pywrap install-rubywrap distclean

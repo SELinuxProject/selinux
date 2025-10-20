@@ -35,7 +35,3 @@ relabel:
 
 clean:
 	-rm -f semodule *.o genhomedircon
-
-indent:
-	../../scripts/Lindent $(wildcard *.[ch])
-

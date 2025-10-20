@@ -77,6 +77,3 @@ relabel: install
 clean:
 	-rm -f $(TARGETS) $(CHECKPOLOBJS) $(CHECKMODOBJS) y.tab.c y.tab.h lex.yy.c tests/testpol.conf tests/testpol.bin
 	$(MAKE) -C test clean
-
-indent:
-	../scripts/Lindent $(filter-out $(GENERATED),$(wildcard *.[ch]))

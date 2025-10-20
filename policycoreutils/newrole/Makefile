@@ -87,9 +87,6 @@ endif
 clean:
 	rm -f newrole *.o 
 
-indent:
-	../../scripts/Lindent $(wildcard *.[ch])
-
 relabel: install
 	/sbin/restorecon $(DESTDIR)$(BINDIR)/newrole
 

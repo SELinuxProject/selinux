@@ -59,7 +59,4 @@ relabel: install
 clean:
 	-rm -f restorecond *.o *~
 
-indent:
-	../../scripts/Lindent $(wildcard *.[ch])
-
 test:
