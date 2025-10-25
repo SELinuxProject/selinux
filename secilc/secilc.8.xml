@@ -96,7 +96,7 @@
          </varlistentry>
 
          <varlistentry>
-            <term><option>-X, --attrs-size &lt;size></option></term>
+            <term><option>-X, --expand-size &lt;size></option></term>
             <listitem><para>Expand type attributes with fewer than <emphasis role="bold">&lt;SIZE></emphasis> members.</para></listitem>
          </varlistentry>
 
