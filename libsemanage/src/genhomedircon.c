@@ -308,14 +308,52 @@ done:
 	return retval;
 }
 
+/*
+ * Parses `file` for `key` seperated by `sep` into `out`.
+ * Returns:
+ *   true on success.
+ *   false on failure.
+ *   `out` is guaranteed to be initalised.
+ *   `fallback_set` is initalised to false, and set to true if a fallback was used.
+ */
+static bool parse_uid_config(const char *file, const char *key, const char *sep,
+		uid_t fallback, uid_t *out, bool *fallback_set)
+{
+	assert(out);
+	assert(fallback_set);
+
+	*fallback_set = false;
+
+	char *uid_str = semanage_findval(file, key, sep);
+	if (!uid_str || !*uid_str) {
+		free(uid_str);
+		*fallback_set = true;
+		*out = fallback;
+		return true;
+	}
+
+	char *endptr;
+	errno = 0;
+	const unsigned long val = strtoul(uid_str, &endptr, 0);
+
+	if (endptr != uid_str && *endptr == '\0' && errno != ERANGE) {
+		*out = (uid_t)val;
+		free(uid_str);
+		return true;
+	}
+
+	free(uid_str);
+	*fallback_set = true;
+	*out = fallback;
+	return false;
+}
+
 static semanage_list_t *get_home_dirs(genhomedircon_settings_t * s)
 {
 	semanage_list_t *homedir_list = NULL;
 	semanage_list_t *shells = NULL;
 	fc_match_handle_t hand;
 	char *path = NULL;
-	uid_t temp, minuid = 500, maxuid = 60000;
-	int minuid_set = 0;
 	struct passwd *pwbuf;
 	struct stat buf;
 
@@ -362,56 +400,25 @@ static semanage_list_t *get_home_dirs(genhomedircon_settings_t * s)
 	     "Conversion failed for key " key ", is its value a number?" \
 	     "  Falling back to default value of `%s`.", #val);
 
-	path = semanage_findval(PATH_ETC_LOGIN_DEFS, "UID_MIN", NULL);
-	if (path && *path) {
-		char *endptr;
-		const unsigned long val = strtoul(path, &endptr, 0);
-		if (endptr != path && *endptr == '\0') {
-			minuid = (uid_t)val;
-			minuid_set = 1;
-		} else {
-			/* we were provided an invalid value, use defaults.  */
-			genhomedircon_warn_conv_fail("UID_MIN", FALLBACK_MINUID);
-			minuid = FALLBACK_MINUID;
-			minuid_set = 1;
-		}
-	}
-	free(path);
-	path = NULL;
+	uid_t minuid;
+	bool fallback_set;
+	if (!parse_uid_config(PATH_ETC_LOGIN_DEFS, "UID_MIN", NULL, FALLBACK_MINUID, &minuid, &fallback_set))
+		genhomedircon_warn_conv_fail("UID_MIN", FALLBACK_MINUID);
 
-	path = semanage_findval(PATH_ETC_LOGIN_DEFS, "UID_MAX", NULL);
-	if (path && *path) {
-		char *endptr;
-		const unsigned long val = strtoul(path, &endptr, 0);
-		if (endptr != path && *endptr == '\0') {
-			maxuid = (uid_t)val;
-		} else {
-			/* we were provided an invalid value, use defaults.  */
-			genhomedircon_warn_conv_fail("UID_MAX", FALLBACK_MAXUID);
-			maxuid = FALLBACK_MAXUID;
-		}
-	}
-	free(path);
-	path = NULL;
+	const bool logindefs_minuid_fallback_set = fallback_set;
 
-	path = semanage_findval(PATH_ETC_LIBUSER, "LU_UIDNUMBER", "=");
-	if (path && *path) {
-		char *endptr;
-		const unsigned long val = strtoul(path, &endptr, 0);
-		if (endptr != path && *endptr == '\0') {
-			temp = (uid_t)val;
-		} else {
-			/* we were provided an invalid value, use defaults.  */
-			genhomedircon_warn_conv_fail("LU_UIDNUMBER", FALLBACK_LU_UIDNUMBER);
-			temp = FALLBACK_LU_UIDNUMBER;
-		}
-		if (!minuid_set || temp < minuid) {
-			minuid = temp;
-			minuid_set = 1;
-		}
-	}
-	free(path);
-	path = NULL;
+	uid_t temp;
+	if (!parse_uid_config(PATH_ETC_LIBUSER, "LU_UIDNUMBER", "=", FALLBACK_LU_UIDNUMBER, &temp, &fallback_set))
+		genhomedircon_warn_conv_fail("LU_UIDNUMBER", FALLBACK_LU_UIDNUMBER);
+
+	if (logindefs_minuid_fallback_set)
+		minuid = temp;
+
+	uid_t maxuid;
+	/* We don't actually check fallback_set here, PATH_ETC_LOGIN_DEFS is the one source of
+	   truth for UID_MAX.  */
+	if (!parse_uid_config(PATH_ETC_LOGIN_DEFS, "UID_MAX", NULL, FALLBACK_MAXUID, &maxuid, &fallback_set))
+		genhomedircon_warn_conv_fail("UID_MAX", FALLBACK_MAXUID);
 
 #undef genhomedircon_warn_conv_fail
 
