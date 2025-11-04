@@ -2544,71 +2544,71 @@ static int context_to_cil(struct policydb *pdb, struct context_struct *con)
 static int ocontext_isid_to_cil(struct policydb *pdb, const char *const *sid_to_string,
 				unsigned num_sids, struct ocontext *isids)
 {
-	int rc = -1;
-
 	struct ocontext *isid;
-
-	struct sid_item {
-		char *sid_key;
-		struct sid_item *next;
-	};
-
-	struct sid_item *head = NULL;
-	struct sid_item *item = NULL;
+	struct ocontext **isid_array;
+	struct strs *strs;
 	char *sid;
-	char unknown[18];
+	char *prev;
 	unsigned i;
 
+	strs = isids_to_strs(sid_to_string, num_sids, isids);
+	if (!strs) {
+		ERR(NULL, "Error writing sid rules to CIL");
+		return -1;
+	}
+
+	if (strs_num_items(strs) == 0) {
+		strs_destroy(&strs);
+		return 0;
+	}
+
+	for (i=1; i < strs_num_items(strs); i++) {
+		sid = strs_read_at_index(strs, i);
+		cil_printf("(sid %s)\n", sid);
+	}
+
+	cil_printf("(sidorder (");
+	prev = NULL;
+	for (i=1; i < strs_num_items(strs); i++) {
+		sid = strs_read_at_index(strs, i);
+		if (prev) {
+			cil_printf("%s ", prev);
+		}
+		prev = sid;
+	}
+	if (prev) {
+		cil_printf("%s", prev);
+	}
+	cil_printf("))\n");
+
+	isid_array = calloc(strs_num_items(strs), sizeof(struct ocontext *));
+	if (!isid_array) {
+		ERR(NULL, "Out of memory");
+		strs_free_all(strs);
+		strs_destroy(&strs);
+		return -1;
+	}
 	for (isid = isids; isid != NULL; isid = isid->next) {
 		i = isid->sid[0];
-		if (i < num_sids && sid_to_string[i]) {
-			sid = (char*)sid_to_string[i];
-		} else {
-			snprintf(unknown, 18, "%s%u", "UNKNOWN", i);
-			sid = unknown;
+		if (i < strs_num_items(strs)) {
+			isid_array[i] = isid;
 		}
-		cil_println(0, "(sid %s)", sid);
-		cil_printf("(sidcontext %s ", sid);
-		context_to_cil(pdb, &isid->context[0]);
-		cil_printf(")\n");
-
-		// get the sid names in the correct order (reverse from the isids
-		// ocontext) for sidorder statement
-		item = malloc(sizeof(*item));
-		if (item == NULL) {
-			ERR(NULL, "Out of memory");
-			rc = -1;
-			goto exit;
-		}
-		item->sid_key = strdup(sid);
-		if (!item->sid_key) {
-			ERR(NULL, "Out of memory");
-			free(item);
-			rc = -1;
-			goto exit;
-		}
-		item->next = head;
-		head = item;
 	}
-
-	if (head != NULL) {
-		cil_printf("(sidorder (");
-		for (item = head; item != NULL; item = item->next) {
-			cil_printf("%s ", item->sid_key);
+	for (i=1; i < strs_num_items(strs); i++) {
+		if (isid_array[i]) {
+			sid = strs_read_at_index(strs, i);
+			cil_printf("(sidcontext %s ", sid);
+			isid = isid_array[i];
+			context_to_cil(pdb, &isid->context[0]);
+			cil_printf(")\n");
 		}
-		cil_printf("))\n");
 	}
+	free(isid_array);
 
-	rc = 0;
+	strs_free_all(strs);
+	strs_destroy(&strs);
 
-exit:
-	while(head) {
-		item = head;
-		head = item->next;
-		free(item->sid_key);
-		free(item);
-	}
-	return rc;
+	return 0;
 }
 
 static int ocontext_selinux_isid_to_cil(struct policydb *pdb, struct ocontext *isids)

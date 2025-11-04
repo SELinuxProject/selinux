@@ -115,4 +115,5 @@ int strs_stack_push(struct strs *stack, char *s);
 char *strs_stack_pop(struct strs *stack);
 int strs_stack_empty(const struct strs *stack);
 
+struct strs *isids_to_strs(const char *const *sid_to_str, unsigned num_sids, struct ocontext *isids);
 int sort_ocontexts(struct policydb *pdb);

@@ -463,53 +463,30 @@ static int write_class_decl_rules_to_conf(FILE *out, struct policydb *pdb)
 static int write_sids_to_conf(FILE *out, const char *const *sid_to_str,
 			      unsigned num_sids, struct ocontext *isids)
 {
-	struct ocontext *isid;
 	struct strs *strs;
 	char *sid;
-	char unknown[18];
 	unsigned i;
-	int rc;
 
-	rc = strs_init(&strs, num_sids+1);
-	if (rc != 0) {
-		goto exit;
+	strs = isids_to_strs(sid_to_str, num_sids, isids);
+	if (!strs) {
+		ERR(NULL, "Error writing sid rules to policy.conf");
+		return -1;
 	}
 
-	for (isid = isids; isid != NULL; isid = isid->next) {
-		i = isid->sid[0];
-		if (i < num_sids && sid_to_str[i]) {
-			sid = strdup(sid_to_str[i]);
-		} else {
-			snprintf(unknown, sizeof(unknown), "%s%u", "UNKNOWN", i);
-			sid = strdup(unknown);
-		}
-		if (!sid) {
-			rc = -1;
-			goto exit;
-		}
-		rc = strs_add_at_index(strs, sid, i);
-		if (rc != 0) {
-			free(sid);
-			goto exit;
-		}
+	if (strs_num_items(strs) == 0) {
+		strs_destroy(&strs);
+		return 0;
 	}
 
-	for (i=0; i<strs_num_items(strs); i++) {
+	for (i=1; i < strs_num_items(strs); i++) {
 		sid = strs_read_at_index(strs, i);
-		if (!sid) {
-			continue;
-		}
 		sepol_printf(out, "sid %s\n", sid);
 	}
 
-exit:
 	strs_free_all(strs);
 	strs_destroy(&strs);
-	if (rc != 0) {
-		ERR(NULL, "Error writing sid rules to policy.conf");
-	}
 
-	return rc;
+	return 0;
 }
 
 static int write_sid_decl_rules_to_conf(FILE *out, struct policydb *pdb)
