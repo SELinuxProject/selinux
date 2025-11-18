@@ -153,6 +153,9 @@ display warnings about entries that had no matching files by outputting the
 .BR selabel_stats (3)
 results.
 .TP
+.B \-c
+count and display the number of (would be) relabeled files. The exit code will be set to 0 only if at least one file is relabeled.
+.TP
 .B \-0
 the separator for the input items is assumed to be the null character
 (instead of the white space).  The quotes and the backslash characters are

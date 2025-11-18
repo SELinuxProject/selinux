@@ -69,6 +69,9 @@ static struct dir_xattr *dir_xattr_last;
 /* Number of errors ignored during the file tree walk. */
 static long unsigned skipped_errors;
 
+/* Number of successfully relabeled files or files that would be relabeled */
+static long unsigned relabeled_files;
+
 /* restorecon_flags for passing to restorecon_sb() */
 struct rest_flags {
 	bool nochange;
@@ -88,6 +91,7 @@ struct rest_flags {
 	bool warnonnomatch;
 	bool conflicterror;
 	bool count_errors;
+	bool count_relabeled;
 };
 
 static void restorecon_init(void)
@@ -650,11 +654,12 @@ out:
 }
 
 static int restorecon_sb(const char *pathname, const struct stat *sb,
-			    const struct rest_flags *flags, bool first)
+			    const struct rest_flags *flags, bool first, bool *updated_out)
 {
 	char *newcon = NULL;
 	char *curcon = NULL;
 	int rc;
+	bool updated = false;
 	const char *lookup_path = pathname;
 
 	if (rootpath) {
@@ -736,7 +741,6 @@ static int restorecon_sb(const char *pathname, const struct stat *sb,
 	}
 
 	if (curcon == NULL || strcmp(curcon, newcon) != 0) {
-		bool updated = false;
 
 		if (!flags->set_specctx && curcon &&
 				    (is_context_customizable(curcon) > 0)) {
@@ -796,9 +800,14 @@ static int restorecon_sb(const char *pathname, const struct stat *sb,
 				syslog(LOG_INFO, "labeling %s to %s\n",
 					    pathname, newcon);
 		}
+
+		/* Note: relabel counting handled by caller */
+
 	}
 
 out:
+	if (updated_out)
+		*updated_out = updated;
 	rc = 0;
 out1:
 	freecon(curcon);
@@ -887,6 +896,7 @@ struct rest_state {
 	bool abort;
 	int error;
 	long unsigned skipped_errors;
+	long unsigned relabeled_files;
 	int saved_errno;
 	pthread_mutex_t mutex;
 };
@@ -1010,8 +1020,9 @@ loop_body:
 			if (state->parallel)
 				pthread_mutex_unlock(&state->mutex);
 
+			bool updated = false;
 			error = restorecon_sb(ent_path, &ent_st, &state->flags,
-					      first);
+					      first, &updated);
 
 			if (state->parallel) {
 				pthread_mutex_lock(&state->mutex);
@@ -1030,6 +1041,8 @@ loop_body:
 					state->skipped_errors++;
 				else
 					state->error = error;
+			} else if (updated && state->flags.count_relabeled) {
+				state->relabeled_files++;
 			}
 			break;
 		}
@@ -1087,6 +1100,8 @@ static int selinux_restorecon_common(const char *pathname_orig,
 		    SELINUX_RESTORECON_IGNORE_DIGEST) ? true : false;
 	state.flags.count_errors = (restorecon_flags &
 		    SELINUX_RESTORECON_COUNT_ERRORS) ? true : false;
+	state.flags.count_relabeled = (restorecon_flags &
+		    SELINUX_RESTORECON_COUNT_RELABELED) ? true : false;
 	state.setrestorecondigest = true;
 
 	state.head = NULL;
@@ -1094,6 +1109,7 @@ static int selinux_restorecon_common(const char *pathname_orig,
 	state.abort = false;
 	state.error = 0;
 	state.skipped_errors = 0;
+	state.relabeled_files = 0;
 	state.saved_errno = 0;
 
 	struct stat sb;
@@ -1215,7 +1231,11 @@ static int selinux_restorecon_common(const char *pathname_orig,
 			goto cleanup;
 		}
 
-		error = restorecon_sb(pathname, &sb, &state.flags, true);
+		bool updated = false;
+		error = restorecon_sb(pathname, &sb, &state.flags, true, &updated);
+		if (updated && state.flags.count_relabeled) {
+			state.relabeled_files++;
+		}
 		goto cleanup;
 	}
 
@@ -1341,6 +1361,7 @@ out:
 	(void) fts_close(state.fts);
 	errno = state.saved_errno;
 cleanup:
+	relabeled_files = state.relabeled_files;
 	if (state.flags.add_assoc) {
 		if (state.flags.verbose)
 			filespec_eval();
@@ -1617,4 +1638,9 @@ cleanup:
 long unsigned selinux_restorecon_get_skipped_errors(void)
 {
 	return skipped_errors;
+}
+
+long unsigned selinux_restorecon_get_relabeled_files(void)
+{
+	return relabeled_files;
 }

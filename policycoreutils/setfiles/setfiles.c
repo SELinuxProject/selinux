@@ -35,8 +35,8 @@ static __attribute__((__noreturn__)) void usage(const char *const name)
 {
 	if (iamrestorecon) {
 		fprintf(stderr,
-			"usage:  %s [-iIDFUmnprRv0xT] [-e excludedir] pathname...\n"
-			"usage:  %s [-iIDFUmnprRv0xT] [-e excludedir] -f filename\n",
+			"usage:  %s [-ciIDFUmnprRv0xT] [-e excludedir] pathname...\n"
+			"usage:  %s [-ciIDFUmnprRv0xT] [-e excludedir] -f filename\n",
 			name, name);
 	} else {
 		fprintf(stderr,
@@ -146,11 +146,12 @@ int main(int argc, char **argv)
 	size_t buf_len, nthreads = 1;
 	const char *base;
 	int errors = 0;
-	const char *ropts = "e:f:hiIDlmno:pqrsvFURW0xT:";
+	const char *ropts = "ce:f:hiIDlmno:pqrsvFURW0xT:";
 	const char *sopts = "c:de:f:hiIDlmno:pqr:svACEFUR:W0T:";
 	const char *opts;
 	union selinux_callback cb;
 	long unsigned skipped_errors;
+	long unsigned relabeled_files;
 
 	/* Initialize variables */
 	memset(&r_opts, 0, sizeof(r_opts));
@@ -160,6 +161,7 @@ int main(int argc, char **argv)
 	request_digest = 0;
 	policyfile = NULL;
 	skipped_errors = 0;
+	relabeled_files = 0;
 
 	if (!argv[0]) {
 		fprintf(stderr, "Called without required program name!\n");
@@ -223,7 +225,10 @@ int main(int argc, char **argv)
 	while ((opt = getopt(argc, argv, opts)) > 0) {
 		switch (opt) {
 		case 'c':
-			{
+			if (iamrestorecon) {
+				r_opts.count_relabeled = SELINUX_RESTORECON_COUNT_RELABELED;
+				break;
+			} else {
 				FILE *policystream;
 
 				policyfile = optarg;
@@ -457,14 +462,14 @@ int main(int argc, char **argv)
 			if (!strcmp(buf, "/"))
 				r_opts.mass_relabel = SELINUX_RESTORECON_MASS_RELABEL;
 			errors |= process_glob(buf, &r_opts, nthreads,
-					       &skipped_errors) < 0;
+					       &skipped_errors, &relabeled_files) < 0;
 		}
 		if (strcmp(input_filename, "-") != 0)
 			fclose(f);
 	} else {
 		for (i = optind; i < argc; i++)
 			errors |= process_glob(argv[i], &r_opts, nthreads,
-					       &skipped_errors) < 0;
+					       &skipped_errors, &relabeled_files) < 0;
 	}
 
 	if (r_opts.mass_relabel && !r_opts.nochange)
@@ -478,6 +483,15 @@ int main(int argc, char **argv)
 
 	if (r_opts.progress)
 		fprintf(stdout, "\n");
+
+	/* Output relabeled file count if requested */
+	if (r_opts.count_relabeled) {
+		long unsigned relabeled_count = selinux_restorecon_get_relabeled_files();
+		printf("Relabeled %lu files\n", relabeled_count);
+
+		/* Set exit code to 0 if at least one file was relabeled */
+		exit(errors ? -1 : relabeled_count ? 0 : 1);
+	}
 
 	exit(errors ? -1 : skipped_errors ? 1 : 0);
 }

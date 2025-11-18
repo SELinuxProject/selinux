@@ -134,6 +134,11 @@ extern int selinux_restorecon_parallel(const char *pathname,
  */
 #define SELINUX_RESTORECON_SET_USER_ROLE		0x40000
 
+/*
+ * Count the number of relabeled files (or would be relabeled if "nochange" was not set).
+ */
+ #define SELINUX_RESTORECON_COUNT_RELABELED		0x80000
+
 /**
  * selinux_restorecon_set_sehandle - Set the global fc handle.
  * @hndl: specifies handle to set as the global fc handle.
@@ -227,6 +232,16 @@ extern int selinux_restorecon_xattr(const char *pathname,
  * errors ignored during the file tree walk.
  */
 extern long unsigned selinux_restorecon_get_skipped_errors(void);
+
+/* selinux_restorecon_get_relabeled_files - Get the number of relabeled files
+ *
+ * If SELINUX_RESTORECON_COUNT_RELABELED was passed to selinux_restorecon(3) or
+ * selinux_restorecon_parallel(3), this function returns the number of files
+ * that were successfully relabeled.
+ * If the SELINUX_RESTORECON_NOCHANGE flag was set, this function returns
+ * the number of files that would be relabeled.
+ */
+extern long unsigned selinux_restorecon_get_relabeled_files(void);
 
 #ifdef __cplusplus
 }

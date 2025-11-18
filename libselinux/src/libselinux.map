@@ -262,3 +262,8 @@ LIBSELINUX_3.9 {
   global:
     context_to_str;
 } LIBSELINUX_3.8;
+
+LIBSELINUX_3.10 {
+  global:
+    selinux_restorecon_get_relabeled_files;
+} LIBSELINUX_3.9;
