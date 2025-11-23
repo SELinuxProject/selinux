@@ -93,7 +93,7 @@ Definitions may be repeated many times throughout the policy. Duplicates will re
 Symbol Character Set
 --------------------
 
-Symbols (any string not enclosed in double quotes) must only contain alphanumeric `[a-z A-Z] [0-9]` characters plus the following special characters: `\.@=/-_$%@+!|&^:`
+Symbols (any string not enclosed in double quotes) must only contain alphanumeric `[a-z A-Z] [0-9]` characters plus the following special characters: `\.=/-_$%@+!|&^:`
 
 However symbols are checked for any specific character set limitations, for example:
 
