@@ -207,8 +207,7 @@ int declare_symbol(uint32_t symbol_type,
 	return ret;
 }
 
-static int role_implicit_bounds(hashtab_t roles_tab,
-				char *role_id, role_datum_t *role)
+static int role_implicit_bounds(hashtab_t roles_tab, char *role_id, role_datum_t *role)
 {
 	role_datum_t *bounds;
 	char *bounds_id, *delim;
@@ -226,21 +225,13 @@ static int role_implicit_bounds(hashtab_t roles_tab,
 
 	bounds = hashtab_search(roles_tab, bounds_id);
 	if (!bounds) {
-		yyerror2("role %s doesn't exist, is implicit bounds of %s",
-			 bounds_id, role_id);
+		yyerror2("Implicit role bounds declared (%s), but the parent (%s) was not found in the same scope", role_id, bounds_id);
 		free(bounds_id);
 		return -1;
 	}
 
-	if (!role->bounds)
-		role->bounds = bounds->s.value;
-	else if (role->bounds != bounds->s.value) {
-		yyerror2("role %s has inconsistent bounds %s/%s",
-			 role_id, bounds_id,
-			 policydbp->p_role_val_to_name[role->bounds - 1]);
-		free(bounds_id);
-		return -1;
-	}
+	role->bounds = bounds->s.value;
+
 	free(bounds_id);
 
 	return 0;
@@ -456,8 +447,7 @@ type_datum_t *declare_type(unsigned char primary, unsigned char isattr)
 	return type;
 }
 
-static int user_implicit_bounds(hashtab_t users_tab,
-				char *user_id, user_datum_t *user)
+static int user_implicit_bounds(hashtab_t users_tab, char *user_id, user_datum_t *user)
 {
 	user_datum_t *bounds;
 	char *bounds_id, *delim;
@@ -475,21 +465,13 @@ static int user_implicit_bounds(hashtab_t users_tab,
 
 	bounds = hashtab_search(users_tab, bounds_id);
 	if (!bounds) {
-		yyerror2("user %s doesn't exist, is implicit bounds of %s",
-			 bounds_id, user_id);
+		yyerror2("Implicit user bounds declared (%s), but the parent (%s) was not found in the same scope", user_id, bounds_id);
 		free(bounds_id);
 		return -1;
 	}
 
-	if (!user->bounds)
-		user->bounds = bounds->s.value;
-	else if (user->bounds != bounds->s.value) {
-		yyerror2("user %s has inconsistent bounds %s/%s",
-			 user_id, bounds_id,
-			 policydbp->p_role_val_to_name[user->bounds - 1]);
-		free(bounds_id);
-		return -1;
-	}
+	user->bounds = bounds->s.value;
+
 	free(bounds_id);
 
 	return 0;
