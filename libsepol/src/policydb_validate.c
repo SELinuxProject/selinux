@@ -665,6 +665,8 @@ bad:
 
 static int validate_mls_level(const mls_level_t *level, const validate_t *sens, const validate_t *cats)
 {
+	if (level->sens == 0)
+		return 0;
 	if (validate_value(level->sens, sens))
 		goto bad;
 	if (validate_ebitmap(&level->cat, cats))
@@ -679,6 +681,9 @@ static int validate_mls_level(const mls_level_t *level, const validate_t *sens, 
 static int validate_level_datum(sepol_handle_t *handle, const level_datum_t *level, validate_t flavors[], const policydb_t *p)
 {
 	if (level->notdefined != 0)
+		goto bad;
+
+	if (level->level->sens == 0)
 		goto bad;
 
 	if (validate_mls_level(level->level, &flavors[SYM_LEVELS], &flavors[SYM_CATS]))
