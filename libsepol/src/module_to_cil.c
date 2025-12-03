@@ -516,11 +516,11 @@ static int is_id_in_scope(struct policydb *pdb, struct stack *decl_stack, char *
 	return is_id_in_scope_with_start(pdb, decl_stack, start, symbol_type, type);
 }
 
-static int semantic_level_to_cil(struct policydb *pdb, int sens_offset, struct mls_semantic_level *level)
+static int semantic_level_to_cil(struct policydb *pdb, struct mls_semantic_level *level)
 {
 	struct mls_semantic_cat *cat;
 
-	cil_printf("(%s ", pdb->p_sens_val_to_name[level->sens - sens_offset]);
+	cil_printf("(%s ", pdb->p_sens_val_to_name[level->sens - 1]);
 
 	if (level->cat != NULL) {
 		cil_printf("(");
@@ -1586,14 +1586,14 @@ static int range_trans_to_cil(int indent, struct policydb *pdb, struct range_tra
 
 					cil_printf("(");
 
-					rc = semantic_level_to_cil(pdb, 1, &rule->trange.level[0]);
+					rc = semantic_level_to_cil(pdb, &rule->trange.level[0]);
 					if (rc != 0) {
 						goto exit;
 					}
 
 					cil_printf(" ");
 
-					rc = semantic_level_to_cil(pdb, 1, &rule->trange.level[1]);
+					rc = semantic_level_to_cil(pdb, &rule->trange.level[1]);
 					if (rc != 0) {
 						goto exit;
 					}
@@ -2320,7 +2320,7 @@ exit:
 	return rc;
 }
 
-static int user_to_cil(int indent, struct policydb *pdb, struct avrule_block *block, struct stack *UNUSED(decl_stack), char *key, void *datum,  int scope)
+static int user_to_cil(int indent, struct policydb *pdb, struct avrule_block *UNUSED(block), struct stack *UNUSED(decl_stack), char *key, void *datum,  int scope)
 {
 	struct user_datum *user = datum;
 	struct ebitmap roles = user->roles.roles;
@@ -2328,7 +2328,6 @@ static int user_to_cil(int indent, struct policydb *pdb, struct avrule_block *bl
 	struct mls_semantic_range range = user->range;
 	struct ebitmap_node *node;
 	uint32_t i;
-	int sens_offset = 1;
 
 	if (scope == SCOPE_DECL) {
 		cil_println(indent, "(user %s)", key);
@@ -2341,16 +2340,10 @@ static int user_to_cil(int indent, struct policydb *pdb, struct avrule_block *bl
 		cil_println(indent, "(userrole %s %s)", key, pdb->p_role_val_to_name[i]);
 	}
 
-	if (block->flags & AVRULE_OPTIONAL) {
-		// sensitivities in user statements in optionals do not have the
-		// standard -1 offset
-		sens_offset = 0;
-	}
-
 	cil_indent(indent);
 	cil_printf("(userlevel %s ", key);
 	if (pdb->mls) {
-		semantic_level_to_cil(pdb, sens_offset, &level);
+		semantic_level_to_cil(pdb, &level);
 	} else {
 		cil_printf(DEFAULT_LEVEL);
 	}
@@ -2359,9 +2352,9 @@ static int user_to_cil(int indent, struct policydb *pdb, struct avrule_block *bl
 	cil_indent(indent);
 	cil_printf("(userrange %s (", key);
 	if (pdb->mls) {
-		semantic_level_to_cil(pdb, sens_offset, &range.level[0]);
+		semantic_level_to_cil(pdb, &range.level[0]);
 		cil_printf(" ");
-		semantic_level_to_cil(pdb, sens_offset, &range.level[1]);
+		semantic_level_to_cil(pdb, &range.level[1]);
 	} else {
 		cil_printf(DEFAULT_LEVEL " " DEFAULT_LEVEL);
 	}
