@@ -766,13 +766,19 @@ static int type_bounds_copy_callback(hashtab_key_t key,
 	type_datum_t *type = (type_datum_t *) datum;
 	type_datum_t *dest;
 	uint32_t bounds_val;
+	hashtab_t type_tab;
 
 	if (!type->bounds)
 		return 0;
 
+	if (state->dest_decl == NULL)
+		type_tab = state->base->p_types.table;
+	else
+		type_tab = state->dest_decl->p_types.table;
+
 	bounds_val = state->cur->map[SYM_TYPES][type->bounds - 1];
 
-	dest = hashtab_search(state->base->p_types.table, key);
+	dest = hashtab_search(type_tab, key);
 	if (!dest) {
 		ERR(state->handle,
 		    "Type lookup failed for %s", (char *)key);
@@ -795,13 +801,19 @@ static int role_bounds_copy_callback(hashtab_key_t key,
 	role_datum_t *role = (role_datum_t *) datum;
 	role_datum_t *dest;
 	uint32_t bounds_val;
+	hashtab_t role_tab;
 
 	if (!role->bounds)
 		return 0;
 
+	if (state->dest_decl == NULL)
+		role_tab = state->base->p_roles.table;
+	else
+		role_tab = state->dest_decl->p_roles.table;
+
 	bounds_val = state->cur->map[SYM_ROLES][role->bounds - 1];
 
-	dest = hashtab_search(state->base->p_roles.table, key);
+	dest = hashtab_search(role_tab, key);
 	if (!dest) {
 		ERR(state->handle,
 		    "Role lookup failed for %s", (char *)key);
@@ -824,13 +836,19 @@ static int user_bounds_copy_callback(hashtab_key_t key,
 	user_datum_t *user = (user_datum_t *) datum;
 	user_datum_t *dest;
 	uint32_t bounds_val;
+	hashtab_t user_tab;
 
 	if (!user->bounds)
 		return 0;
 
+	if (state->dest_decl == NULL)
+		user_tab = state->base->p_users.table;
+	else
+		user_tab = state->dest_decl->p_users.table;
+
 	bounds_val = state->cur->map[SYM_USERS][user->bounds - 1];
 
-	dest = hashtab_search(state->base->p_users.table, key);
+	dest = hashtab_search(user_tab, key);
 	if (!dest) {
 		ERR(state->handle,
 		    "User lookup failed for %s", (char *)key);

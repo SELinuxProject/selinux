@@ -3146,15 +3146,25 @@ int expand_module(sepol_handle_t * handle,
 		    (decl->p_types.table, attr_convert_callback, &state)) {
 			goto cleanup;
 		}
+		/* copy type bounds */
+		if (hashtab_map(decl->p_types.table,
+						type_bounds_copy_callback, &state))
+			goto cleanup;
 
 		/* copy roles */
 		if (hashtab_map
 		    (decl->p_roles.table, role_copy_callback, &state))
 			goto cleanup;
+		if (hashtab_map(state.base->p_roles.table,
+						role_bounds_copy_callback, &state))
+			goto cleanup;
 
 		/* copy users */
 		if (hashtab_map
 		    (decl->p_users.table, user_copy_callback, &state))
+			goto cleanup;
+		if (hashtab_map(decl->p_users.table,
+						user_bounds_copy_callback, &state))
 			goto cleanup;
 
 	}

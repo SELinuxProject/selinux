@@ -1484,6 +1484,8 @@ int define_typeattribute(void)
 static int define_typebounds_helper(const char *bounds_id, const char *type_id)
 {
 	type_datum_t *bounds, *type;
+	char *id;
+	uint32_t value;
 
 	if (!is_id_in_scope(SYM_TYPES, bounds_id)) {
 		yyerror2("type %s is not within scope", bounds_id);
@@ -1507,10 +1509,11 @@ static int define_typebounds_helper(const char *bounds_id, const char *type_id)
 		return -1;
 	}
 
-	if (type->flavor == TYPE_TYPE && !type->primary) {
-		type = policydbp->type_val_to_struct[type->s.value - 1];
-	} else if (type->flavor == TYPE_ALIAS) {
-		type = policydbp->type_val_to_struct[type->primary - 1];
+	id = strdup(type_id);
+	value = (type->flavor != TYPE_ALIAS) ? type->s.value : type->primary;
+	type = get_local_type(id, value, 0);
+	if (!type) {
+		yyerror("Out of memory!");
 	}
 
 	if (!type->bounds)
