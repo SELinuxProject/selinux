@@ -1262,6 +1262,63 @@ allow %s_t %s_t:%s_socket name_%s;
         return fcfile
 
     def __extract_rpms(self):
+        # Try dnf5 first, fall back to dnf4
+        try:
+            import libdnf5
+            self.__extract_rpms_dnf5()
+        except ImportError:
+            try:
+                import dnf
+                self.__extract_rpms_dnf4()
+            except ImportError:
+                pass
+
+    def __extract_rpms_dnf5(self):
+        import libdnf5
+
+        base = libdnf5.base.Base()
+        base.load_config()
+        base.setup()
+
+        repo_sack = base.get_repo_sack()
+        repo_sack.create_repos_from_system_configuration()
+
+        repo_sack.load_repos()
+
+        query = libdnf5.rpm.PackageQuery(base)
+        query.filter_file([self.program])
+        query.filter_available()
+
+        for pkg in query:
+            self.rpms.append(pkg.get_name())
+            files = pkg.get_files()
+            for fname in files:
+                for b in self.DEFAULT_DIRS:
+                    if b == "/etc":
+                        continue
+                    if fname.startswith(b):
+                        if os.path.isfile(fname):
+                            self.add_file(fname)
+                        else:
+                            self.add_dir(fname)
+
+            # Query for source package
+            src_query = libdnf5.rpm.PackageQuery(base)
+            src_query.filter_provides([pkg.get_source_name()])
+            src_query.filter_available()
+            for bpkg in src_query:
+                files = bpkg.get_files()
+                for fname in files:
+                    for b in self.DEFAULT_DIRS:
+                        if b == "/etc":
+                            continue
+                        if fname.startswith(b):
+                            if os.path.isfile(fname):
+                                self.add_file(fname)
+                            else:
+                                self.add_dir(fname)
+
+    def __extract_rpms_dnf4(self):
         import dnf
 
         with dnf.Base() as base:
