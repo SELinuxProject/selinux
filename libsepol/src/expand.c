@@ -875,7 +875,7 @@ static int expand_role_attributes_in_attributes(sepol_handle_t *handle, policydb
 	ebitmap_init(&attrs);
 	for (i=0; i < p->p_roles.nprim; i++) {
 		rd = p->role_val_to_struct[i];
-		if (rd->flavor == ROLE_ATTRIB) {
+		if (rd && rd->flavor == ROLE_ATTRIB) {
 			ebitmap_set_bit(&attrs, i, 1);
 		}
 	}
@@ -887,9 +887,6 @@ static int expand_role_attributes_in_attributes(sepol_handle_t *handle, policydb
 			rd = p->role_val_to_struct[i];
 			if (ebitmap_match_any(&rd->roles, &attrs)) {
 				done = 0;
-				if (ebitmap_get_bit(&rd->roles, i)) {
-					ERR(handle, "Before: attr has own bit set: %d\n", i);
-				}
 				ebitmap_init(&roles);
 				ebitmap_for_each_positive_bit(&rd->roles, nj, j) {
 					if (ebitmap_get_bit(&attrs, j)) {
@@ -901,18 +898,20 @@ static int expand_role_attributes_in_attributes(sepol_handle_t *handle, policydb
 				ebitmap_union(&rd->roles, &roles);
 				ebitmap_destroy(&roles);
 				if (ebitmap_get_bit(&rd->roles, i)) {
-					ERR(handle, "After: attr has own bit set: %d\n", i);
-					done = 1; /* Just end early */
+					ERR(handle, "Found loop in role attributes involving: %s", p->p_role_val_to_name[i]);
+					ebitmap_destroy(&attrs);
+					return -1;
 				}
 			}
 		}
 	}
 
-	if (reps >= p->p_roles.nprim) {
-		ERR(handle, "Had to bail: reps = %u\n", reps);
-	}
-
 	ebitmap_destroy(&attrs);
+
+	if (!done) {
+		ERR(handle, "Failed to expand role attributes");
+		return -1;
+	}
 
 	return 0;
 }
