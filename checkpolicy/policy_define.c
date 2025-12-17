@@ -1440,11 +1440,18 @@ int define_typeattribute(void)
 		return -1;
 	}
 	t = hashtab_search(policydbp->p_types.table, id);
-	if (!t || t->flavor == TYPE_ATTRIB) {
+	if (!t) {
 		yyerror2("unknown type %s", id);
 		free(id);
 		return -1;
+	} else if (t->flavor == TYPE_ATTRIB) {
+		if (policydbp->policy_type != POLICY_KERN && policydbp->policyvers < MOD_POLICYDB_VERSION_TYPE_ATTR_ATTRS) {
+			yyerror2("Type attributes cannot be used in a typeattribute definition in policy version %d", policydbp->policyvers);
+			free(id);
+			return -1;
+		}
 	}
+
 	free(id);
 
 	while ((id = queue_remove(id_queue))) {

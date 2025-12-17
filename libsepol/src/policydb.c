@@ -363,6 +363,13 @@ static const struct policydb_compat_info policydb_compat[] = {
 	 .target_platform = SEPOL_TARGET_SELINUX,
 	},
 	{
+	 .type = POLICY_BASE,
+	 .version = MOD_POLICYDB_VERSION_TYPE_ATTR_ATTRS,
+	 .sym_num = SYM_NUM,
+	 .ocon_num = OCON_IBENDPORT + 1,
+	 .target_platform = SEPOL_TARGET_SELINUX,
+	},
+	{
 	 .type = POLICY_MOD,
 	 .version = MOD_POLICYDB_VERSION_BASE,
 	 .sym_num = SYM_NUM,
@@ -498,6 +505,13 @@ static const struct policydb_compat_info policydb_compat[] = {
 	{
 	 .type = POLICY_MOD,
 	 .version = MOD_POLICYDB_VERSION_NEVERAUDIT,
+	 .sym_num = SYM_NUM,
+	 .ocon_num = 0,
+	 .target_platform = SEPOL_TARGET_SELINUX,
+	},
+	{
+	 .type = POLICY_MOD,
+	 .version = MOD_POLICYDB_VERSION_TYPE_ATTR_ATTRS,
 	 .sym_num = SYM_NUM,
 	 .ocon_num = 0,
 	 .target_platform = SEPOL_TARGET_SELINUX,
@@ -4492,16 +4506,19 @@ int policydb_read(policydb_t * p, struct policy_file *fp, unsigned verbose)
 			if (r_policyvers >= POLICYDB_VERSION_AVTAB) {
 				if (ebitmap_read(&p->type_attr_map[i], fp))
 					goto bad;
-				ebitmap_for_each_positive_bit(&p->type_attr_map[i],
-							 tnode, j) {
+				ebitmap_for_each_positive_bit(&p->type_attr_map[i], tnode, j) {
 					if (i == j)
 						continue;
 
 					if (j >= p->p_types.nprim)
 						goto bad;
 
-					if (ebitmap_set_bit
-					    (&p->attr_type_map[j], i, 1))
+					if (p->type_val_to_struct[i]->flavor == TYPE_ATTRIB) {
+						ERR(fp->handle, "Invalid to have type attributes associated with an attribute for a kernel policy");
+						goto bad;
+					}
+
+					if (ebitmap_set_bit(&p->attr_type_map[j], i, 1))
 						goto bad;
 				}
 			}

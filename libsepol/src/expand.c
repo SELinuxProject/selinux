@@ -222,6 +222,56 @@ static int attr_convert_callback(hashtab_key_t key, hashtab_datum_t datum,
 	return 0;
 }
 
+static int expand_attributes_in_attributes(sepol_handle_t *handle, policydb_t *p)
+{
+	ebitmap_t attrs, types;
+	ebitmap_node_t *ni, *nj;
+	unsigned int i, j, reps = 0, done = 0;
+	type_datum_t *td, *ad;
+
+	ebitmap_init(&attrs);
+	for (i=0; i < p->p_types.nprim; i++) {
+		td = p->type_val_to_struct[i];
+		if (td && td->flavor == TYPE_ATTRIB)
+			ebitmap_set_bit(&attrs, i, 1);
+	}
+
+	while (!done && reps < p->p_types.nprim) {
+		done = 1;
+		reps++;
+		ebitmap_for_each_positive_bit(&attrs, ni, i) {
+			td = p->type_val_to_struct[i];
+			if (ebitmap_match_any(&td->types, &attrs)) {
+				done = 0;
+				ebitmap_init(&types);
+				ebitmap_for_each_positive_bit(&td->types, nj, j) {
+					if (ebitmap_get_bit(&attrs, j)) {
+						ad = p->type_val_to_struct[j];
+						ebitmap_union(&types, &ad->types);
+						ebitmap_set_bit(&td->types, j, 0);
+					}
+				}
+				ebitmap_union(&td->types, &types);
+				ebitmap_destroy(&types);
+				if (ebitmap_get_bit(&td->types, i)) {
+					ERR(handle, "Found loop in type attributes involving: %s", p->p_type_val_to_name[i]);
+					ebitmap_destroy(&attrs);
+					return -1;
+				}
+			}
+		}
+	}
+
+	ebitmap_destroy(&attrs);
+
+	if (!done) {
+		ERR(handle, "Failed to expand attributes");
+		return -1;
+	}
+
+	return 0;
+}
+
 static int perm_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 			      void *data)
 {
@@ -3159,6 +3209,10 @@ int expand_module(sepol_handle_t * handle,
 			goto cleanup;
 		if (hashtab_map(decl->p_types.table, type_bounds_copy_callback, &state))
 			goto cleanup;
+	}
+	/* Expand any attributes in each attributes' types ebitmap */
+	if (expand_attributes_in_attributes(state.handle, state.out)) {
+		goto cleanup;
 	}
 
 	/* copy commons */

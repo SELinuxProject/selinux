@@ -566,6 +566,27 @@ bad:
 	return -1;
 }
 
+static int validate_types_in_attribute(const ebitmap_t *map, const policydb_t *p, const validate_t flavors[SYM_NUM])
+{
+	ebitmap_node_t *node;
+	uint32_t i;
+
+	if (validate_ebitmap(map, &flavors[SYM_TYPES]))
+		goto bad;
+
+	if (p->policy_type != POLICY_KERN && p->policyvers < MOD_POLICYDB_VERSION_TYPE_ATTR_ATTRS) {
+		ebitmap_for_each_positive_bit(map, node, i) {
+			if (validate_simpletype(i+1, p, flavors))
+				goto bad;
+		}
+	}
+
+	return 0;
+
+bad:
+	return -1;
+}
+
 static int validate_type_datum(sepol_handle_t *handle, const type_datum_t *type, const policydb_t *p, validate_t flavors[])
 {
 	if (validate_value(type->s.value, &flavors[SYM_TYPES]))
@@ -582,8 +603,13 @@ static int validate_type_datum(sepol_handle_t *handle, const type_datum_t *type,
 			goto bad;
 		break;
 	case TYPE_ATTRIB:
-		if (validate_ebitmap(&type->types, &flavors[SYM_TYPES]))
-			goto bad;
+		if (p->policy_type == POLICY_KERN) {
+			if (!ebitmap_is_empty(&type->types))
+				goto bad;
+		} else {
+			if (validate_types_in_attribute(&type->types, p, flavors))
+				goto bad;
+		}
 		if (type->bounds)
 			goto bad;
 		break;
