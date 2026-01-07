@@ -56,6 +56,12 @@
 #define USAGE_STRING _("USAGE: seunshare [ -v ] [ -C ] [ -k ] [ -t tmpdir ] [ -h homedir ] \
 [ -r runuserdir ] [ -P pipewiresocket ] [ -W waylandsocket ] [ -Z CONTEXT ] -- executable [args] ")
 
+#define strdup_or_err(args, index, src) do {	\
+		args[index] = strdup(src); \
+		if (! args[index]) \
+			goto err; \
+	} while(0)
+
 static int verbose = 0;
 static int child = 0;
 
@@ -136,15 +142,14 @@ static int set_signal_handles(void)
 	} while(0)
 
 /**
- * Spawn external command using system() with dropped privileges.
- * TODO: avoid system() and use exec*() instead
+ * Spawn external command with dropped privileges.
  */
-static int spawn_command(const char *cmd, uid_t uid){
+static int spawn_command(char **cmd, uid_t uid){
 	int childpid;
 	int status = -1;
 
 	if (verbose > 1)
-		printf("spawn_command: %s\n", cmd);
+		printf("spawn_command: %s\n", cmd[0]);
 
 	childpid = fork();
 	if (childpid == -1) {
@@ -155,8 +160,7 @@ static int spawn_command(const char *cmd, uid_t uid){
 	if (childpid == 0) {
 		if (drop_privs(uid) != 0) exit(-1);
 
-		status = system(cmd);
-		status_to_retval(status, status);
+		status = execv(cmd[0], cmd);
 		exit(status);
 	}
 
@@ -342,15 +346,24 @@ static int bad_path(const char *path) {
 	return 0;
 }
 
-static int rsynccmd(const char * src, const char *dst, char **cmdbuf)
-{
+static void free_args(char **args) {
+	char **args_p = args;
+	if (! args)
+		return;
+	while (*args_p != NULL) {
+		free(*args_p);
+		args_p++;
+	}
+	free(args);
+}
+
+static int rsynccmd(const char * src, const char *dst, char ***cmd) {
+	char **args;
 	char *buf = NULL;
-	char *newbuf = NULL;
 	glob_t fglob;
 	fglob.gl_offs = 0;
 	int flags = GLOB_PERIOD;
-	unsigned int i = 0;
-	int rc = -1;
+	unsigned int i = 0, index;
 
 	/* match glob for all files in src dir */
 	if (asprintf(&buf, "%s/*", src) == -1) {
@@ -365,43 +378,35 @@ static int rsynccmd(const char * src, const char *dst, char **cmdbuf)
 
 	free(buf); buf = NULL;
 
-	for ( i=0; i < fglob.gl_pathc; i++) {
+	/* rsync  -trlHDq + <glob list> + dst + NULL */
+	*cmd = calloc(2 + fglob.gl_pathc + 2, sizeof(char *));
+	if (! *cmd) {
+		fprintf(stderr, _("Out of memory\n"));
+		return -1;
+	}
+
+	args = *cmd;
+	strdup_or_err(args, 0, "/usr/bin/rsync");
+	strdup_or_err(args, 1, "-trlHDq");
+
+	for ( i=0, index = 2; i < fglob.gl_pathc; i++) {
 		const char *path = fglob.gl_pathv[i];
-
 		if (bad_path(path)) continue;
-
-		if (!buf) {
-			if (asprintf(&newbuf, "\'%s\'", path) == -1) {
-				fprintf(stderr, _("Out of memory\n"));
-				goto err;
-			}
-		} else {
-			if (asprintf(&newbuf, "%s  \'%s\'", buf, path) == -1) {
-				fprintf(stderr, _("Out of memory\n"));
-				goto err;
-			}
-		}
-
-		free(buf); buf = newbuf;
-		newbuf = NULL;
+		strdup_or_err(args, index, path);
+		index++;
 	}
-
-	if (buf) {
-		if (asprintf(&newbuf, "/usr/bin/rsync -trlHDq %s '%s'", buf, dst) == -1) {
-			fprintf(stderr, _("Out of memory\n"));
-			goto err;
-		}
-		*cmdbuf=newbuf;
-	}
-	else {
-		*cmdbuf=NULL;
-	}
-	rc = 0;
-
-err:
-	free(buf); buf = NULL;
+	strdup_or_err(args, index, dst);
+	index++;
+	args[index] = NULL;
 	globfree(&fglob);
-	return rc;
+	return 0;
+err:
+	globfree(&fglob);
+	if (args) {
+		free_args(args);
+		*cmd = NULL;
+	}
+	return -1;
 }
 
 /*
@@ -472,21 +477,38 @@ static bool rm_rf(int targetfd, const char *path) {
 static int cleanup_tmpdir(const char *tmpdir, const char *src,
 	struct passwd *pwd, int copy_content)
 {
-	char *cmdbuf = NULL;
+	char **args;
 	int rc = 0;
 
 	/* rsync files back */
 	if (copy_content) {
-		if (asprintf(&cmdbuf, "/usr/bin/rsync --exclude=.X11-unix -utrlHDq --delete '%s/' '%s/'", tmpdir, src) == -1) {
+		args = calloc(7, sizeof(char *));
+		if (! args) {
 			fprintf(stderr, _("Out of memory\n"));
-			cmdbuf = NULL;
-			rc++;
+			return 1;
 		}
-		if (cmdbuf && spawn_command(cmdbuf, pwd->pw_uid) != 0) {
+
+		strdup_or_err(args, 0, "/usr/bin/rsync");
+		strdup_or_err(args, 1, "--exclude=.X11-unix");
+		strdup_or_err(args, 2, "-utrlHDq");
+		strdup_or_err(args, 3, "--delete");
+		if (asprintf(&args[4], "%s/", tmpdir) == -1) {
+			fprintf(stderr, _("Out of memory\n"));
+			free_args(args);
+			return 1;
+		}
+		if (asprintf(&args[5], "%s/", src) == -1) {
+			fprintf(stderr, _("Out of memory\n"));
+			free_args(args);
+			return 1;
+		}
+		args[6] = NULL;
+
+		if (spawn_command(args, pwd->pw_uid) != 0) {
 			fprintf(stderr, _("Failed to copy files from the runtime temporary directory\n"));
 			rc++;
 		}
-		free(cmdbuf); cmdbuf = NULL;
+		free_args(args);
 	}
 
 	if ((uid_t)setfsuid(0) != 0) {
@@ -506,6 +528,10 @@ static int cleanup_tmpdir(const char *tmpdir, const char *src,
 	}
 
 	return rc;
+err:
+	if (args)
+		free_args(args);
+	return 1;
 }
 
 /**
@@ -518,7 +544,7 @@ static char *create_tmpdir(const char *src, struct stat *src_st,
 	struct stat *out_st, struct passwd *pwd, const char *execcon)
 {
 	char *tmpdir = NULL;
-	char *cmdbuf = NULL;
+	char **cmd = NULL;
 	int fd_t = -1, fd_s = -1;
 	struct stat tmp_st;
 	char *con = NULL;
@@ -605,7 +631,7 @@ static char *create_tmpdir(const char *src, struct stat *src_st,
 	if ((uid_t)setfsuid(pwd->pw_uid) != 0)
 		goto err;
 
-	if (rsynccmd(src, tmpdir, &cmdbuf) < 0) {
+	if (rsynccmd(src, tmpdir, &cmd) < 0) {
 		goto err;
 	}
 
@@ -613,7 +639,7 @@ static char *create_tmpdir(const char *src, struct stat *src_st,
 	if ((uid_t)setfsuid(0) != pwd->pw_uid)
 		goto err;
 
-	if (cmdbuf && spawn_command(cmdbuf, pwd->pw_uid) != 0) {
+	if (spawn_command(cmd, pwd->pw_uid) != 0) {
 		fprintf(stderr, _("Failed to populate runtime temporary directory\n"));
 		cleanup_tmpdir(tmpdir, src, pwd, 0);
 		goto err;
@@ -623,7 +649,7 @@ static char *create_tmpdir(const char *src, struct stat *src_st,
 err:
 	free(tmpdir); tmpdir = NULL;
 good:
-	free(cmdbuf); cmdbuf = NULL;
+	free_args(cmd);
 	freecon(con); con = NULL;
 	if (fd_t >= 0) close(fd_t);
 	if (fd_s >= 0) close(fd_s);
