@@ -245,19 +245,22 @@ static int expand_attributes_in_attributes(sepol_handle_t *handle, policydb_t *p
 				done = 0;
 				ebitmap_init(&types);
 				ebitmap_for_each_positive_bit(&td->types, nj, j) {
+					if (i == j) {
+						ERR(handle, "Found loop in type attributes involving: %s", p->p_type_val_to_name[i]);
+						ebitmap_destroy(&attrs);
+						ebitmap_destroy(&types);
+						return -1;
+					}
 					if (ebitmap_get_bit(&attrs, j)) {
 						ad = p->type_val_to_struct[j];
 						ebitmap_union(&types, &ad->types);
-						ebitmap_set_bit(&td->types, j, 0);
+					} else {
+						ebitmap_set_bit(&types, j, 1);
 					}
 				}
-				ebitmap_union(&td->types, &types);
+				ebitmap_destroy(&td->types);
+				ebitmap_cpy(&td->types, &types);
 				ebitmap_destroy(&types);
-				if (ebitmap_get_bit(&td->types, i)) {
-					ERR(handle, "Found loop in type attributes involving: %s", p->p_type_val_to_name[i]);
-					ebitmap_destroy(&attrs);
-					return -1;
-				}
 			}
 		}
 	}
@@ -925,9 +928,8 @@ static int expand_role_attributes_in_attributes(sepol_handle_t *handle, policydb
 	ebitmap_init(&attrs);
 	for (i=0; i < p->p_roles.nprim; i++) {
 		rd = p->role_val_to_struct[i];
-		if (rd && rd->flavor == ROLE_ATTRIB) {
+		if (rd && rd->flavor == ROLE_ATTRIB)
 			ebitmap_set_bit(&attrs, i, 1);
-		}
 	}
 
 	while (!done && reps < p->p_roles.nprim) {
@@ -939,19 +941,22 @@ static int expand_role_attributes_in_attributes(sepol_handle_t *handle, policydb
 				done = 0;
 				ebitmap_init(&roles);
 				ebitmap_for_each_positive_bit(&rd->roles, nj, j) {
+					if (i == j) {
+						ERR(handle, "Found loop in role attributes involving: %s", p->p_role_val_to_name[i]);
+						ebitmap_destroy(&attrs);
+						ebitmap_destroy(&roles);
+						return -1;
+					}
 					if (ebitmap_get_bit(&attrs, j)) {
 						ad = p->role_val_to_struct[j];
 						ebitmap_union(&roles, &ad->roles);
-						ebitmap_set_bit(&rd->roles, j, 0);
+					} else {
+						ebitmap_set_bit(&roles, j, 1);
 					}
 				}
-				ebitmap_union(&rd->roles, &roles);
+				ebitmap_destroy(&rd->roles);
+				ebitmap_cpy(&rd->roles, &roles);
 				ebitmap_destroy(&roles);
-				if (ebitmap_get_bit(&rd->roles, i)) {
-					ERR(handle, "Found loop in role attributes involving: %s", p->p_role_val_to_name[i]);
-					ebitmap_destroy(&attrs);
-					return -1;
-				}
 			}
 		}
 	}
