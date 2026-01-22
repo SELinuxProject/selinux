@@ -4513,7 +4513,7 @@ int policydb_read(policydb_t * p, struct policy_file *fp, unsigned verbose)
 					if (j >= p->p_types.nprim)
 						goto bad;
 
-					if (p->type_val_to_struct[i]->flavor == TYPE_ATTRIB) {
+					if (p->type_val_to_struct[i] && p->type_val_to_struct[i]->flavor == TYPE_ATTRIB) {
 						ERR(fp->handle, "Invalid to have type attributes associated with an attribute for a kernel policy");
 						goto bad;
 					}
