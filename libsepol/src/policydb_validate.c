@@ -661,9 +661,9 @@ bad:
 	return -1;
 }
 
-static int validate_mls_semantic_level(const mls_semantic_level_t *level, const validate_t *sens, const validate_t *cats)
+static int validate_mls_semantic_level(const mls_semantic_level_t *level, const validate_t *sens, const validate_t *cats, int allow_unset)
 {
-	if (level->sens == 0)
+	if (allow_unset && level->sens == 0)
 		return 0;
 	if (validate_value(level->sens, sens))
 		goto bad;
@@ -676,11 +676,11 @@ bad:
 	return -1;
 }
 
-static int validate_mls_semantic_range(const mls_semantic_range_t *range, const validate_t *sens, const validate_t *cats)
+static int validate_mls_semantic_range(const mls_semantic_range_t *range, const validate_t *sens, const validate_t *cats, int allow_unset)
 {
-	if (validate_mls_semantic_level(&range->level[0], sens, cats))
+	if (validate_mls_semantic_level(&range->level[0], sens, cats, allow_unset))
 		goto bad;
-	if (validate_mls_semantic_level(&range->level[1], sens, cats))
+	if (validate_mls_semantic_level(&range->level[1], sens, cats, allow_unset))
 		goto bad;
 
 	return 0;
@@ -689,9 +689,9 @@ bad:
 	return -1;
 }
 
-static int validate_mls_level(const mls_level_t *level, const validate_t *sens, const validate_t *cats)
+static int validate_mls_level(const mls_level_t *level, const validate_t *sens, const validate_t *cats, int allow_unset)
 {
-	if (level->sens == 0)
+	if (allow_unset && level->sens == 0)
 		return 0;
 	if (validate_value(level->sens, sens))
 		goto bad;
@@ -712,7 +712,7 @@ static int validate_level_datum(sepol_handle_t *handle, const level_datum_t *lev
 	if (level->level->sens == 0)
 		goto bad;
 
-	if (validate_mls_level(level->level, &flavors[SYM_LEVELS], &flavors[SYM_CATS]))
+	if (validate_mls_level(level->level, &flavors[SYM_LEVELS], &flavors[SYM_CATS], 0))
 		goto bad;
 
 	if (level->isalias) {
@@ -740,11 +740,11 @@ static int validate_level_datum_wrapper(__attribute__ ((unused)) hashtab_key_t k
 	return validate_level_datum(margs->handle, d, margs->flavors, margs->policy);
 }
 
-static int validate_mls_range(const mls_range_t *range, const validate_t *sens, const validate_t *cats)
+static int validate_mls_range(const mls_range_t *range, const validate_t *sens, const validate_t *cats, int allow_unset)
 {
-	if (validate_mls_level(&range->level[0], sens, cats))
+	if (validate_mls_level(&range->level[0], sens, cats, allow_unset))
 		goto bad;
-	if (validate_mls_level(&range->level[1], sens, cats))
+	if (validate_mls_level(&range->level[1], sens, cats, allow_unset))
 		goto bad;
 
 	return 0;
@@ -759,14 +759,19 @@ static int validate_user_datum(sepol_handle_t *handle, const user_datum_t *user,
 		goto bad;
 	if (validate_role_set(&user->roles, &flavors[SYM_ROLES]))
 		goto bad;
-	if (validate_mls_semantic_range(&user->range, &flavors[SYM_LEVELS], &flavors[SYM_CATS]))
-		goto bad;
-	if (validate_mls_semantic_level(&user->dfltlevel, &flavors[SYM_LEVELS], &flavors[SYM_CATS]))
-		goto bad;
-	if (p->mls && p->policy_type != POLICY_MOD && validate_mls_range(&user->exp_range, &flavors[SYM_LEVELS], &flavors[SYM_CATS]))
-		goto bad;
-	if (p->mls && p->policy_type != POLICY_MOD && validate_mls_level(&user->exp_dfltlevel, &flavors[SYM_LEVELS], &flavors[SYM_CATS]))
-		goto bad;
+	if (p->mls) {
+		int allow_unset = (p->policy_type != POLICY_MOD);
+		if (validate_mls_semantic_range(&user->range, &flavors[SYM_LEVELS], &flavors[SYM_CATS], allow_unset))
+			goto bad;
+		if (validate_mls_semantic_level(&user->dfltlevel, &flavors[SYM_LEVELS], &flavors[SYM_CATS], allow_unset))
+			goto bad;
+
+		allow_unset = (p->policy_type != POLICY_KERN);
+		if (validate_mls_range(&user->exp_range, &flavors[SYM_LEVELS], &flavors[SYM_CATS], allow_unset))
+			goto bad;
+		if (validate_mls_level(&user->exp_dfltlevel, &flavors[SYM_LEVELS], &flavors[SYM_CATS], allow_unset))
+			goto bad;
+	}
 	if (user->bounds && validate_value(user->bounds, &flavors[SYM_USERS]))
 		goto bad;
 
@@ -1323,7 +1328,7 @@ static int validate_context(const context_struct_t *con, validate_t flavors[], i
 		return -1;
 	if (validate_value(con->type, &flavors[SYM_TYPES]))
 		return -1;
-	if (mls && validate_mls_range(&con->range, &flavors[SYM_LEVELS], &flavors[SYM_CATS]))
+	if (mls && validate_mls_range(&con->range, &flavors[SYM_LEVELS], &flavors[SYM_CATS], 0))
 		return -1;
 
 	return 0;
@@ -1484,7 +1489,7 @@ static int validate_range_trans_rules(sepol_handle_t *handle, const range_trans_
 			goto bad;
 		if (validate_ebitmap(&range_trans->tclasses, &flavors[SYM_CLASSES]))
 			goto bad;
-		if (validate_mls_semantic_range(&range_trans->trange, &flavors[SYM_LEVELS], &flavors[SYM_CATS]))
+		if (validate_mls_semantic_range(&range_trans->trange, &flavors[SYM_LEVELS], &flavors[SYM_CATS], 0))
 			goto bad;
 	}
 
@@ -1663,8 +1668,7 @@ static int validate_range_transition(hashtab_key_t key, hashtab_datum_t data, vo
 		goto bad;
 	if (validate_value(rt->target_class, &flavors[SYM_CLASSES]))
 		goto bad;
-
-	if (validate_mls_range(r, &flavors[SYM_LEVELS], &flavors[SYM_CATS]))
+	if (validate_mls_range(r, &flavors[SYM_LEVELS], &flavors[SYM_CATS], 0))
 		goto bad;
 
 	return 0;
