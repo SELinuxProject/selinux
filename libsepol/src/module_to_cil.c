@@ -520,6 +520,9 @@ static int semantic_level_to_cil(struct policydb *pdb, struct mls_semantic_level
 {
 	struct mls_semantic_cat *cat;
 
+	if (level->sens == 0)
+		return -1;
+
 	cil_printf("(%s ", pdb->p_sens_val_to_name[level->sens - 1]);
 
 	if (level->cat != NULL) {
@@ -2498,6 +2501,9 @@ exit:
 static int level_to_cil(struct policydb *pdb, struct mls_level *level)
 {
 	struct ebitmap *map = &level->cat;
+
+	if (level->sens == 0)
+		return -1;
 
 	cil_printf("(%s", pdb->p_sens_val_to_name[level->sens - 1]);
 
