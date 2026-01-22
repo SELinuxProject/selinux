@@ -1987,6 +1987,9 @@ static int is_decl_requires_met(link_state_t * state,
 
 
 		if (!is_id_enabled(id, state->base, SYM_CLASSES)) {
+			req->symbol_type = SYM_CLASSES;
+			req->symbol_value = i + 1;
+			req->perm_value = 0;
 			return 0;
 		}
 
@@ -2109,20 +2112,22 @@ static void print_missing_requirements(link_state_t * state,
 	    cur->branch_list->module_name : "BASE";
 
 	if (req->symbol_type == SYM_CLASSES) {
-
 		struct find_perm_arg fparg;
+		class_datum_t *cladatum = p->class_val_to_struct[req->symbol_value - 1];
 
-		class_datum_t *cladatum;
-		cladatum = p->class_val_to_struct[req->symbol_value - 1];
+		if (req->perm_value == 0) {
+			ERR(state->handle, "%s's global requirements were not met: class %s",
+				mod_name, p->p_class_val_to_name[req->symbol_value - 1]);
+		} else {
+			fparg.valuep = req->perm_value;
+			fparg.key = NULL;
+			(void)hashtab_map(cladatum->permissions.table, find_perm, &fparg);
 
-		fparg.valuep = req->perm_value;
-		fparg.key = NULL;
-		(void)hashtab_map(cladatum->permissions.table, find_perm, &fparg);
-
-		ERR(state->handle,
-		    "%s's global requirements were not met: class %s, permission %s",
-		    mod_name,
-		    p->p_class_val_to_name[req->symbol_value - 1], fparg.key);
+			ERR(state->handle,
+				"%s's global requirements were not met: class %s, permission %s",
+				mod_name,
+				p->p_class_val_to_name[req->symbol_value - 1], fparg.key);
+		}
 	} else {
 		ERR(state->handle,
 		    "%s's global requirements were not met: %s %s",
