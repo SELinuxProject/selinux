@@ -53,6 +53,7 @@ for COMPONENT in "${DIRS[@]}"; do
 done
 
 git archive -o "$DEST/selinux-${RELEASE_TAG}.tar.gz" --prefix="selinux-${RELEASE_TAG}/" "${RELEASE_TAG}"
+gpg -b -a "$DEST/selinux-${RELEASE_TAG}.tar.gz"
 
 echo "Add the following to the $WIKIDIR/Releases.md wiki page:"
 
