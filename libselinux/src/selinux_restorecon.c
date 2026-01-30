@@ -942,9 +942,10 @@ loop_body:
 		case FTS_DNR:
 			error = errno;
 			errno = ftsent->fts_errno;
-			selinux_log(SELINUX_ERROR,
-				    "Could not read %s: %m.\n",
-				    ftsent->fts_path);
+			if (!state->flags.ignore_noent || errno != ENOENT)
+				selinux_log(SELINUX_ERROR,
+					    "Could not read %s: %m.\n",
+					    ftsent->fts_path);
 			errno = error;
 			fts_set(fts, ftsent, FTS_SKIP);
 			continue;
