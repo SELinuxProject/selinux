@@ -17,7 +17,7 @@
 #include "policy.h"
 #include "mapping.h"
 
-#define MAXVECTORS 8*sizeof(access_vector_t)
+#define MAXVECTORS (8 * sizeof(access_vector_t))
 
 struct discover_class_node {
 	char *name;

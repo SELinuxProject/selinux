@@ -11,7 +11,7 @@
 #include "selinux_internal.h"
 #include "policy.h"
 
-#define UNSET (char *) -1
+#define UNSET ((char *) -1)
 
 /* Cached values so that when a thread calls set*con() then gen*con(), the value
  * which was set is directly returned.
@@ -267,11 +267,11 @@ static int setprocattrcon(const char *context, const char *attr,
 #define setselfattr_def(fn, attr, prev_context) \
 	int set##fn##_raw(const char * c) \
 	{ \
-		return setprocattrcon_raw(c, attr, &prev_context); \
+		return setprocattrcon_raw(c, attr, &(prev_context)); \
 	} \
 	int set##fn(const char * c) \
 	{ \
-		return setprocattrcon(c, attr, &prev_context); \
+		return setprocattrcon(c, attr, &(prev_context)); \
 	}
 
 #define all_selfattr_def(fn, attr, prev_context) \

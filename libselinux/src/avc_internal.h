@@ -144,7 +144,7 @@ static inline void avc_free_lock(void *lock)
   } while (0)
 #define avc_cache_stats_add(field, num) \
   do { \
-    cache_stats.field += num; \
+    cache_stats.field += (num); \
   } while (0)
 
 #else
