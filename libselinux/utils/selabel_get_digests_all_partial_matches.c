@@ -164,6 +164,6 @@ int main(int argc, char **argv)
 	}
 
 	(void) fts_close(fts);
-	(void) selabel_close(hnd);
+	selabel_close(hnd);
 	return 0;
 }
