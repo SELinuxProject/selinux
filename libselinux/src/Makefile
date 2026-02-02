@@ -116,9 +116,7 @@ ifeq (yes,$(shell printf '${H}include <stdlib.h>\nint main(void){return realloca
 override CFLAGS += -DHAVE_REALLOCARRAY
 endif
 
-SWIG_CFLAGS += -Wno-error -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-parameter \
-		-Wno-shadow -Wno-uninitialized -Wno-missing-prototypes -Wno-missing-declarations \
-		-Wno-deprecated-declarations
+SWIG_CFLAGS += -Wno-error -Wno-deprecated-declarations -Wno-missing-prototypes -Wno-missing-declarations
 
 RANLIB ?= ranlib
 
