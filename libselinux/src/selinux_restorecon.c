@@ -375,13 +375,7 @@ static int add_xattr_entry(const char *directory, bool delete_nonmatch,
 		goto oom;
 	}
 
-	new_entry->digest = strdup(sha1_buf);
-	if (!new_entry->digest) {
-		free(new_entry->directory);
-		free(new_entry);
-		free(sha1_buf);
-		goto oom;
-	}
+	new_entry->digest = sha1_buf;
 
 	new_entry->result = digest_result;
 
@@ -393,7 +387,6 @@ static int add_xattr_entry(const char *directory, bool delete_nonmatch,
 		dir_xattr_last = new_entry;
 	}
 
-	free(sha1_buf);
 	return 0;
 
 oom:
