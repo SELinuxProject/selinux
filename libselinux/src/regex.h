@@ -56,11 +56,6 @@ char const *regex_arch_string(void) ;
  */
 char const *regex_version(void) ;
 /**
- * This constructor function allocates a buffer for a regex_data structure.
- * The buffer is being initialized with zeroes.
- */
-struct regex_data *regex_data_create(void) ;
-/**
  * This complementary destructor function frees the a given regex_data buffer.
  * It also frees any non NULL member pointers with the appropriate pcreX_X_free
  * function. For PCRE this function respects the extra_owned field and frees
