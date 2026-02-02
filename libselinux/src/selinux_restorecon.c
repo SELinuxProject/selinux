@@ -905,7 +905,7 @@ static void *selinux_restorecon_thread(void *arg)
 	bool first = false;
 
 	if (state->parallel)
-		pthread_mutex_lock(&state->mutex);
+		__pthread_mutex_lock(&state->mutex);
 
 	if (state->ftsent_first) {
 		ftsent = state->ftsent_first;
@@ -1012,14 +1012,14 @@ loop_body:
 
 			ent_st = *ftsent->fts_statp;
 			if (state->parallel)
-				pthread_mutex_unlock(&state->mutex);
+				__pthread_mutex_unlock(&state->mutex);
 
 			bool updated = false;
 			error = restorecon_sb(ent_path, &ent_st, &state->flags,
 					      first, &updated);
 
 			if (state->parallel) {
-				pthread_mutex_lock(&state->mutex);
+				__pthread_mutex_lock(&state->mutex);
 				if (state->abort)
 					goto unlock;
 			}
@@ -1047,7 +1047,7 @@ finish:
 		state->saved_errno = errno;
 unlock:
 	if (state->parallel)
-		pthread_mutex_unlock(&state->mutex);
+		__pthread_mutex_unlock(&state->mutex);
 	return NULL;
 }
 
@@ -1280,7 +1280,7 @@ static int selinux_restorecon_common(const char *pathname_orig,
 		pthread_t self = pthread_self();
 		pthread_t *threads = NULL;
 
-		pthread_mutex_init(&state.mutex, NULL);
+		__pthread_mutex_init(&state.mutex, NULL);
 
 		threads = calloc(nthreads - 1, sizeof(*threads));
 		if (!threads)
@@ -1317,7 +1317,7 @@ static int selinux_restorecon_common(const char *pathname_orig,
 		}
 		free(threads);
 
-		pthread_mutex_destroy(&state.mutex);
+		__pthread_mutex_destroy(&state.mutex);
 	}
 
 	error = state.error;
