@@ -172,7 +172,7 @@ err:
 	return -1;
 }
 
-int regex_writef(struct regex_data *regex, FILE *fp, int do_write_precompregex)
+int regex_writef(const struct regex_data *regex, FILE *fp, int do_write_precompregex)
 {
 	int rc = 0;
 	size_t len;
@@ -278,7 +278,7 @@ int regex_match(struct regex_data *regex, char const *subject, int partial)
  * Preferably, this function would be replaced with an algorithm that computes
  * the equivalence of the automatons systematically.
  */
-int regex_cmp(struct regex_data *regex1, struct regex_data *regex2)
+int regex_cmp(const struct regex_data *regex1, const struct regex_data *regex2)
 {
 	int rc;
 	size_t len1, len2;
@@ -422,7 +422,7 @@ err:
 	return -1;
 }
 
-static inline pcre_extra *get_pcre_extra(struct regex_data *regex)
+static inline const pcre_extra *get_pcre_extra(const struct regex_data *regex)
 {
 	if (!regex) return NULL;
 	if (regex->owned) {
@@ -434,14 +434,14 @@ static inline pcre_extra *get_pcre_extra(struct regex_data *regex)
 	}
 }
 
-int regex_writef(struct regex_data *regex, FILE *fp,
+int regex_writef(const struct regex_data *regex, FILE *fp,
 		 int do_write_precompregex __attribute__((unused)))
 {
 	int rc;
 	size_t len;
 	uint32_t data_u32;
 	size_t size;
-	pcre_extra *sd = get_pcre_extra(regex);
+	const pcre_extra *sd = get_pcre_extra(regex);
 
 	/* determine the size of the pcre data in bytes */
 	rc = pcre_fullinfo(regex->regex, NULL, PCRE_INFO_SIZE, &size);
@@ -525,7 +525,7 @@ int regex_match(struct regex_data *regex, char const *subject, int partial)
  * Preferably, this function would be replaced with an algorithm that computes
  * the equivalence of the automatons systematically.
  */
-int regex_cmp(struct regex_data *regex1, struct regex_data *regex2)
+int regex_cmp(const struct regex_data *regex1, const struct regex_data *regex2)
 {
 	int rc;
 	size_t len1, len2;
