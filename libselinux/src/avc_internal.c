@@ -264,7 +264,6 @@ int avc_netlink_check_nb(void)
 
 		(void)avc_netlink_process(buf);
 	}
-	return 0;
 }
 
 /* run routine for the netlink listening thread */
