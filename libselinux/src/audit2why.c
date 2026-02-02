@@ -1,8 +1,3 @@
-/* Workaround for http://bugs.python.org/issue4835 */
-#ifndef SIZEOF_SOCKET_T
-#define SIZEOF_SOCKET_T SIZEOF_INT
-#endif
-
 #include <Python.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -169,7 +164,7 @@ static int check_booleans(struct boolean_t **bools)
 static PyObject *finish(PyObject *self __attribute__((unused)), PyObject *args) {
 	PyObject *result = 0;
   
-	if (PyArg_ParseTuple(args,(char *)":finish")) {
+	if (PyArg_ParseTuple(args, ":finish")) {
 		int i = 0;
 		if (! avc)
 			Py_RETURN_NONE;
@@ -307,7 +302,7 @@ static PyObject *init(PyObject *self __attribute__((unused)), PyObject *args) {
 	  PyErr_SetString( PyExc_RuntimeError, "init called multiple times");
 	  return NULL;
   }
-  if (!PyArg_ParseTuple(args,(char *)"|s:policy_init",&init_path))
+  if (!PyArg_ParseTuple(args, "|s:policy_init", &init_path))
     return NULL;
   result = __policy_init(init_path);
   return Py_BuildValue("i", result);
@@ -322,7 +317,7 @@ static PyObject *analyze(PyObject *self __attribute__((unused)) , PyObject *args
 	char *reason_buf = NULL;
 	char * scon;
 	char * tcon;
-	char *tclassstr; 
+	char *tclassstr;
 	PyObject *listObj;
 	PyObject *strObj;
 	int numlines;
@@ -335,9 +330,9 @@ static PyObject *analyze(PyObject *self __attribute__((unused)) , PyObject *args
 	int rc;
 	int i = 0;
 
-	if (!PyArg_ParseTuple(args,(char *)"sssO!:audit2why",&scon,&tcon,&tclassstr,&PyList_Type, &listObj)) 
+	if (!PyArg_ParseTuple(args, "sssO!:audit2why", &scon, &tcon, &tclassstr, &PyList_Type, &listObj))
 		return NULL;
-  
+
 	/* get the number of lines passed to us */
 	numlines = PyList_Size(listObj);
 
@@ -371,11 +366,7 @@ static PyObject *analyze(PyObject *self __attribute__((unused)) , PyObject *args
 		strObj = PyList_GetItem(listObj, i); /* Can't fail */
 		
 		/* make it a string */
-#if PY_MAJOR_VERSION >= 3
 		permstr = _PyUnicode_AsString( strObj );
-#else
-		permstr = PyString_AsString( strObj );
-#endif
 		
 		rc = sepol_string_to_av_perm(tclass, permstr, &perm);
 		if (rc < 0)
@@ -453,8 +444,7 @@ static PyMethodDef audit2whyMethods[] = {
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };
 
-#if PY_MAJOR_VERSION >= 3
-/* Module-initialization logic specific to Python 3 */
+/* Module-initialization logic */
 static struct PyModuleDef moduledef = {
 	PyModuleDef_HEAD_INIT,
 	"audit2why",
@@ -469,20 +459,12 @@ static struct PyModuleDef moduledef = {
 
 PyMODINIT_FUNC PyInit_audit2why(void); /* silence -Wmissing-prototypes */
 PyMODINIT_FUNC PyInit_audit2why(void)
-#else
-PyMODINIT_FUNC initaudit2why(void); /* silence -Wmissing-prototypes */
-PyMODINIT_FUNC initaudit2why(void)
-#endif
 {
 	PyObject *m;
-#if PY_MAJOR_VERSION >= 3
 	m = PyModule_Create(&moduledef);
 	if (m == NULL) {
 		return NULL;
 	}
-#else
-	m  = Py_InitModule("audit2why", audit2whyMethods);
-#endif
 	PyModule_AddIntConstant(m,"UNKNOWN", UNKNOWN);
 	PyModule_AddIntConstant(m,"BADSCON", BADSCON);
 	PyModule_AddIntConstant(m,"BADTCON", BADTCON);
@@ -498,7 +480,5 @@ PyMODINIT_FUNC initaudit2why(void)
 	PyModule_AddIntConstant(m,"RBAC", RBAC);
 	PyModule_AddIntConstant(m,"BOUNDS", BOUNDS);
 
-#if PY_MAJOR_VERSION >= 3
 	return m;
-#endif
 }
