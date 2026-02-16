@@ -1578,12 +1578,14 @@ trans_context(const char *incon, char **rcon) {
 			urange = dashp+1;
 		} else {
 			trans = compute_trans_from_raw(range, domain);
-			if (trans)
+			if (trans) {
 				if (add_cache(domain, range, trans) < 0) {
 					free(trans);
 					free(range);
 					return -1;
 				}
+				break;
+			}
 		}
 
 		if (lrange && urange) {
@@ -1728,6 +1730,7 @@ untrans_context(const char *incon, char **rcon) {
 					free(raw);
 					return -1;
 				}
+				break;
 			} else {
 				log_debug("untrans_context unable to compute raw context %s\n", range);
 			}
