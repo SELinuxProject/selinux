@@ -33,6 +33,7 @@ SELinux libraries and tools are packaged in several Linux distributions:
 * Debian and Ubuntu (https://packages.debian.org/sid/policycoreutils)
 * Gentoo (https://packages.gentoo.org/packages/sys-apps/policycoreutils)
 * RHEL and Fedora (https://src.fedoraproject.org/rpms/policycoreutils)
+* SLES and openSUSE (https://src.opensuse.org/pool/policycoreutils)
 * Yocto Project (http://git.yoctoproject.org/cgit/cgit.cgi/meta-selinux/tree/recipes-security/selinux)
 * and many more (https://repology.org/project/policycoreutils/versions)
 
