@@ -231,7 +231,7 @@ static inline const char* file_kind_to_string(uint8_t file_kind)
  * Determine whether the regular expression specification has any meta characters
  * or any unsupported escape sequence.
  */
-static bool regex_has_meta_chars(const char *regex, size_t *prefix_len, const char *path, unsigned int lineno)
+static bool regex_has_meta_chars(const char *regex, size_t *prefix_len)
 {
 	const char *p = regex;
 	size_t plen = 0;
@@ -275,8 +275,7 @@ static bool regex_has_meta_chars(const char *regex, size_t *prefix_len, const ch
 			case ',':
 				continue;
 			default:
-				COMPAT_LOG(SELINUX_INFO, "%s:  line %u has unsupported escaped character %c (%#x) for literal matching, continuing using regex\n",
-					   path, lineno, isprint((unsigned char)*p) ? *p : '?', *p);
+				/* Unsupported escaped character, continuing using regex */
 				*prefix_len = plen;
 				return true;
 			}
@@ -343,7 +342,6 @@ static int regex_simplify(const char *regex, size_t len, char **out, const char 
 				*p++ = regex[i++];
 				break;
 			default:
-				/* regex_has_meta_chars() reported already the notable occurrences */
 				free(result);
 				return 0;
 			}
@@ -523,7 +521,7 @@ static int insert_spec(const struct selabel_handle *rec, struct saved_data *data
 		return -1;
 	}
 
-	has_meta = regex_has_meta_chars(regex, &prefix_len, path, lineno);
+	has_meta = regex_has_meta_chars(regex, &prefix_len);
 
 	/* Ensured by read_spec_entry() */
 	assert(prefix_len < UINT16_MAX);
