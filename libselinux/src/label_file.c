@@ -1600,6 +1600,107 @@ FUZZ_EXTERN void free_lookup_result(struct lookup_result *result)
 }
 
 /**
+ * all_node_specs() - Return all definitions in the given node and all transitive children.
+ * @node:      The top level node to return all definitions for.
+ * @file_kind: The kind of the file to look up (translated from file type into LABEL_FILE_KIND_*).
+ * @find_all:  Whether return all file context definitions or just any.
+ *
+ * Return: A linked list of all file context definitions if a match was found.
+ *         NULL is returned in case of no match found, or an allocation failure.
+ */
+static struct lookup_result *all_node_specs(struct spec_node *node, uint8_t file_kind, bool find_all)
+{
+	struct lookup_result *result = NULL;
+	struct lookup_result **next = &result;
+
+	for (uint32_t i = 0; i < node->literal_specs_num; i++) {
+		struct literal_spec *lspec = &node->literal_specs[i];
+		struct lookup_result *r;
+
+		if (file_kind != LABEL_FILE_KIND_ALL && lspec->file_kind != LABEL_FILE_KIND_ALL && lspec->file_kind != file_kind)
+			continue;
+
+		if (strcmp(lspec->lr.ctx_raw, "<<none>>") == 0)
+			continue;
+
+		r = malloc(sizeof(*r));
+		if (!r)
+			goto fail;
+
+		*r = (struct lookup_result) {
+			.regex_str = lspec->regex_str,
+			.prefix_len = lspec->prefix_len,
+			.file_kind = lspec->file_kind,
+			.lr = &lspec->lr,
+			.has_meta_chars = false,
+			.next = NULL,
+		};
+
+		if (!find_all)
+			return r;
+
+		*next = r;
+		next = &r->next;
+	}
+
+	for (uint32_t i = 0; i < node->regex_specs_num; i++) {
+		struct regex_spec *rspec = &node->regex_specs[i];
+		struct lookup_result *r;
+
+		if (file_kind != LABEL_FILE_KIND_ALL && rspec->file_kind != LABEL_FILE_KIND_ALL && file_kind != rspec->file_kind)
+			continue;
+
+		if (strcmp(rspec->lr.ctx_raw, "<<none>>") == 0)
+			continue;
+
+		r = malloc(sizeof(*r));
+		if (!r)
+			goto fail;
+
+		*r = (struct lookup_result) {
+			.regex_str = rspec->regex_str,
+			.prefix_len = rspec->prefix_len,
+			.file_kind = rspec->file_kind,
+			.lr = &rspec->lr,
+			.has_meta_chars = true,
+			.next = NULL,
+		};
+
+		if (!find_all)
+			return r;
+
+		*next = r;
+		next = &r->next;
+	}
+
+	for (uint32_t i = 0; i < node->children_num; i++) {
+		struct spec_node *child = &node->children[i];
+		struct lookup_result *r, *last;
+
+		r = all_node_specs(child, file_kind, find_all);
+		if (!r)
+			continue;
+
+		if (!find_all)
+			return r;
+
+		last = r;
+		while (last->next)
+			last = last->next;
+
+		*next = r;
+		next = &last->next;
+	}
+
+	return result;
+
+fail:
+	free_lookup_result(result);
+
+	return NULL;
+}
+
+/**
  * lookup_check_node() - Try to find a file context definition in the given node or parents.
  * @node:      The deepest specification node to match against. Parent nodes are successively
  *             searched on no match or when finding all matches.
@@ -1644,6 +1745,9 @@ static struct lookup_result *lookup_check_node(struct spec_node *node, const cha
 #endif
 
 						if (strcmp(lspec->lr.ctx_raw, "<<none>>") == 0) {
+							if (partial)
+								continue;
+
 							errno = ENOENT;
 							goto fail;
 						}
@@ -1712,6 +1816,9 @@ static struct lookup_result *lookup_check_node(struct spec_node *node, const cha
 				}
 
 				if (strcmp(rspec->lr.ctx_raw, "<<none>>") == 0) {
+					if (partial)
+						continue;
+
 					errno = ENOENT;
 					goto fail;
 				}
@@ -1808,32 +1915,41 @@ static struct spec_node* search_child_node(struct spec_node *array, uint32_t siz
 	return NULL;
 }
 
-static struct spec_node* lookup_find_deepest_node(struct spec_node *node, const char *key)
+static struct spec_node* lookup_find_deepest_node(struct spec_node *node, const char *key, const char **rest_key)
 {
 	/* Find the node matching the deepest stem */
 
 	struct spec_node *n = node;
 	const char *p = key;
 
+	*rest_key = NULL;
+
 	while (true) {
 		struct spec_node *child;
 		size_t length;
 		const char *q;
 
-		if (*p != '/')
+		if (unlikely(*p != '/'))
 			break;
 
 		q = strchr(p + 1, '/');
-		if (q == NULL)
+		if (q == NULL) {
+			*rest_key = (p + 1);
 			break;
+		}
 
 		length = q - p - 1;
-		if (length == 0)
-			break;
+		if (unlikely(length == 0)) {
+			/* double slash */
+			p = q;
+			continue;
+		}
 
 		child = search_child_node(n->children, n->children_num, p + 1, length);
-		if (!child)
+		if (!child) {
+			*rest_key = (p + 1);
 			break;
+		}
 
 		n = child;
 		p = q;
@@ -1882,7 +1998,7 @@ FUZZ_EXTERN struct lookup_result *lookup_all(struct selabel_handle *rec,
 	size_t len;
 	uint8_t file_kind = mode_to_file_kind(type);
 	char *clean_key = NULL;
-	const char *prev_slash, *next_slash;
+	const char *prev_slash, *next_slash, *rest_key;
 	unsigned int sofar = 0;
 	char *sub = NULL;
 
@@ -1938,9 +2054,39 @@ FUZZ_EXTERN struct lookup_result *lookup_all(struct selabel_handle *rec,
 	if (sub)
 		key = sub;
 
-	node = lookup_find_deepest_node(data->root, key);
+	node = lookup_find_deepest_node(data->root, key, &rest_key);
 
 	result = lookup_check_node(node, key, file_kind, partial, find_all, buf);
+
+	/* For partial lookup if the key matches a child node, recursively add all specs */
+	if (partial && rest_key) {
+		if (!find_all && result != NULL) {
+			/* found already a result, and only one result is wanted */
+			goto finish;
+		}
+
+		for (uint32_t i = 0; i < node->children_num; i++) {
+			struct spec_node *child = &node->children[i];
+			struct lookup_result *r, *last;
+
+			if (strncmp(child->stem, rest_key, strlen(rest_key)) != 0)
+				continue;
+
+			r = all_node_specs(child, file_kind, find_all);
+			if (!r)
+				continue;
+
+			last = r;
+			while (last->next)
+				last = last->next;
+
+			last->next = result;
+			result = r;
+
+			if (!find_all)
+				break;
+		}
+	}
 
 finish:
 	free(clean_key);
