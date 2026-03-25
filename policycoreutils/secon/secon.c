@@ -348,7 +348,7 @@ static int my_getXcon_raw(pid_t pid, char  **con, const char *val)
 {
 	char buf[4096];
 	FILE *fp = NULL;
-	const char *ptr = NULL;
+	char *ptr = NULL;
 
 	snprintf(buf, sizeof(buf), "%s/%ld/attr/%s", "/proc", (long int)pid,
 		 val);
