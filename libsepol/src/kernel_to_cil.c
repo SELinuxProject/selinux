@@ -1018,9 +1018,9 @@ static size_t cats_ebitmap_len(struct ebitmap *cats, char **val_to_name)
 
 		len += strlen(val_to_name[start]);
 		if (range > 2) {
-			len += strlen(val_to_name[i-1]) + strlen("(range  ) ");
+			len += strlen(val_to_name[i]) + strlen("(range  ) ");
 		} else if (range == 2) {
-			len += strlen(val_to_name[i-1]) + 2;
+			len += strlen(val_to_name[i]) + 2;
 		} else if (range == 1) {
 			len += 1;
 		}
