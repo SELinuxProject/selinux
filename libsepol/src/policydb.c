@@ -4192,7 +4192,7 @@ int policydb_read(policydb_t * p, struct policy_file *fp, unsigned verbose)
 	unsigned int i, j, r_policyvers;
 	uint32_t buf[5], nprim;
 	size_t len, nel;
-	char *policydb_str;
+	char policydb_str[POLICYDB_STRING_MAX_LENGTH + 1];
 	const struct policydb_compat_info *info;
 	unsigned int policy_type, bufindex;
 	ebitmap_node_t *tnode;
@@ -4222,16 +4222,9 @@ int policydb_read(policydb_t * p, struct policy_file *fp, unsigned verbose)
 		return POLICYDB_ERROR;
 	}
 
-	policydb_str = malloc(len + 1);
-	if (!policydb_str) {
-		ERR(fp->handle, "unable to allocate memory for policydb "
-		    "string of length %zu", len);
-		return POLICYDB_ERROR;
-	}
 	rc = next_entry(policydb_str, fp, len);
 	if (rc < 0) {
 		ERR(fp->handle, "truncated policydb string identifier");
-		free(policydb_str);
 		return POLICYDB_ERROR;
 	}
 	policydb_str[len] = 0;
@@ -4248,21 +4241,15 @@ int policydb_read(policydb_t * p, struct policy_file *fp, unsigned verbose)
 		if (i == POLICYDB_TARGET_SZ) {
 			ERR(fp->handle, "cannot find a valid target for policy "
 				"string %s", policydb_str);
-			free(policydb_str);
 			return POLICYDB_ERROR;
 		}
 	} else {
 		if (strcmp(policydb_str, POLICYDB_MOD_STRING)) {
 			ERR(fp->handle, "invalid string identifier %s",
 				policydb_str);
-			free(policydb_str);
 			return POLICYDB_ERROR;
 		}
 	}
-
-	/* Done with policydb_str. */
-	free(policydb_str);
-	policydb_str = NULL;
 
 	/* Read the version, config, and table sizes (and policy type if it's a module). */
 	if (policy_type == POLICY_KERN)
