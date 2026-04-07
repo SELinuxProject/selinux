@@ -5,9 +5,8 @@ ConditionPathExists=/etc/selinux/restorecond.conf
 ConditionSecurity=selinux
 
 [Service]
-Type=forking
-ExecStart=/usr/sbin/restorecond
-PIDFile=/run/restorecond.pid
+Type=simple
+ExecStart=/usr/sbin/restorecond -F
 
 [Install]
 WantedBy=multi-user.target
