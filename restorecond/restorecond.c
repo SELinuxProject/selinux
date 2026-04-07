@@ -76,6 +76,7 @@ int debug_mode = 0;
 int terminate = 0;
 int master_wd = -1;
 int run_as_user = 0;
+int foreground_mode = 0;
 
 static void done(void) {
 	watch_list_free(master_fd);
@@ -124,7 +125,7 @@ static void term_handler(int s __attribute__ ((unused)))
 
 static void usage(char *program)
 {
-	printf("%s [-d] [-f restorecond_file ] [-u] [-v] \n", program);
+	printf("%s [-d] [-f restorecond_file ] [-F] [-n] [-u] [-v] \n", program);
 }
 
 void exitApp(const char *msg)
@@ -165,13 +166,16 @@ int main(int argc, char **argv)
 	sigaction(SIGTERM, &sa, NULL);
 
 	atexit( done );
-	while ((opt = getopt(argc, argv, "hdf:uv")) > 0) {
+	while ((opt = getopt(argc, argv, "hdf:Fuv")) > 0) {
 		switch (opt) {
 		case 'd':
 			debug_mode = 1;
 			break;
 		case 'f':
 			watch_file = optarg;
+			break;
+		case 'F':
+			foreground_mode = 1;
 			break;
 		case 'u':
 			run_as_user = 1;
@@ -209,12 +213,11 @@ int main(int argc, char **argv)
 
 	read_config(master_fd, watch_file);
 
-	if (!debug_mode) {
+	if (!debug_mode && !foreground_mode) {
 		if (daemon(0, 0) < 0)
 			exitApp("daemon");
+		write_pid_file();
 	}
-
-	write_pid_file();
 
 	while (watch(master_fd, watch_file) == 0) {
 	}
