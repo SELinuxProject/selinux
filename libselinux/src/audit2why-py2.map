@@ -1,0 +1,5 @@
+AUDIT2WHY_2.9 {
+  global:
+    initaudit2why;
+  local: *;
+};
