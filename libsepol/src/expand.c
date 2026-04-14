@@ -3042,22 +3042,21 @@ static void discard_tunables(sepol_handle_t *sh, policydb_t *pol)
 
 		for (cur_node = decl->cond_list; cur_node != NULL;
 		     cur_node = cur_node->next) {
-			int booleans, tunables, i;
+			int booleans = 0, tunables = 0;
 			cond_bool_datum_t *booldatum;
-			cond_bool_datum_t *tmp[COND_EXPR_MAXDEPTH];
-
-			booleans = tunables = 0;
-			memset(tmp, 0, sizeof(cond_bool_datum_t *) * COND_EXPR_MAXDEPTH);
 
 			for (cur_expr = cur_node->expr; cur_expr != NULL;
 			     cur_expr = cur_expr->next) {
 				if (cur_expr->expr_type != COND_BOOL)
 					continue;
 				booldatum = pol->bool_val_to_struct[cur_expr->boolean - 1];
-				if (booldatum->flags & COND_BOOL_FLAGS_TUNABLE)
-					tmp[tunables++] = booldatum;
-				else
+				if (booldatum->flags & COND_BOOL_FLAGS_TUNABLE) {
+					tunables++;
+					if (preserve_tunables)
+						booldatum->flags &= ~COND_BOOL_FLAGS_TUNABLE;
+				} else {
 					booleans++;
+				}
 			}
 
 			/* bool_copy_callback() at link phase has ensured
@@ -3069,10 +3068,6 @@ static void discard_tunables(sepol_handle_t *sh, policydb_t *pol)
 
 			if (booleans || preserve_tunables) {
 				cur_node->flags &= ~COND_NODE_FLAGS_TUNABLE;
-				if (tunables) {
-					for (i = 0; i < tunables; i++)
-						tmp[i]->flags &= ~COND_BOOL_FLAGS_TUNABLE;
-				}
 			} else {
 				cur_node->flags |= COND_NODE_FLAGS_TUNABLE;
 				cur_state = cond_evaluate_expr(pol, cur_node->expr);
