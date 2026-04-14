@@ -4355,7 +4355,7 @@ int cil_resolve_name_keep_aliases(struct cil_tree_node *ast_node, char *name, en
 		node = ast_node;
 		if (*name == '.') {
 			/* Leading '.' */
-			symtab = &((struct cil_root *)db->ast->root->data)->symtab[CIL_SYM_BLOCKS];
+			symtab = ((struct cil_root *)db->ast->root->data)->symtab;
 		} else {
 			rc = __cil_resolve_name_helper(db, node->parent, current, CIL_SYM_BLOCKS, datum);
 			if (rc != SEPOL_OK) {
@@ -4366,14 +4366,20 @@ int cil_resolve_name_keep_aliases(struct cil_tree_node *ast_node, char *name, en
 		}
 		/* Keep looking up blocks by name until only last part of name remains */
 		while (next != NULL) {
-			rc = cil_symtab_get_datum(symtab, current, datum);
+			rc = cil_symtab_get_datum(&(symtab[CIL_SYM_BLOCKS]), current, datum);
 			if (rc != SEPOL_OK) {
 				free(name_dup);
 				goto exit;
 			}
 			node = NODE(*datum);
 			if (node->flavor == CIL_BLOCK) {
-				symtab = &((struct cil_block*)node->data)->symtab[CIL_SYM_BLOCKS];
+				if (((struct cil_block *)node->data)->is_abstract) {
+					cil_log(CIL_WARN, "Found %s which is an abstract block and invalid for name resolution\n", current);
+					free(name_dup);
+					rc = SEPOL_ERR;
+					goto exit;
+				}
+				symtab = ((struct cil_block*)node->data)->symtab;
 			} else {
 				if (ast_node->flavor != CIL_IN) {
 					cil_log(CIL_WARN, "Can only use %s name for name resolution in \"in\" blocks\n", cil_node_to_string(node));
@@ -4383,7 +4389,7 @@ int cil_resolve_name_keep_aliases(struct cil_tree_node *ast_node, char *name, en
 				}
 				if (node->flavor == CIL_MACRO) {
 					struct cil_macro *macro = node->data;
-					symtab = &macro->symtab[sym_index];
+					symtab = macro->symtab;
 				}
 			}
 			current = next;
@@ -4401,6 +4407,7 @@ int cil_resolve_name_keep_aliases(struct cil_tree_node *ast_node, char *name, en
 
 exit:
 	if (rc != SEPOL_OK) {
+		cil_tree_log(ast_node, CIL_ERR, "Failed to resolve %s", name);
 		*datum = NULL;
 	}
 
