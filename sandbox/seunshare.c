@@ -679,9 +679,19 @@ killall (const char *execcon)
 		return -1;
 	}
 	pids = 0;
-	context_t con;
-	con = context_new(execcon);
-	const char *mcs = context_range_get(con);
+	context_t con = context_new(execcon);
+	if (!con) {
+		free(pid_table);
+		(void)closedir(dir);
+		return -1;
+	}
+	const char *const mcs = context_range_get(con);
+	if (!mcs) {
+		context_free(con);
+		free(pid_table);
+		(void)closedir(dir);
+		return -1;
+	}
 	printf("mcs=%s\n", mcs);
 	while ((de = readdir (dir)) != NULL) {
 		if (!(pid = (pid_t)atoi(de->d_name)) || pid == self)
@@ -708,11 +718,13 @@ killall (const char *execcon)
 		if (getpidcon(id, &scon) == 0) {
 
 			context_t pidcon = context_new(scon);
-			/* Attempt to kill remaining processes */
-			if (strcmp(context_range_get(pidcon), mcs) == 0)
-				kill(id, SIGKILL);
+			if (pidcon) {
+				/* Attempt to kill remaining processes */
+				if (strcmp(context_range_get(pidcon), mcs) == 0)
+					kill(id, SIGKILL);
 
-			context_free(pidcon);
+				context_free(pidcon);
+			}
 			freecon(scon);
 		}
 		running++;
