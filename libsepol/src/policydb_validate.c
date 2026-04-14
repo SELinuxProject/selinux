@@ -874,32 +874,32 @@ static int validate_datum(__attribute__ ((unused))hashtab_key_t k, hashtab_datum
 	return !value_isvalid(s->value, *nprim);
 }
 
-static int validate_datum_array_entries(sepol_handle_t *handle, const policydb_t *p, validate_t flavors[])
+static int validate_datum_array_entries(sepol_handle_t *handle, const policydb_t *p, const symtab_t *symtabs, validate_t flavors[])
 {
 	map_arg_t margs = { flavors, handle, p, 0 };
 
-	if (hashtab_map(p->p_commons.table, validate_common_datum_wrapper, &margs))
+	if (hashtab_map(symtabs[SYM_COMMONS].table, validate_common_datum_wrapper, &margs))
 		goto bad;
 
-	if (hashtab_map(p->p_classes.table, validate_class_datum_wrapper, &margs))
+	if (hashtab_map(symtabs[SYM_CLASSES].table, validate_class_datum_wrapper, &margs))
 		goto bad;
 
-	if (hashtab_map(p->p_roles.table, validate_role_datum_wrapper, &margs))
+	if (hashtab_map(symtabs[SYM_ROLES].table, validate_role_datum_wrapper, &margs))
 		goto bad;
 
-	if (hashtab_map(p->p_types.table, validate_type_datum_wrapper, &margs))
+	if (hashtab_map(symtabs[SYM_TYPES].table, validate_type_datum_wrapper, &margs))
 		goto bad;
 
-	if (hashtab_map(p->p_users.table, validate_user_datum_wrapper, &margs))
+	if (hashtab_map(symtabs[SYM_USERS].table, validate_user_datum_wrapper, &margs))
 		goto bad;
 
-	if (p->mls && hashtab_map(p->p_levels.table, validate_level_datum_wrapper, &margs))
+	if (p->mls && hashtab_map(symtabs[SYM_LEVELS].table, validate_level_datum_wrapper, &margs))
 		goto bad;
 
-	if (hashtab_map(p->p_cats.table, validate_datum, &flavors[SYM_CATS]))
+	if (hashtab_map(symtabs[SYM_CATS].table, validate_datum, &flavors[SYM_CATS]))
 		goto bad;
 
-	if (hashtab_map(p->p_bools.table, validate_bool_datum_wrapper, &margs))
+	if (hashtab_map(symtabs[SYM_BOOLS].table, validate_bool_datum_wrapper, &margs))
 		goto bad;
 
 	return 0;
@@ -1565,20 +1565,6 @@ bad:
 	return -1;
 }
 
-static int validate_symtabs(sepol_handle_t *handle, const symtab_t symtabs[], validate_t flavors[])
-{
-	unsigned int i;
-
-	for (i = 0; i < SYM_NUM; i++) {
-		if (hashtab_map(symtabs[i].table, validate_datum, &flavors[i].nprim)) {
-			ERR(handle, "Invalid symtab");
-			return -1;
-		}
-	}
-
-	return 0;
-}
-
 static int validate_avrule_blocks(sepol_handle_t *handle, const avrule_block_t *avrule_block, const policydb_t *p, validate_t flavors[])
 {
 	const avrule_decl_t *decl;
@@ -1601,7 +1587,7 @@ static int validate_avrule_blocks(sepol_handle_t *handle, const avrule_block_t *
 				goto bad;
 			if (validate_filename_trans_rules(handle, decl->filename_trans_rules, p, flavors))
 				goto bad;
-			if (validate_symtabs(handle, decl->symtab, flavors))
+			if (validate_datum_array_entries(handle, p, decl->symtab, flavors))
 				goto bad;
 		}
 
@@ -1853,7 +1839,7 @@ int policydb_validate(sepol_handle_t *handle, const policydb_t *p)
 	if (validate_datum_array_gaps(handle, p, flavors))
 		goto bad;
 
-	if (validate_datum_array_entries(handle, p, flavors))
+	if (validate_datum_array_entries(handle, p, p->symtab, flavors))
 		goto bad;
 
 	if (validate_permissives(handle, p, flavors))
