@@ -261,25 +261,20 @@ int matchpathcon_filespec_add(ino_t ino, int specind, const char *file)
 	return -1;
 }
 
+int matchpathcon_filespec_add64(unsigned long ino, int specind,
+                              const char *file)
+{
+	return matchpathcon_filespec_add(ino, specind, file);
+}
+
 #if (defined(_FILE_OFFSET_BITS) && _FILE_OFFSET_BITS == 64) && defined(__INO64_T_TYPE) && !defined(__INO_T_MATCHES_INO64_T)
-/* alias defined in the public header but we undefine it here */
-#undef matchpathcon_filespec_add
 
 /* ABI backwards-compatible shim for non-LFS 32-bit systems */
-
 static_assert(sizeof(unsigned long) == sizeof(__ino_t), "inode size mismatch");
 static_assert(sizeof(unsigned long) == sizeof(uint32_t), "inode size mismatch");
 static_assert(sizeof(ino_t) == sizeof(ino64_t), "inode size mismatch");
 static_assert(sizeof(ino64_t) == sizeof(uint64_t), "inode size mismatch");
 
-extern int matchpathcon_filespec_add(unsigned long ino, int specind,
-                                     const char *file);
-
-int matchpathcon_filespec_add(unsigned long ino, int specind,
-                              const char *file)
-{
-	return matchpathcon_filespec_add64(ino, specind, file);
-}
 #elif (defined(_FILE_OFFSET_BITS) && _FILE_OFFSET_BITS == 64) || defined(__INO_T_MATCHES_INO64_T)
 
 static_assert(sizeof(uint64_t) == sizeof(ino_t), "inode size mismatch");
