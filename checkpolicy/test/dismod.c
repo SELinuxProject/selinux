@@ -106,8 +106,7 @@ static __attribute__((__noreturn__)) void usage(const char *progname)
 	puts("");
 	puts("Actions:");
 	for (unsigned int i = 0; commands[i].meta != EOL; i++) {
-		if (commands[i].meta == HEADER
-		    || commands[i].meta & NOOPT)
+		if (!(commands[i].meta & CMD))
 			continue;
 		printf("  %c    %s\n", commands[i].cmd, commands[i].desc);
 	}
