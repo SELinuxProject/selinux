@@ -1322,6 +1322,9 @@ allow %s_t %s_t:%s_socket name_%s;
         import dnf
 
         with dnf.Base() as base:
+            if base.conf.substitutions.get('releasever') is None:
+                base.conf.substitutions['releasever'] = ''
+
             base.read_all_repos()
             base.fill_sack(load_system_repo=True)
 
