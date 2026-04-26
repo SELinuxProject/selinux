@@ -537,10 +537,8 @@ extern int matchpathcon_index(const char *path,
    with the same inode (e.g. due to multiple hard links).  If so, then
    use the latter of the two specifications based on their order in the 
    file contexts configuration.  Return the used specification index. */
-#if defined(_FILE_OFFSET_BITS) && _FILE_OFFSET_BITS == 64 && defined(__INO64_T_TYPE) && !defined(__INO_T_MATCHES_INO64_T)
-#define matchpathcon_filespec_add matchpathcon_filespec_add64
-#endif
 extern int matchpathcon_filespec_add(ino_t ino, int specind, const char *file);
+extern int matchpathcon_filespec_add64(ino_t ino, int specind, const char *file);
 
 /* Destroy any inode associations that have been added, e.g. to restart
    for a new filesystem. */
