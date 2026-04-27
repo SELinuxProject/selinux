@@ -1488,7 +1488,7 @@ static int semanage_exec_prog(semanage_handle_t * sh,
 
 	/* no need to use pthread_atfork() -- child will not be using
 	 * any mutexes. */
-	forkval = vfork();
+	forkval = fork();
 	if (forkval == 0) {
 		/* child process.  file descriptors will be closed
 		 * because they were set as close-on-exec. */
