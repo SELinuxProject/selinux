@@ -281,7 +281,7 @@ const char *selinux_policy_root(void)
 int selinux_set_policy_root(const char *path)
 {
 	int i;
-	char *policy_type = strrchr(path, '/');
+	const char *policy_type = strrchr(path, '/');
 	if (!policy_type) {
 		errno = EINVAL;
 		return -1;
