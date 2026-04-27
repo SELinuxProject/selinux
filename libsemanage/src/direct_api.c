@@ -1755,7 +1755,7 @@ static int semanage_direct_install_file(semanage_handle_t * sh,
 
 	int retval = -1;
 	char *path = NULL;
-	const char *filename;
+	char *filename;
 	const char *lang_ext = NULL;
 	char *module_name = NULL;
 	char *separator;

@@ -167,6 +167,6 @@ int write_full(int fd, const void *buf, size_t len) WARN_UNUSED;
 #ifdef __GNUC__
 __attribute__((nonnull))
 #endif
-char *semanage_basename(const char *filename);
+const char *semanage_basename(const char *filename);
 
 #endif

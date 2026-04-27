@@ -234,8 +234,8 @@ char *semanage_str_replace(const char *search, const char *replace,
 			   const char *src, size_t lim)
 {
 	size_t count = 0, slen, rlen, newsize;
-	char *p, *pres, *result;
-	const char *psrc;
+	char *pres, *result;
+	const char *p, *psrc;
 
 	slen = strlen(search);
 	rlen = strlen(replace);
@@ -353,8 +353,8 @@ int write_full(int fd, const void *buf, size_t len)
 #ifdef __GNUC__
 __attribute__((nonnull))
 #endif
-char *semanage_basename(const char *filename)
+const char *semanage_basename(const char *filename)
 {
-	char *p = strrchr(filename, '/');
+	const char *p = strrchr(filename, '/');
 	return p ? p + 1 : (char *)filename;
 }
