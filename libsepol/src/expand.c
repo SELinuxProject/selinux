@@ -827,8 +827,10 @@ static int role_dominates_copy_callback(hashtab_key_t key __attribute__ ((unused
 
 	if (map_ebitmap(&role->dominates, &mapped, state->rolemap))
 		return -1;
-	if (ebitmap_union(&new_role->dominates, &mapped))
+	if (ebitmap_union(&new_role->dominates, &mapped)) {
+		ebitmap_destroy(&mapped);
 		return -1;
+	}
 	ebitmap_destroy(&mapped);
 
 	return 0;
