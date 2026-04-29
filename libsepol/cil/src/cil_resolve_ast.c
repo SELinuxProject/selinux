@@ -4407,7 +4407,7 @@ int cil_resolve_name_keep_aliases(struct cil_tree_node *ast_node, char *name, en
 
 exit:
 	if (rc != SEPOL_OK) {
-		cil_tree_log(ast_node, CIL_ERR, "Failed to resolve %s", name);
+		cil_tree_log(ast_node, CIL_INFO, "Failed to resolve %s", name);
 		*datum = NULL;
 	}
 
