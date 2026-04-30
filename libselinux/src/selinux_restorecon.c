@@ -767,10 +767,14 @@ static int restorecon_sb(const char *pathname, const struct stat *sb,
 		if (!flags->nochange) {
 			if (lsetfilecon(pathname, newcon) < 0) {
 				/* Ignore files removed during relabeling if ignore_noent is set */
-				if (flags->ignore_noent && errno == ENOENT)
+				if (flags->ignore_noent && errno == ENOENT) {
 					goto out;
-				else
+				} else if (errno == EROFS) {
+					selinux_log(SELINUX_INFO, "Read only filesystem, relabel not possible: %s\n", pathname);
+					goto out;
+				} else {
 					goto err;
+				}
 			}
 
 			updated = true;
