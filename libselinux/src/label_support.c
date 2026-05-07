@@ -190,13 +190,11 @@ int  digest_add_specfile(struct selabel_digest *digest, FILE *fp,
 					    1, buf_len, fp) != buf_len)
 			return -1;
 
-	} else if (from_addr) {
-		tmp_buf = memcpy(digest->hashbuf +
-				    (digest->hashbuf_size - buf_len),
-				    from_addr, buf_len);
-		if (!tmp_buf)
-			return -1;
-	}
+	} else if (from_addr)
+		memcpy(digest->hashbuf +
+			    (digest->hashbuf_size - buf_len),
+			    from_addr, buf_len);
+
 	/* Now add path to list */
 	digest->specfile_list[digest->specfile_cnt] = strdup(path);
 	if (!digest->specfile_list[digest->specfile_cnt])
