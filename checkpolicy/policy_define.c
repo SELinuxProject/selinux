@@ -380,10 +380,8 @@ int define_initial_sid(void)
 	return 0;
 
       bad:
-	if (id)
-		free(id);
-	if (newc)
-		free(newc);
+	free(id);
+	free(newc);
 	return -1;
 }
 
@@ -631,17 +629,13 @@ int define_common_perms(void)
 	return 0;
 
       bad:
-	if (id)
-		free(id);
-	if (comdatum)
-		free(comdatum);
+	free(id);
+	free(comdatum);
 	return -1;
 
       bad_perm:
-	if (perm)
-		free(perm);
-	if (perdatum)
-		free(perdatum);
+	free(perm);
+	free(perdatum);
 	return -1;
 }
 
@@ -758,10 +752,8 @@ int define_av_perms(int inherits)
 	return 0;
 
       bad:
-	if (id)
-		free(id);
-	if (perdatum)
-		free(perdatum);
+	free(id);
+	free(perdatum);
 	return -1;
 }
 
@@ -891,10 +883,8 @@ int define_sens(void)
 	return 0;
 
       bad:
-	if (id)
-		free(id);
-	if (level)
-		free(level);
+	free(id);
+	free(level);
 	if (datum) {
 		level_datum_destroy(datum);
 		free(datum);
@@ -902,8 +892,7 @@ int define_sens(void)
 	return -1;
 
       bad_alias:
-	if (id)
-		free(id);
+	free(id);
 	if (aliasdatum) {
 		level_datum_destroy(aliasdatum);
 		free(aliasdatum);
@@ -1075,8 +1064,7 @@ int define_category(void)
 	return 0;
 
       bad:
-	if (id)
-		free(id);
+	free(id);
 	if (datum) {
 		cat_datum_destroy(datum);
 		free(datum);
@@ -1084,8 +1072,7 @@ int define_category(void)
 	return -1;
 
       bad_alias:
-	if (id)
-		free(id);
+	free(id);
 	if (aliasdatum) {
 		cat_datum_destroy(aliasdatum);
 		free(aliasdatum);
@@ -6128,13 +6115,10 @@ static int define_genfs_context_helper(char *fstype, int has_type)
 	free(type);
 	return 0;
       fail:
-	if (type)
-		free(type);
+	free(type);
 	context_destroy(&newc->context[0]);
-	if (fstype)
-		free(fstype);
-	if (newc->u.name)
-		free(newc->u.name);
+	free(fstype);
+	free(newc->u.name);
 	free(newc);
 	return -1;
 }
