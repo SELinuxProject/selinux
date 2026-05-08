@@ -785,7 +785,7 @@ int define_sens(void)
 		yyerror2("sensitivity identifier %s may not contain periods", id);
 		goto bad;
 	}
-	level = (mls_level_t *) malloc(sizeof(mls_level_t));
+	level = malloc(sizeof(mls_level_t));
 	if (!level) {
 		yyerror("out of memory");
 		goto bad;
@@ -794,7 +794,7 @@ int define_sens(void)
 	level->sens = 0;	/* actual value set in define_dominance */
 	ebitmap_init(&level->cat);	/* actual value set in define_level */
 
-	datum = (level_datum_t *) malloc(sizeof(level_datum_t));
+	datum = malloc(sizeof(level_datum_t));
 	if (!datum) {
 		yyerror("out of memory");
 		goto bad;
@@ -838,7 +838,7 @@ int define_sens(void)
 			free(id);
 			return -1;
 		}
-		aliasdatum = (level_datum_t *) malloc(sizeof(level_datum_t));
+		aliasdatum = malloc(sizeof(level_datum_t));
 		if (!aliasdatum) {
 			yyerror("out of memory");
 			free(id);
@@ -975,7 +975,7 @@ int define_category(void)
 		yyerror2("category identifier %s may not contain periods", id);
 		goto bad;
 	}
-	datum = (cat_datum_t *) malloc(sizeof(cat_datum_t));
+	datum = malloc(sizeof(cat_datum_t));
 	if (!datum) {
 		yyerror("out of memory");
 		goto bad;
@@ -1018,7 +1018,7 @@ int define_category(void)
 			free(id);
 			return -1;
 		}
-		aliasdatum = (cat_datum_t *) malloc(sizeof(cat_datum_t));
+		aliasdatum = malloc(sizeof(cat_datum_t));
 		if (!aliasdatum) {
 			yyerror("out of memory");
 			free(id);
@@ -1090,7 +1090,7 @@ static int clone_level(hashtab_key_t key __attribute__ ((unused)), hashtab_datum
 			levdatum->notdefined = FALSE;
 			return 0;
 		}
-		newlevel = (mls_level_t *) malloc(sizeof(mls_level_t));
+		newlevel = malloc(sizeof(mls_level_t));
 		if (!newlevel)
 			return -1;
 		if (mls_level_cpy(newlevel, level)) {
@@ -2166,7 +2166,7 @@ static int define_te_avtab_xperms_helper(int which, avrule_t ** rule)
 	unsigned int i;
 	int add = 1, ret;
 
-	avrule = (avrule_t *) malloc(sizeof(avrule_t));
+	avrule = malloc(sizeof(avrule_t));
 	if (!avrule) {
 		yyerror("out of memory");
 		goto out;
@@ -2230,8 +2230,7 @@ static int define_te_avtab_xperms_helper(int which, avrule_t ** rule)
 	perms = NULL;
 	id = queue_head(id_queue);
 	ebitmap_for_each_positive_bit(&tclasses, node, i) {
-		cur_perms =
-		    (class_perm_node_t *) malloc(sizeof(class_perm_node_t));
+		cur_perms = malloc(sizeof(class_perm_node_t));
 		if (!cur_perms) {
 			yyerror("out of memory");
 			goto out2;
@@ -2778,7 +2777,7 @@ static int define_te_avtab_helper(int which, avrule_t ** rule)
 
 	ebitmap_init(&tclasses);
 
-	avrule = (avrule_t *) malloc(sizeof(avrule_t));
+	avrule = malloc(sizeof(avrule_t));
 	if (!avrule) {
 		yyerror("memory error");
 		ret = -1;
@@ -2847,8 +2846,7 @@ static int define_te_avtab_helper(int which, avrule_t ** rule)
 
 	perms = NULL;
 	ebitmap_for_each_positive_bit(&tclasses, node, i) {
-		cur_perms =
-		    (class_perm_node_t *) malloc(sizeof(class_perm_node_t));
+		cur_perms = malloc(sizeof(class_perm_node_t));
 		if (!cur_perms) {
 			yyerror("out of memory");
 			ret = -1;
@@ -4389,7 +4387,7 @@ static int mls_semantic_cats_merge(mls_semantic_cat_t ** dst,
 	mls_semantic_cat_t *new;
 
 	while (src) {
-		new = (mls_semantic_cat_t *) malloc(sizeof(mls_semantic_cat_t));
+		new = malloc(sizeof(mls_semantic_cat_t));
 		if (!new)
 			return -1;
 
@@ -4466,7 +4464,7 @@ static int parse_semantic_categories(char *id, level_datum_t * levdatum __attrib
 		range_start = range_end = cdatum->s.value;
 	}
 
-	newcat = (mls_semantic_cat_t *) malloc(sizeof(mls_semantic_cat_t));
+	newcat = malloc(sizeof(mls_semantic_cat_t));
 	if (!newcat) {
 		yyerror("out of memory");
 		return -1;
@@ -4858,7 +4856,7 @@ int define_fs_context(unsigned int major, unsigned int minor)
 		return -1;
 	}
 
-	newc->u.name = (char *)malloc(6);
+	newc->u.name = malloc(6);
 	if (!newc->u.name) {
 		yyerror("out of memory");
 		free(newc);
