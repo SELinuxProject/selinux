@@ -1498,10 +1498,15 @@ static int define_typebounds_helper(const char *bounds_id, const char *type_id)
 	}
 
 	id = strdup(type_id);
+	if (!id) {
+		yyerror("Out of memory!");
+		return -1;
+	}
 	value = (type->flavor != TYPE_ALIAS) ? type->s.value : type->primary;
 	type = get_local_type(id, value, 0);
 	if (!type) {
 		yyerror("Out of memory!");
+		return -1;
 	}
 
 	if (!type->bounds)
@@ -3558,6 +3563,10 @@ int define_filename_trans(void)
 		append_filename_trans(ftr);
 
 		ftr->name = strdup(name);
+		if (!ftr->name) {
+			yyerror("out of memory");
+			goto bad;
+		}
 		if (type_set_cpy(&ftr->stypes, &stypes)) {
 			yyerror("out of memory");
 			goto bad;
@@ -4509,6 +4518,10 @@ int define_user(void)
 	}
 
 	id = strdup(username);
+	if (!id) {
+		yyerror("out of memory");
+		return -1;
+	}
 
 	if ((usrdatum = declare_user()) == NULL) {
 		free(id);
