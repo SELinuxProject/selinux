@@ -428,7 +428,7 @@ static bool rm_rf(int targetfd, const char *path) {
 	}
 
 	if (S_ISDIR(statbuf.st_mode)) {
-		const int newfd = openat(targetfd, path, O_RDONLY | O_DIRECTORY | O_CLOEXEC);
+		const int newfd = openat(targetfd, path, O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC);
 		if (newfd < 0) {
 			perror("openat");
 			return false;
