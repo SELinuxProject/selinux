@@ -304,18 +304,20 @@ static int seunshare_mount(const char *src, const char *dst, struct stat *src_st
  */
 static int seunshare_mount_file(const char *src, const char *dst)
 {
-	int flags = 0;
-
 	if (verbose)
 		printf(_("Mounting %s on %s\n"), src, dst);
 
 	if (access(dst, F_OK) == -1) {
-		 FILE *fptr;
-         fptr = fopen(dst, "w");
-		 fclose(fptr);
+		int fd = open(dst, O_WRONLY | O_CREAT | O_NOFOLLOW | O_CLOEXEC, 0600);
+		if (fd < 0) {
+			fprintf(stderr, _("Failed to create mount point %s: %m\n"), dst);
+			return -1;
+		}
+		close(fd);
 	}
+
 	/* mount file */
-	if (mount(src, dst, NULL, MS_BIND | flags, NULL) < 0) {
+	if (mount(src, dst, NULL, MS_BIND, NULL) < 0) {
 		fprintf(stderr, _("Failed to mount %s on %s: %s\n"), src, dst, strerror(errno));
 		return -1;
 	}
