@@ -858,8 +858,8 @@ int main(int argc, char **argv) {
 	/* Changing fsuid is usually required when user-specified directory is
 	 * on an NFS mount.  It's also desired to avoid leaking info about
 	 * existence of the files not accessible to the user. */
-	if (((uid_t)setfsuid(uid) != 0)   && (errno != 0)) {
-		fprintf(stderr, _("Error: unable to setfsuid %m\n"));
+	if ((uid_t)setfsuid(uid) != 0) {
+		fprintf(stderr, _("Error: unable to setfsuid\n"));
 
 		return -1;
 	}
