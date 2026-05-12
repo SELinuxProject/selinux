@@ -49,6 +49,7 @@ unsigned int utmpwatcher_handle(int inotify_fd, int wd)
 {
 	int changed = 0;
 	struct utmp u;
+	char name[UT_NAMESIZE+1];
 	const char *utmp_path = "/run/utmp";
 	struct stringsList *prev_utmp_ptr = utmp_ptr;
 	if (wd != utmp_wd)
@@ -60,8 +61,11 @@ unsigned int utmpwatcher_handle(int inotify_fd, int wd)
 		exitApp("Error reading utmp file.");
 
 	while (fread(&u, sizeof(struct utmp), 1, cfg) > 0) {
-		if (u.ut_type == USER_PROCESS)
-			strings_list_add(&utmp_ptr, u.ut_user);
+		if (u.ut_type == USER_PROCESS) {
+			strncpy(name, u.ut_user, UT_NAMESIZE);
+			name[UT_NAMESIZE] = '\0';
+			strings_list_add(&utmp_ptr, name);
+		}
 	}
 	fclose(cfg);
 	if (utmp_wd >= 0)
