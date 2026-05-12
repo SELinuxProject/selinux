@@ -15,6 +15,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <fcntl.h>
+#include <dirent.h>
 #include <selinux/selinux.h>
 #include "restorecond.h"
 #include "stringslist.h"
@@ -45,6 +46,124 @@ int watch_list_isempty(void) {
 	return firstDir == NULL;
 }
 
+static int open_final(int dfd, const char *name, struct stat *sb)
+{
+	int fd;
+
+	if (name)
+		fd = openat(dfd, name, O_PATH | O_NOFOLLOW | O_CLOEXEC);
+	else
+		fd = fcntl(dfd, F_DUPFD_CLOEXEC, 0);
+	if (fd < 0)
+		return -1;
+
+	if (fstat(fd, sb) < 0) {
+		close(fd);
+		return -1;
+	}
+
+	return fd;
+}
+
+static int safe_open(const char *path, struct stat *sb)
+{
+	char *copy, *cur, *slash;
+	int dfd, nfd;
+
+	if (!path || path[0] == '\0') {
+		errno = ENOENT;
+		return -1;
+	}
+
+	copy = strdup(path);
+	if (!copy)
+		return -1;
+
+	if (copy[0] == '/') {
+		dfd = open("/", O_PATH | O_DIRECTORY | O_CLOEXEC);
+		cur = copy + 1;
+	} else {
+		dfd = open(".", O_PATH | O_DIRECTORY | O_CLOEXEC);
+		cur = copy;
+	}
+	if (dfd < 0) {
+		free(copy);
+		return -1;
+	}
+
+	while (*cur == '/')
+		cur++;
+
+	while (*cur != '\0') {
+		slash = strchr(cur, '/');
+		if  (slash) {
+			*slash = '\0';
+			char *next = slash + 1;
+			while (*next == '/')
+				next++;
+			if (*next != '\0') {
+				nfd = openat(dfd, cur, O_PATH | O_NOFOLLOW |
+					O_DIRECTORY | O_CLOEXEC);
+				close(dfd);
+				if (nfd < 0) {
+					free(copy);
+					return -1;
+				}
+				dfd = nfd;
+				cur = next;
+				continue;
+			}
+		}
+
+		nfd = open_final(dfd, cur, sb);
+		close(dfd);
+		free(copy);
+		return nfd;
+	}
+
+	nfd = open_final(dfd, NULL, sb);
+	close(dfd);
+	free(copy);
+	return nfd;
+}
+
+static void *nofollow_opendir(const char *name)
+{
+	struct stat sb;
+	int fd, rdfd;
+
+	fd = safe_open(name, &sb);
+	if (fd < 0)
+		return NULL;
+
+	if (!S_ISDIR(sb.st_mode)) {
+		close(fd);
+		errno = ENOTDIR;
+		return NULL;
+	}
+
+	rdfd = openat(fd, ".", O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC);
+	close(fd);
+	if (rdfd < 0)
+		return NULL;
+	return fdopendir(rdfd);
+}
+
+static struct dirent *nofollow_readdir(void *d)
+{
+	return readdir((DIR *)d);
+}
+
+static void nofollow_closedir(void *d)
+{
+	closedir((DIR *)d);
+}
+
+static int nofollow_lstat(const char *path, struct stat *sb)
+{
+	return lstat(path, sb);
+}
+
 void watch_list_add(int fd, const char *path)
 {
 	struct watchList *ptr = NULL;
@@ -58,21 +177,30 @@ void watch_list_add(int fd, const char *path)
 	ptr = firstDir;
 	int len;
 
+	memset(&globbuf, 0, sizeof(globbuf));
+	globbuf.gl_opendir = nofollow_opendir;
+	globbuf.gl_readdir = nofollow_readdir;
+	globbuf.gl_closedir = nofollow_closedir;
+	globbuf.gl_lstat = nofollow_lstat;
+	globbuf.gl_stat = nofollow_lstat; /* never follow symlinks */
 	globbuf.gl_offs = 1;
 	if (glob(path,
-		 GLOB_TILDE | GLOB_PERIOD,
+		 GLOB_TILDE | GLOB_PERIOD | GLOB_ALTDIRFUNC,
 		 NULL,
 		 &globbuf) >= 0) {
 		for (i = 0; i < globbuf.gl_pathc; i++) {
-			len = strlen(globbuf.gl_pathv[i]) - 2;
-			if (len > 0 &&
-			    strcmp(&globbuf.gl_pathv[i][len--], "/.") == 0)
+			struct stat sb;
+			const char *p = globbuf.gl_pathv[i];
+
+			len = strlen(p) - 2;
+			if (len > 0 && strcmp(&p[len--], "/.") == 0)
 				continue;
-			if (len > 0 &&
-			    strcmp(&globbuf.gl_pathv[i][len], "/..") == 0)
+			if (len > 0 && strcmp(&p[len], "/..") == 0)
 				continue;
-			selinux_restorecon(globbuf.gl_pathv[i],
-					   r_opts.restorecon_flags);
+			if (lstat(p, &sb) == 0 && S_ISREG(sb.st_mode) &&
+				sb.st_nlink > 1)
+				continue;
+			selinux_restorecon(p, r_opts.restorecon_flags);
 		}
 		globfree(&globbuf);
 	}
@@ -89,7 +217,8 @@ void watch_list_add(int fd, const char *path)
 
 	if (!ptr) exitApp("Out of Memory");
 
-	ptr->wd = inotify_add_watch(fd, dir, IN_CREATE | IN_MOVED_TO);
+	ptr->wd = inotify_add_watch(fd, dir,
+				    IN_CREATE | IN_MOVED_TO |IN_DONT_FOLLOW);
 	if (ptr->wd == -1) {
 		free(ptr);
 		if (! run_as_user)
@@ -281,7 +410,8 @@ void read_config(int fd, const char *watch_file_path)
 
 	inotify_rm_watch(fd, master_wd);
 	master_wd =
-	    inotify_add_watch(fd, watch_file_path, IN_MOVED_FROM | IN_MODIFY);
+	    inotify_add_watch(fd, watch_file_path,
+			      IN_MOVED_FROM | IN_MODIFY | IN_DONT_FOLLOW);
 	if (master_wd == -1)
 		exitApp("Error watching config file.");
 }
