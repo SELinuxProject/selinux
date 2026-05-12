@@ -260,24 +260,30 @@ static int verify_shell(const char *shell_name)
  */
 static int seunshare_mount(const char *src, const char *dst, struct stat *src_st)
 {
-	int flags = 0;
+	int bind_flags = MS_BIND;
+	int sec_flags = 0;
 	int is_tmp = 0;
 
 	if (verbose)
 		printf(_("Mounting %s on %s\n"), src, dst);
 
 	if (strcmp("/tmp", dst) == 0) {
-		flags = flags | MS_NODEV | MS_NOSUID | MS_NOEXEC;
+		sec_flags = MS_NODEV | MS_NOSUID | MS_NOEXEC;
 		is_tmp = 1;
 	}
 
 	if (strncmp("/run/user", dst, 9) == 0) {
-		flags = flags | MS_REC;
+		bind_flags |= MS_REC;
 	}
 
 	/* mount directory */
-	if (mount(src, dst, NULL, MS_BIND | flags, NULL) < 0) {
+	if (mount(src, dst, NULL, bind_flags, NULL) < 0) {
 		fprintf(stderr, _("Failed to mount %s on %s: %s\n"), src, dst, strerror(errno));
+		return -1;
+	}
+	/* remount with security flags, ignored on original bind mount */
+	if (sec_flags && mount(NULL, dst, NULL, MS_BIND | MS_REMOUNT | sec_flags, NULL) < 0) {
+		fprintf(stderr, _("Failed to remount %s: %m\n"), dst);
 		return -1;
 	}
 
@@ -289,8 +295,13 @@ static int seunshare_mount(const char *src, const char *dst, struct stat *src_st
 		if (verbose)
 			printf(_("Mounting /tmp on /var/tmp\n"));
 
-		if (mount("/tmp", "/var/tmp",  NULL, MS_BIND | flags, NULL) < 0) {
+		if (mount("/tmp", "/var/tmp",  NULL, MS_BIND, NULL) < 0) {
 			fprintf(stderr, _("Failed to mount /tmp on /var/tmp: %s\n"), strerror(errno));
+			return -1;
+		}
+		/* remount with security flags, ignored on original bind mount */
+		if (mount(NULL, "/var/tmp", NULL, MS_BIND | MS_REMOUNT | sec_flags, NULL) < 0) {
+			fprintf(stderr, _("Failed to remount /var/tmp: %m\n"));
 			return -1;
 		}
 	}
