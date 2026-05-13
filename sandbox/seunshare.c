@@ -849,6 +849,12 @@ int main(int argc, char **argv) {
 		}
 	}
 
+	if ((wayland_display && (strchr(wayland_display, '/') || strstr(wayland_display, ".."))) ||
+		(pipewire_socket && (strchr(pipewire_socket, '/') || strstr(pipewire_socket, "..")))) {
+		fprintf(stderr, _("Error: -W/-P must be a socket name, not a path\n"));
+		return -1;
+	}
+
 	if (! homedir_s && ! tmpdir_s) {
 		fprintf(stderr, _("Error: tmpdir and/or homedir required\n %s\n"), USAGE_STRING);
 		return -1;
@@ -990,7 +996,8 @@ int main(int argc, char **argv) {
 					perror(_("Out of memory"));
 					goto childerr;
 				}
-				seunshare_mount_file(pipewire_path, pipewire_path_s);
+				if (seunshare_mount_file(pipewire_path, pipewire_path_s) == -1)
+					goto childerr;
 			}
 		}
 
