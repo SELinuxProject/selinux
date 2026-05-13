@@ -763,14 +763,12 @@ int main(int argc, char **argv) {
 	char *tmpdir_s = NULL;	/* tmpdir spec'd by user in argv[] */
 	char *tmpdir_r = NULL;	/* tmpdir created by seunshare */
 	char *runuserdir_s = NULL;	/* /var/run/user/UID spec'd by user in argv[] */
-	char *runuserdir_r = NULL;	/* /var/run/user/UID created by seunshare */
 
 	struct stat st_curhomedir;
 	struct stat st_homedir;
 	struct stat st_tmpdir_s;
 	struct stat st_tmpdir_r;
 	struct stat st_runuserdir_s;
-	struct stat st_runuserdir_r;
 
 	const struct option long_options[] = {
 		{"homedir", 1, 0, 'h'},
@@ -900,12 +898,6 @@ int main(int argc, char **argv) {
 	if (tmpdir_s && (tmpdir_r = create_tmpdir(tmpdir_s, &st_tmpdir_s,
 						  &st_tmpdir_r, pwd, execcon)) == NULL) {
 		fprintf(stderr, _("Failed to create runtime temporary directory\n"));
-		return -1;
-	}
-	/* create runtime runuserdir */
-	if (runuserdir_s && (runuserdir_r = create_tmpdir(runuserdir_s, &st_runuserdir_s,
-						  &st_runuserdir_r, pwd, execcon)) == NULL) {
-		fprintf(stderr, _("Failed to create runtime $XDG_RUNTIME_DIR directory\n"));
 		return -1;
 	}
 
