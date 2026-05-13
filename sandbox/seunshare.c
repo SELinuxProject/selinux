@@ -680,8 +680,8 @@ killall (const char *execcon)
 	char *scon;
 	struct dirent *de;
 	pid_t *pid_table, pid, self;
-	int i;
-	int pids, max_pids;
+	unsigned int i;
+	unsigned int pids, max_pids;
 	int running = 0;
 	self = getpid();
 	if (!(dir = opendir(PROC_BASE))) {
@@ -701,26 +701,34 @@ killall (const char *execcon)
 		return -1;
 	}
 	const char *const mcs = context_range_get(con);
-	if (!mcs) {
+	const char *const type = context_type_get(con);
+	if (!mcs || !type) {
 		context_free(con);
 		free(pid_table);
 		(void)closedir(dir);
 		return -1;
 	}
-	printf("mcs=%s\n", mcs);
+	if (verbose)
+		printf("mcs=%s type=%s\n", mcs, type);
 	while ((de = readdir (dir)) != NULL) {
 		if (!(pid = (pid_t)atoi(de->d_name)) || pid == self)
 			continue;
 
 		if (pids == max_pids) {
-			pid_t *new_pid_table = realloc(pid_table, 2*pids*sizeof(pid_t));
+			max_pids *= 2;
+			if (max_pids <= pids)
+			{
+				free(pid_table);
+				(void)closedir(dir);
+				return -1;
+			}
+			pid_t *new_pid_table = reallocarray(pid_table, max_pids, sizeof(pid_t));
 			if (!new_pid_table) {
 				free(pid_table);
 				(void)closedir(dir);
 				return -1;
 			}
 			pid_table = new_pid_table;
-			max_pids *= 2;
 		}
 		pid_table[pids++] = pid;
 	}
@@ -734,8 +742,12 @@ killall (const char *execcon)
 
 			context_t pidcon = context_new(scon);
 			if (pidcon) {
+				const char *const pmcs = context_range_get(pidcon);
+				const char *const ptype = context_type_get(pidcon);
+
 				/* Attempt to kill remaining processes */
-				if (strcmp(context_range_get(pidcon), mcs) == 0)
+				if (pmcs && ptype && !strcmp(pmcs, mcs) &&
+					!strcmp(ptype, type))
 					kill(id, SIGKILL);
 
 				context_free(pidcon);
