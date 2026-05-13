@@ -776,10 +776,10 @@ int main(int argc, char **argv) {
 		{"homedir", 1, 0, 'h'},
 		{"tmpdir", 1, 0, 't'},
 		{"runuserdir", 1, 0, 'r'},
-		{"kill", 1, 0, 'k'},
-		{"verbose", 1, 0, 'v'},
+		{"kill", 0, 0, 'k'},
+		{"verbose", 0, 0, 'v'},
 		{"context", 1, 0, 'Z'},
-		{"capabilities", 1, 0, 'C'},
+		{"capabilities", 0, 0, 'C'},
 		{"wayland", 1, 0, 'W'},
 		{"pipewire", 1, 0, 'P'},
 		{NULL, 0, 0, 0}
@@ -811,7 +811,7 @@ int main(int argc, char **argv) {
 	}
 
 	while (1) {
-		clflag = getopt_long(argc, argv, "Ccvh:r:t:W:Z:", long_options, NULL);
+		clflag = getopt_long(argc, argv, "Ckvh:r:t:W:P:Z:", long_options, NULL);
 		if (clflag == -1)
 			break;
 
