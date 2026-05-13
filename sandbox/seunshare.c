@@ -964,6 +964,15 @@ int main(int argc, char **argv) {
 			}
 		}
 
+		if (runuserdir_s) {
+			struct stat sb;
+
+			if (verify_directory(RUNTIME_DIR, NULL, &sb) < 0 ||
+				check_owner_uid(uid, RUNTIME_DIR, &sb) < 0)
+				goto childerr;
+
+		}
+
 		if ((XDG_SESSION_TYPE = getenv("XDG_SESSION_TYPE")) != NULL) {
 			if ((XDG_SESSION_TYPE = strdup(XDG_SESSION_TYPE)) == NULL) {
 				perror(_("Out of memory"));
