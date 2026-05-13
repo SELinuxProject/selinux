@@ -235,13 +235,11 @@ static int identify_equiv_types(void)
 	 * Create a list of access vector rules for each type
 	 * from the access vector table.
 	 */
-	type_rules = malloc(sizeof(struct avtab_node) * policydb.p_types.nprim);
+	type_rules = calloc(policydb.p_types.nprim, sizeof(struct avtab_node));
 	if (!type_rules) {
 		fprintf(stderr, "out of memory\n");
 		exit(1);
 	}
-	memset(type_rules, 0,
-	       sizeof(struct avtab_node) * policydb.p_types.nprim);
 	if (avtab_map(&policydb.te_avtab, create_type_rules, type_rules))
 		exit(1);
 

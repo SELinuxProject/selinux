@@ -842,12 +842,11 @@ int require_class(int pass)
 				return -1;
 			}
 			allocated = 1;
-			if ((perm = malloc(sizeof(*perm))) == NULL) {
+			if ((perm = calloc(1, sizeof(*perm))) == NULL) {
 				yyerror("Out of memory!");
 				free(perm_id);
 				return -1;
 			}
-			memset(perm, 0, sizeof(*perm));
 			ret =
 			    hashtab_insert(datum->permissions.table, perm_id,
 					   perm);
