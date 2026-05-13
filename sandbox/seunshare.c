@@ -391,8 +391,8 @@ static int rsynccmd(const char * src, const char *dst, char ***cmd) {
 
 	free(buf); buf = NULL;
 
-	/* rsync  -trlHDq + <glob list> + dst + NULL */
-	*cmd = calloc(2 + fglob.gl_pathc + 2, sizeof(char *));
+	/* rsync -trlHDq -- <glob list> dst NULL */
+	*cmd = calloc(3 + fglob.gl_pathc + 2, sizeof(char *));
 	if (! *cmd) {
 		fprintf(stderr, _("Out of memory\n"));
 		return -1;
@@ -401,8 +401,9 @@ static int rsynccmd(const char * src, const char *dst, char ***cmd) {
 	args = *cmd;
 	strdup_or_err(args, 0, "/usr/bin/rsync");
 	strdup_or_err(args, 1, "-trlHDq");
+	strdup_or_err(args, 2, "--");
 
-	for ( i=0, index = 2; i < fglob.gl_pathc; i++) {
+	for ( i=0, index = 3; i < fglob.gl_pathc; i++) {
 		const char *path = fglob.gl_pathv[i];
 		if (bad_path(path)) continue;
 		strdup_or_err(args, index, path);
@@ -495,7 +496,7 @@ static int cleanup_tmpdir(const char *tmpdir, const char *src,
 
 	/* rsync files back */
 	if (copy_content) {
-		args = calloc(7, sizeof(char *));
+		args = calloc(8, sizeof(char *));
 		if (! args) {
 			fprintf(stderr, _("Out of memory\n"));
 			return 1;
@@ -505,17 +506,18 @@ static int cleanup_tmpdir(const char *tmpdir, const char *src,
 		strdup_or_err(args, 1, "--exclude=.X11-unix");
 		strdup_or_err(args, 2, "-utrlHDq");
 		strdup_or_err(args, 3, "--delete");
-		if (asprintf(&args[4], "%s/", tmpdir) == -1) {
+		strdup_or_err(args, 4, "--");
+		if (asprintf(&args[5], "%s/", tmpdir) == -1) {
 			fprintf(stderr, _("Out of memory\n"));
 			free_args(args);
 			return 1;
 		}
-		if (asprintf(&args[5], "%s/", src) == -1) {
+		if (asprintf(&args[6], "%s/", src) == -1) {
 			fprintf(stderr, _("Out of memory\n"));
 			free_args(args);
 			return 1;
 		}
-		args[6] = NULL;
+		args[7] = NULL;
 
 		if (spawn_command(args, pwd->pw_uid) != 0) {
 			fprintf(stderr, _("Failed to copy files from the runtime temporary directory\n"));
