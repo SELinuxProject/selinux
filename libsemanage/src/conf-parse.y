@@ -29,6 +29,7 @@
 
 #include <errno.h>
 #include <unistd.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -132,9 +133,9 @@ compiler_dir:       COMPILER_DIR '=' ARG  {
 
 ignore_module_cache:	IGNORE_MODULE_CACHE '=' ARG  {
 							if (strcasecmp($3, "true") == 0)
-								current_conf->ignore_module_cache = 1;
+								current_conf->ignore_module_cache = true;
 							else if (strcasecmp($3, "false") == 0)
-								current_conf->ignore_module_cache = 0;
+								current_conf->ignore_module_cache = false;
 							else {
 								yyerror("disable-caching can only be 'true' or 'false'");
 							}
@@ -195,9 +196,9 @@ file_mode:   FILE_MODE '=' ARG  {
 
 save_previous:    SAVE_PREVIOUS '=' ARG {
 	                if (strcasecmp($3, "true") == 0)
-		                current_conf->save_previous = 1;
+		                current_conf->save_previous = true;
 			else if (strcasecmp($3, "false") == 0)
-				current_conf->save_previous = 0;
+				current_conf->save_previous = false;
 			else {
 				yyerror("save-previous can only be 'true' or 'false'");
 			}
@@ -208,9 +209,9 @@ save_previous:    SAVE_PREVIOUS '=' ARG {
 
 save_linked:    SAVE_LINKED '=' ARG {
 	                if (strcasecmp($3, "true") == 0)
-		                current_conf->save_linked = 1;
+		                current_conf->save_linked = true;
 			else if (strcasecmp($3, "false") == 0)
-				current_conf->save_linked = 0;
+				current_conf->save_linked = false;
 			else {
 				yyerror("save-linked can only be 'true' or 'false'");
 			}
@@ -220,9 +221,9 @@ save_linked:    SAVE_LINKED '=' ARG {
 
 disable_genhomedircon: DISABLE_GENHOMEDIRCON '=' ARG {
 	if (strcasecmp($3, "false") == 0) {
-		current_conf->disable_genhomedircon = 0;
+		current_conf->disable_genhomedircon = false;
 	} else if (strcasecmp($3, "true") == 0) {
-		current_conf->disable_genhomedircon = 1;
+		current_conf->disable_genhomedircon = true;
 	} else {
 		yyerror("disable-genhomedircon can only be 'true' or 'false'");
 	}
@@ -231,9 +232,9 @@ disable_genhomedircon: DISABLE_GENHOMEDIRCON '=' ARG {
 
 usepasswd: USEPASSWD '=' ARG {
 	if (strcasecmp($3, "false") == 0) {
-		current_conf->usepasswd = 0;
+		current_conf->usepasswd = false;
 	} else if (strcasecmp($3, "true") == 0) {
-		current_conf->usepasswd = 1;
+		current_conf->usepasswd = true;
 	} else {
 		yyerror("usepasswd can only be 'true' or 'false'");
 	}
@@ -272,9 +273,9 @@ bzip_blocksize:  BZIP_BLOCKSIZE '=' ARG {
 
 bzip_small:  BZIP_SMALL '=' ARG {
 	if (strcasecmp($3, "false") == 0) {
-		current_conf->bzip_small = 0;
+		current_conf->bzip_small = false;
 	} else if (strcasecmp($3, "true") == 0) {
-		current_conf->bzip_small = 1;
+		current_conf->bzip_small = true;
 	} else {
 		yyerror("bzip-small can only be 'true' or 'false'");
 	}
@@ -283,9 +284,9 @@ bzip_small:  BZIP_SMALL '=' ARG {
 
 remove_hll:  REMOVE_HLL'=' ARG {
 	if (strcasecmp($3, "false") == 0) {
-		current_conf->remove_hll = 0;
+		current_conf->remove_hll = false;
 	} else if (strcasecmp($3, "true") == 0) {
-		current_conf->remove_hll = 1;
+		current_conf->remove_hll = true;
 	} else {
 		yyerror("remove-hll can only be 'true' or 'false'");
 	}
@@ -294,9 +295,9 @@ remove_hll:  REMOVE_HLL'=' ARG {
 
 relabel_store:  RELABEL_STORE'=' ARG {
 	if (strcasecmp($3, "false") == 0) {
-		current_conf->relabel_store = 0;
+		current_conf->relabel_store = false;
 	} else if (strcasecmp($3, "true") == 0) {
-		current_conf->relabel_store = 1;
+		current_conf->relabel_store = true;
 	} else {
 		yyerror("relabel_store can only be 'true' or 'false'");
 	}
@@ -305,9 +306,9 @@ relabel_store:  RELABEL_STORE'=' ARG {
 
 optimize_policy:  OPTIMIZE_POLICY '=' ARG {
 	if (strcasecmp($3, "false") == 0) {
-		current_conf->optimize_policy = 0;
+		current_conf->optimize_policy = false;
 	} else if (strcasecmp($3, "true") == 0) {
-		current_conf->optimize_policy = 1;
+		current_conf->optimize_policy = true;
 	} else {
 		yyerror("optimize-policy can only be 'true' or 'false'");
 	}
@@ -316,9 +317,9 @@ optimize_policy:  OPTIMIZE_POLICY '=' ARG {
 
 multiple_decls:  MULTIPLE_DECLS '=' ARG {
 	if (strcasecmp($3, "false") == 0) {
-		current_conf->multiple_decls = 0;
+		current_conf->multiple_decls = false;
 	} else if (strcasecmp($3, "true") == 0) {
-		current_conf->multiple_decls = 1;
+		current_conf->multiple_decls = true;
 	} else {
 		yyerror("multiple-decls can only be 'true' or 'false'");
 	}
@@ -398,26 +399,33 @@ static int semanage_conf_init(semanage_conf_t * conf)
 	const char *policy_root = selinux_policy_root();
 	if (policy_root != NULL) {
 		conf->store_path = strdup(semanage_basename(policy_root));
+		if (!conf->store_path)
+			return -1;
 	}
 	conf->ignoredirs = NULL;
 	conf->store_root_path = strdup("/var/lib/selinux");
+	if (!conf->store_root_path)
+		return -1;
 	conf->compiler_directory_path = strdup("/usr/libexec/selinux/hll");
+	if (!conf->compiler_directory_path)
+		return -1;
 	conf->policyvers = sepol_policy_kern_vers_max();
 	conf->target_platform = SEPOL_TARGET_SELINUX;
 	conf->expand_check = 1;
 	conf->handle_unknown = -1;
-	conf->usepasswd = 1;
+	conf->usepasswd = true;
 	conf->file_mode = 0644;
 	conf->bzip_blocksize = 9;
-	conf->bzip_small = 0;
-	conf->ignore_module_cache = 0;
-	conf->remove_hll = 0;
-	conf->relabel_store = 1;
-	conf->optimize_policy = 1;
-	conf->multiple_decls = 1;
+	conf->bzip_small = false;
+	conf->ignore_module_cache = false;
+	conf->remove_hll = false;
+	conf->relabel_store = true;
+	conf->optimize_policy = true;
+	conf->multiple_decls = true;
 
-	conf->save_previous = 0;
-	conf->save_linked = 0;
+	conf->save_previous = false;
+	conf->save_linked = false;
+	conf->disable_genhomedircon = false;
 
 	if (!conf->store_path ||
 	    !conf->store_root_path ||

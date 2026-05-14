@@ -231,7 +231,7 @@ void semanage_set_ignore_module_cache(semanage_handle_t *sh,
 				    int ignore_module_cache)
 {
 	assert(sh != NULL);
-	sh->conf->ignore_module_cache = ignore_module_cache;
+	sh->conf->ignore_module_cache = !!ignore_module_cache;
 }
 
 void semanage_set_check_contexts(semanage_handle_t * sh, int do_check_contexts)

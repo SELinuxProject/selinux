@@ -992,7 +992,7 @@ static int semanage_compile_module(semanage_handle_t *sh,
 		goto cleanup;
 	}
 
-	if (sh->conf->remove_hll == 1) {
+	if (sh->conf->remove_hll) {
 		status = unlink(hll_path);
 		if (status != 0) {
 			ERR(sh, "Error while removing HLL file %s.", hll_path);

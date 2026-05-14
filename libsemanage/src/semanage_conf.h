@@ -21,6 +21,7 @@
 #define SEMANAGE_CONF_H
 
 #include <semanage/handle.h>
+#include <stdbool.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -37,19 +38,19 @@ typedef struct semanage_conf {
 	int policyvers;		/* version for server generated policies */
 	int target_platform;
 	int expand_check;
-	int save_previous;
-	int save_linked;
-	int disable_genhomedircon;
-	int usepasswd;
+	bool save_previous;
+	bool save_linked;
+	bool disable_genhomedircon;
+	bool usepasswd;
 	int handle_unknown;
 	mode_t file_mode;
 	int bzip_blocksize;
-	int bzip_small;
-	int remove_hll;
-	int ignore_module_cache;
-	int optimize_policy;
-	int multiple_decls;
-	int relabel_store;
+	bool bzip_small;
+	bool remove_hll;
+	bool ignore_module_cache;
+	bool optimize_policy;
+	bool multiple_decls;
+	bool relabel_store;
 	char *ignoredirs;	/* ";" separated of list for genhomedircon to ignore */
 	struct external_prog *load_policy;
 	struct external_prog *setfiles;
