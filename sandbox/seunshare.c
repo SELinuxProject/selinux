@@ -197,35 +197,33 @@ static int check_owner_gid(gid_t gid, const char *file, struct stat *st) {
 	return 0;
 }
 
-#define equal_stats(one,two) \
-	((one)->st_dev == (two)->st_dev && (one)->st_ino == (two)->st_ino && \
-	 (one)->st_uid == (two)->st_uid && (one)->st_gid == (two)->st_gid && \
-	 (one)->st_mode == (two)->st_mode)
-
 /**
- * Sanity check specified directory.  Store stat info for future comparison, or
- * compare with previously saved info to detect replaced directories.
- * Note: This function does not perform owner checks.
+ * Open directory with O_DIRECTORY|O_NOFOLLOW and return its fd
+ * and fstat() results. The returned fd and its /proc/self/fd/N
+ * path can be used for all subsequent operations on the directory.
+ * NB Any non-final components in the @dir pathname are resolved
+ * as usual but will be checked against the fsuid of the caller.
  */
-static int verify_directory(const char *dir, struct stat *st_in, struct stat *st_out) {
+static int pin_dir(const char *dir, struct stat *st_out)
+{
+	int fd;
 	struct stat sb;
 
-	if (st_out == NULL) st_out = &sb;
-
-	if (lstat(dir, st_out) == -1) {
-		fprintf(stderr, _("Failed to stat %s: %s\n"), dir, strerror(errno));
-		return -1;
-	}
-	if (! S_ISDIR(st_out->st_mode)) {
-		fprintf(stderr, _("Error: %s is not a directory: %s\n"), dir, strerror(errno));
-		return -1;
-	}
-	if (st_in && !equal_stats(st_in, st_out)) {
-		fprintf(stderr, _("Error: %s was replaced by a different directory\n"), dir);
+	fd = open(dir, O_RDONLY|O_DIRECTORY|O_NOFOLLOW|O_CLOEXEC);
+	if (fd < 0) {
+		fprintf(stderr, _("Failed to open %s: %m\n"), dir);
 		return -1;
 	}
 
-	return 0;
+	if (fstat(fd, &sb) < 0) {
+		fprintf(stderr, _("Failed to stat %s: %m\n"), dir);
+		close(fd);
+		return -1;
+	}
+
+	if (st_out)
+		*st_out = sb;
+	return fd;
 }
 
 /**
@@ -256,85 +254,90 @@ static int verify_shell(const char *shell_name)
 }
 
 /**
- * Mount directory and check that we mounted the right directory.
+ * Bind-mount directory @src (using @src_fd) on directory @dst (using @dst_fd),
+ * applying @bind_flags for the initial bind mount and @sec_flags if
+ * non-zero via remount.
  */
-static int seunshare_mount(const char *src, const char *dst, struct stat *src_st)
+static int seunshare_mount(const char *src, int src_fd,
+			   const char *dst, int dst_fd,
+			   int bind_flags, int sec_flags)
 {
-	int bind_flags = MS_BIND;
-	int sec_flags = 0;
-	int is_tmp = 0;
+	char srcprocfd[32], dstprocfd[32];
+
+	bind_flags |= MS_BIND;
 
 	if (verbose)
 		printf(_("Mounting %s on %s\n"), src, dst);
 
-	if (strcmp("/tmp", dst) == 0) {
-		sec_flags = MS_NODEV | MS_NOSUID | MS_NOEXEC;
-		is_tmp = 1;
-	}
+	snprintf(srcprocfd, sizeof(srcprocfd), "/proc/self/fd/%d", src_fd);
+	snprintf(dstprocfd, sizeof(dstprocfd), "/proc/self/fd/%d", dst_fd);
 
-	if (strncmp("/run/user", dst, 9) == 0) {
-		bind_flags |= MS_REC;
-	}
-
-	/* mount directory */
-	if (mount(src, dst, NULL, bind_flags, NULL) < 0) {
-		fprintf(stderr, _("Failed to mount %s on %s: %s\n"), src, dst, strerror(errno));
+	/* bind mount directory */
+	if (mount(srcprocfd, dstprocfd, NULL, bind_flags, NULL) < 0) {
+		fprintf(stderr, _("Failed to mount %s on %s: %m\n"), src, dst);
 		return -1;
 	}
-	/* remount with security flags, ignored on original bind mount */
-	if (sec_flags && mount(NULL, dst, NULL, MS_BIND | MS_REMOUNT | sec_flags, NULL) < 0) {
+
+	/*
+	 * Remount with security flags set - requires use of dst path again.
+	 * Revisit when we migrate to open_tree()/move_mount().
+	 */
+	if (sec_flags &&
+	    mount(NULL, dst, NULL, MS_BIND | MS_REMOUNT | sec_flags, NULL) < 0) {
 		fprintf(stderr, _("Failed to remount %s: %m\n"), dst);
 		return -1;
 	}
 
-	/* verify whether we mounted what we expected to mount */
-	if (verify_directory(dst, src_st, NULL) < 0) return -1;
-
-	/* bind mount /tmp on /var/tmp too */
-	if (is_tmp) {
-		if (verbose)
-			printf(_("Mounting /tmp on /var/tmp\n"));
-
-		if (mount("/tmp", "/var/tmp",  NULL, MS_BIND, NULL) < 0) {
-			fprintf(stderr, _("Failed to mount /tmp on /var/tmp: %s\n"), strerror(errno));
-			return -1;
-		}
-		/* remount with security flags, ignored on original bind mount */
-		if (mount(NULL, "/var/tmp", NULL, MS_BIND | MS_REMOUNT | sec_flags, NULL) < 0) {
-			fprintf(stderr, _("Failed to remount /var/tmp: %m\n"));
-			return -1;
-		}
-	}
-
 	return 0;
-
 }
 
 /**
- * Mount directory and check that we mounted the right directory.
+ * Bind-mount a file named @src_name in directory @src_dirfd on
+ * a file named @dst_name in directory @dst_dirfd, creating @dst_name
+ * if it doesn't already exist.
  */
-static int seunshare_mount_file(const char *src, const char *dst)
+static int seunshare_mount_file(int src_dirfd, const char *src_name,
+				int dst_dirfd, const char *dst_name)
 {
-	if (verbose)
-		printf(_("Mounting %s on %s\n"), src, dst);
+	char srcprocfd[32], dstprocfd[32];
+	int src_fd = -1, dst_fd = -1, rc = -1;
 
-	if (access(dst, F_OK) == -1) {
-		int fd = open(dst, O_WRONLY | O_CREAT | O_NOFOLLOW | O_CLOEXEC, 0600);
-		if (fd < 0) {
-			fprintf(stderr, _("Failed to create mount point %s: %m\n"), dst);
-			return -1;
-		}
-		close(fd);
+	if (verbose)
+		printf(_("Mounting %s on %s\n"), src_name, dst_name);
+
+	src_fd = openat(src_dirfd, src_name, O_PATH | O_NOFOLLOW | O_CLOEXEC);
+	if (src_fd < 0) {
+		fprintf(stderr, _("Failed to open %s: %m\n"), src_name);
+		goto out;
 	}
+
+	dst_fd = openat(dst_dirfd, dst_name, O_PATH | O_NOFOLLOW | O_CLOEXEC);
+	if (dst_fd < 0 && errno == ENOENT)
+		dst_fd = openat(dst_dirfd, dst_name,
+				O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW |
+				O_CLOEXEC, 0600);
+	if (dst_fd < 0) {
+		fprintf(stderr, _("Failed to open/create %s: %m\n"), dst_name);
+		goto out;
+	}
+
+	snprintf(srcprocfd, sizeof(srcprocfd), "/proc/self/fd/%d", src_fd);
+	snprintf(dstprocfd, sizeof(dstprocfd), "/proc/self/fd/%d", dst_fd);
 
 	/* mount file */
-	if (mount(src, dst, NULL, MS_BIND, NULL) < 0) {
-		fprintf(stderr, _("Failed to mount %s on %s: %s\n"), src, dst, strerror(errno));
-		return -1;
+	if (mount(srcprocfd, dstprocfd, NULL, MS_BIND, NULL) < 0) {
+		fprintf(stderr, _("Failed to mount %s on %s: %m\n"), src_name,
+			dst_name);
+		goto out;
 	}
 
-	return 0;
-
+	rc = 0;
+out:
+	if (src_fd >= 0)
+		close(src_fd);
+	if (dst_fd >= 0)
+		close(dst_fd);
+	return rc;
 }
 
 /*
@@ -556,7 +559,8 @@ err:
  * to clean it up.
  */
 static char *create_tmpdir(const char *src, struct stat *src_st,
-	struct stat *out_st, struct passwd *pwd, const char *execcon)
+			struct stat *out_st, struct passwd *pwd,
+			const char *execcon)
 {
 	char *tmpdir = NULL;
 	char **cmd = NULL;
@@ -564,29 +568,23 @@ static char *create_tmpdir(const char *src, struct stat *src_st,
 	struct stat tmp_st;
 	char *con = NULL;
 
-	/* get selinux context */
+	/* get selinux context of source directory */
 	if (execcon) {
 		if ((uid_t)setfsuid(pwd->pw_uid) != 0)
 			goto err;
-
-		if ((fd_s = open(src, O_RDONLY)) < 0) {
-			fprintf(stderr, _("Failed to open directory %s: %s\n"), src, strerror(errno));
+		if ((fd_s = pin_dir(src, &tmp_st)) < 0)
 			goto err;
-		}
-		if (fstat(fd_s, &tmp_st) == -1) {
-			fprintf(stderr, _("Failed to stat directory %s: %s\n"), src, strerror(errno));
-			goto err;
-		}
-		if (!equal_stats(src_st, &tmp_st)) {
-			fprintf(stderr, _("Error: %s was replaced by a different directory\n"), src);
+		if (tmp_st.st_dev != src_st->st_dev ||
+		    tmp_st.st_ino != src_st->st_ino) {
+			fprintf(stderr,
+				_("%s was replaced by a different directory\n"),
+				src);
 			goto err;
 		}
 		if (fgetfilecon(fd_s, &con) == -1) {
-			fprintf(stderr, _("Failed to get context of the directory %s: %s\n"), src, strerror(errno));
+			fprintf(stderr, _("Failed to get context of the directory %s: %m\n"), src);
 			goto err;
 		}
-
-		/* ok to not reach this if there is an error */
 		if ((uid_t)setfsuid(0) != pwd->pw_uid)
 			goto err;
 	}
@@ -602,9 +600,9 @@ static char *create_tmpdir(const char *src, struct stat *src_st,
 	}
 
 	/* temporary directory must be owned by root:user */
-	if (verify_directory(tmpdir, NULL, out_st) < 0) {
+	fd_t = pin_dir(tmpdir, out_st);
+	if (fd_t < 0)
 		goto err;
-	}
 
 	if (check_owner_uid(0, tmpdir, out_st) < 0)
 		goto err;
@@ -613,18 +611,6 @@ static char *create_tmpdir(const char *src, struct stat *src_st,
 		goto err;
 
 	/* change permissions of the temporary directory */
-	if ((fd_t = open(tmpdir, O_RDONLY)) < 0) {
-		fprintf(stderr, _("Failed to open directory %s: %s\n"), tmpdir, strerror(errno));
-		goto err;
-	}
-	if (fstat(fd_t, &tmp_st) == -1) {
-		fprintf(stderr, _("Failed to stat directory %s: %s\n"), tmpdir, strerror(errno));
-		goto err;
-	}
-	if (!equal_stats(out_st, &tmp_st)) {
-		fprintf(stderr, _("Error: %s was replaced by a different directory\n"), tmpdir);
-		goto err;
-	}
 	if (fchmod(fd_t, 01770) == -1) {
 		fprintf(stderr, _("Unable to change mode on %s: %s\n"), tmpdir, strerror(errno));
 		goto err;
@@ -664,10 +650,10 @@ static char *create_tmpdir(const char *src, struct stat *src_st,
 err:
 	free(tmpdir); tmpdir = NULL;
 good:
-	free_args(cmd);
-	freecon(con); con = NULL;
 	if (fd_t >= 0) close(fd_t);
 	if (fd_s >= 0) close(fd_s);
+	free_args(cmd);
+	freecon(con); con = NULL;
 	return tmpdir;
 }
 
@@ -776,11 +762,12 @@ int main(int argc, char **argv) {
 	char *tmpdir_r = NULL;	/* tmpdir created by seunshare */
 	char *runuserdir_s = NULL;	/* /var/run/user/UID spec'd by user in argv[] */
 
-	struct stat st_curhomedir;
 	struct stat st_homedir;
 	struct stat st_tmpdir_s;
 	struct stat st_tmpdir_r;
 	struct stat st_runuserdir_s;
+
+	int fd;
 
 	const struct option long_options[] = {
 		{"homedir", 1, 0, 'h'},
@@ -893,24 +880,49 @@ int main(int argc, char **argv) {
 		return -1;
 	}
 
-	/* verify homedir and tmpdir */
-	if (homedir_s && (
-		verify_directory(homedir_s, NULL, &st_homedir) < 0 ||
-		check_owner_uid(uid, homedir_s, &st_homedir))) return -1;
-	if (tmpdir_s && (
-		verify_directory(tmpdir_s, NULL, &st_tmpdir_s) < 0 ||
-		check_owner_uid(uid, tmpdir_s, &st_tmpdir_s))) return -1;
-	if (runuserdir_s && (
-		verify_directory(runuserdir_s, NULL, &st_runuserdir_s) < 0 ||
-		check_owner_uid(uid, runuserdir_s, &st_runuserdir_s))) return -1;
+	/*
+	 * Perform early validation of the caller-provided directories so we
+	 * can fail fast, but we unfortunately have to redo this after
+	 * unsharing the mount namespace in the child so that it can use
+	 * the descriptors for subsequent mount(2) calls. Otherwise,
+	 * they end up with a different mount namespace and mount(2) fails
+	 * with errno EINVAL.
+	 */
+	if (homedir_s) {
+		fd = pin_dir(homedir_s, &st_homedir);
+		if (fd < 0)
+			return -1;
+		if (check_owner_uid(uid, homedir_s, &st_homedir))
+			return -1;
+		close(fd);
+	}
+	if (tmpdir_s) {
+		fd = pin_dir(tmpdir_s, &st_tmpdir_s);
+		if (fd < 0)
+			return -1;
+		if (check_owner_uid(uid, tmpdir_s, &st_tmpdir_s))
+			return -1;
+		close(fd);
+	}
+	if (runuserdir_s) {
+		fd = pin_dir(runuserdir_s, &st_runuserdir_s);
+		if (fd < 0)
+			return -1;
+		if (check_owner_uid(uid, runuserdir_s, &st_runuserdir_s))
+			return -1;
+		close(fd);
+	}
 
 	if ((uid_t)setfsuid(0) != uid) return -1;
 
 	/* create runtime tmpdir */
-	if (tmpdir_s && (tmpdir_r = create_tmpdir(tmpdir_s, &st_tmpdir_s,
-						  &st_tmpdir_r, pwd, execcon)) == NULL) {
-		fprintf(stderr, _("Failed to create runtime temporary directory\n"));
-		return -1;
+	if (tmpdir_s) {
+		tmpdir_r = create_tmpdir(tmpdir_s, &st_tmpdir_s, &st_tmpdir_r,
+					 pwd, execcon);
+		if (!tmpdir_r) {
+			fprintf(stderr, _("Failed to create runtime temporary directory\n"));
+			return -1;
+		}
 	}
 
 	/* spawn child process */
@@ -927,11 +939,10 @@ int main(int argc, char **argv) {
 		char *XDG_SESSION_TYPE = NULL;
 		int rc = -1;
 		char *resolved_path = NULL;
-		char *wayland_path_s = NULL; /* /tmp/.../wayland-0 */
-		char *wayland_path = NULL; /* /run/user/UID/wayland-0 */
-		char *pipewire_path_s = NULL; /* /tmp/.../pipewire-0 */
-		char *pipewire_path = NULL; /* /run/user/UID/pipewire-0 */
-
+		int fd_homedir_s = -1, fd_curhomedir = -1;
+		int fd_runuserdir_s = -1, fd_runtime_dir = -1;
+		int fd_tmpdir_r = -1, fd_tmp = -1, fd_var_tmp = -1;
+		struct stat sb;
 
 		if (unshare(CLONE_NEWNS) < 0) {
 			perror(_("Failed to unshare"));
@@ -941,19 +952,67 @@ int main(int argc, char **argv) {
 		/* Remount / as SLAVE so that nothing mounted in the namespace 
 		   shows up in the parent */
 		if (mount("none", "/", NULL, MS_SLAVE | MS_REC , NULL) < 0) {
-			perror(_("Failed to make / a SLAVE mountpoint\n"));
+
 			goto childerr;
 		}
 
 		/* assume fsuid==ruid after this point */
 		if ((uid_t)setfsuid(uid) != 0) goto childerr;
 
+		/*
+		 * Now we can pin the source directories in this namespace
+		 * for later use by mount(2). We recheck that each
+		 * directory is the same inode and still has the
+		 * expected ownership as the early validation.
+		 */
+		if (homedir_s) {
+			fd_homedir_s = pin_dir(homedir_s, &sb);
+			if (fd_homedir_s < 0)
+				goto childerr;
+			if (sb.st_dev != st_homedir.st_dev ||
+				sb.st_ino != st_homedir.st_ino)
+				goto childerr;
+			if (check_owner_uid(uid, homedir_s, &sb))
+				goto childerr;
+		}
+		/*
+		 * NB We don't need to re-pin tmpdir_s, just tmpdir_r,
+		 * since the child never uses tmpdir_s.
+		 */
+		if (tmpdir_r) {
+			fd_tmpdir_r = pin_dir(tmpdir_r, &sb);
+			if (fd < 0)
+				goto childerr;
+			/*
+			 * tmpdir_r checks differ in that it is
+			 * root-owned and we also want to validate
+			 * that the mode is still correct.
+			 */
+			if (sb.st_dev != st_tmpdir_r.st_dev ||
+				sb.st_ino != st_tmpdir_r.st_ino ||
+				sb.st_mode != st_tmpdir_r.st_mode)
+				goto childerr;
+			if (check_owner_uid(0, tmpdir_r, &sb))
+				goto childerr;
+		}
+		if (runuserdir_s) {
+			fd_runuserdir_s = pin_dir(runuserdir_s, &sb);
+			if (fd_runuserdir_s < 0)
+				goto childerr;
+			if (sb.st_dev != st_runuserdir_s.st_dev ||
+				sb.st_ino != st_runuserdir_s.st_ino)
+				goto childerr;
+			if (check_owner_uid(uid, runuserdir_s, &sb))
+				goto childerr;
+		}
+
 		resolved_path = realpath(pwd->pw_dir,NULL);
 		if (! resolved_path) goto childerr;
 
-		if (verify_directory(resolved_path, NULL, &st_curhomedir) < 0)
+		fd_curhomedir = pin_dir(resolved_path, &sb);
+		if (fd_curhomedir < 0)
 			goto childerr;
-		if (check_owner_uid(uid, resolved_path, &st_curhomedir) < 0)
+		if (check_owner_uid(uid, resolved_path, &sb) < 0)
 			goto childerr;
 
 		if ((RUNTIME_DIR = getenv("XDG_RUNTIME_DIR")) != NULL) {
@@ -969,12 +1028,11 @@ int main(int argc, char **argv) {
 		}
 
 		if (runuserdir_s) {
-			struct stat sb;
-
-			if (verify_directory(RUNTIME_DIR, NULL, &sb) < 0 ||
-				check_owner_uid(uid, RUNTIME_DIR, &sb) < 0)
+			fd_runtime_dir = pin_dir(RUNTIME_DIR, &sb);
+			if (fd_runtime_dir < 0)
 				goto childerr;
-
+			if (check_owner_uid(uid, RUNTIME_DIR, &sb) < 0)
+				goto childerr;
 		}
 
 		if ((XDG_SESSION_TYPE = getenv("XDG_SESSION_TYPE")) != NULL) {
@@ -985,42 +1043,57 @@ int main(int argc, char **argv) {
 		}
 
 		if (runuserdir_s && (wayland_display || pipewire_socket)) {
-			if (wayland_display) {
-				if (asprintf(&wayland_path_s, "%s/%s", runuserdir_s, wayland_display) == -1) {
-					perror(_("Out of memory"));
+			if (wayland_display &&
+			    seunshare_mount_file(fd_runtime_dir,
+					    wayland_display,
+					    fd_runuserdir_s,
+					    wayland_display) == -1)
 					goto childerr;
-				}
 
-				if (asprintf(&wayland_path, "%s/%s", RUNTIME_DIR, wayland_display) == -1) {
-					perror(_("Out of memory"));
-					goto childerr;
-				}
-
-				if (seunshare_mount_file(wayland_path, wayland_path_s) == -1)
-					goto childerr;
-			}
-
-			if (pipewire_socket) {
-				if (asprintf(&pipewire_path_s, "%s/%s", runuserdir_s, pipewire_socket) == -1) {
-					perror(_("Out of memory"));
-					goto childerr;
-				}
-				if (asprintf(&pipewire_path, "%s/pipewire-0", RUNTIME_DIR) == -1) {
-					perror(_("Out of memory"));
-					goto childerr;
-				}
-				if (seunshare_mount_file(pipewire_path, pipewire_path_s) == -1)
-					goto childerr;
-			}
+			if (pipewire_socket &&
+			    seunshare_mount_file(fd_runtime_dir,
+					    "pipewire-0",
+					    fd_runuserdir_s,
+					    pipewire_socket) == -1)
+				goto childerr;
 		}
 
 		/* mount homedir, runuserdir and tmpdir, in this order */
-		if (runuserdir_s &&	seunshare_mount(runuserdir_s, RUNTIME_DIR,
-			&st_runuserdir_s) != 0) goto childerr;
-		if (homedir_s && seunshare_mount(homedir_s, resolved_path,
-			&st_homedir) != 0) goto childerr;
-		if (tmpdir_s &&	seunshare_mount(tmpdir_r, "/tmp",
-			&st_tmpdir_r) != 0) goto childerr;
+		if (runuserdir_s &&
+			seunshare_mount(runuserdir_s, fd_runuserdir_s,
+					RUNTIME_DIR, fd_runtime_dir,
+					MS_REC, 0) != 0)
+			goto childerr;
+		if (homedir_s &&
+			seunshare_mount(homedir_s, fd_homedir_s,
+					resolved_path, fd_curhomedir,
+					0, 0) != 0)
+			goto childerr;
+		if (tmpdir_s) {
+			fd_tmp = open("/tmp", O_RDONLY | O_DIRECTORY |
+				      O_NOFOLLOW | O_CLOEXEC);
+			if (fd_tmp < 0) {
+				perror(_("Failed to open /tmp"));
+				goto childerr;
+			}
+
+			if (seunshare_mount(tmpdir_r, fd_tmpdir_r,
+					    "/tmp", fd_tmp, 0,
+					    MS_NODEV|MS_NOSUID|MS_NOEXEC) < 0)
+				goto childerr;
+
+			fd_var_tmp = open("/var/tmp", O_RDONLY | O_DIRECTORY |
+					O_NOFOLLOW | O_CLOEXEC);
+			if (fd_var_tmp < 0) {
+				perror(_("Failed to open /var/tmp"));
+				goto childerr;
+			}
+
+			if (seunshare_mount("/tmp", fd_tmpdir_r,
+					"/var/tmp", fd_var_tmp, 0,
+					MS_NODEV|MS_NOSUID|MS_NOEXEC) < 0)
+				goto childerr;
+		}
 
 		if (drop_privs(uid) != 0) goto childerr;
 
@@ -1101,11 +1174,14 @@ int main(int argc, char **argv) {
 		execv(argv[optind], argv + optind);
 		fprintf(stderr, _("Failed to execute command %s: %s\n"), argv[optind], strerror(errno));
 childerr:
+		if (fd_homedir_s >= 0) close(fd_homedir_s);
+		if (fd_curhomedir >= 0) close(fd_curhomedir);
+		if (fd_runuserdir_s >= 0) close(fd_runuserdir_s);
+		if (fd_runtime_dir >= 0) close(fd_runtime_dir);
+		if (fd_tmpdir_r >= 0) close(fd_tmpdir_r);
+		if (fd_tmp >= 0) close(fd_tmp);
+		if (fd_var_tmp >= 0) close(fd_var_tmp);
 		free(resolved_path);
-		free(wayland_path);
-		free(wayland_path_s);
-		free(pipewire_path);
-		free(pipewire_path_s);
 		free(display);
 		free(LANG);
 		free(RUNTIME_DIR);
