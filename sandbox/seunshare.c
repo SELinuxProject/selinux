@@ -486,6 +486,44 @@ static bool rm_rf(int targetfd, const char *path) {
 	return true;
 }
 
+/*
+ * setfsuid() returns the previous fsuid value,
+ * and does not reliably set errno on errors.
+ * Let's do better.
+ */
+static int setfsuid_checked(uid_t old, uid_t new)
+{
+	int rc;
+
+	rc = setfsuid(new);
+	if ((uid_t)rc != old) {
+		int save_errno = errno;
+		fprintf(stderr,
+			"setfsuid(%u): Returned unexpected old uid %u\n",
+			new, (uid_t)rc);
+		if (save_errno)
+			errno = save_errno;
+		else
+			errno = EPERM;
+		return -1;
+	}
+
+	rc = setfsuid(-1);
+	if ((uid_t)rc != new) {
+		int save_errno = errno;
+		fprintf(stderr,
+			"setfsuid(%u): Produced unexpected new uid %u\n",
+			new,(uid_t)rc);
+		if (save_errno)
+			errno = save_errno;
+		else
+			errno = EPERM;
+		return -1;
+	}
+
+	return 0;
+}
+
 /**
  * Clean up runtime temporary directory.  Returns 0 if no problem was detected,
  * >0 if some error was detected, but errors here are treated as non-fatal and
@@ -529,10 +567,8 @@ static int cleanup_tmpdir(const char *tmpdir, const char *src,
 		free_args(args);
 	}
 
-	if ((uid_t)setfsuid(0) != 0) {
-		/* setfsuid does not return error, but this check makes code checkers happy */
+	if (setfsuid_checked(0, 0) < 0)
 		rc++;
-	}
 
 	/* Recursively remove the runtime temp directory.  */
 	if (!rm_rf(AT_FDCWD, tmpdir)) {
@@ -540,7 +576,7 @@ static int cleanup_tmpdir(const char *tmpdir, const char *src,
 		rc++;
 	}
 
-	if ((uid_t)setfsuid(pwd->pw_uid) != 0) {
+	if (setfsuid_checked(0, pwd->pw_uid) < 0) {
 		fprintf(stderr, _("unable to switch back to user after clearing tmp dir\n"));
 		rc++;
 	}
@@ -570,7 +606,7 @@ static char *create_tmpdir(const char *src, struct stat *src_st,
 
 	/* get selinux context of source directory */
 	if (execcon) {
-		if ((uid_t)setfsuid(pwd->pw_uid) != 0)
+		if (setfsuid_checked(0, pwd->pw_uid))
 			goto err;
 		if ((fd_s = pin_dir(src, &tmp_st)) < 0)
 			goto err;
@@ -585,7 +621,7 @@ static char *create_tmpdir(const char *src, struct stat *src_st,
 			fprintf(stderr, _("Failed to get context of the directory %s: %m\n"), src);
 			goto err;
 		}
-		if ((uid_t)setfsuid(0) != pwd->pw_uid)
+		if (setfsuid_checked(pwd->pw_uid, 0) < 0)
 			goto err;
 	}
 
@@ -629,7 +665,7 @@ static char *create_tmpdir(const char *src, struct stat *src_st,
 		}
 	}
 
-	if ((uid_t)setfsuid(pwd->pw_uid) != 0)
+	if (setfsuid_checked(0, pwd->pw_uid) < 0)
 		goto err;
 
 	if (rsynccmd(src, tmpdir, &cmd) < 0) {
@@ -637,7 +673,7 @@ static char *create_tmpdir(const char *src, struct stat *src_st,
 	}
 
 	/* ok to not reach this if there is an error */
-	if ((uid_t)setfsuid(0) != pwd->pw_uid)
+	if (setfsuid_checked(pwd->pw_uid, 0) < 0)
 		goto err;
 
 	if (spawn_command(cmd, pwd->pw_uid) != 0) {
@@ -874,9 +910,8 @@ int main(int argc, char **argv) {
 	/* Changing fsuid is usually required when user-specified directory is
 	 * on an NFS mount.  It's also desired to avoid leaking info about
 	 * existence of the files not accessible to the user. */
-	if ((uid_t)setfsuid(uid) != 0) {
+	if (setfsuid_checked(0, uid) < 0) {
 		fprintf(stderr, _("Error: unable to setfsuid\n"));
-
 		return -1;
 	}
 
@@ -913,7 +948,8 @@ int main(int argc, char **argv) {
 		close(fd);
 	}
 
-	if ((uid_t)setfsuid(0) != uid) return -1;
+	if (setfsuid_checked(uid, 0) < 0)
+		return -1;
 
 	/* create runtime tmpdir */
 	if (tmpdir_s) {
@@ -957,7 +993,7 @@ int main(int argc, char **argv) {
 		}
 
 		/* assume fsuid==ruid after this point */
-		if ((uid_t)setfsuid(uid) != 0) goto childerr;
+		if (setfsuid_checked(0, uid) < 0) goto childerr;
 
 		/*
 		 * Now we can pin the source directories in this namespace
