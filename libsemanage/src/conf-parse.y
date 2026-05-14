@@ -169,15 +169,18 @@ target_platform: TARGET_PLATFORM '=' ARG  {
         ;
 
 expand_check:   EXPAND_CHECK '=' ARG  {
-                        char *endptr;
-                        long value;
-                        errno = 0;
-                        value = strtol($3, &endptr, 10);
-                        if (*endptr != '\0' || errno != 0 || (value != 0 && value != 1))
-                                yyerror("expand-check can only be '1' or '0'");
-                        else
-                                current_conf->expand_check = value;
-                        free($3);
+	                if (strcasecmp($3, "true") == 0)
+		                current_conf->expand_check = true;
+			else if (strcmp($3, "1") == 0)
+		                current_conf->expand_check = true;
+			else if (strcasecmp($3, "false") == 0)
+		                current_conf->expand_check = false;
+			else if (strcmp($3, "0") == 0)
+		                current_conf->expand_check = false;
+			else {
+				yyerror("expand-check can only be 'true', '1', 'false' or '0'");
+			}
+			free($3);
                 }
         ;
 

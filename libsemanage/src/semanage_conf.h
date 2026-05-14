@@ -37,7 +37,7 @@ typedef struct semanage_conf {
 	int server_port;
 	int policyvers;		/* version for server generated policies */
 	int target_platform;
-	int expand_check;
+	bool expand_check;
 	bool save_previous;
 	bool save_linked;
 	bool disable_genhomedircon;
