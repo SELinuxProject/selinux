@@ -194,7 +194,10 @@ class modulesPage(semanagePage):
     def add(self, file):
         try:
             self.wait()
-            status, output = getstatusoutput("semodule -i %s" % file)
+            p = Popen(["semodule", "-i", file], stdout=PIPE, stderr=PIPE,
+                      universal_newlines=True)
+            out, err = p.communicate()
+            status, output = p.returncode, (out or "") + (err or "")
             self.ready()
             if status != 0:
                 self.error(output)

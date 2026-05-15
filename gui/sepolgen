@@ -1,2 +1,2 @@
 #!/bin/sh
-sepolicy generate $*
+exec sepolicy generate "$@"

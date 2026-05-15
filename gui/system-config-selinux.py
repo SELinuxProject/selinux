@@ -74,10 +74,7 @@ version = "1.0"
 ##
 xml = Gtk.Builder()
 xml.set_translation_domain(PROGNAME)
-if os.access("system-config-selinux.ui", os.F_OK):
-    xml.add_from_file("system-config-selinux.ui")
-else:
-    xml.add_from_file("/usr/share/system-config-selinux/system-config-selinux.ui")
+xml.add_from_file("/usr/share/system-config-selinux/system-config-selinux.ui")
 
 
 class childWindow:

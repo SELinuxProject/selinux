@@ -85,7 +85,6 @@ except:
 version = "1.0"
 
 sys.path.append('/usr/share/system-config-selinux')
-sys.path.append('.')
 
 # From John Hunter http://www.daa.com.au/pipermail/pygtk/2003-February/004454.html
 
@@ -98,10 +97,7 @@ def foreach(model, path, iter, selected):
 ##
 xml = Gtk.Builder()
 xml.set_translation_domain(PROGNAME)
-if os.access("polgen.ui", os.F_OK):
-    xml.add_from_file("polgen.ui")
-else:
-    xml.add_from_file("/usr/share/system-config-selinux/polgen.ui")
+xml.add_from_file("/usr/share/system-config-selinux/polgen.ui")
 
 FILE = 1
 DIR = 2
