@@ -296,11 +296,12 @@ static int seunshare_mount(const char *src, int src_fd,
  * a file named @dst_name in directory @dst_dirfd, creating @dst_name
  * if it doesn't already exist.
  */
-static int seunshare_mount_file(int src_dirfd, const char *src_name,
+static int seunshare_mount_file(uid_t uid, int src_dirfd, const char *src_name,
 				int dst_dirfd, const char *dst_name)
 {
 	char srcprocfd[32], dstprocfd[32];
 	int src_fd = -1, dst_fd = -1, rc = -1;
+	struct stat sb;
 
 	if (verbose)
 		printf(_("Mounting %s on %s\n"), src_name, dst_name);
@@ -311,6 +312,14 @@ static int seunshare_mount_file(int src_dirfd, const char *src_name,
 		goto out;
 	}
 
+	if (fstat(src_fd, &sb) < 0) {
+		fprintf(stderr, _("Failed to stat %s: %m\n"), src_name);
+		goto out;
+
+	}
+	if (check_owner_uid(uid, src_name, &sb))
+		goto out;
+
 	dst_fd = openat(dst_dirfd, dst_name, O_PATH | O_NOFOLLOW | O_CLOEXEC);
 	if (dst_fd < 0 && errno == ENOENT)
 		dst_fd = openat(dst_dirfd, dst_name,
@@ -320,6 +329,14 @@ static int seunshare_mount_file(int src_dirfd, const char *src_name,
 		fprintf(stderr, _("Failed to open/create %s: %m\n"), dst_name);
 		goto out;
 	}
+
+	if (fstat(dst_fd, &sb) < 0) {
+		fprintf(stderr, _("Failed to stat %s: %m\n"), dst_name);
+		goto out;
+
+	}
+	if (check_owner_uid(uid, dst_name, &sb))
+		goto out;
 
 	snprintf(srcprocfd, sizeof(srcprocfd), "/proc/self/fd/%d", src_fd);
 	snprintf(dstprocfd, sizeof(dstprocfd), "/proc/self/fd/%d", dst_fd);
@@ -1080,14 +1097,14 @@ int main(int argc, char **argv) {
 
 		if (runuserdir_s && (wayland_display || pipewire_socket)) {
 			if (wayland_display &&
-			    seunshare_mount_file(fd_runtime_dir,
+				seunshare_mount_file(uid, fd_runtime_dir,
 					    wayland_display,
 					    fd_runuserdir_s,
 					    wayland_display) == -1)
 					goto childerr;
 
 			if (pipewire_socket &&
-			    seunshare_mount_file(fd_runtime_dir,
+				seunshare_mount_file(uid, fd_runtime_dir,
 					    "pipewire-0",
 					    fd_runuserdir_s,
 					    pipewire_socket) == -1)
