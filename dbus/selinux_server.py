@@ -6,6 +6,7 @@ from dbus.mainloop.glib import DBusGMainLoop
 from gi.repository import GObject
 from gi.repository import GLib
 import os
+import re
 import selinux
 from subprocess import Popen, PIPE, STDOUT
 
@@ -33,8 +34,7 @@ class selinux_server(dbus.service.Object):
         if not self.is_authorized(sender, "org.selinux.semanage"):
             raise dbus.exceptions.DBusException("Not authorized")
         p = Popen(["/usr/sbin/semanage", "import"], stdout=PIPE, stderr=PIPE, stdin=PIPE, universal_newlines=True)
-        p.stdin.write(buf)
-        output = p.communicate()
+        output = p.communicate(input=buf)
         if p.returncode and p.returncode != 0:
             raise dbus.exceptions.DBusException(output[1])
 
@@ -48,10 +48,9 @@ class selinux_server(dbus.service.Object):
         if not self.is_authorized(sender, "org.selinux.customized"):
             raise dbus.exceptions.DBusException("Not authorized")
         p = Popen(["/usr/sbin/semanage", "export"], stdout=PIPE, stderr=PIPE, universal_newlines=True)
-        buf = p.stdout.read()
-        output = p.communicate()
+        buf, err = p.communicate()
         if p.returncode and p.returncode != 0:
-            raise OSError("Failed to read SELinux configuration: %s", output)
+            raise OSError("Failed to read SELinux configuration: %s" % err)
         return buf
 
     #
@@ -63,10 +62,9 @@ class selinux_server(dbus.service.Object):
         if not self.is_authorized(sender, "org.selinux.semodule_list"):
             raise dbus.exceptions.DBusException("Not authorized")
         p = Popen(["/usr/sbin/semodule", "--list=full"], stdout=PIPE, stderr=PIPE, universal_newlines=True)
-        buf = p.stdout.read()
-        output = p.communicate()
+        buf, err = p.communicate()
         if p.returncode and p.returncode != 0:
-            raise OSError("Failed to list SELinux modules: %s", output)
+            raise OSError("Failed to list SELinux modules: %s" % err)
         return buf
 
     #
@@ -140,6 +138,8 @@ class selinux_server(dbus.service.Object):
     def change_default_policy(self, value, sender):
         if not self.is_authorized(sender, "org.selinux.change_default_policy"):
             raise dbus.exceptions.DBusException("Not authorized")
+        if not re.fullmatch(r'[A-Za-z0-9_.]+', str(value)):
+            raise ValueError("Invalid policy name: %s" % value)
         path = selinux.selinux_path() + value
         if os.path.isdir(path):
             return self.write_selinux_config(policy=value)
