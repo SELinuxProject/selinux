@@ -354,21 +354,21 @@ static void test_slurp_file_filter(void)
 
 static void test_semanage_basename(void)
 {
-	char *basename1 = semanage_basename("/foo/bar");
+	const char *basename1 = semanage_basename("/foo/bar");
 	CU_ASSERT_STRING_EQUAL(basename1, "bar");
 
-	char *basename2 = semanage_basename("/foo/bar/");
+	const char *basename2 = semanage_basename("/foo/bar/");
 	CU_ASSERT_STRING_EQUAL(basename2, "");
 
-	char *basename3 = semanage_basename("/foo.bar");
+	const char *basename3 = semanage_basename("/foo.bar");
 	CU_ASSERT_STRING_EQUAL(basename3, "foo.bar");
 
-	char *basename5 = semanage_basename(".");
+	const char *basename5 = semanage_basename(".");
 	CU_ASSERT_STRING_EQUAL(basename5, ".");
 
-	char *basename6 = semanage_basename("");
+	const char *basename6 = semanage_basename("");
 	CU_ASSERT_STRING_EQUAL(basename6, "");
 
-	char *basename7 = semanage_basename("/");
+	const char *basename7 = semanage_basename("/");
 	CU_ASSERT_STRING_EQUAL(basename7, "");
 }
