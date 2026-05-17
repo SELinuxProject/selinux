@@ -2,7 +2,7 @@
 PREFIX ?= /usr
 INCLUDEDIR ?= $(PREFIX)/include
 LIBDIR ?= $(PREFIX)/lib
-SHLIBDIR ?= /lib
+SHLIBDIR ?= $(PREFIX)/lib
 RANLIB ?= ranlib
 CILDIR ?= ../cil
 
