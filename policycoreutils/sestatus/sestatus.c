@@ -21,11 +21,16 @@
 
 #define PROC_BASE "/proc"
 #define MAX_CHECK 50
-#define CONF "/etc/sestatus.conf"
+#define CONFDIR "/etc"
+#define CONFNAME "sestatus"
+#define CONFPOST "conf"
+#define CONF CONFDIR "/" CONFNAME "." CONFPOST
 
 /* conf file sections */
-#define PROCS "[process]"
-#define FILES "[files]"
+#define SECTIONPROCS "process"
+#define SECTIONFILES "files"
+#define PROCS "[" SECTIONPROCS "]"
+#define FILES "[" SECTIONFILES "]"
 
 /* buffer size for cmp_cmdline */
 #define BUFSIZE 255
@@ -92,9 +97,75 @@ static int pidof(const char *command)
 	return ret;
 }
 
+#ifdef VENDORDIR
+#include <libeconf.h>
+
+static void load_checks_with_vendor_settings(char *pc[], int *npc, char *fc[], int *nfc)
+{
+	econf_file *key_file = NULL;
+	econf_err error;
+	char **keys;
+	size_t key_number;
+
+	error = econf_readDirs (&key_file,
+				VENDORDIR,
+				CONFDIR,
+				CONFNAME,
+				CONFPOST,
+				"", "#");
+	if (error != ECONF_SUCCESS) {
+		printf("\nCannot read settings %s.%s: %s\n",
+		       CONFNAME,
+		       CONFPOST,
+		       econf_errString( error ));
+		return;
+	}
+
+	error = econf_getKeys(key_file, SECTIONPROCS, &key_number, &keys);
+	if (error != ECONF_SUCCESS) {
+		printf("\nCannot read group %s: %s\n",
+		       SECTIONPROCS,
+		       econf_errString( error ));
+	} else {
+		for (size_t i = 0; i < key_number; i++) {
+			if (*npc >= MAX_CHECK)
+				break;
+			pc[*npc] = strdup(keys[i]);
+			if (!pc[*npc])
+				break;
+			(*npc)++;
+		}
+		econf_free (keys);
+	}
+
+	error = econf_getKeys(key_file, SECTIONFILES, &key_number, &keys);
+	if (error != ECONF_SUCCESS) {
+		printf("\nCannot read group %s: %s\n",
+		       SECTIONFILES,
+		       econf_errString( error ));
+	} else {
+		for (size_t i = 0; i < key_number; i++) {
+			if (*nfc >= MAX_CHECK)
+				break;
+			fc[*nfc] = strdup(keys[i]);
+			if (!fc[*nfc])
+				break;
+			(*nfc)++;
+		}
+		econf_free (keys);
+	}
+
+	econf_free (key_file);
+	return;
+}
+#endif
+
 static void load_checks(char *pc[], int *npc, char *fc[], int *nfc)
 {
-
+#ifdef VENDORDIR
+	load_checks_with_vendor_settings(pc, npc, fc, nfc);
+	return;
+#endif
 	FILE *fp = fopen(CONF, "r");
 	char buf[255], *bufp;
 	int buf_len, section = -1;
