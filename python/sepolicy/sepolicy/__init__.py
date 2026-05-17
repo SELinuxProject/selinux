@@ -986,8 +986,8 @@ def get_all_port_types():
     global port_types
     if port_types:
         return port_types
-    port_types = list(sorted(info(ATTRIBUTE, "port_type"))[0]["types"])
-    return port_types
+    port_types = set(next(info(ATTRIBUTE, "port_type"))["types"] + [x["type"] for x in info(PORT)])
+    return sorted(port_types)
 
 
 def get_all_bools():
