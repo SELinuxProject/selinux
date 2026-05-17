@@ -28,10 +28,12 @@ context_t context_new(const char *str)
 	context_t result = (context_t) malloc(sizeof(context_s_t));
 	const char *p, *tok;
 
-	if (result)
+	if (result){
 		result->ptr = n;
-	else
+	}else{
 		free(n);
+	        n=NULL;
+	}
 	if (n == 0 || result == 0) {
 		goto err;
 	}
