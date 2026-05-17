@@ -99,9 +99,6 @@ override LDFLAGS += -L/opt/local/lib -undefined dynamic_lookup
 LD_SONAME_FLAGS=-install_name,$(LIBSO)
 endif
 
-# override with -lfts when building on Musl libc to use fts-standalone
-FTS_LDLIBS ?=
-
 override CFLAGS += -I../include -D_GNU_SOURCE $(DISABLE_FLAGS) $(PCRE_CFLAGS)
 
 # check for strlcpy(3) availability
