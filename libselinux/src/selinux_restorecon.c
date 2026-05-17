@@ -19,7 +19,6 @@
 #include <limits.h>
 #include <stdint.h>
 #include <sys/types.h>
-#include <sys/stat.h>
 #include <sys/xattr.h>
 #include <sys/vfs.h>
 #include <sys/statvfs.h>
@@ -28,6 +27,10 @@
 #include <libgen.h>
 #include <syslog.h>
 #include <assert.h>
+
+// expose alias for stat64 and lstat64 on musl
+#define _LARGEFILE64_SOURCE 1
+#include <sys/stat.h>
 
 #include <selinux/selinux.h>
 #include <selinux/context.h>
