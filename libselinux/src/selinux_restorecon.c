@@ -1033,6 +1033,24 @@ static bool note_walk_error(struct rest_state *state)
 	return false;
 }
 
+/*
+ * Map a dirent d_type to the matching S_IF* file-type bits, or 0 if d_type
+ * is not informative (e.g. DT_UNKNOWN on filesystems that do not fill it in).
+ */
+static mode_t d_type_to_mode(unsigned char d_type)
+{
+	switch (d_type) {
+	case DT_REG:  return S_IFREG;
+	case DT_DIR:  return S_IFDIR;
+	case DT_LNK:  return S_IFLNK;
+	case DT_FIFO: return S_IFIFO;
+	case DT_SOCK: return S_IFSOCK;
+	case DT_BLK:  return S_IFBLK;
+	case DT_CHR:  return S_IFCHR;
+	default:      return 0;
+	}
+}
+
 static int open_final(int dfd, const char *name, struct stat *sb)
 {
 	int fd;
@@ -1212,15 +1230,32 @@ static int walk_next(struct rest_state *state, int *ent_fd, int *rd_fd,
 			state->pathbuf[top->pathlen] = '\0';
 			continue;
 		}
-		if (fstat(fd, ent_sb) < 0) {
-			selinux_log(SELINUX_ERROR,
-				    "Could not stat %s: %m.\n",
-				    state->pathbuf);
-			close(fd);
-			state->pathbuf[top->pathlen] = '\0';
-			if (note_walk_error(state))
-				return -1;
-			continue;
+
+		/*
+		 * Skip fstat() when d_type already gives the file type and
+		 * neither xdev (st_dev) nor add_assoc (st_ino) is needed.
+		 * Directories always fstat for cycle detection and walk_push().
+		 */
+		mode_t mode_from_dtype = d_type_to_mode(de->d_type);
+		bool need_fstat = mode_from_dtype == 0 ||
+				  S_ISDIR(mode_from_dtype) ||
+				  state->flags.set_xdev ||
+				  state->flags.add_assoc;
+
+		if (need_fstat) {
+			if (fstat(fd, ent_sb) < 0) {
+				selinux_log(SELINUX_ERROR,
+					    "Could not stat %s: %m.\n",
+					    state->pathbuf);
+				close(fd);
+				state->pathbuf[top->pathlen] = '\0';
+				if (note_walk_error(state))
+					return -1;
+				continue;
+			}
+		} else {
+			memset(ent_sb, 0, sizeof(*ent_sb));
+			ent_sb->st_mode = mode_from_dtype;
 		}
 
 		int rdfd = -1;
