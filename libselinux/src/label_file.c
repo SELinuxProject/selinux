@@ -1604,14 +1604,19 @@ FUZZ_EXTERN void free_lookup_result(struct lookup_result *result)
  * @node:      The top level node to return all definitions for.
  * @file_kind: The kind of the file to look up (translated from file type into LABEL_FILE_KIND_*).
  * @find_all:  Whether return all file context definitions or just any.
+ * @buf:       A pre-allocated buffer for a potential result to avoid allocating it on the heap or
+ *             NULL. Mutual exclusive with @find_all.
  *
  * Return: A linked list of all file context definitions if a match was found.
  *         NULL is returned in case of no match found, or an allocation failure.
  */
-static struct lookup_result *all_node_specs(struct spec_node *node, uint8_t file_kind, bool find_all)
+static struct lookup_result *all_node_specs(struct spec_node *node, uint8_t file_kind, bool find_all,
+					    struct lookup_result *buf)
 {
 	struct lookup_result *result = NULL;
 	struct lookup_result **next = &result;
+
+	assert(!(find_all && buf != NULL));
 
 	for (uint32_t i = 0; i < node->literal_specs_num; i++) {
 		struct literal_spec *lspec = &node->literal_specs[i];
@@ -1623,9 +1628,13 @@ static struct lookup_result *all_node_specs(struct spec_node *node, uint8_t file
 		if (strcmp(lspec->lr.ctx_raw, "<<none>>") == 0)
 			continue;
 
-		r = malloc(sizeof(*r));
-		if (!r)
-			goto fail;
+		if (likely(!find_all && buf)) {
+			r = buf;
+		} else {
+			r = malloc(sizeof(*r));
+			if (!r)
+				goto fail;
+		}
 
 		*r = (struct lookup_result) {
 			.regex_str = lspec->regex_str,
@@ -1653,9 +1662,13 @@ static struct lookup_result *all_node_specs(struct spec_node *node, uint8_t file
 		if (strcmp(rspec->lr.ctx_raw, "<<none>>") == 0)
 			continue;
 
-		r = malloc(sizeof(*r));
-		if (!r)
-			goto fail;
+		if (likely(!find_all && buf)) {
+			r = buf;
+		} else {
+			r = malloc(sizeof(*r));
+			if (!r)
+				goto fail;
+		}
 
 		*r = (struct lookup_result) {
 			.regex_str = rspec->regex_str,
@@ -1677,7 +1690,7 @@ static struct lookup_result *all_node_specs(struct spec_node *node, uint8_t file
 		struct spec_node *child = &node->children[i];
 		struct lookup_result *r, *last;
 
-		r = all_node_specs(child, file_kind, find_all);
+		r = all_node_specs(child, file_kind, find_all, buf);
 		if (!r)
 			continue;
 
@@ -1709,7 +1722,7 @@ fail:
  * @partial:   Whether to partially match the given file path or completely.
  * @find_all:  Whether to find all file context definitions or just the most specific.
  * @buf:       A pre-allocated buffer for a potential result to avoid allocating it on the heap or
- *             NULL. Mututal exclusive with @find_all.
+ *             NULL. Mutual exclusive with @find_all.
  *
  * Return: A pointer to a file context definition if a match was found. If @find_all was specified
  *         its a linked list of all results. If @buf was specified it is returned on a match found.
@@ -2072,7 +2085,7 @@ FUZZ_EXTERN struct lookup_result *lookup_all(struct selabel_handle *rec,
 			if (strncmp(child->stem, rest_key, strlen(rest_key)) != 0)
 				continue;
 
-			r = all_node_specs(child, file_kind, find_all);
+			r = all_node_specs(child, file_kind, find_all, buf);
 			if (!r)
 				continue;
 
