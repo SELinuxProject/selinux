@@ -865,65 +865,42 @@ err:
 	goto out1;
 }
 
-struct dir_hash_node {
-	char *path;
-	uint8_t digest[SHA1_HASH_SIZE];
-	struct dir_hash_node *next;
-};
 /*
  * Returns true if the digest of all partial matched contexts is the same as
- * the one saved by setxattr. Otherwise returns false and constructs a
- * dir_hash_node with the newly calculated digest.
+ * the one saved by setxattr. Otherwise returns false and sets @have_digest
+ * to indicate if @digest_out was set to the digest to apply after
+ * relabeling this directory.
  */
 static bool check_context_match_for_dir(const char *pathname,
-					struct dir_hash_node **new_node,
-					int error)
+					uint8_t digest_out[SHA1_HASH_SIZE],
+					bool *have_digest)
 {
 	bool status;
 	size_t digest_len = 0;
 	uint8_t *read_digest = NULL;
 	uint8_t *calculated_digest = NULL;
 
-	if (!new_node)
-		return false;
-
-	*new_node = NULL;
+	*have_digest = false;
 
 	/* status = true if digests match, false otherwise. */
 	status = selabel_get_digests_all_partial_matches(fc_sehandle, pathname,
 							 &calculated_digest,
 							 &read_digest,
 							 &digest_len);
-
 	if (status)
 		goto free;
 
 	/* Save digest of all matched contexts for the current directory. */
-	if (!error && calculated_digest) {
-		*new_node = calloc(1, sizeof(struct dir_hash_node));
-
-		if (!*new_node)
-			goto oom;
-
-		(*new_node)->path = strdup(pathname);
-
-		if (!(*new_node)->path) {
-			free(*new_node);
-			*new_node = NULL;
-			goto oom;
-		}
-		memcpy((*new_node)->digest, calculated_digest, digest_len);
-		(*new_node)->next = NULL;
+	if (calculated_digest) {
+		assert(digest_len == SHA1_HASH_SIZE);
+		memcpy(digest_out, calculated_digest, SHA1_HASH_SIZE);
+		*have_digest = true;
 	}
 
 free:
 	free(calculated_digest);
 	free(read_digest);
 	return status;
-
-oom:
-	selinux_log(SELINUX_ERROR, "%s: Out of memory\n", __func__);
-	goto free;
 }
 
 struct walk_level {
@@ -931,6 +908,8 @@ struct walk_level {
 	dev_t dev;
 	ino_t ino;
 	size_t pathlen;
+	uint8_t digest[SHA1_HASH_SIZE];
+	bool write_digest;
 };
 
 struct rest_state {
@@ -949,7 +928,6 @@ struct rest_state {
 	int root_fd;
 	struct stat root_sb;
 
-	struct dir_hash_node *head, *current;
 	bool abort;
 	int error;
 	long unsigned skipped_errors;
@@ -987,6 +965,7 @@ static int walk_push(struct rest_state *st, int rdfd, dev_t dev, ino_t ino,
 	wl->dev = dev;
 	wl->ino = ino;
 	wl->pathlen = pathlen;
+	wl->write_digest = false;
 	st->depth++;
 	return 0;
 }
@@ -1184,6 +1163,20 @@ static int walk_next(struct rest_state *state, int *ent_fd, int *rd_fd,
 					return -1;
 				continue;
 			}
+			/*
+			 * Completed directory traversal; set digest
+			 * if requested and no errors.
+			 */
+			if (top->write_digest && state->setrestorecondigest &&
+			    !state->flags.nochange && !state->error &&
+			    !state->skipped_errors &&
+			    fsetxattr(dirfd(top->dirp),
+				      RESTORECON_PARTIAL_MATCH_DIGEST,
+				      top->digest, SHA1_HASH_SIZE, 0) < 0) {
+				selinux_log(SELINUX_ERROR,
+					"Could not set digest on %s: %m\n",
+					state->pathbuf);
+			}
 			walk_pop(state);
 			continue;
 		}
@@ -1333,32 +1326,21 @@ static void *selinux_restorecon_thread(void *arg)
 				continue;
 			}
 
-			if (state->setrestorecondigest) {
-				struct dir_hash_node *new_node = NULL;
+			uint8_t digest[SHA1_HASH_SIZE];
+			bool have_digest = false;
 
-				if (check_context_match_for_dir(ent_path,
-								&new_node,
-								state->error) &&
-								!state->ignore_digest) {
-					selinux_log(SELINUX_INFO,
-						"Skipping restorecon on directory(%s)\n",
-						    ent_path);
-					close(ent_fd);
-					if (rd_fd >= 0)
-						close(rd_fd);
-					prune_pathbuf(state);
-					continue;
-				}
-
-				if (new_node && !state->error) {
-					if (!state->current) {
-						state->current = new_node;
-						state->head = state->current;
-					} else {
-						state->current->next = new_node;
-						state->current = new_node;
-					}
-				}
+			if (descend && state->setrestorecondigest &&
+			    check_context_match_for_dir(ent_path,
+						        digest,
+						        &have_digest) &&
+				                        !state->ignore_digest) {
+				selinux_log(SELINUX_INFO,
+					"Skipping restorecon on directory(%s)\n",
+					ent_path);
+				close(ent_fd);
+				close(rd_fd);
+				prune_pathbuf(state);
+				continue;
 			}
 
 			if (descend) {
@@ -1369,6 +1351,13 @@ static void *selinux_restorecon_thread(void *arg)
 					state->error = -1;
 					state->abort = true;
 					goto finish;
+				}
+
+				if (have_digest) {
+					struct walk_level *wl = &state->stack[state->depth - 1];
+
+					memcpy(wl->digest, digest, SHA1_HASH_SIZE);
+					wl->write_digest = true;
 				}
 			}
 		}
@@ -1465,8 +1454,6 @@ static int selinux_restorecon_common(const char *pathname_orig,
 		    SELINUX_RESTORECON_COUNT_RELABELED) ? true : false;
 	state.setrestorecondigest = true;
 
-	state.head = NULL;
-	state.current = NULL;
 	state.abort = false;
 	state.error = 0;
 	state.skipped_errors = 0;
@@ -1480,7 +1467,6 @@ static int selinux_restorecon_common(const char *pathname_orig,
 	struct stat sb;
 	char *pathname = NULL, *pathdnamer = NULL, *pathdname, *pathbname;
 	int error;
-	struct dir_hash_node *current = NULL;
 
 	if (state.flags.verbose && state.flags.progress)
 		state.flags.verbose = false;
@@ -1687,27 +1673,6 @@ static int selinux_restorecon_common(const char *pathname_orig,
 	if (state.saved_errno)
 		goto out;
 
-	/*
-	 * Labeling successful. Write partial match digests for subdirectories.
-	 * Note: we can't ignore errors here that we've masked due to
-	 * SELINUX_RESTORECON_COUNT_ERRORS.
-	 */
-	if (state.setrestorecondigest && !state.flags.nochange && !error &&
-	    state.skipped_errors == 0) {
-		current = state.head;
-		while (current != NULL) {
-			if (setxattr(current->path,
-			    RESTORECON_PARTIAL_MATCH_DIGEST,
-			    current->digest,
-			    SHA1_HASH_SIZE, 0) < 0) {
-				selinux_log(SELINUX_ERROR,
-					    "setxattr failed: %s: %m\n",
-					    current->path);
-			}
-			current = current->next;
-		}
-	}
-
 	skipped_errors = state.skipped_errors;
 
 out:
@@ -1727,15 +1692,6 @@ cleanup:
 	}
 	free(pathdnamer);
 	free(pathname);
-
-	current = state.head;
-	while (current != NULL) {
-		struct dir_hash_node *next = current->next;
-
-		free(current->path);
-		free(current);
-		current = next;
-	}
 	return error;
 
 oom:
