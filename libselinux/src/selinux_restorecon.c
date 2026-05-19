@@ -1040,6 +1040,20 @@ static bool walk_is_cycle(const struct rest_state *st, dev_t dev, ino_t ino)
 	return false;
 }
 
+static bool note_walk_error(struct rest_state *state)
+{
+	if (state->flags.abort_on_error) {
+		state->error = -1;
+		state->abort = true;
+		return true;
+	}
+	if (state->flags.count_errors)
+		state->skipped_errors++;
+	else
+		state->error = -1;
+	return false;
+}
+
 static int open_final(int dfd, const char *name, struct stat *sb)
 {
 	int fd;
@@ -1143,10 +1157,12 @@ static int walk_next(struct rest_state *state, int *ent_fd, int *rd_fd,
 			*rd_fd = openat(fd, ".", O_RDONLY | O_DIRECTORY |
 					O_NOFOLLOW | O_CLOEXEC);
 			if (*rd_fd < 0 &&
-			    (!state->flags.ignore_noent || errno != ENOENT))
+			    (!state->flags.ignore_noent || errno != ENOENT)) {
 				selinux_log(SELINUX_ERROR,
 					"Could not read %s: %m\n",
 					state->pathbuf);
+				note_walk_error(state);
+			}
 		}
 		return 1;
 	}
@@ -1159,8 +1175,15 @@ static int walk_next(struct rest_state *state, int *ent_fd, int *rd_fd,
 		errno = 0;
 		de = readdir(top->dirp);
 		if (!de) {
-			if (errno)
-				return -1;
+			if (errno) {
+				selinux_log(SELINUX_ERROR,
+					"Could not read directory %s: %m.\n",
+					state->pathbuf);
+				walk_pop(state);
+				if (note_walk_error(state))
+					return -1;
+				continue;
+			}
 			walk_pop(state);
 			continue;
 		}
@@ -1173,19 +1196,26 @@ static int walk_next(struct rest_state *state, int *ent_fd, int *rd_fd,
 		size_t plen = walk_path_append(state, de->d_name);
 		if (plen == (size_t)-1) {
 			selinux_log(SELINUX_ERROR,
-				"Path name too long under %.*s.\n",
+				"Path name too long under %.*s, skipping.\n",
 				(int)top->pathlen, state->pathbuf);
 			errno = ENAMETOOLONG;
-			return -1;
+			if (note_walk_error(state))
+				return -1;
+			continue;
 		}
 
 		int fd = openat(pdfd, de->d_name,
 				O_PATH | O_NOFOLLOW | O_CLOEXEC);
 		if (fd < 0) {
-			if (!state->flags.ignore_noent || errno != ENOENT)
+			if (!state->flags.ignore_noent || errno != ENOENT) {
 				selinux_log(SELINUX_ERROR,
 					    "Could not open %s: %m.\n",
 					    state->pathbuf);
+				state->pathbuf[top->pathlen] = '\0';
+				if (note_walk_error(state))
+					return -1;
+				continue;
+			}
 			state->pathbuf[top->pathlen] = '\0';
 			continue;
 		}
@@ -1195,6 +1225,8 @@ static int walk_next(struct rest_state *state, int *ent_fd, int *rd_fd,
 				    state->pathbuf);
 			close(fd);
 			state->pathbuf[top->pathlen] = '\0';
+			if (note_walk_error(state))
+				return -1;
 			continue;
 		}
 
@@ -1203,11 +1235,17 @@ static int walk_next(struct rest_state *state, int *ent_fd, int *rd_fd,
 			rdfd = openat(fd, ".",
 				      O_RDONLY | O_DIRECTORY |
 				      O_NOFOLLOW | O_CLOEXEC);
-			if (rdfd < 0) {
-				if (!state->flags.ignore_noent || errno != ENOENT)
-					selinux_log(SELINUX_ERROR,
-						"Could not open %s: %m.\n",
-						state->pathbuf);
+			if (rdfd < 0 &&
+			    (!state->flags.ignore_noent || errno != ENOENT)) {
+				selinux_log(SELINUX_ERROR,
+					"Could not open %s: %m.\n",
+					state->pathbuf);
+				/*
+				 * Even if we cannot open the directory for
+				 * reading, we want to relabel the directory
+				 * itself.
+				 */
+				(void) note_walk_error(state);
 			}
 		}
 
