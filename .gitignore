@@ -19,6 +19,9 @@
 *.rej
 *.pyc
 *.pyo
+*.gcno
+*.gcda
+*.gcov
 cscope.*
 .#*
 \#*
