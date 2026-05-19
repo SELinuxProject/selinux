@@ -1280,7 +1280,7 @@ static int copy_avrule_list(avrule_t * list, avrule_t ** dst,
 			    module->map[SYM_CLASSES][cur_perm->tclass - 1];
 			assert(new_perm->tclass);
 
-			if (new_rule->specified & AVRULE_AV) {
+			if (new_rule->specified & (AVRULE_AV | AVRULE_XPERMS)) {
 				for (i = 0;
 				     i <
 				     module->perm_map_len[cur_perm->tclass - 1];
