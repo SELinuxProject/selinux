@@ -1034,7 +1034,7 @@ int main(int argc, char **argv) {
 		 */
 		if (tmpdir_r) {
 			fd_tmpdir_r = pin_dir(tmpdir_r, &sb);
-			if (fd < 0)
+			if (fd_tmpdir_r < 0)
 				goto childerr;
 			/*
 			 * tmpdir_r checks differ in that it is
