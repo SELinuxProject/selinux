@@ -1505,6 +1505,8 @@ static int selinux_restorecon_common(const char *pathname_orig,
 	char *pathname = NULL, *pathdnamer = NULL, *pathdname, *pathbname;
 	int error;
 
+	fc_count = 0;
+
 	if (state.flags.verbose && state.flags.progress)
 		state.flags.verbose = false;
 
