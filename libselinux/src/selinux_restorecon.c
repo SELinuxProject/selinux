@@ -40,8 +40,6 @@
 #include "label_file.h"
 #include "sha1.h"
 
-#define STAR_COUNT 1024
-
 static struct selabel_handle *fc_sehandle = NULL;
 static bool selabel_no_digest;
 static char *rootpath = NULL;
@@ -734,19 +732,23 @@ static int restorecon_sb(int fd, const char *pathname, const struct stat *sb,
 	}
 
 	if (flags->progress) {
-		__pthread_mutex_lock(&progress_mutex);
-		fc_count++;
-		if (fc_count % STAR_COUNT == 0) {
+		const unsigned STAR_COUNT = 1024;
+		uint64_t fc_count_local;
+
+		fc_count_local = __atomic_add_fetch(&fc_count, 1, __ATOMIC_RELAXED);
+
+		if (fc_count_local % STAR_COUNT == 0) {
+			__pthread_mutex_lock(&progress_mutex);
 			if (flags->mass_relabel && efile_count > 0) {
-				float pc = (fc_count < efile_count) ? (100.0 *
-					     fc_count / efile_count) : 100;
+				float pc = (fc_count_local < efile_count) ? (100.0 *
+					     fc_count_local / efile_count) : 100;
 				fprintf(stdout, "\r%-.1f%%", (double)pc);
 			} else {
-				fprintf(stdout, "\r%" PRIu64 "k", fc_count / STAR_COUNT);
+				fprintf(stdout, "\r%" PRIu64 "k", fc_count_local / STAR_COUNT);
 			}
 			fflush(stdout);
+			__pthread_mutex_unlock(&progress_mutex);
 		}
-		__pthread_mutex_unlock(&progress_mutex);
 	}
 
 	if (flags->add_assoc) {
