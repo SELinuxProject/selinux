@@ -183,7 +183,6 @@ void watch_list_add(int fd, const char *path)
 	globbuf.gl_closedir = nofollow_closedir;
 	globbuf.gl_lstat = nofollow_lstat;
 	globbuf.gl_stat = nofollow_lstat; /* never follow symlinks */
-	globbuf.gl_offs = 1;
 	if (glob(path,
 		 GLOB_TILDE | GLOB_PERIOD | GLOB_ALTDIRFUNC,
 		 NULL,
