@@ -63,7 +63,7 @@
 	} while(0)
 
 static int verbose = 0;
-static int child = 0;
+static volatile sig_atomic_t child = 0;
 
 static capng_select_t cap_set = CAPNG_SELECT_CAPS;
 
@@ -98,7 +98,7 @@ static int drop_privs(uid_t uid)
  * If the user sends a siginto to seunshare, kill the child's session
  */
 static void handler(int sig) {
-	if (child > 0) kill(-child,sig);
+	if (child > 0) kill(-(pid_t)child,sig);
 }
 
 /**
