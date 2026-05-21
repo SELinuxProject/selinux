@@ -1742,7 +1742,7 @@ exit:
 }
 
 
-static int constraint_expr_to_string(struct policydb *pdb, struct constraint_expr *exprs, char **expr_string)
+static int constraint_expr_to_string(struct policydb *pdb, struct constraint_expr *exprs, char **expr_string, int *use_mls)
 {
 	int rc = -1;
 	struct constraint_expr *expr;
@@ -1761,6 +1761,8 @@ static int constraint_expr_to_string(struct policydb *pdb, struct constraint_exp
 	char **name_list = NULL;
 	unsigned int num_names = 0;
 	struct type_set *ts;
+
+	*use_mls = 0;
 
 	rc = stack_init(&stack);
 	if (rc != 0) {
@@ -1801,6 +1803,10 @@ static int constraint_expr_to_string(struct policydb *pdb, struct constraint_exp
 				ERR(NULL, "Unknown expression attribute type: %i", expr->attr);
 				rc = -1;
 				goto exit;
+			}
+
+			if (expr->attr >= CEXPR_L1L2) {
+				*use_mls = 1;
 			}
 
 			if (expr->expr_type == CEXPR_ATTR) {
@@ -1979,16 +1985,24 @@ static int constraints_to_cil(int indent, struct policydb *pdb, char *classkey, 
 	int rc = -1;
 	struct constraint_node *node;
 	char *expr = NULL;
-	const char *mls;
+	int use_mls;
+	const char *mls = "";
 	char *perms;
-
-	mls = pdb->mls ? "mls" : "";
 
 	for (node = constraints; node != NULL; node = node->next) {
 
-		rc = constraint_expr_to_string(pdb, node->expr, &expr);
+		rc = constraint_expr_to_string(pdb, node->expr, &expr, &use_mls);
 		if (rc != 0) {
 			goto exit;
+		}
+
+		if (use_mls) {
+			if (!pdb->mls) {
+				ERR(NULL, "MLS constraint expression in non-mls policy");
+				rc = -1;
+				goto exit;
+			}
+			mls = "mls";
 		}
 
 		if (is_constraint) {
