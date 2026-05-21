@@ -710,97 +710,6 @@ good:
 	return tmpdir;
 }
 
-#define PROC_BASE "/proc"
-
-static int
-killall (const char *execcon)
-{
-	DIR *dir;
-	char *scon;
-	struct dirent *de;
-	pid_t *pid_table, pid, self;
-	unsigned int i;
-	unsigned int pids, max_pids;
-	int running = 0;
-	self = getpid();
-	if (!(dir = opendir(PROC_BASE))) {
-		return -1;
-	}
-	max_pids = 256;
-	pid_table = malloc(max_pids * sizeof (pid_t));
-	if (!pid_table) {
-		(void)closedir(dir);
-		return -1;
-	}
-	pids = 0;
-	context_t con = context_new(execcon);
-	if (!con) {
-		free(pid_table);
-		(void)closedir(dir);
-		return -1;
-	}
-	const char *const mcs = context_range_get(con);
-	const char *const type = context_type_get(con);
-	if (!mcs || !type) {
-		context_free(con);
-		free(pid_table);
-		(void)closedir(dir);
-		return -1;
-	}
-	if (verbose)
-		printf("mcs=%s type=%s\n", mcs, type);
-	while ((de = readdir (dir)) != NULL) {
-		if (!(pid = (pid_t)atoi(de->d_name)) || pid == self)
-			continue;
-
-		if (pids == max_pids) {
-			max_pids *= 2;
-			if (max_pids <= pids)
-			{
-				free(pid_table);
-				(void)closedir(dir);
-				return -1;
-			}
-			pid_t *new_pid_table = reallocarray(pid_table, max_pids, sizeof(pid_t));
-			if (!new_pid_table) {
-				free(pid_table);
-				(void)closedir(dir);
-				return -1;
-			}
-			pid_table = new_pid_table;
-		}
-		pid_table[pids++] = pid;
-	}
-
-	(void)closedir(dir);
-
-	for (i = 0; i < pids; i++) {
-		pid_t id = pid_table[i];
-
-		if (getpidcon(id, &scon) == 0) {
-
-			context_t pidcon = context_new(scon);
-			if (pidcon) {
-				const char *const pmcs = context_range_get(pidcon);
-				const char *const ptype = context_type_get(pidcon);
-
-				/* Attempt to kill remaining processes */
-				if (pmcs && ptype && !strcmp(pmcs, mcs) &&
-					!strcmp(ptype, type))
-					kill(id, SIGKILL);
-
-				context_free(pidcon);
-			}
-			freecon(scon);
-		}
-		running++;
-	}
-
-	context_free(con);
-	free(pid_table);
-	return running;
-}
-
 int main(int argc, char **argv) {
 	int status = -1;
 	const char *execcon = NULL;
@@ -1253,7 +1162,7 @@ childerr:
 	kill(-child,SIGTERM);
 
 	if (execcon && kill_all)
-		killall(execcon);
+		fprintf(stderr, "-k/--kill no longer supported; run killall -Z %s\n", execcon);
 
 	if (tmpdir_r) cleanup_tmpdir(tmpdir_r, tmpdir_s, pwd, 1);
 
