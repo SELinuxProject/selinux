@@ -1280,10 +1280,12 @@ exit:
 	return rc;
 }
 
-static int cond_expr_to_cil(int indent, struct policydb *pdb, struct cond_expr *cond_expr, uint32_t flags)
+static int cond_expr_to_cil(int indent, struct policydb *pdb, struct cond_expr *cond_expr)
 {
 	int rc = 0;
 	struct cond_expr *curr;
+	struct cond_bool_datum *dat1;
+	uint32_t is_tunable = 0;
 	struct stack *stack = NULL;
 	int len = 0;
 	int rlen;
@@ -1303,6 +1305,8 @@ static int cond_expr_to_cil(int indent, struct policydb *pdb, struct cond_expr *
 
 	for (curr = cond_expr; curr != NULL; curr = curr->next) {
 		if (curr->expr_type == COND_BOOL) {
+			dat1 = pdb->bool_val_to_struct[curr->boolean - 1];
+			is_tunable |= dat1->flags;
 			val1 = pdb->p_bool_val_to_name[curr->boolean - 1];
 			// length of boolean + 2 parens + null terminator
 			len = strlen(val1) + 2 + 1;
@@ -1388,7 +1392,7 @@ static int cond_expr_to_cil(int indent, struct policydb *pdb, struct cond_expr *
 		new_val = NULL;
 	}
 
-	if (flags & COND_NODE_FLAGS_TUNABLE) {
+	if (is_tunable) {
 		type = "tunableif";
 	} else {
 		type = "booleanif";
@@ -1429,7 +1433,7 @@ static int cond_list_to_cil(int indent, struct policydb *pdb, struct cond_node *
 		if (!cond->avtrue_list && !cond->avfalse_list)
 			continue;
 
-		rc = cond_expr_to_cil(indent, pdb, cond->expr, cond->flags);
+		rc = cond_expr_to_cil(indent, pdb, cond->expr);
 		if (rc != 0) {
 			goto exit;
 		}
