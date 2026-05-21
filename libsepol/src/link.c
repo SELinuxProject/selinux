@@ -1757,12 +1757,6 @@ static int copy_avrule_block(link_state_t * state, policy_module_t * module,
 			}
 		}
 
-		if (last_decl == NULL) {
-			new_block->branch_list = new_decl;
-		} else {
-			last_decl->next = new_decl;
-		}
-		last_decl = new_decl;
 		state->base->decl_val_to_struct[state->next_decl_id - 1] =
 		    new_decl;
 		state->decl_to_mod[state->next_decl_id] = module->policy;
@@ -1774,6 +1768,13 @@ static int copy_avrule_block(link_state_t * state, policy_module_t * module,
 			avrule_decl_destroy(new_decl);
 			goto cleanup;
 		}
+
+		if (last_decl == NULL) {
+			new_block->branch_list = new_decl;
+		} else {
+			last_decl->next = new_decl;
+		}
+		last_decl = new_decl;
 
 		state->next_decl_id++;
 	}
