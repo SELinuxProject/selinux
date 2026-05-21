@@ -169,6 +169,32 @@ io_channel_callback
   return TRUE;
 }
 
+static gboolean
+stdin_callback
+ (GIOChannel *source,
+  GIOCondition condition,
+  gpointer data __attribute__((__unused__)))
+{
+
+  char buffer[256];
+  gsize bytes_read;
+
+  if (condition & G_IO_IN) {
+    /* Data is available. */
+    while (g_io_channel_read_chars(source, buffer, sizeof (buffer),
+				    &bytes_read, NULL) == G_IO_STATUS_NORMAL
+	    && bytes_read > 0)
+	    ;
+    if (bytes_read == 0)
+	    exit(0);
+  }
+
+  if (condition & (G_IO_HUP | G_IO_ERR | G_IO_NVAL))
+	  exit(0);
+
+  return TRUE;
+}
+
 int start(void) {
 #ifdef HAVE_DBUS
 	GDBusConnection *bus;
@@ -243,7 +269,7 @@ static int local_server(void) {
 	g_io_add_watch_full( in,
 			     G_PRIORITY_HIGH,
 			     G_IO_IN|G_IO_ERR|G_IO_HUP,
-			     io_channel_callback, NULL, NULL);
+			     stdin_callback, NULL, NULL);
 
 	return 0;
 }
