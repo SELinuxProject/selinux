@@ -1242,7 +1242,8 @@ childerr:
 		exit(-1);
 	}
 
-	drop_caps();
+	if (drop_caps() == -1)
+		goto err;
 
 	/* parent waits for child exit to do the cleanup */
 	waitpid(child, &status, 0);
