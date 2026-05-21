@@ -1426,6 +1426,8 @@ static int cond_list_to_cil(int indent, struct policydb *pdb, struct cond_node *
 	struct cond_node *cond;
 
 	for (cond = cond_list; cond != NULL; cond = cond->next) {
+		if (!cond->avtrue_list && !cond->avfalse_list)
+			continue;
 
 		rc = cond_expr_to_cil(indent, pdb, cond->expr, cond->flags);
 		if (rc != 0) {
