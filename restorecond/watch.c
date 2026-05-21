@@ -170,10 +170,12 @@ void watch_list_add(int fd, const char *path)
 	size_t i = 0;
 	struct watchList *prev = NULL;
 	glob_t globbuf;
-	char *x = strdup(path);
-	if (!x) exitApp("Out of Memory");
-	char *file = basename(x);
-	char *dir = dirname(x);
+	char *xb = strdup(path);
+	if (!xb) exitApp("Out of Memory");
+	char *xd = strdup(path);
+	if (!xd) exitApp("Out of Memory");
+	char *file = basename(xb);
+	char *dir = dirname(xd);
 	ptr = firstDir;
 	int len;
 
@@ -240,7 +242,8 @@ void watch_list_add(int fd, const char *path)
 		printf("%d: Dir=%s, File=%s\n", ptr->wd, ptr->dir, file);
 
 end:
-	free(x);
+	free(xb);
+	free(xd);
 	return;
 }
 
