@@ -4856,13 +4856,15 @@ int define_fs_context(unsigned int major, unsigned int minor)
 		return -1;
 	}
 
-	newc->u.name = malloc(6);
+	/* "%02x:%02x" with two unsigned ints needs at most
+	 * "ffffffff:ffffffff" + NUL = 18 bytes. */
+	newc->u.name = malloc(18);
 	if (!newc->u.name) {
 		yyerror("out of memory");
 		free(newc);
 		return -1;
 	}
-	sprintf(newc->u.name, "%02x:%02x", major, minor);
+	snprintf(newc->u.name, 18, "%02x:%02x", major, minor);
 
 	if (parse_security_context(&newc->context[0])) {
 		free(newc->u.name);
