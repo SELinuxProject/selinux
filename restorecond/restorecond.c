@@ -217,6 +217,8 @@ int main(int argc, char **argv)
 		if (daemon(0, 0) < 0)
 			exitApp("daemon");
 		write_pid_file();
+	} else {
+		pidfile = 0;
 	}
 
 	while (watch(master_fd, watch_file) == 0) {
