@@ -21,6 +21,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdio_ext.h>
+#include <stdint.h>
 #include <ctype.h>
 #include <selinux/selinux.h>
 #include <selinux/context.h>
@@ -973,6 +974,38 @@ word_size(const void *p1, const void *p2) {
 	return spaceship_cmp(w2_len, w1_len);
 }
 
+static int buf_append(char **buf, size_t *cap, size_t *len, const char *s)
+{
+	size_t slen = strlen(s);
+
+	if (slen >= SIZE_MAX - 1 - *len) {
+		log_error("buf_append: length overflow (%zu + %zu)", *len, slen);
+		return -1;
+	}
+
+	size_t need = *len + slen + 1;
+	if (need > *cap) {
+		size_t ncap = *cap ? *cap : 128;
+		while (ncap < need) {
+			if (ncap > SIZE_MAX / 2) {
+				ncap = need;
+				break;
+			}
+			ncap *= 2;
+		}
+		char *n = realloc(*buf, ncap);
+		if (!n) {
+			log_error("buf_append: allocation error %s", strerror(errno));
+			return -1;
+		}
+		*buf = n;
+		*cap = ncap;
+	}
+	memcpy(*buf + *len, s, slen + 1);
+	*len += slen;
+	return 0;
+}
+
 static void
 build_regexp(pcre2_code **r, char *buffer) {
 	int error;
@@ -985,18 +1018,23 @@ build_regexp(pcre2_code **r, char *buffer) {
 		pcre2_get_error_message(error, errbuf, sizeof(errbuf));
 		log_error("pcre compilation of '%s' failed at offset %zu: %s\n", buffer, error_offset, errbuf);
 	}
-	buffer[0] = '\0';
 }
 
 static int
 build_regexps(domain_t *domain) {
-	char buffer[1024 * 128];
-	buffer[0] = '\0';
+	char *buffer = NULL;
+	size_t cap = 0, len = 0;
 	base_classification_t *bc;
 	word_group_t *g;
 	affix_t *a;
 	word_t *w;
 	size_t n_el, i;
+
+#define APPEND(s) do { if (buf_append(&buffer, &cap, &len, (s))) goto err; } while (0)
+#define RESET() do { len = 0; if (buffer) buffer[0] = '\0'; } while (0)
+
+	/* initialize buffer and cap to non-NULL/0 values */
+	APPEND("");
 
 	for (n_el = 0, bc = domain->base_classifications; bc; bc = bc->next) {
 		n_el++;
@@ -1005,7 +1043,7 @@ build_regexps(domain_t *domain) {
 	char **sortable = calloc(n_el, sizeof(char *));
 	if (!sortable) {
 		log_error("allocation error %s", strerror(errno));
-		return -1;
+		goto err;
 	}
 
 	for (i=0, bc = domain->base_classifications; bc; bc = bc->next) {
@@ -1015,31 +1053,33 @@ build_regexps(domain_t *domain) {
 	qsort(sortable, n_el, sizeof(char *), string_size);
 
 	for (i = 0; i < n_el; i++) {
-		strcat(buffer, sortable[i]);
-		if (i < n_el) strcat(buffer,"|");
+		APPEND(sortable[i]);
+		if (i != (n_el - 1)) APPEND("|");
 	}
 
 	free(sortable);
 
 	log_debug(">>> %s classification regexp=%s\n", domain->name, buffer);
 	build_regexp(&domain->base_classification_regexp, buffer);
+	RESET();
 
 	for (g = domain->groups; g; g = g->next) {
 		if (g->prefixes) {
-			strcat(buffer,"(?:");
+			APPEND("(?:");
 			for (a = g->prefixes; a; a = a->next) {
-				strcat(buffer, a->text);
-				if (a->next) strcat(buffer,"|");
+				APPEND(a->text);
+				if (a->next) APPEND("|");
 			}
-			strcat(buffer,")");
-			strcat(buffer,"[ 	]+");
+			APPEND(")");
+			APPEND("[ 	]+");
 			log_debug(">>> %s %s prefix regexp=%s\n", domain->name, g->name, buffer);
 			build_regexp(&g->prefix_regexp, buffer);
+			RESET();
 		}
 
 		if (g->prefixes)
-			strcat(buffer, "^");
-		strcat(buffer, "(?:");
+			APPEND("^");
+		APPEND("(?:");
 
 		g->sword_len=0;
 		for (w = g->words; w; w = w->next)
@@ -1048,7 +1088,7 @@ build_regexps(domain_t *domain) {
 		g->sword = calloc(g->sword_len, sizeof(word_t *));
 		if (!g->sword) {
 			log_error("allocation error %s", strerror(errno));
-			return -1;
+			goto err;
 		}
 
 		i=0;
@@ -1058,38 +1098,47 @@ build_regexps(domain_t *domain) {
 		qsort(g->sword, g->sword_len, sizeof(word_t *), word_size);
 
 		for (i=0; i < g->sword_len; i++) {
-			if (i) strcat(buffer,"|");
-			strcat(buffer,"\\b");
-			strcat(buffer, g->sword[i]->text);
-			strcat(buffer,"\\b");
+			if (i) APPEND("|");
+			APPEND("\\b");
+			APPEND(g->sword[i]->text);
+			APPEND("\\b");
 		}
 
 		if (g->whitespace) {
-			strcat(buffer,"|[");
-			strcat(buffer, g->whitespace);
-			strcat(buffer, "]+");
+			APPEND("|[");
+			APPEND(g->whitespace);
+			APPEND("]+");
 		}
 
-		strcat(buffer, ")+");
+		APPEND(")+");
 		if (g->suffixes)
-			strcat(buffer, "$");
+			APPEND("$");
 
 		log_debug(">>> %s %s modifier regexp=%s\n", domain->name, g->name, buffer);
 		build_regexp(&g->word_regexp, buffer);
+		RESET();
+
 		if (g->suffixes) {
-			strcat(buffer,"[ 	]+");
-			strcat(buffer,"(?:");
+			APPEND("[ 	]+");
+			APPEND("(?:");
 			for (a = g->suffixes; a; a = a->next) {
-				strcat(buffer, a->text);
-				if (a->next) strcat(buffer,"|");
+				APPEND(a->text);
+				if (a->next) APPEND("|");
 			}
-			strcat(buffer,")");
+			APPEND(")");
 			log_debug(">>> %s %s suffix regexp=%s\n", domain->name, g->name, buffer);
 			build_regexp(&g->suffix_regexp, buffer);
+			RESET();
 		}
 	}
 
+	free(buffer);
 	return 0;
+err:
+	free(buffer);
+	return -1;
+#undef APPEND
+#undef RESET
 }
 
 static char *
@@ -1349,6 +1398,8 @@ compute_trans_from_raw(const char *level, domain_t *domain) {
 	word_group_t *g;
 	mls_level_t *l = NULL;
 	char *rval = NULL;
+	char *obuf = NULL;
+	size_t ocap = 0, olen = 0;
 	word_group_t *groups = NULL;
 	ebitmap_t bit_diff, temp, handled, nothandled, unhandled, orig_unhandled;
 
@@ -1482,39 +1533,36 @@ compute_trans_from_raw(const char *level, domain_t *domain) {
 			ebitmap_destroy(&unhandled);
 			ebitmap_destroy(&orig_unhandled);
 			if (done) {
-				char buffer[9999];
-				buffer[0] = 0;
-				strcat(buffer, bc->trans);
-				strcat(buffer, " ");
+#define OAPPEND(s) do { if (buf_append(&obuf, &ocap, &olen, (s))) goto err; } while (0)
+				OAPPEND(bc->trans);
+				OAPPEND(" ");
 				for (g=groups; g; g = g->next) {
 					if (g->words && g->prefixes) {
-						strcat(buffer, g->prefixes->text);
-						strcat(buffer, " ");
+						OAPPEND(g->prefixes->text);
+						OAPPEND(" ");
 					}
 					word_t *w;
 					for (w=g->words; w; w = w->next) {
-						strcat(buffer, w->text);
+						OAPPEND(w->text);
 						if (w->next)
-							strcat(buffer, g->join);
+							OAPPEND(g->join);
 					}
 					if (g->words && g->suffixes) {
-						strcat(buffer, " ");
-						strcat(buffer, g->suffixes->text);
+						OAPPEND(" ");
+						OAPPEND(g->suffixes->text);
 					}
 					word_group_t *n = g->next;
 					while(g->words && n) {
 						if (n->words) {
-							strcat(buffer, " ");
+							OAPPEND(" ");
 							break;
 						}
 						n = n->next;
 					}
 				}
-				rval = strdup(buffer);
-				if (!rval) {
-					log_error("compute_trans_from_raw: allocation error %s", strerror(errno));
-					goto err;
-				}
+				rval = obuf;
+				obuf = NULL;
+#undef OAPPEND
 			}
 			/* clean up */
 			while (groups)
@@ -1542,6 +1590,7 @@ compute_trans_from_raw(const char *level, domain_t *domain) {
 	return rval;
 
 err:
+	free(obuf);
 	while (groups)
 		destroy_group(&groups, groups);
 	mls_level_destroy(l);
