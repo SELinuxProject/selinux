@@ -1280,8 +1280,12 @@ compute_raw_from_trans(const char *level, domain_t *domain) {
 			     (g->prefixes && prefix) ||
 			     (g->suffixes && suffix)) &&
 			     g->word_regexp) {
-				char *s = work + prefix_offset + prefix_len;
-				PCRE2_SIZE len = (suffix_len ? suffix_offset : work_len) - prefix_len - prefix_offset;
+				PCRE2_SIZE start = prefix_offset + prefix_len;
+				PCRE2_SIZE end = (suffix_len ? suffix_offset : work_len);
+				if (end < start)
+					goto no_word_match;
+				char *s = work + start;
+				PCRE2_SIZE len = end - start;
 				match_data = pcre2_match_data_create_from_pattern(g->word_regexp, NULL);
 				if (!match_data) {
 					log_error("allocation error %s", strerror(errno));
@@ -1342,6 +1346,7 @@ compute_raw_from_trans(const char *level, domain_t *domain) {
 				pcre2_match_data_free(match_data);
 				match_data = NULL;
 			}
+no_word_match:
 /* YYY */
 			complete=1;
 			char *p = work;
