@@ -17,6 +17,7 @@
 #include <values.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -178,7 +179,8 @@ numdigits(unsigned int n)
 }
 
 static int
-parse_category(ebitmap_t *e, const char *raw, int allowinverse)
+parse_category(ebitmap_t *e, const char *raw, bool allowinverse,
+	       bool fromconfig)
 {
 	int inverse = 0;
 	unsigned int low, high;
@@ -192,12 +194,16 @@ parse_category(ebitmap_t *e, const char *raw, int allowinverse)
 			return -1;
 		if (low > MAX_CATS)
 			return -1;
+		if (!fromconfig && low > maxbit)
+			return -1;
 		raw += numdigits(low) + 1;
 		if (*raw == '.') {
 			raw++;
 			if (sscanf(raw,"c%u", &high) != 1)
 				return -1;
 			if (high > MAX_CATS)
+				return -1;
+			if (!fromconfig && high > maxbit)
 				return -1;
 			raw += numdigits(high) + 1;
 		} else {
@@ -206,7 +212,7 @@ parse_category(ebitmap_t *e, const char *raw, int allowinverse)
 		while (low <= high) {
 			if (ebitmap_set_bit(e, low, inverse ? 0 : 1) < 0)
 				return -1;
-			if (low >= maxbit)
+			if (fromconfig && low >= maxbit)
 				maxbit = low + 1;
 			low++;
 		}
@@ -225,14 +231,14 @@ parse_ebitmap(ebitmap_t *e, ebitmap_t *def, const char *raw) {
 	int rc = ebitmap_cpy(e, def);
 	if (rc < 0)
 		return rc;
-	rc = parse_category(e, raw, 1);
+	rc = parse_category(e, raw, true, true);
 	if (rc < 0)
 		return rc;
 	return 0;
 }
 
 static mls_level_t *
-parse_raw(const char *raw) {
+parse_raw(const char *raw, bool fromconfig) {
 	mls_level_t *mls = calloc(1, sizeof(mls_level_t));
 	if (!mls)
 		return NULL;
@@ -241,7 +247,7 @@ parse_raw(const char *raw) {
 	raw += numdigits(mls->sens) + 1;
 	if (*raw == ':') {
 		raw++;
-		if (parse_category(&mls->cat, raw, 0) < 0)
+		if (parse_category(&mls->cat, raw, false, fromconfig) < 0)
 			goto err;
 	} else if (*raw != '\0') {
 		goto err;
@@ -615,7 +621,7 @@ destroy_cat_constraint(cat_constraint_t **list, cat_constraint_t *constraint) {
 
 static int
 add_base_classification(domain_t *domain, char *raw, char *trans) {
-	mls_level_t *level = parse_raw(raw);
+	mls_level_t *level = parse_raw(raw, true);
 	if (level) {
 		base_classification_t **i;
 		base_classification_t *base_classification = calloc(1, sizeof(base_classification_t));
@@ -1434,7 +1440,7 @@ compute_trans_from_raw(const char *level, domain_t *domain) {
 	if (!level)
 		goto err;
 	
-	l = parse_raw(level);
+	l = parse_raw(level, false);
 	if (!l)
 		goto err;
 	log_debug(" compute_trans_from_raw raw = %s\n", level);
