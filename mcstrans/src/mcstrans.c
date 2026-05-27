@@ -235,7 +235,7 @@ static mls_level_t *
 parse_raw(const char *raw) {
 	mls_level_t *mls = calloc(1, sizeof(mls_level_t));
 	if (!mls)
-		goto err;
+		return NULL;
 	if (sscanf(raw,"s%u", &mls->sens) != 1)
 		goto err;
 	raw += numdigits(mls->sens) + 1;
@@ -439,6 +439,8 @@ add_word(word_group_t *group, char *raw, char *trans) {
 		return -1;
 	}
 	word_t *word = create_word(&group->words, trans);
+	if (!word)
+		return -1;
 	int rc = parse_ebitmap(&word->cat, &group->def, raw);
 	if (rc < 0) {
 		log_error(" syntax error in %s\n", raw);
@@ -485,6 +487,7 @@ add_constraint(char op, char *raw, char *tok) {
 		}
 		if (asprintf(&constraint->text, "%s%c%s", raw, op, tok) < 0) {
 			log_error("asprintf failed %s", strerror(errno));
+			ebitmap_destroy(&constraint->cat);
 			free(constraint);
 			return -1;
 		}
@@ -513,6 +516,9 @@ add_constraint(char op, char *raw, char *tok) {
 		}
 		if (asprintf(&constraint->text, "%s%c%s", raw, op, tok) < 0) {
 			log_error("asprintf failed %s", strerror(errno));
+			ebitmap_destroy(&constraint->mask);
+			ebitmap_destroy(&constraint->cat);
+			free(constraint);
 			return -1;
 		}
 		constraint->nbits = ebitmap_cardinality(&constraint->cat);
