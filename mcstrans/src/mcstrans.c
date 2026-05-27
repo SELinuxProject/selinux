@@ -46,6 +46,9 @@
 #define log_debug(fmt, ...) do {} while (0)
 #endif
 
+#ifndef MAX_CATS
+#define MAX_CATS 1024
+#endif
 static unsigned int maxbit=0;
 
 /* Define data structures */
@@ -187,20 +190,24 @@ parse_category(ebitmap_t *e, const char *raw, int allowinverse)
 		}
 		if (sscanf(raw,"c%u", &low) != 1)
 			return -1;
+		if (low > MAX_CATS)
+			return -1;
 		raw += numdigits(low) + 1;
 		if (*raw == '.') {
 			raw++;
 			if (sscanf(raw,"c%u", &high) != 1)
+				return -1;
+			if (high > MAX_CATS)
 				return -1;
 			raw += numdigits(high) + 1;
 		} else {
 			high = low;
 		}
 		while (low <= high) {
-			if (low >= maxbit)
-				maxbit = low + 1;
 			if (ebitmap_set_bit(e, low, inverse ? 0 : 1) < 0)
 				return -1;
+			if (low >= maxbit)
+				maxbit = low + 1;
 			low++;
 		}
 		if (*raw == ',') {
