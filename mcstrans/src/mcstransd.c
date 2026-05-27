@@ -307,14 +307,15 @@ process_events(struct pollfd **ufds, int *nfds)
 				/* Probably received a connection */
 				if ((connfd = accept(sockfd, NULL, NULL)) < 0) {
 					syslog(LOG_ERR, "accept() failed: %m");
-					return -1;
+					continue;
 				}
 
 				if (add_pollfd(ufds, nfds, connfd)) {
 					syslog(LOG_ERR,
 					  "Failed to add fd (%d) to poll list\n",
 						connfd);
-					return -1;
+					close(connfd);
+					continue;
 				}
 			} else {
 				ret = service_request(connfd);
