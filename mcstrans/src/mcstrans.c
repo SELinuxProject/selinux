@@ -192,18 +192,18 @@ parse_category(ebitmap_t *e, const char *raw, bool allowinverse,
 		}
 		if (sscanf(raw,"c%u", &low) != 1)
 			return -1;
-		if (low > MAX_CATS)
+		if (low >= MAX_CATS)
 			return -1;
-		if (!fromconfig && low > maxbit)
+		if (!fromconfig && low >= maxbit)
 			return -1;
 		raw += numdigits(low) + 1;
 		if (*raw == '.') {
 			raw++;
 			if (sscanf(raw,"c%u", &high) != 1)
 				return -1;
-			if (high > MAX_CATS)
+			if (high >= MAX_CATS)
 				return -1;
-			if (!fromconfig && high > maxbit)
+			if (!fromconfig && high >= maxbit)
 				return -1;
 			raw += numdigits(high) + 1;
 		} else {
