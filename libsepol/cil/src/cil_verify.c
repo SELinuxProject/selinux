@@ -1621,7 +1621,6 @@ exit:
 int __cil_verify_helper(struct cil_tree_node *node, uint32_t *finished, void *extra_args)
 {
 	int rc = SEPOL_ERR;
-	int *avrule_cnt = 0;
 	int *handleunknown;
 	int *mls;
 	int *nseuserdflt = 0;
@@ -1635,7 +1634,6 @@ int __cil_verify_helper(struct cil_tree_node *node, uint32_t *finished, void *ex
 	}
 
 	db = args->db;
-	avrule_cnt = args->avrule_cnt;
 	handleunknown = args->handleunknown;
 	mls = args->mls;
 	nseuserdflt = args->nseuserdflt;
@@ -1670,10 +1668,6 @@ int __cil_verify_helper(struct cil_tree_node *node, uint32_t *finished, void *ex
 			break;
 		case CIL_TYPE:
 			rc = __cil_verify_type(node);
-			break;
-		case CIL_AVRULE:
-			(*avrule_cnt)++;
-			rc = SEPOL_OK;
 			break;
 		case CIL_HANDLEUNKNOWN:
 			if (*handleunknown != -1) {

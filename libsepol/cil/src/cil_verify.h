@@ -49,7 +49,6 @@ enum cil_syntax {
 struct cil_args_verify {
 	struct cil_db *db;
 	struct cil_complex_symtab *csymtab;
-	int *avrule_cnt;
 	int *handleunknown;
 	int *mls;
 	int *nseuserdflt;

@@ -2506,7 +2506,6 @@ exit:
 static int cil_post_verify(struct cil_db *db)
 {
 	int rc = SEPOL_ERR;
-	int avrule_cnt = 0;
 	int handleunknown = -1;
 	int mls = -1;
 	int nseuserdflt = 0;
@@ -2518,7 +2517,6 @@ static int cil_post_verify(struct cil_db *db)
 
 	extra_args.db = db;
 	extra_args.csymtab = &csymtab;
-	extra_args.avrule_cnt = &avrule_cnt;
 	extra_args.handleunknown = &handleunknown;
 	extra_args.mls = &mls;
 	extra_args.nseuserdflt = &nseuserdflt;
@@ -2546,12 +2544,6 @@ static int cil_post_verify(struct cil_db *db)
 		} else {
 			db->mls = mls;
 		}
-	}
-
-	if (avrule_cnt == 0) {
-		cil_log(CIL_ERR, "Policy must include at least one avrule\n");
-		rc = SEPOL_ERR;
-		goto exit;
 	}
 
 	if (nseuserdflt > 1) {

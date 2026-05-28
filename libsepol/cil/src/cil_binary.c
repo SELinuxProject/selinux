@@ -5468,6 +5468,12 @@ int cil_binary_create_allocated_pdb(const struct cil_db *db, sepol_policydb_t *p
 		goto exit;
 	}
 
+	if (pdb->te_avtab.nel == 0) {
+		cil_log(CIL_ERR, "Policy must include at least one avrule\n");
+		rc = SEPOL_ERR;
+		goto exit;
+	}
+
 	rc = SEPOL_OK;
 
 exit:
