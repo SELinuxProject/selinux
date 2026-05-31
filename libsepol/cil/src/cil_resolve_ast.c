@@ -2602,6 +2602,8 @@ int cil_resolve_in(struct cil_tree_node *current, struct cil_db *db)
 	struct cil_in *in = current->data;
 	struct cil_symtab_datum *block_datum = NULL;
 	struct cil_tree_node *block_node = NULL;
+	struct cil_tree_node *src_node = NULL;
+	struct cil_src_info *info = NULL;
 	int rc = SEPOL_ERR;
 
 	rc = cil_resolve_name(current, in->block_str, CIL_SYM_BLOCKS, db,
@@ -2625,6 +2627,27 @@ int cil_resolve_in(struct cil_tree_node *current, struct cil_db *db)
 			rc = SEPOL_ERR;
 			goto exit;
 		}
+	}
+
+	char *path = cil_tree_get_cil_path(current);
+	if (path != NULL) {
+		cil_src_info_init(&info);
+		info->kind = CIL_KEY_SRC_CIL;
+		info->path = path;
+
+		cil_tree_node_init(&src_node);
+		src_node->parent = block_node;
+		src_node->flavor = CIL_SRC_INFO;
+		src_node->data = info;
+
+		if (block_node->cl_head == NULL) {
+			block_node->cl_head = src_node;
+		} else {
+			block_node->cl_tail->next = src_node;
+		}
+		block_node->cl_tail = src_node;
+
+		block_node = src_node;
 	}
 
 	rc = cil_copy_ast(db, current, block_node);
