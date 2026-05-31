@@ -204,18 +204,18 @@ static int add_exclude(const char *directory, bool who)
 	size_t len = 0;
 	int i;
 
-	/* Check if already present. */
-	for (i = 0; i < exclude_count; i++) {
-		if (strcmp(directory, exclude_lst[i].directory) == 0)
-			return 0;
-	}
-
 	if (directory == NULL || directory[0] != '/') {
 		selinux_log(SELINUX_ERROR,
 			    "Full path required for exclude: %s.\n",
 			    directory);
 		errno = EINVAL;
 		return -1;
+	}
+
+	/* Check if already present. */
+	for (i = 0; i < exclude_count; i++) {
+		if (strcmp(directory, exclude_lst[i].directory) == 0)
+			return 0;
 	}
 
 	if (exclude_count >= INT_MAX - 1) {
