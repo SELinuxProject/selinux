@@ -653,6 +653,12 @@ static void cil_classperms_to_string(struct cil_classperms *classperms, struct c
 	size_t len = 0;
 	char *new, *curr;
 
+	/* cil classperms are expressions, and hence may collapse to none. As an empty
+	   list of permissions, { }, is not valid in kernel policy language, make sure
+	   we only emit something if at least one permission exists.  */
+	if (cil_list_is_empty(classperms->perms))
+		return;
+
 	len += strlen(DATUM(classperms->class)->fqn) + 1;
 	cil_list_for_each(i1, classperms->perms) {
 		len += strlen(DATUM(i1->data)->fqn) + 1;
