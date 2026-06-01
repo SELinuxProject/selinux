@@ -1,0 +1,21 @@
+name: Check format
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check-format:
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install tools
+        run: dnf install -y make clang-tools-extra
+      - name: Check format
+        run: make check-format
