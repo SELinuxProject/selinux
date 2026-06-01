@@ -992,6 +992,7 @@ end_arch_check:
 	mmap_area->next = data->mmap_areas;
 	data->mmap_areas = mmap_area;
 	mmap_area = NULL;
+	addr = NULL;
 
 	if (data->num_specs == 0) {
 		free_spec_node(data->root);
