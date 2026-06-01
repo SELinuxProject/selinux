@@ -192,11 +192,13 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 		data->nspec = 0;
 		lineno = 0;
 
-		while (fgets(line_buf, sizeof(line_buf) - 1, fp)
+		while (fgets(line_buf, sizeof(line_buf), fp)
 		       && data->nspec < maxnspec) {
 			if (process_line(rec, path, line_buf, pass, ++lineno)
-									  != 0)
+				!= 0) {
+				status = -1;
 				goto finish;
+			}
 		}
 
 		if (pass == 1) {
@@ -213,8 +215,10 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 			}
 
 			if (NULL == (data->spec_arr =
-				     calloc(data->nspec, sizeof(spec_t))))
+					calloc(data->nspec, sizeof(spec_t)))) {
+				status = -1;
 				goto finish;
+			}
 
 			maxnspec = data->nspec;
 
