@@ -78,6 +78,9 @@ static int process_line(const char *path, const char *line_buf, int pass,
 			selinux_log(SELINUX_WARNING,
 				    "%s:  line %u has invalid object type %s\n",
 				    path, lineno, type);
+			free(type);
+			free(key);
+			free(context);
 			return 0;
 		}
 		data->spec_arr[data->nspec].key = key;
