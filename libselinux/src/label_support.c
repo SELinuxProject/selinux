@@ -201,15 +201,14 @@ int  digest_add_specfile(struct selabel_digest *digest, FILE *fp,
 			    from_addr, buf_len);
 
 	/* Now add path to list */
+	if (digest->specfile_cnt >= DIGEST_FILES_MAX) {
+		errno = EOVERFLOW;
+		return -1;
+	}
 	digest->specfile_list[digest->specfile_cnt] = strdup(path);
 	if (!digest->specfile_list[digest->specfile_cnt])
 		return -1;
 
 	digest->specfile_cnt++;
-	if (digest->specfile_cnt > DIGEST_FILES_MAX) {
-		errno = EOVERFLOW;
-		return -1;
-	}
-
 	return 0;
 }
