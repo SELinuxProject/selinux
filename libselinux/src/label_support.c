@@ -80,6 +80,11 @@ int  read_spec_entries(char *line_buf, size_t nread, const char **errbuf, int nu
 
 	*errbuf = NULL;
 
+	if (nread == 0) {
+		errno = EINVAL;
+		return -1;
+	}
+
 	if (line_buf[nread - 1] == '\n')
 		line_buf[nread - 1] = '\0';
 	else
