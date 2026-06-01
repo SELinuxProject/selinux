@@ -1284,7 +1284,7 @@ static int selabel_subs_init(const char *path, struct selabel_digest *digest,
 		return (errno == ENOENT) ? 0 : -1;
 	}
 
-	while (fgets_unlocked(buf, sizeof(buf) - 1, cfg)) {
+	while (fgets_unlocked(buf, sizeof(buf), cfg)) {
 		char *ptr;
 		char *src = buf;
 		char *dst;
@@ -1296,7 +1296,8 @@ static int selabel_subs_init(const char *path, struct selabel_digest *digest,
 		ptr = src;
 		while (*ptr && ! isspace((unsigned char)*ptr))
 			ptr++;
-		*ptr++ = '\0';
+		if (*ptr)
+			*ptr++ = '\0';
 		if (! *src) continue;
 
 		dst = ptr;
