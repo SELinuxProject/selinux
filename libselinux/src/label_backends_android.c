@@ -102,6 +102,7 @@ static int process_line(struct selabel_handle *rec,
 				    "%s:  line %u error due to: %m\n", path,
 				    lineno);
 		}
+		free(prop);
 		return -1;
 	}
 
