@@ -294,3 +294,8 @@ LIBSEPOL_3.6 {
   global:
 	cil_write_post_ast;
 } LIBSEPOL_3.4;
+
+LIBSEPOL_3.11 {
+  global:
+	cil_check_neverallows_against_pdb;
+} LIBSEPOL_3.6;

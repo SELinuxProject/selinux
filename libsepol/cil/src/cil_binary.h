@@ -36,6 +36,21 @@
 #include "cil_tree.h"
 #include "cil_list.h"
 
+
+/**
+ * Check neverallows from a CIL database against a policy database.
+ *
+ * The types, classes, and permissions used in the CIL neverallow rules must
+ * be declared in the policy database.
+ *
+ * @param[in] db The cil database containing the neverallows to be used.
+ * @param[in] pdb The policy database to be checked for violations.
+ * @param[out] violation 1 if a neverallow violation was found, 0 otherwise
+ *
+ * @return SEPOL_OK upon success or an error otherwise.
+ */
+int cil_check_neverallows_against_pdb(const struct cil_db *db, policydb_t *pdb, int *violation);
+
 /**
  * Create a binary policydb from the cil db.
  *

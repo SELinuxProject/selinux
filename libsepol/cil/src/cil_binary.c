@@ -5143,6 +5143,54 @@ exit:
 	return rc;
 }
 
+static int __cil_collect_neverallows_helper(struct cil_tree_node *node, uint32_t *finished, void *extra_args)
+{
+	if (node->flavor == CIL_BLOCK) {
+		struct cil_block *blk = node->data;
+		if (blk->is_abstract == CIL_TRUE) {
+			*finished = CIL_TREE_SKIP_HEAD;
+		}
+	} else if (node->flavor == CIL_MACRO) {
+		*finished = CIL_TREE_SKIP_HEAD;
+	} else if (node->flavor == CIL_BOOLEANIF) {
+		*finished = CIL_TREE_SKIP_HEAD;
+	} else if (node->flavor == CIL_AVRULE || node->flavor == CIL_AVRULEX) {
+		struct cil_avrule *rule = node->data;
+		if (rule->rule_kind == CIL_AVRULE_NEVERALLOW) {
+			struct cil_list *neverallows = extra_args;
+			cil_list_prepend(neverallows, CIL_LIST_ITEM, node);
+		}
+	}
+
+	return SEPOL_OK;
+}
+
+int cil_check_neverallows_against_pdb(const struct cil_db *db, policydb_t *pdb, int *violation)
+{
+	int rc = SEPOL_OK;
+	struct cil_list *neverallows;
+
+	*violation = CIL_FALSE;
+
+	if (db == NULL || pdb == NULL) {
+		cil_log(CIL_ERR,"CIL db and/or Policy db is NULL\n");
+		return SEPOL_ERR;
+	}
+
+	cil_list_init(&neverallows, CIL_LIST_ITEM);
+	rc = cil_tree_walk(db->ast->root, __cil_collect_neverallows_helper, NULL, NULL, neverallows);
+	if (rc != SEPOL_OK) {
+		cil_log(CIL_INFO, "Failure collecting neverallows\n");
+		goto exit;
+	}
+
+	rc = cil_check_neverallows(db, pdb, neverallows, violation);
+
+exit:
+	cil_list_destroy(&neverallows, CIL_FALSE);
+	return rc;
+}
+
 static struct cil_list *cil_classperms_from_sepol(policydb_t *pdb, uint16_t class, uint32_t data, struct cil_class *class_value_to_cil[], struct cil_perm **perm_value_to_cil[])
 {
 	struct cil_classperms *cp;
