@@ -4,6 +4,8 @@ secil2conf
 secil2conf.8
 secil2tree
 secil2tree.8
+secilcheck
+secilcheck.8
 policy.*
 file_contexts
 docs/html
