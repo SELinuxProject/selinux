@@ -117,3 +117,5 @@ int strs_stack_empty(const struct strs *stack);
 
 struct strs *isids_to_strs(const char *const *sid_to_str, unsigned num_sids, struct ocontext *isids);
 int sort_ocontexts(struct policydb *pdb);
+
+int check_for_supported_policy(struct policydb *pdb);

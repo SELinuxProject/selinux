@@ -3116,6 +3116,11 @@ int sepol_kernel_policydb_to_conf(FILE *out, struct policydb *pdb)
 	struct strs *non_mls_validatetrans = NULL;
 	int rc = 0;
 
+	rc = check_for_supported_policy(pdb);
+	if (rc != 0) {
+		return rc;
+	}
+
 	rc = strs_init(&mls_constraints, 32);
 	if (rc != 0) {
 		goto exit;
@@ -3133,30 +3138,6 @@ int sepol_kernel_policydb_to_conf(FILE *out, struct policydb *pdb)
 
 	rc = strs_init(&non_mls_validatetrans, 32);
 	if (rc != 0) {
-		goto exit;
-	}
-
-	if (pdb == NULL) {
-		ERR(NULL, "No policy");
-		rc = -1;
-		goto exit;
-	}
-
-	if (pdb->policy_type != SEPOL_POLICY_KERN) {
-		ERR(NULL, "Policy is not a kernel policy");
-		rc = -1;
-		goto exit;
-	}
-
-	if (pdb->policyvers >= POLICYDB_VERSION_AVTAB && pdb->policyvers <= POLICYDB_VERSION_PERMISSIVE) {
-		/*
-		 * For policy versions between 20 and 23, attributes exist in the policy,
-		 * but only in the type_attr_map. This means that there are gaps in both
-		 * the type_val_to_struct and p_type_val_to_name arrays and policy rules
-		 * can refer to those gaps.
-		 */
-		ERR(NULL, "Writing policy versions between 20 and 23 as a policy.conf is not supported");
-		rc = -1;
 		goto exit;
 	}
 

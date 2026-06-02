@@ -297,5 +297,6 @@ LIBSEPOL_3.6 {
 
 LIBSEPOL_3.11 {
   global:
+	sepol_kernel_policydb_decls_to_cil;
 	cil_check_neverallows_against_pdb;
 } LIBSEPOL_3.6;
