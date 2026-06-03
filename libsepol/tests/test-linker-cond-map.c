@@ -55,7 +55,8 @@ typedef struct test_cond_expr {
 	uint32_t expr_type;
 } test_cond_expr_t;
 
-static void test_cond_expr_mapping(policydb_t * p, avrule_decl_t * d, test_cond_expr_t * bools, int len)
+static void test_cond_expr_mapping(policydb_t *p, avrule_decl_t *d,
+				   test_cond_expr_t *bools, int len)
 {
 	int i;
 	cond_expr_t *expr;
@@ -70,13 +71,15 @@ static void test_cond_expr_mapping(policydb_t * p, avrule_decl_t * d, test_cond_
 
 		CU_ASSERT(expr->expr_type == bools[i].expr_type);
 		if (bools[i].boolean) {
-			CU_ASSERT(strcmp(p->sym_val_to_name[SYM_BOOLS][expr->boolean - 1], bools[i].boolean) == 0);
+			CU_ASSERT(strcmp(p->sym_val_to_name[SYM_BOOLS]
+							   [expr->boolean - 1],
+					 bools[i].boolean) == 0);
 		}
 		expr = expr->next;
 	}
 }
 
-static void test_bool_state(policydb_t * p, const char *boolean, int state)
+static void test_bool_state(policydb_t *p, const char *boolean, int state)
 {
 	cond_bool_datum_t *b;
 
@@ -85,7 +88,7 @@ static void test_bool_state(policydb_t * p, const char *boolean, int state)
 	CU_ASSERT(b->state == state);
 }
 
-void base_cond_tests(policydb_t * base)
+void base_cond_tests(policydb_t *base)
 {
 	avrule_decl_t *d;
 	unsigned int decls[1];
@@ -113,10 +116,9 @@ void base_cond_tests(policydb_t * base)
 	bools[0].boolean = "o1_b_bool_1";
 	bools[0].expr_type = COND_BOOL;
 	test_cond_expr_mapping(base, d, bools, 1);
-
 }
 
-void module_cond_tests(policydb_t * base)
+void module_cond_tests(policydb_t *base)
 {
 	avrule_decl_t *d;
 	unsigned int decls[1];
@@ -135,7 +137,8 @@ void module_cond_tests(policydb_t * base)
 	/* bool existence and state, module 1 optional scope */
 	d = test_find_decl_by_sym(base, SYM_TYPES, "tag_o1_m1");
 	decls[0] = d->decl_id;
-	test_sym_presence(base, "o1_m1_bool_1", SYM_BOOLS, SCOPE_DECL, decls, 1);
+	test_sym_presence(base, "o1_m1_bool_1", SYM_BOOLS, SCOPE_DECL, decls,
+			  1);
 	test_bool_state(base, "o1_m1_bool_1", 0);
 	/* conditional expression mapped correctly */
 	bools[0].boolean = "o1_m1_bool_1";

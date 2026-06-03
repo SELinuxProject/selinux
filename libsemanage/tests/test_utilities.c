@@ -48,10 +48,8 @@ static void test_semanage_findval(void);
 static void test_slurp_file_filter(void);
 static void test_semanage_basename(void);
 
-static char fname[] = {
-	'T', 'E', 'S', 'T', '_', 'T', 'E', 'M', 'P', '_', 'X', 'X', 'X', 'X',
-	'X', 'X', '\0'
-};
+static char fname[] = { 'T', 'E', 'S', 'T', '_', 'T', 'E', 'M', 'P',
+			'_', 'X', 'X', 'X', 'X', 'X', 'X', '\0' };
 int fd;
 FILE *fptr;
 
@@ -61,8 +59,8 @@ int semanage_utilities_test_init(void)
 
 	if (fd < 0) {
 		perror("test_semanage_findval: ");
-		CU_FAIL_FATAL
-		    ("Error opening temporary file, test cannot start.");
+		CU_FAIL_FATAL(
+			"Error opening temporary file, test cannot start.");
 	}
 
 	fptr = fdopen(fd, "w+");
@@ -85,8 +83,8 @@ int semanage_utilities_test_cleanup(void)
 
 int semanage_utilities_add_tests(CU_pSuite suite)
 {
-	if (NULL == CU_add_test(suite, "semanage_is_prefix",
-				test_semanage_is_prefix)) {
+	if (NULL ==
+	    CU_add_test(suite, "semanage_is_prefix", test_semanage_is_prefix)) {
 		goto err;
 	}
 	if (NULL == CU_add_test(suite, "semanage_split_on_space",
@@ -99,8 +97,8 @@ int semanage_utilities_add_tests(CU_pSuite suite)
 	if (NULL == CU_add_test(suite, "semanage_list", test_semanage_list)) {
 		goto err;
 	}
-	if (NULL == CU_add_test(suite, "semanage_str_count",
-				test_semanage_str_count)) {
+	if (NULL ==
+	    CU_add_test(suite, "semanage_str_count", test_semanage_str_count)) {
 		goto err;
 	}
 	if (NULL == CU_add_test(suite, "semanage_rtrim", test_semanage_rtrim)) {
@@ -110,20 +108,20 @@ int semanage_utilities_add_tests(CU_pSuite suite)
 				test_semanage_str_replace)) {
 		goto err;
 	}
-	if (NULL == CU_add_test(suite, "semanage_findval",
-				test_semanage_findval)) {
+	if (NULL ==
+	    CU_add_test(suite, "semanage_findval", test_semanage_findval)) {
 		goto err;
 	}
-	if (NULL == CU_add_test(suite, "slurp_file_filter",
-				test_slurp_file_filter)) {
+	if (NULL ==
+	    CU_add_test(suite, "slurp_file_filter", test_slurp_file_filter)) {
 		goto err;
 	}
-	if (NULL == CU_add_test(suite, "semanage_basename",
-				test_semanage_basename)) {
+	if (NULL ==
+	    CU_add_test(suite, "semanage_basename", test_semanage_basename)) {
 		goto err;
 	}
 	return 0;
-      err:
+err:
 	CU_cleanup_registry();
 	return CU_get_error();
 }
@@ -146,8 +144,7 @@ static void test_semanage_split_on_space(void)
 	char *temp;
 
 	if (!str) {
-		CU_FAIL
-		    ("semanage_split_on_space: unable to perform test, no memory");
+		CU_FAIL("semanage_split_on_space: unable to perform test, no memory");
 		return;
 	}
 	temp = semanage_split_on_space(str);
@@ -175,8 +172,7 @@ static void test_semanage_split(void)
 	char *temp;
 
 	if (!str) {
-		CU_FAIL
-		    ("semanage_split_on_space: unable to perform test, no memory");
+		CU_FAIL("semanage_split_on_space: unable to perform test, no memory");
 		return;
 	}
 	temp = semanage_split(str, NULL);
@@ -234,8 +230,7 @@ static void test_semanage_list(void)
 
 	retval = semanage_list_sort(&list);
 	if (retval) {
-		CU_FAIL
-		    ("semanage_list_sort: error unrelated to sort (memory?)");
+		CU_FAIL("semanage_list_sort: error unrelated to sort (memory?)");
 		goto past_sort;
 	}
 	CU_ASSERT_STRING_EQUAL(list->data, "bar");
@@ -243,7 +238,7 @@ static void test_semanage_list(void)
 	CU_ASSERT_STRING_EQUAL(list->next->next->data, "gonk");
 	CU_ASSERT_STRING_EQUAL(list->next->next->next->data, "zebra");
 
-      past_sort:
+past_sort:
 	ptr = semanage_list_find(list, "zebra");
 	CU_ASSERT_PTR_NOT_NULL(ptr);
 	ptr = semanage_list_find(list, "bogus");

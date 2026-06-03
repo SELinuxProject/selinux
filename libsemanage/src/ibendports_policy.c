@@ -28,17 +28,17 @@ int semanage_ibendport_exists(semanage_handle_t *handle,
 	return dbase_exists(handle, dconfig, key, response);
 }
 
-int semanage_ibendport_count(semanage_handle_t *handle,
-			     unsigned int *response)
+int semanage_ibendport_count(semanage_handle_t *handle, unsigned int *response)
 {
 	dbase_config_t *dconfig = semanage_ibendport_dbase_policy(handle);
 
 	return dbase_count(handle, dconfig, response);
 }
 
-int semanage_ibendport_iterate(semanage_handle_t *handle,
-			       int (*handler)(const semanage_ibendport_t *record,
-					      void *varg), void *handler_arg)
+int semanage_ibendport_iterate(
+	semanage_handle_t *handle,
+	int (*handler)(const semanage_ibendport_t *record, void *varg),
+	void *handler_arg)
 {
 	dbase_config_t *dconfig = semanage_ibendport_dbase_policy(handle);
 

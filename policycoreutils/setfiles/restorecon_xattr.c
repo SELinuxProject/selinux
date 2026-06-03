@@ -53,7 +53,7 @@ int main(int argc, char **argv)
 
 	if (is_selinux_enabled() <= 0) {
 		fprintf(stderr,
-		    "SELinux must be enabled to perform this operation.\n");
+			"SELinux must be enabled to perform this operation.\n");
 		exit(-1);
 	}
 
@@ -75,15 +75,16 @@ int main(int argc, char **argv)
 			break;
 		case 'd':
 			delete_digest =
-			    SELINUX_RESTORECON_XATTR_DELETE_NONMATCH_DIGESTS;
+				SELINUX_RESTORECON_XATTR_DELETE_NONMATCH_DIGESTS;
 			break;
 		case 'D':
 			delete_all_digests =
-			    SELINUX_RESTORECON_XATTR_DELETE_ALL_DIGESTS;
+				SELINUX_RESTORECON_XATTR_DELETE_ALL_DIGESTS;
 			break;
 		case 'e':
 			if (lstat(optarg, &sb) < 0 && errno != EACCES) {
-				fprintf(stderr, "Can't stat exclude path \"%s\", %s - ignoring.\n",
+				fprintf(stderr,
+					"Can't stat exclude path \"%s\", %s - ignoring.\n",
 					optarg, strerror(errno));
 				break;
 			}
@@ -103,20 +104,20 @@ int main(int argc, char **argv)
 	}
 
 	struct selinux_opt selinux_opts[] = {
-		{ SELABEL_OPT_PATH, fc_file },
-		{ SELABEL_OPT_DIGEST, (char *)1 }
+		{ SELABEL_OPT_PATH, fc_file }, { SELABEL_OPT_DIGEST, (char *)1 }
 	};
 
 	hnd = selabel_open(SELABEL_CTX_FILE, selinux_opts, 2);
 	if (!hnd) {
 		switch (errno) {
 		case EOVERFLOW:
-			fprintf(stderr, "Error: Number of specfiles or"
-				 " specfile buffer caused an overflow.\n");
+			fprintf(stderr,
+				"Error: Number of specfiles or"
+				" specfile buffer caused an overflow.\n");
 			break;
 		default:
 			fprintf(stderr, "Error: selabel_open: %s\n",
-							    strerror(errno));
+				strerror(errno));
 		}
 		exit(-1);
 	}
@@ -125,8 +126,8 @@ int main(int argc, char **argv)
 	selinux_restorecon_set_sehandle(hnd);
 
 	if (display_digest) {
-		if (selabel_digest(hnd, &fc_digest, &fc_digest_len,
-				   &specfiles, &num_specfiles) < 0) {
+		if (selabel_digest(hnd, &fc_digest, &fc_digest_len, &specfiles,
+				   &num_specfiles) < 0) {
 			fprintf(stderr,
 				"Error: selabel_digest: Digest not available.\n");
 			selabel_close(hnd);
@@ -135,9 +136,8 @@ int main(int argc, char **argv)
 
 		sha1_buf = malloc(fc_digest_len * 2 + 1);
 		if (!sha1_buf) {
-			fprintf(stderr,
-				"Error allocating digest buffer: %s\n",
-							    strerror(errno));
+			fprintf(stderr, "Error allocating digest buffer: %s\n",
+				strerror(errno));
 			selabel_close(hnd);
 			exit(-1);
 		}
@@ -157,24 +157,22 @@ int main(int argc, char **argv)
 	}
 
 	if (exclude_list)
-		selinux_restorecon_set_exclude_list
-						 ((const char **)exclude_list);
+		selinux_restorecon_set_exclude_list(
+			(const char **)exclude_list);
 
-	xattr_flags = delete_digest | delete_all_digests |
-		      ignore_mounts | recurse;
+	xattr_flags = delete_digest | delete_all_digests | ignore_mounts |
+		      recurse;
 
 	pathname = realpath(argv[optind], NULL);
 	if (!pathname) {
-		fprintf(stderr,
-			"restorecon_xattr: realpath(%s) failed: %s\n",
+		fprintf(stderr, "restorecon_xattr: realpath(%s) failed: %s\n",
 			argv[optind], strerror(errno));
 		rc = -1;
 		goto out;
 	}
 
 	if (selinux_restorecon_xattr(pathname, xattr_flags, &xattr_list)) {
-		fprintf(stderr,
-			"Error selinux_restorecon_xattr: %s\n",
+		fprintf(stderr, "Error selinux_restorecon_xattr: %s\n",
 			strerror(errno));
 		rc = -1;
 		goto out;
@@ -200,8 +198,7 @@ int main(int argc, char **argv)
 				       no_comment ? " Match\n" : "\n");
 				break;
 			case DELETED_NOMATCH:
-				printf("Deleted Digest: %s%s",
-				       current->digest,
+				printf("Deleted Digest: %s%s", current->digest,
 				       no_comment ? " No Match\n" : "\n");
 				break;
 			case ERROR:

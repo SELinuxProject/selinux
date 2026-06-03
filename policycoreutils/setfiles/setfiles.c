@@ -103,8 +103,8 @@ static void audit_mass_relabel(int mass_relabel_errs)
 	}
 
 	rc = audit_log_user_message(audit_fd, AUDIT_FS_RELABEL,
-				    "op=mass relabel",
-				    NULL, NULL, NULL, !mass_relabel_errs);
+				    "op=mass relabel", NULL, NULL, NULL,
+				    !mass_relabel_errs);
 	if (rc <= 0) {
 		fprintf(stderr, "Error sending audit message: %s.\n",
 			strerror(errno));
@@ -116,7 +116,7 @@ static void audit_mass_relabel(int mass_relabel_errs)
 #endif
 }
 
-static int __attribute__ ((format(printf, 2, 3)))
+static int __attribute__((format(printf, 2, 3)))
 log_callback(int type, const char *fmt, ...)
 {
 	int rc;
@@ -202,7 +202,8 @@ int main(int argc, char **argv)
 		 * Does lazy validation of contexts upon use.
 		 */
 		if (strcmp(base, RESTORECON))
-			fprintf(stderr, "Executed with unrecognized name (%s), defaulting to %s behavior.\n",
+			fprintf(stderr,
+				"Executed with unrecognized name (%s), defaulting to %s behavior.\n",
 				base, RESTORECON);
 
 		iamrestorecon = 1;
@@ -226,7 +227,8 @@ int main(int argc, char **argv)
 		switch (opt) {
 		case 'c':
 			if (iamrestorecon) {
-				r_opts.count_relabeled = SELINUX_RESTORECON_COUNT_RELABELED;
+				r_opts.count_relabeled =
+					SELINUX_RESTORECON_COUNT_RELABELED;
 				break;
 			} else {
 				FILE *policystream;
@@ -243,8 +245,8 @@ int main(int argc, char **argv)
 				__fsetlocking(policystream,
 					      FSETLOCKING_BYCALLER);
 
-				if (sepol_set_policydb_from_file(policystream)
-									< 0) {
+				if (sepol_set_policydb_from_file(policystream) <
+				    0) {
 					fprintf(stderr,
 						"Error reading policy %s: %s\n",
 						policyfile, strerror(errno));
@@ -257,7 +259,8 @@ int main(int argc, char **argv)
 			}
 		case 'e':
 			if (lstat(optarg, &sb) < 0 && errno != EACCES) {
-				fprintf(stderr, "Can't stat exclude path \"%s\", %s - ignoring.\n",
+				fprintf(stderr,
+					"Can't stat exclude path \"%s\", %s - ignoring.\n",
 					optarg, strerror(errno));
 				break;
 			}
@@ -269,16 +272,13 @@ int main(int argc, char **argv)
 			break;
 		case 'd':
 			r_opts.debug = 1;
-			r_opts.log_matches =
-					   SELINUX_RESTORECON_LOG_MATCHES;
+			r_opts.log_matches = SELINUX_RESTORECON_LOG_MATCHES;
 			break;
 		case 'i':
-			r_opts.ignore_noent =
-					   SELINUX_RESTORECON_IGNORE_NOENTRY;
+			r_opts.ignore_noent = SELINUX_RESTORECON_IGNORE_NOENTRY;
 			break;
 		case 'I': /* Force label check by ignoring directory digest. */
-			r_opts.ignore_digest =
-					   SELINUX_RESTORECON_IGNORE_DIGEST;
+			r_opts.ignore_digest = SELINUX_RESTORECON_IGNORE_DIGEST;
 			request_digest = 1;
 			break;
 		case 'D': /*
@@ -290,26 +290,24 @@ int main(int argc, char **argv)
 			break;
 		case 'l':
 			r_opts.syslog_changes =
-					   SELINUX_RESTORECON_SYSLOG_CHANGES;
+				SELINUX_RESTORECON_SYSLOG_CHANGES;
 			break;
 		case 'C':
 			r_opts.count_errors = SELINUX_RESTORECON_COUNT_ERRORS;
 			break;
 		case 'E':
 			r_opts.conflict_error =
-					   SELINUX_RESTORECON_CONFLICT_ERROR;
+				SELINUX_RESTORECON_CONFLICT_ERROR;
 			break;
 		case 'F':
 			r_opts.set_specctx =
-					   SELINUX_RESTORECON_SET_SPECFILE_CTX;
+				SELINUX_RESTORECON_SET_SPECFILE_CTX;
 			break;
 		case 'U':
-			r_opts.set_user_role =
-					   SELINUX_RESTORECON_SET_USER_ROLE;
+			r_opts.set_user_role = SELINUX_RESTORECON_SET_USER_ROLE;
 			break;
 		case 'm':
-			r_opts.ignore_mounts =
-					   SELINUX_RESTORECON_IGNORE_MOUNTS;
+			r_opts.ignore_mounts = SELINUX_RESTORECON_IGNORE_MOUNTS;
 			break;
 		case 'n':
 			r_opts.nochange = SELINUX_RESTORECON_NOCHANGE;
@@ -423,7 +421,8 @@ int main(int argc, char **argv)
 			exit(-1);
 		}
 		if (!S_ISREG(sb.st_mode)) {
-			fprintf(stderr, "%s:  spec file %s is not a regular file.\n",
+			fprintf(stderr,
+				"%s:  spec file %s is not a regular file.\n",
 				argv[0], argv[optind]);
 			exit(-1);
 		}
@@ -450,8 +449,7 @@ int main(int argc, char **argv)
 
 		if (f == NULL) {
 			fprintf(stderr, "Unable to open %s: %s\n",
-				input_filename,
-				strerror(errno));
+				input_filename, strerror(errno));
 			usage(argv[0]);
 		}
 		__fsetlocking(f, FSETLOCKING_BYCALLER);
@@ -460,16 +458,19 @@ int main(int argc, char **argv)
 		while ((len = getdelim(&buf, &buf_len, delim, f)) > 0) {
 			buf[len - 1] = 0;
 			if (!strcmp(buf, "/"))
-				r_opts.mass_relabel = SELINUX_RESTORECON_MASS_RELABEL;
+				r_opts.mass_relabel =
+					SELINUX_RESTORECON_MASS_RELABEL;
 			errors |= process_glob(buf, &r_opts, nthreads,
-					       &skipped_errors, &relabeled_files) < 0;
+					       &skipped_errors,
+					       &relabeled_files) < 0;
 		}
 		if (strcmp(input_filename, "-") != 0)
 			fclose(f);
 	} else {
 		for (i = optind; i < argc; i++)
 			errors |= process_glob(argv[i], &r_opts, nthreads,
-					       &skipped_errors, &relabeled_files) < 0;
+					       &skipped_errors,
+					       &relabeled_files) < 0;
 	}
 
 	if (r_opts.mass_relabel && !r_opts.nochange)
@@ -486,7 +487,8 @@ int main(int argc, char **argv)
 
 	/* Output relabeled file count if requested */
 	if (r_opts.count_relabeled) {
-		long unsigned relabeled_count = selinux_restorecon_get_relabeled_files();
+		long unsigned relabeled_count =
+			selinux_restorecon_get_relabeled_files();
 		printf("Relabeled %lu files\n", relabeled_count);
 
 		/* Set exit code to 0 if at least one file was relabeled */

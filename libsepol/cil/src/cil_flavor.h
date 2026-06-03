@@ -118,7 +118,7 @@ enum cil_flavor {
 	CIL_IBPKEYCON,
 	CIL_IBENDPORTCON,
 
-/*
+	/*
  *          boolean  constraint  set  catset
  *  dom                  X
  *  domby                X
@@ -191,6 +191,5 @@ enum cil_flavor {
 	CIL_POLICYCAP,
 	CIL_PERMISSIONX
 };
-
 
 #endif /* CIL_FLAVOR_H_ */

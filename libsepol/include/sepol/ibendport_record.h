@@ -21,13 +21,11 @@ extern int sepol_ibendport_compare2(const sepol_ibendport_t *ibendport,
 				    const sepol_ibendport_t *ibendport2);
 
 extern int sepol_ibendport_key_create(sepol_handle_t *handle,
-				      const char *ibdev_name,
-				      int port,
+				      const char *ibdev_name, int port,
 				      sepol_ibendport_key_t **key_ptr);
 
 extern void sepol_ibendport_key_unpack(const sepol_ibendport_key_t *key,
-				       const char **ibdev_name,
-				       int *port);
+				       const char **ibdev_name, int *port);
 
 extern int sepol_ibendport_alloc_ibdev_name(sepol_handle_t *handle,
 					    char **ibdev_name);
@@ -50,7 +48,8 @@ extern int sepol_ibendport_set_ibdev_name(sepol_handle_t *handle,
 					  sepol_ibendport_t *ibendport,
 					  const char *ibdev_name);
 
-extern sepol_context_t *sepol_ibendport_get_con(const sepol_ibendport_t *ibendport);
+extern sepol_context_t *
+sepol_ibendport_get_con(const sepol_ibendport_t *ibendport);
 
 extern int sepol_ibendport_set_con(sepol_handle_t *handle,
 				   sepol_ibendport_t *ibendport,

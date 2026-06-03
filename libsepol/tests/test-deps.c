@@ -68,19 +68,19 @@
 
 #include "helpers.h"
 
-#define BASE_MODREQ_TYPE_GLOBAL    0
-#define BASE_MODREQ_ATTR_GLOBAL    1
-#define BASE_MODREQ_OBJ_GLOBAL     2
-#define BASE_MODREQ_BOOL_GLOBAL    3
-#define BASE_MODREQ_ROLE_GLOBAL    4
-#define BASE_MODREQ_PERM_GLOBAL    5
-#define BASE_MODREQ_TYPE_OPT       6
-#define BASE_MODREQ_ATTR_OPT       7
-#define BASE_MODREQ_OBJ_OPT        8
-#define BASE_MODREQ_BOOL_OPT       9
-#define BASE_MODREQ_ROLE_OPT       10
-#define BASE_MODREQ_PERM_OPT       11
-#define NUM_BASES                  12
+#define BASE_MODREQ_TYPE_GLOBAL 0
+#define BASE_MODREQ_ATTR_GLOBAL 1
+#define BASE_MODREQ_OBJ_GLOBAL 2
+#define BASE_MODREQ_BOOL_GLOBAL 3
+#define BASE_MODREQ_ROLE_GLOBAL 4
+#define BASE_MODREQ_PERM_GLOBAL 5
+#define BASE_MODREQ_TYPE_OPT 6
+#define BASE_MODREQ_ATTR_OPT 7
+#define BASE_MODREQ_OBJ_OPT 8
+#define BASE_MODREQ_BOOL_OPT 9
+#define BASE_MODREQ_ROLE_OPT 10
+#define BASE_MODREQ_PERM_OPT 11
+#define NUM_BASES 12
 
 static policydb_t bases_met[NUM_BASES];
 static policydb_t bases_notmet[NUM_BASES];
@@ -97,12 +97,14 @@ int deps_test_init(void)
 	 * matter too much.
 	 */
 	for (i = 0; i < NUM_BASES; i++) {
-		if (test_load_policy(&bases_met[i], POLICY_BASE, mls, "test-deps", "base-metreq.conf"))
+		if (test_load_policy(&bases_met[i], POLICY_BASE, mls,
+				     "test-deps", "base-metreq.conf"))
 			return -1;
 	}
 
 	for (i = 0; i < NUM_BASES; i++) {
-		if (test_load_policy(&bases_notmet[i], POLICY_BASE, mls, "test-deps", "base-notmetreq.conf"))
+		if (test_load_policy(&bases_notmet[i], POLICY_BASE, mls,
+				     "test-deps", "base-notmetreq.conf"))
 			return -1;
 	}
 
@@ -137,7 +139,8 @@ int deps_test_cleanup(void)
  *  decl_type          name of the unique type found in the module's global
  *                       section is to find that avrule_decl.
  */
-static void do_deps_modreq_global(int req_met, int b, const char *policy, const char *decl_type)
+static void do_deps_modreq_global(int req_met, int b, const char *policy,
+				  const char *decl_type)
 {
 	policydb_t *base;
 	policydb_t mod;
@@ -161,7 +164,8 @@ static void do_deps_modreq_global(int req_met, int b, const char *policy, const 
 		link_ret = -3;
 	}
 
-	CU_ASSERT_FATAL(test_load_policy(&mod, POLICY_MOD, mls, "test-deps", policy) == 0);
+	CU_ASSERT_FATAL(test_load_policy(&mod, POLICY_MOD, mls, "test-deps",
+					 policy) == 0);
 
 	/* link the modules and check for the correct return value.
 	 */
@@ -189,22 +193,34 @@ static void do_deps_modreq_global(int req_met, int b, const char *policy, const 
 static void deps_modreq_global(void)
 {
 	/* object classes */
-	do_deps_modreq_global(1, BASE_MODREQ_OBJ_GLOBAL, "modreq-obj-global.conf", "mod_global_t");
-	do_deps_modreq_global(0, BASE_MODREQ_OBJ_GLOBAL, "modreq-obj-global.conf", "mod_global_t");
+	do_deps_modreq_global(1, BASE_MODREQ_OBJ_GLOBAL,
+			      "modreq-obj-global.conf", "mod_global_t");
+	do_deps_modreq_global(0, BASE_MODREQ_OBJ_GLOBAL,
+			      "modreq-obj-global.conf", "mod_global_t");
 	/* types */
-	do_deps_modreq_global(1, BASE_MODREQ_TYPE_GLOBAL, "modreq-type-global.conf", "mod_global_t");
-	do_deps_modreq_global(0, BASE_MODREQ_TYPE_GLOBAL, "modreq-type-global.conf", "mod_global_t");
+	do_deps_modreq_global(1, BASE_MODREQ_TYPE_GLOBAL,
+			      "modreq-type-global.conf", "mod_global_t");
+	do_deps_modreq_global(0, BASE_MODREQ_TYPE_GLOBAL,
+			      "modreq-type-global.conf", "mod_global_t");
 	/* attributes */
-	do_deps_modreq_global(1, BASE_MODREQ_ATTR_GLOBAL, "modreq-attr-global.conf", "mod_global_t");
-	do_deps_modreq_global(0, BASE_MODREQ_ATTR_GLOBAL, "modreq-attr-global.conf", "mod_global_t");
+	do_deps_modreq_global(1, BASE_MODREQ_ATTR_GLOBAL,
+			      "modreq-attr-global.conf", "mod_global_t");
+	do_deps_modreq_global(0, BASE_MODREQ_ATTR_GLOBAL,
+			      "modreq-attr-global.conf", "mod_global_t");
 	/* booleans */
-	do_deps_modreq_global(1, BASE_MODREQ_BOOL_GLOBAL, "modreq-bool-global.conf", "mod_global_t");
-	do_deps_modreq_global(0, BASE_MODREQ_BOOL_GLOBAL, "modreq-bool-global.conf", "mod_global_t");
+	do_deps_modreq_global(1, BASE_MODREQ_BOOL_GLOBAL,
+			      "modreq-bool-global.conf", "mod_global_t");
+	do_deps_modreq_global(0, BASE_MODREQ_BOOL_GLOBAL,
+			      "modreq-bool-global.conf", "mod_global_t");
 	/* roles */
-	do_deps_modreq_global(1, BASE_MODREQ_ROLE_GLOBAL, "modreq-role-global.conf", "mod_global_t");
-	do_deps_modreq_global(0, BASE_MODREQ_ROLE_GLOBAL, "modreq-role-global.conf", "mod_global_t");
-	do_deps_modreq_global(1, BASE_MODREQ_PERM_GLOBAL, "modreq-perm-global.conf", "mod_global_t");
-	do_deps_modreq_global(0, BASE_MODREQ_PERM_GLOBAL, "modreq-perm-global.conf", "mod_global_t");
+	do_deps_modreq_global(1, BASE_MODREQ_ROLE_GLOBAL,
+			      "modreq-role-global.conf", "mod_global_t");
+	do_deps_modreq_global(0, BASE_MODREQ_ROLE_GLOBAL,
+			      "modreq-role-global.conf", "mod_global_t");
+	do_deps_modreq_global(1, BASE_MODREQ_PERM_GLOBAL,
+			      "modreq-perm-global.conf", "mod_global_t");
+	do_deps_modreq_global(0, BASE_MODREQ_PERM_GLOBAL,
+			      "modreq-perm-global.conf", "mod_global_t");
 }
 
 /* This function performs testing of the dependency handles for module optional
@@ -220,7 +236,8 @@ static void deps_modreq_global(void)
  *  decl_type          name of the unique type found in the module's global
  *                       section is to find that avrule_decl.
  */
-static void do_deps_modreq_opt(int req_met, int ret_val, int b, const char *policy, const char *decl_type)
+static void do_deps_modreq_opt(int req_met, int ret_val, int b,
+			       const char *policy, const char *decl_type)
 {
 	policydb_t *base;
 	policydb_t mod;
@@ -242,7 +259,8 @@ static void do_deps_modreq_opt(int req_met, int ret_val, int b, const char *poli
 		base = &bases_notmet[b];
 	}
 
-	CU_ASSERT_FATAL(test_load_policy(&mod, POLICY_MOD, mls, "test-deps", policy) == 0);
+	CU_ASSERT_FATAL(test_load_policy(&mod, POLICY_MOD, mls, "test-deps",
+					 policy) == 0);
 
 	/* link the modules and check for the correct return value.
 	 */
@@ -273,28 +291,41 @@ static void do_deps_modreq_opt(int req_met, int ret_val, int b, const char *poli
 static void deps_modreq_opt(void)
 {
 	/* object classes */
-	do_deps_modreq_opt(1, 0, BASE_MODREQ_OBJ_OPT, "modreq-obj-opt.conf", "mod_opt_t");
-	do_deps_modreq_opt(0, 0, BASE_MODREQ_OBJ_OPT, "modreq-obj-opt.conf", "mod_opt_t");
+	do_deps_modreq_opt(1, 0, BASE_MODREQ_OBJ_OPT, "modreq-obj-opt.conf",
+			   "mod_opt_t");
+	do_deps_modreq_opt(0, 0, BASE_MODREQ_OBJ_OPT, "modreq-obj-opt.conf",
+			   "mod_opt_t");
 	/* types */
-	do_deps_modreq_opt(1, 0, BASE_MODREQ_TYPE_OPT, "modreq-type-opt.conf", "mod_opt_t");
-	do_deps_modreq_opt(0, 0, BASE_MODREQ_TYPE_OPT, "modreq-type-opt.conf", "mod_opt_t");
+	do_deps_modreq_opt(1, 0, BASE_MODREQ_TYPE_OPT, "modreq-type-opt.conf",
+			   "mod_opt_t");
+	do_deps_modreq_opt(0, 0, BASE_MODREQ_TYPE_OPT, "modreq-type-opt.conf",
+			   "mod_opt_t");
 	/* attributes */
-	do_deps_modreq_opt(1, 0, BASE_MODREQ_ATTR_OPT, "modreq-attr-opt.conf", "mod_opt_t");
-	do_deps_modreq_opt(0, 0, BASE_MODREQ_ATTR_OPT, "modreq-attr-opt.conf", "mod_opt_t");
+	do_deps_modreq_opt(1, 0, BASE_MODREQ_ATTR_OPT, "modreq-attr-opt.conf",
+			   "mod_opt_t");
+	do_deps_modreq_opt(0, 0, BASE_MODREQ_ATTR_OPT, "modreq-attr-opt.conf",
+			   "mod_opt_t");
 	/* booleans */
-	do_deps_modreq_opt(1, 0, BASE_MODREQ_BOOL_OPT, "modreq-bool-opt.conf", "mod_opt_t");
-	do_deps_modreq_opt(0, 0, BASE_MODREQ_BOOL_OPT, "modreq-bool-opt.conf", "mod_opt_t");
+	do_deps_modreq_opt(1, 0, BASE_MODREQ_BOOL_OPT, "modreq-bool-opt.conf",
+			   "mod_opt_t");
+	do_deps_modreq_opt(0, 0, BASE_MODREQ_BOOL_OPT, "modreq-bool-opt.conf",
+			   "mod_opt_t");
 	/* roles */
-	do_deps_modreq_opt(1, 0, BASE_MODREQ_ROLE_OPT, "modreq-role-opt.conf", "mod_opt_t");
-	do_deps_modreq_opt(0, 0, BASE_MODREQ_ROLE_OPT, "modreq-role-opt.conf", "mod_opt_t");
+	do_deps_modreq_opt(1, 0, BASE_MODREQ_ROLE_OPT, "modreq-role-opt.conf",
+			   "mod_opt_t");
+	do_deps_modreq_opt(0, 0, BASE_MODREQ_ROLE_OPT, "modreq-role-opt.conf",
+			   "mod_opt_t");
 	/* permissions */
-	do_deps_modreq_opt(1, 0, BASE_MODREQ_PERM_OPT, "modreq-perm-opt.conf", "mod_opt_t");
-	do_deps_modreq_opt(0, -3, BASE_MODREQ_PERM_OPT, "modreq-perm-opt.conf", "mod_opt_t");
+	do_deps_modreq_opt(1, 0, BASE_MODREQ_PERM_OPT, "modreq-perm-opt.conf",
+			   "mod_opt_t");
+	do_deps_modreq_opt(0, -3, BASE_MODREQ_PERM_OPT, "modreq-perm-opt.conf",
+			   "mod_opt_t");
 }
 
 int deps_add_tests(CU_pSuite suite)
 {
-	if (NULL == CU_add_test(suite, "deps_modreq_global", deps_modreq_global)) {
+	if (NULL ==
+	    CU_add_test(suite, "deps_modreq_global", deps_modreq_global)) {
 		return CU_get_error();
 	}
 

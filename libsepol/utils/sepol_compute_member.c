@@ -6,7 +6,6 @@
 #include <sepol/policydb/services.h>
 #include <sepol/sepol.h>
 
-
 int main(int argc, char *argv[])
 {
 	FILE *fp;
@@ -22,11 +21,13 @@ int main(int argc, char *argv[])
 
 	fp = fopen(argv[1], "r");
 	if (!fp) {
-		fprintf(stderr, "Can't open policy %s:  %s\n", argv[1], strerror(errno));
+		fprintf(stderr, "Can't open policy %s:  %s\n", argv[1],
+			strerror(errno));
 		return 1;
 	}
 	if (sepol_set_policydb_from_file(fp) < 0) {
-		fprintf(stderr, "Error while processing policy %s:  %s\n", argv[1], strerror(errno));
+		fprintf(stderr, "Error while processing policy %s:  %s\n",
+			argv[1], strerror(errno));
 		fclose(fp);
 		return 1;
 	}
@@ -48,12 +49,14 @@ int main(int argc, char *argv[])
 	}
 
 	if (sepol_member_sid(ssid, tsid, tclass, &out_sid) < 0) {
-		fprintf(stderr, "Failed to compute member sid:  %s\n", strerror(errno));
+		fprintf(stderr, "Failed to compute member sid:  %s\n",
+			strerror(errno));
 		return 1;
 	}
 
 	if (sepol_sid_to_context(out_sid, &context, &context_len) < 0) {
-		fprintf(stderr, "Failed to convert sid %u:  %s\n", out_sid, strerror(errno));
+		fprintf(stderr, "Failed to convert sid %u:  %s\n", out_sid,
+			strerror(errno));
 		return 1;
 	}
 

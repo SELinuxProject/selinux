@@ -35,7 +35,6 @@
 #define IFACE3_IFCON "system_u:object_r:third_netif_t:s0"
 #define IFACE3_MSGCON IFACE3_IFCON
 
-
 /* iface_record.h */
 static void test_iface_compare(void);
 static void test_iface_compare2(void);
@@ -105,7 +104,7 @@ int iface_add_tests(CU_pSuite suite)
 	CU_add_test(suite, "iface_list", test_iface_list);
 
 	CU_add_test(suite, "iface_modify_del_query_local",
-				test_iface_modify_del_query_local);
+		    test_iface_modify_del_query_local);
 	CU_add_test(suite, "iface_exists_local", test_iface_exists_local);
 	CU_add_test(suite, "iface_count_local", test_iface_count_local);
 	CU_add_test(suite, "iface_iterate_local", test_iface_iterate_local);
@@ -129,12 +128,12 @@ static semanage_iface_t *get_iface_nth(int idx)
 	res = semanage_iface_list(sh, &records, &count);
 
 	CU_ASSERT_FATAL(res >= 0);
-	CU_ASSERT_FATAL(count >= (unsigned int) idx + 1);
+	CU_ASSERT_FATAL(count >= (unsigned int)idx + 1);
 
 	iface = records[idx];
 
 	for (unsigned int i = 0; i < count; i++)
-		if (i != (unsigned int) idx)
+		if (i != (unsigned int)idx)
 			semanage_iface_free(records[i]);
 
 	free(records);
@@ -310,8 +309,8 @@ static void test_iface_get_set_ifcon(void)
 	/* setup */
 	setup_handle(SH_CONNECT);
 	iface = get_iface_nth(I_FIRST);
-	CU_ASSERT(semanage_context_from_string(sh,
-			       "my_user_u:my_role_r:my_type_t:s0", &con1) >= 0);
+	CU_ASSERT(semanage_context_from_string(
+			  sh, "my_user_u:my_role_r:my_type_t:s0", &con1) >= 0);
 
 	/* test */
 	CU_ASSERT(semanage_iface_set_ifcon(sh, iface, con1) == 0);
@@ -334,8 +333,8 @@ static void test_iface_get_set_msgcon(void)
 	/* setup */
 	setup_handle(SH_CONNECT);
 	iface = get_iface_nth(I_FIRST);
-	CU_ASSERT(semanage_context_from_string(sh,
-			       "my_user_u:my_role_r:my_type_t:s0", &con1) >= 0);
+	CU_ASSERT(semanage_context_from_string(
+			  sh, "my_user_u:my_role_r:my_type_t:s0", &con1) >= 0);
 
 	/* test */
 	CU_ASSERT(semanage_iface_set_msgcon(sh, iface, con1) == 0);
@@ -392,8 +391,8 @@ static void test_iface_clone(void)
 	CU_ASSERT(semanage_context_from_string(sh, "user_u:role_r:if_type_t:s0",
 					       &ifcon) >= 0);
 	CU_ASSERT(semanage_iface_set_ifcon(sh, iface, ifcon) >= 0);
-	CU_ASSERT(semanage_context_from_string(sh, "user_u:role_r:msg_type_t:s0",
-					       &msgcon) >= 0);
+	CU_ASSERT(semanage_context_from_string(
+			  sh, "user_u:role_r:msg_type_t:s0", &msgcon) >= 0);
 	CU_ASSERT(semanage_iface_set_msgcon(sh, iface, msgcon) >= 0);
 
 	/* test */
@@ -431,7 +430,7 @@ static void test_iface_query(void)
 	/* test */
 	CU_ASSERT(semanage_iface_query(sh, key, &iface) >= 0);
 	CU_ASSERT_STRING_EQUAL(semanage_iface_get_name(iface),
-		semanage_iface_get_name(iface_exp));
+			       semanage_iface_get_name(iface_exp));
 
 	con = semanage_iface_get_ifcon(iface);
 	con_exp = semanage_iface_get_ifcon(iface_exp);
@@ -492,7 +491,8 @@ static void test_iface_count(void)
 
 static unsigned int counter_iface_iterate = 0;
 
-static int handler_iface_iterate(__attribute__((unused)) const semanage_iface_t *record,
+static int handler_iface_iterate(__attribute__((unused))
+				 const semanage_iface_t *record,
 				 __attribute__((unused)) void *varg)
 {
 	counter_iface_iterate++;
@@ -633,7 +633,8 @@ static void test_iface_count_local(void)
 /* Function semanage_iface_iterate_local */
 static unsigned int counter_iface_iterate_local = 0;
 
-static int handler_iface_iterate_local(__attribute__((unused)) const semanage_iface_t *record,
+static int handler_iface_iterate_local(__attribute__((unused))
+				       const semanage_iface_t *record,
 				       __attribute__((unused)) void *varg)
 {
 	counter_iface_iterate_local++;

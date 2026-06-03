@@ -6,7 +6,6 @@
 #include <sepol/policydb/services.h>
 #include <sepol/sepol.h>
 
-
 int main(int argc, char *argv[])
 {
 	FILE *fp;
@@ -22,11 +21,13 @@ int main(int argc, char *argv[])
 
 	fp = fopen(argv[1], "r");
 	if (!fp) {
-		fprintf(stderr, "Can't open policy %s:  %s\n", argv[1], strerror(errno));
+		fprintf(stderr, "Can't open policy %s:  %s\n", argv[1],
+			strerror(errno));
 		return 1;
 	}
 	if (sepol_set_policydb_from_file(fp) < 0) {
-		fprintf(stderr, "Error while processing policy %s:  %s\n", argv[1], strerror(errno));
+		fprintf(stderr, "Error while processing policy %s:  %s\n",
+			argv[1], strerror(errno));
 		fclose(fp);
 		return 1;
 	}
@@ -50,10 +51,14 @@ int main(int argc, char *argv[])
 	rc = sepol_compute_av(ssid, tsid, tclass, 0, &avd);
 	switch (rc) {
 	case 0:
-		printf("allowed:    %s\n", sepol_av_perm_to_string(tclass, avd.allowed));
-		printf("decided:    %s\n", sepol_av_perm_to_string(tclass, avd.decided));
-		printf("auditallow: %s\n", sepol_av_perm_to_string(tclass, avd.auditallow));
-		printf("auditdeny:  %s\n", sepol_av_perm_to_string(tclass, avd.auditdeny));
+		printf("allowed:    %s\n",
+		       sepol_av_perm_to_string(tclass, avd.allowed));
+		printf("decided:    %s\n",
+		       sepol_av_perm_to_string(tclass, avd.decided));
+		printf("auditallow: %s\n",
+		       sepol_av_perm_to_string(tclass, avd.auditallow));
+		printf("auditdeny:  %s\n",
+		       sepol_av_perm_to_string(tclass, avd.auditdeny));
 		break;
 	case -EINVAL:
 		printf("Invalid request\n");

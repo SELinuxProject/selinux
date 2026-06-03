@@ -40,17 +40,18 @@
 #include <getopt.h>
 #include <stdlib.h>
 
-#define DECLARE_SUITE(name) \
-	do { \
-		suite = CU_add_suite(#name, name##_test_init, name##_test_cleanup); \
-		if (NULL == suite) { \
-			CU_cleanup_registry(); \
-			return CU_get_error(); \
-		} \
-		if (name##_add_tests(suite)) { \
-			CU_cleanup_registry(); \
-			return CU_get_error(); \
-		} \
+#define DECLARE_SUITE(name)                                   \
+	do {                                                  \
+		suite = CU_add_suite(#name, name##_test_init, \
+				     name##_test_cleanup);    \
+		if (NULL == suite) {                          \
+			CU_cleanup_registry();                \
+			return CU_get_error();                \
+		}                                             \
+		if (name##_add_tests(suite)) {                \
+			CU_cleanup_registry();                \
+			return CU_get_error();                \
+		}                                             \
 	} while (0)
 
 static void usage(char *progname)
@@ -94,7 +95,6 @@ static bool do_tests(int interactive, int verbose)
 	num_failures = CU_get_number_of_tests_failed();
 	CU_cleanup_registry();
 	return CU_get_error() == CUE_SUCCESS && num_failures == 0;
-
 }
 
 /* The main function for setting up and running the libsemanage unit tests.
@@ -104,11 +104,9 @@ int main(int argc, char **argv)
 {
 	int i, verbose = 1, interactive = 0;
 
-	struct option opts[] = {
-		{"verbose", 0, NULL, 'v'},
-		{"interactive", 0, NULL, 'i'},
-		{NULL, 0, NULL, 0}
-	};
+	struct option opts[] = { { "verbose", 0, NULL, 'v' },
+				 { "interactive", 0, NULL, 'i' },
+				 { NULL, 0, NULL, 0 } };
 
 	while ((i = getopt_long(argc, argv, "vi", opts, NULL)) != -1) {
 		switch (i) {
@@ -119,10 +117,10 @@ int main(int argc, char **argv)
 			interactive = 1;
 			break;
 		case 'h':
-		default:{
-				usage(argv[0]);
-				exit(1);
-			}
+		default: {
+			usage(argv[0]);
+			exit(1);
+		}
 		}
 	}
 

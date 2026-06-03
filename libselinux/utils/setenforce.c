@@ -7,7 +7,7 @@
 #include <errno.h>
 #include <selinux/selinux.h>
 
-static __attribute__ ((__noreturn__)) void usage(const char *progname)
+static __attribute__((__noreturn__)) void usage(const char *progname)
 {
 	fprintf(stderr, "usage:  %s [ Enforcing | Permissive | 1 | 0 ]\n",
 		progname);
@@ -36,7 +36,8 @@ int main(int argc, char **argv)
 			usage(argv[0]);
 	}
 	if (rc < 0) {
-		fprintf(stderr, "%s:  security_setenforce() failed:  %s\n", argv[0], strerror(errno));
+		fprintf(stderr, "%s:  security_setenforce() failed:  %s\n",
+			argv[0], strerror(errno));
 		return 2;
 	}
 	return 0;

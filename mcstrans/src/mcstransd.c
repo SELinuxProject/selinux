@@ -22,27 +22,29 @@
 
 #ifdef UNUSED
 #elif defined(__GNUC__)
-# define UNUSED(x) UNUSED_ ## x __attribute__((unused))
+#define UNUSED(x) UNUSED_##x __attribute__((unused))
 #elif defined(__LCLINT__)
-# define UNUSED(x) /*@unused@*/ x
+#define UNUSED(x) /*@unused@*/ x
 #else
-# define UNUSED(x) x
+#define UNUSED(x) x
 #endif
 
 #define SETRANS_UNIX_SOCKET "/var/run/setrans/.setrans-unix"
 
-#define SETRANS_INIT			1
-#define RAW_TO_TRANS_CONTEXT		2
-#define TRANS_TO_RAW_CONTEXT		3
-#define RAW_CONTEXT_TO_COLOR		4
-#define MAX_DATA_BUF			4096
-#define MAX_DESCRIPTORS			8192
+#define SETRANS_INIT 1
+#define RAW_TO_TRANS_CONTEXT 2
+#define TRANS_TO_RAW_CONTEXT 3
+#define RAW_CONTEXT_TO_COLOR 4
+#define MAX_DATA_BUF 4096
+#define MAX_DESCRIPTORS 8192
 
 #ifdef DEBUG
 //#define log_debug(fmt, ...) syslog(LOG_DEBUG, fmt, __VA_ARGS__)
 #define log_debug(fmt, ...) fprintf(stderr, fmt, __VA_ARGS__)
 #else
-#define log_debug(fmt, ...) do {} while (0)
+#define log_debug(fmt, ...) \
+	do {                \
+	} while (0)
 #endif
 
 #define SETRANSD_PATHNAME "/sbin/mcstransd"
@@ -50,16 +52,15 @@
 /* name of program (for error messages) */
 #define SETRANSD_PROGNAME "mcstransd"
 
-static int sockfd = -1;	/* socket we are listening on */
+static int sockfd = -1; /* socket we are listening on */
 
 static volatile int restart_daemon = 0;
-static void cleanup_exit(int ret) __attribute__ ((noreturn));
-static void
-cleanup_exit(int ret) 
+static void cleanup_exit(int ret) __attribute__((noreturn));
+static void cleanup_exit(int ret)
 {
 	finish_context_colors();
 	finish_context_translations();
-	if (sockfd >=0)
+	if (sockfd >= 0)
 		(void)unlink(SETRANS_UNIX_SOCKET);
 
 	log_debug("%s\n", "cleanup_exit");
@@ -68,14 +69,13 @@ cleanup_exit(int ret)
 }
 
 static void clean_exit(void);
-static  __attribute__((noreturn)) void clean_exit(void)
+static __attribute__((noreturn)) void clean_exit(void)
 {
 	log_debug("%s\n", "clean_exit");
 	cleanup_exit(0);
 }
 
-static int
-send_response(int fd, uint32_t function, char *data, int32_t ret_val)
+static int send_response(int fd, uint32_t function, char *data, int32_t ret_val)
 {
 	struct iovec resp_hdr[3];
 	uint32_t data_size;
@@ -94,7 +94,8 @@ send_response(int fd, uint32_t function, char *data, int32_t ret_val)
 	resp_hdr[2].iov_base = &ret_val;
 	resp_hdr[2].iov_len = sizeof(ret_val);
 
-	while (((count = writev(fd, resp_hdr, 3)) < 0) && (errno == EINTR));
+	while (((count = writev(fd, resp_hdr, 3)) < 0) && (errno == EINTR))
+		;
 	if (count != (sizeof(function) + sizeof(data_size) + sizeof(ret_val))) {
 		syslog(LOG_ERR, "Failed to write response header");
 		return -1;
@@ -103,7 +104,8 @@ send_response(int fd, uint32_t function, char *data, int32_t ret_val)
 	resp_data.iov_base = data;
 	resp_data.iov_len = data_size;
 
-	while (((count = writev(fd, &resp_data, 1)) < 0) && (errno == EINTR));
+	while (((count = writev(fd, &resp_data, 1)) < 0) && (errno == EINTR))
+		;
 	if (count < 0 || (size_t)count != data_size) {
 		syslog(LOG_ERR, "Failed to write response data");
 		return -1;
@@ -112,8 +114,7 @@ send_response(int fd, uint32_t function, char *data, int32_t ret_val)
 	return ret_val;
 }
 
-static int
-get_peer_pid(int fd, pid_t *pid)
+static int get_peer_pid(int fd, pid_t *pid)
 {
 	int ret;
 	socklen_t size = sizeof(struct ucred);
@@ -129,9 +130,8 @@ get_peer_pid(int fd, pid_t *pid)
 	return ret;
 }
 
-
-static int
-process_request(int fd, uint32_t function, char *data1, char *UNUSED(data2))
+static int process_request(int fd, uint32_t function, char *data1,
+			   char *UNUSED(data2))
 {
 	int32_t result;
 	char *out = NULL;
@@ -163,8 +163,8 @@ process_request(int fd, uint32_t function, char *data1, char *UNUSED(data2))
 	if (result) {
 		pid_t pid = 0;
 		get_peer_pid(fd, &pid);
-		syslog(LOG_ERR, "Invalid request func=%d from=%u",
-		       function, pid);
+		syslog(LOG_ERR, "Invalid request func=%d from=%u", function,
+		       pid);
 	}
 
 	free(out);
@@ -172,8 +172,7 @@ process_request(int fd, uint32_t function, char *data1, char *UNUSED(data2))
 	return ret;
 }
 
-static int
-service_request(int fd)
+static int service_request(int fd)
 {
 	struct iovec req_hdr[3];
 	uint32_t function;
@@ -192,29 +191,31 @@ service_request(int fd)
 	req_hdr[2].iov_base = &data2_size;
 	req_hdr[2].iov_len = sizeof(data2_size);
 
-	while (((count = readv(fd, req_hdr, 3)) < 0) && (errno == EINTR));
+	while (((count = readv(fd, req_hdr, 3)) < 0) && (errno == EINTR))
+		;
 	if (count <= 0) {
 		return 1;
 	}
-	if (count != (sizeof(function) + sizeof(data1_size) +
-	              sizeof(data2_size) )) {
-		log_debug("Failed to read request header %d != %u\n",(int)count,
-			(unsigned)(sizeof(function) + sizeof(data1_size) +
-                      sizeof(data2_size) ));
+	if (count !=
+	    (sizeof(function) + sizeof(data1_size) + sizeof(data2_size))) {
+		log_debug("Failed to read request header %d != %u\n",
+			  (int)count,
+			  (unsigned)(sizeof(function) + sizeof(data1_size) +
+				     sizeof(data2_size)));
 		return -1;
 	}
 
 	if (!data1_size || !data2_size || data1_size > MAX_DATA_BUF ||
-						data2_size > MAX_DATA_BUF ) {
+	    data2_size > MAX_DATA_BUF) {
 		log_debug("Header invalid data1_size=%u data2_size=%u\n",
-		        data1_size, data2_size);
+			  data1_size, data2_size);
 		return -1;
 	}
 
 	data1 = malloc(data1_size);
 	if (!data1) {
 		log_debug("Could not allocate %d bytes\n", data1_size);
-		return -1; 
+		return -1;
 	}
 	data2 = malloc(data2_size);
 	if (!data2) {
@@ -228,7 +229,8 @@ service_request(int fd)
 	req_data[1].iov_base = data2;
 	req_data[1].iov_len = data2_size;
 
-	while (((count = readv(fd, req_data, 2)) < 0) && (errno == EINTR));
+	while (((count = readv(fd, req_data, 2)) < 0) && (errno == EINTR))
+		;
 	if (count <= 0 || (size_t)count != (data1_size + data2_size) ||
 	    data1[data1_size - 1] != '\0' || data2[data2_size - 1] != '\0') {
 		free(data1);
@@ -245,8 +247,7 @@ service_request(int fd)
 	return ret;
 }
 
-static int
-add_pollfd(struct pollfd **ufds, int *nfds, int connfd)
+static int add_pollfd(struct pollfd **ufds, int *nfds, int connfd)
 {
 	int ii = 0;
 
@@ -257,10 +258,10 @@ add_pollfd(struct pollfd **ufds, int *nfds, int connfd)
 	}
 
 	if (ii == *nfds) {
-		struct pollfd *tmp = (struct pollfd *)realloc(*ufds,
-					(*nfds+1)*sizeof(struct pollfd));
+		struct pollfd *tmp = (struct pollfd *)realloc(
+			*ufds, (*nfds + 1) * sizeof(struct pollfd));
 		if (!tmp) {
-			syslog(LOG_ERR, "realloc failed for %d fds", *nfds+1);
+			syslog(LOG_ERR, "realloc failed for %d fds", *nfds + 1);
 			return -1;
 		}
 
@@ -269,14 +270,13 @@ add_pollfd(struct pollfd **ufds, int *nfds, int connfd)
 	}
 
 	(*ufds)[ii].fd = connfd;
-	(*ufds)[ii].events = POLLIN|POLLPRI;
+	(*ufds)[ii].events = POLLIN | POLLPRI;
 	(*ufds)[ii].revents = 0;
 
 	return 0;
 }
 
-static void
-adj_pollfds(struct pollfd **ufds, int *nfds)
+static void adj_pollfds(struct pollfd **ufds, int *nfds)
 {
 	int ii, jj;
 
@@ -291,8 +291,7 @@ adj_pollfds(struct pollfd **ufds, int *nfds)
 	*nfds = jj;
 }
 
-static int
-process_events(struct pollfd **ufds, int *nfds)
+static int process_events(struct pollfd **ufds, int *nfds)
 {
 	int ii = 0;
 	int ret = 0;
@@ -303,7 +302,6 @@ process_events(struct pollfd **ufds, int *nfds)
 
 		if (revents & (POLLIN | POLLPRI)) {
 			if (connfd == sockfd) {
-
 				/* Probably received a connection */
 				if ((connfd = accept(sockfd, NULL, NULL)) < 0) {
 					syslog(LOG_ERR, "accept() failed: %m");
@@ -312,8 +310,8 @@ process_events(struct pollfd **ufds, int *nfds)
 
 				if (add_pollfd(ufds, nfds, connfd)) {
 					syslog(LOG_ERR,
-					  "Failed to add fd (%d) to poll list\n",
-						connfd);
+					       "Failed to add fd (%d) to poll list\n",
+					       connfd);
 					close(connfd);
 					continue;
 				}
@@ -322,9 +320,9 @@ process_events(struct pollfd **ufds, int *nfds)
 				if (ret) {
 					if (ret < 0) {
 						syslog(LOG_ERR,
-							"Servicing of request "
-							"failed for fd (%d)\n",
-							connfd);
+						       "Servicing of request "
+						       "failed for fd (%d)\n",
+						       connfd);
 					}
 					/* Setup pollfd for deletion later. */
 					(*ufds)[ii].fd = -1;
@@ -338,7 +336,7 @@ process_events(struct pollfd **ufds, int *nfds)
 		}
 		if (revents & POLLHUP) {
 			log_debug("The connection with fd (%d) hung up\n",
-				connfd);
+				  connfd);
 
 			/* Set the pollfd up for deletion later. */
 			(*ufds)[ii].fd = -1;
@@ -348,8 +346,10 @@ process_events(struct pollfd **ufds, int *nfds)
 			revents = revents & ~(POLLHUP);
 		}
 		if (revents && connfd != -1) {
-			syslog(LOG_ERR, "Unknown/error events (%x) encountered"
-					" for fd (%d)\n", revents, connfd);
+			syslog(LOG_ERR,
+			       "Unknown/error events (%x) encountered"
+			       " for fd (%d)\n",
+			       revents, connfd);
 
 			/* Set the pollfd up for deletion later. */
 			(*ufds)[ii].fd = -1;
@@ -365,11 +365,9 @@ process_events(struct pollfd **ufds, int *nfds)
 	return 0;
 }
 
-static void
-process_connections(void) __attribute__ ((noreturn));
+static void process_connections(void) __attribute__((noreturn));
 
-static void
-process_connections(void)
+static void process_connections(void)
 {
 	int ret = 0;
 	int nfds = 1;
@@ -380,7 +378,7 @@ process_connections(void)
 		cleanup_exit(1);
 	}
 	ufds[0].fd = sockfd;
-	ufds[0].events = POLLIN|POLLPRI;
+	ufds[0].events = POLLIN | POLLPRI;
 	ufds[0].revents = 0;
 
 	while (1) {
@@ -389,12 +387,15 @@ process_connections(void)
 			finish_context_colors();
 			finish_context_translations();
 			if (init_translations()) {
-				syslog(LOG_ERR, "Failed to initialize label translations");
+				syslog(LOG_ERR,
+				       "Failed to initialize label translations");
 				cleanup_exit(1);
 			}
 			if (init_colors()) {
-				syslog(LOG_ERR, "Failed to initialize color translations");
-				syslog(LOG_ERR, "No color information will be available");
+				syslog(LOG_ERR,
+				       "Failed to initialize color translations");
+				syslog(LOG_ERR,
+				       "No color information will be available");
 			}
 			restart_daemon = 0;
 		}
@@ -416,27 +417,23 @@ process_connections(void)
 	}
 }
 
-static void
-sigterm_handler(int sig) __attribute__ ((noreturn));
+static void sigterm_handler(int sig) __attribute__((noreturn));
 
-static void
-sigterm_handler(int UNUSED(sig))
+static void sigterm_handler(int UNUSED(sig))
 {
 	cleanup_exit(0);
 }
 
-static void
-sighup_handler(int UNUSED(sig))
+static void sighup_handler(int UNUSED(sig))
 {
 	restart_daemon = 1;
 }
 
-static void
-initialize(void)
+static void initialize(void)
 {
 	struct sigaction act;
 	struct sockaddr_un addr;
-	struct rlimit rl ;
+	struct rlimit rl;
 
 	if (init_translations()) {
 		syslog(LOG_ERR, "Failed to initialize label translations");
@@ -477,7 +474,7 @@ initialize(void)
 	atexit(clean_exit);
 
 	sockfd = socket(PF_UNIX, SOCK_STREAM, 0);
-	if (sockfd < 0)	{
+	if (sockfd < 0) {
 		syslog(LOG_ERR, "socket() failed: %m");
 		cleanup_exit(1);
 	}
@@ -507,7 +504,6 @@ initialize(void)
 	rl.rlim_max = MAX_DESCRIPTORS;
 	rl.rlim_cur = MAX_DESCRIPTORS;
 	setrlimit(RLIMIT_NOFILE, &rl);
-
 }
 
 static void dropprivs(void)
@@ -517,7 +513,7 @@ static void dropprivs(void)
 	new_caps = cap_init();
 	if (cap_set_proc(new_caps)) {
 		syslog(LOG_ERR, "Error dropping capabilities, aborting: %s\n",
-			 strerror(errno));
+		       strerror(errno));
 		cleanup_exit(-1);
 	}
 	cap_free(new_caps);
@@ -528,8 +524,7 @@ static void usage(char *program)
 	printf("%s [-f] [-h] \n", program);
 }
 
-int
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
 	int opt;
 	int do_fork = 1;
@@ -577,4 +572,3 @@ main(int argc, char *argv[])
 	/* we should never get here */
 	return 1;
 }
-

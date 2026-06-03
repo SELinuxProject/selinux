@@ -5,7 +5,7 @@
 #include "get_default_type_internal.h"
 #include <errno.h>
 
-static int find_default_type(FILE * fp, const char *role, char **type);
+static int find_default_type(FILE *fp, const char *role, char **type);
 
 int get_default_type(const char *role, char **type)
 {
@@ -24,7 +24,7 @@ int get_default_type(const char *role, char **type)
 	return 0;
 }
 
-static int find_default_type(FILE * fp, const char *role, char **type)
+static int find_default_type(FILE *fp, const char *role, char **type)
 {
 	char buf[250];
 	const char *ptr = "", *end;

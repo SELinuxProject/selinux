@@ -17,14 +17,13 @@
 #include "flask.h"
 #include "private.h"
 
-#define SIDTAB_HASH(sid) \
-(sid & SIDTAB_HASH_MASK)
+#define SIDTAB_HASH(sid) (sid & SIDTAB_HASH_MASK)
 
 #define INIT_SIDTAB_LOCK(s)
 #define SIDTAB_LOCK(s)
 #define SIDTAB_UNLOCK(s)
 
-int sepol_sidtab_init(sidtab_t * s)
+int sepol_sidtab_init(sidtab_t *s)
 {
 	s->htable = calloc(SIDTAB_SIZE, sizeof(sidtab_ptr_t));
 	if (!s->htable)
@@ -36,8 +35,8 @@ int sepol_sidtab_init(sidtab_t * s)
 	return 0;
 }
 
-int sepol_sidtab_insert(sidtab_t * s, sepol_security_id_t sid,
-			context_struct_t * context)
+int sepol_sidtab_insert(sidtab_t *s, sepol_security_id_t sid,
+			context_struct_t *context)
 {
 	int hvalue;
 	sidtab_node_t *prev, *cur, *newnode;
@@ -58,7 +57,7 @@ int sepol_sidtab_insert(sidtab_t * s, sepol_security_id_t sid,
 		return -EEXIST;
 	}
 
-	newnode = (sidtab_node_t *) malloc(sizeof(sidtab_node_t));
+	newnode = (sidtab_node_t *)malloc(sizeof(sidtab_node_t));
 	if (newnode == NULL)
 		return -ENOMEM;
 	newnode->sid = sid;
@@ -81,7 +80,7 @@ int sepol_sidtab_insert(sidtab_t * s, sepol_security_id_t sid,
 	return 0;
 }
 
-context_struct_t *sepol_sidtab_search(sidtab_t * s, sepol_security_id_t sid)
+context_struct_t *sepol_sidtab_search(sidtab_t *s, sepol_security_id_t sid)
 {
 	int hvalue;
 	sidtab_node_t *cur;
@@ -108,10 +107,10 @@ context_struct_t *sepol_sidtab_search(sidtab_t * s, sepol_security_id_t sid)
 	return &cur->context;
 }
 
-int sepol_sidtab_map(sidtab_t * s,
-		     int (*apply) (sepol_security_id_t sid,
-				   context_struct_t * context,
-				   void *args), void *args)
+int sepol_sidtab_map(sidtab_t *s,
+		     int (*apply)(sepol_security_id_t sid,
+				  context_struct_t *context, void *args),
+		     void *args)
 {
 	int i, ret;
 	sidtab_node_t *cur;
@@ -131,10 +130,11 @@ int sepol_sidtab_map(sidtab_t * s,
 	return 0;
 }
 
-void sepol_sidtab_map_remove_on_error(sidtab_t * s,
-				      int (*apply) (sepol_security_id_t sid,
-						    context_struct_t * context,
-						    void *args), void *args)
+void sepol_sidtab_map_remove_on_error(sidtab_t *s,
+				      int (*apply)(sepol_security_id_t sid,
+						   context_struct_t *context,
+						   void *args),
+				      void *args)
 {
 	int i, ret;
 	sidtab_node_t *last, *cur, *temp;
@@ -169,9 +169,8 @@ void sepol_sidtab_map_remove_on_error(sidtab_t * s,
 	return;
 }
 
-static inline sepol_security_id_t sepol_sidtab_search_context(sidtab_t * s,
-							      context_struct_t *
-							      context)
+static inline sepol_security_id_t
+sepol_sidtab_search_context(sidtab_t *s, context_struct_t *context)
 {
 	int i;
 	sidtab_node_t *cur;
@@ -187,9 +186,8 @@ static inline sepol_security_id_t sepol_sidtab_search_context(sidtab_t * s,
 	return 0;
 }
 
-int sepol_sidtab_context_to_sid(sidtab_t * s,
-				context_struct_t * context,
-				sepol_security_id_t * out_sid)
+int sepol_sidtab_context_to_sid(sidtab_t *s, context_struct_t *context,
+				sepol_security_id_t *out_sid)
 {
 	sepol_security_id_t sid;
 	int ret = 0;
@@ -212,7 +210,7 @@ int sepol_sidtab_context_to_sid(sidtab_t * s,
 		ret = sepol_sidtab_insert(s, sid, context);
 		if (ret)
 			s->next_sid--;
-	      unlock_out:
+unlock_out:
 		SIDTAB_UNLOCK(s);
 	}
 
@@ -223,7 +221,7 @@ int sepol_sidtab_context_to_sid(sidtab_t * s,
 	return 0;
 }
 
-void sepol_sidtab_hash_eval(sidtab_t * h, char *tag)
+void sepol_sidtab_hash_eval(sidtab_t *h, char *tag)
 {
 	int i, chain_len, slots_used, max_chain_len;
 	sidtab_node_t *cur;
@@ -245,12 +243,11 @@ void sepol_sidtab_hash_eval(sidtab_t * h, char *tag)
 		}
 	}
 
-	printf
-	    ("%s:  %d entries and %d/%d buckets used, longest chain length %d\n",
-	     tag, h->nel, slots_used, SIDTAB_SIZE, max_chain_len);
+	printf("%s:  %d entries and %d/%d buckets used, longest chain length %d\n",
+	       tag, h->nel, slots_used, SIDTAB_SIZE, max_chain_len);
 }
 
-void sepol_sidtab_destroy(sidtab_t * s)
+void sepol_sidtab_destroy(sidtab_t *s)
 {
 	int i;
 	sidtab_ptr_t cur, temp;
@@ -274,7 +271,7 @@ void sepol_sidtab_destroy(sidtab_t * s)
 	s->next_sid = 1;
 }
 
-void sepol_sidtab_set(sidtab_t * dst, sidtab_t * src)
+void sepol_sidtab_set(sidtab_t *dst, sidtab_t *src)
 {
 	SIDTAB_LOCK(src);
 	dst->htable = src->htable;
@@ -284,7 +281,7 @@ void sepol_sidtab_set(sidtab_t * dst, sidtab_t * src)
 	SIDTAB_UNLOCK(src);
 }
 
-void sepol_sidtab_shutdown(sidtab_t * s)
+void sepol_sidtab_shutdown(sidtab_t *s)
 {
 	SIDTAB_LOCK(s);
 	s->shutdown = 1;

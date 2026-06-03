@@ -5,14 +5,13 @@
 #include <sepol/policydb.h>
 #include <sepol/ibpkey_record.h>
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Return the number of ibpkeys */
-extern int sepol_ibpkey_count(sepol_handle_t *handle,
-			      const sepol_policydb_t *p, unsigned int *response);
+extern int sepol_ibpkey_count(sepol_handle_t *handle, const sepol_policydb_t *p,
+			      unsigned int *response);
 
 /* Check if a ibpkey exists */
 extern int sepol_ibpkey_exists(sepol_handle_t *handle,
@@ -37,11 +36,10 @@ extern int sepol_ibpkey_modify(sepol_handle_t *handle,
  * 1 to signal successful exit
  * 0 to signal continue
  */
-extern int sepol_ibpkey_iterate(sepol_handle_t *handle,
-				const sepol_policydb_t *policydb,
-				int (*fn)(const sepol_ibpkey_t *ibpkey,
-					  void *fn_arg), void *arg);
-
+extern int
+sepol_ibpkey_iterate(sepol_handle_t *handle, const sepol_policydb_t *policydb,
+		     int (*fn)(const sepol_ibpkey_t *ibpkey, void *fn_arg),
+		     void *arg);
 
 #ifdef __cplusplus
 }

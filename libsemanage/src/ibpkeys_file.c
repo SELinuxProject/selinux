@@ -29,7 +29,8 @@ static int ibpkey_print(semanage_handle_t *handle,
 	int low = semanage_ibpkey_get_low(ibpkey);
 	int high = semanage_ibpkey_get_high(ibpkey);
 
-	if (semanage_ibpkey_get_subnet_prefix(handle, ibpkey, &subnet_prefix_str) != 0)
+	if (semanage_ibpkey_get_subnet_prefix(handle, ibpkey,
+					      &subnet_prefix_str) != 0)
 		goto err;
 
 	con = semanage_ibpkey_get_con(ibpkey);
@@ -62,8 +63,8 @@ err:
 	return STATUS_ERR;
 }
 
-static int ibpkey_parse(semanage_handle_t *handle,
-			parse_info_t *info, semanage_ibpkey_t *ibpkey)
+static int ibpkey_parse(semanage_handle_t *handle, parse_info_t *info,
+			semanage_ibpkey_t *ibpkey)
 {
 	int low, high;
 	char *str = NULL;
@@ -119,14 +120,14 @@ static int ibpkey_parse(semanage_handle_t *handle,
 	if (parse_fetch_string(handle, info, &str, ' ', 0) < 0)
 		goto err;
 	if (semanage_context_from_string(handle, str, &con) < 0) {
-		ERR(handle, "invalid security context \"%s\" (%s: %u)\n%s",
-		    str, info->filename, info->lineno, info->orig_line);
+		ERR(handle, "invalid security context \"%s\" (%s: %u)\n%s", str,
+		    info->filename, info->lineno, info->orig_line);
 		goto err;
 	}
 	if (!con) {
-		ERR(handle, "<<none>> context is not valid for ibpkeys (%s: %u):\n%s",
-		    info->filename,
-		    info->lineno, info->orig_line);
+		ERR(handle,
+		    "<<none>> context is not valid for ibpkeys (%s: %u):\n%s",
+		    info->filename, info->lineno, info->orig_line);
 		goto err;
 	}
 	free(str);
@@ -159,15 +160,10 @@ static const record_file_table_t SEMANAGE_IBPKEY_FILE_RTABLE = {
 	.print = ibpkey_print,
 };
 
-int ibpkey_file_dbase_init(semanage_handle_t *handle,
-			   const char *path_ro,
-			   const char *path_rw,
-			   dbase_config_t *dconfig)
+int ibpkey_file_dbase_init(semanage_handle_t *handle, const char *path_ro,
+			   const char *path_rw, dbase_config_t *dconfig)
 {
-	if (dbase_file_init(handle,
-			    path_ro,
-			    path_rw,
-			    &SEMANAGE_IBPKEY_RTABLE,
+	if (dbase_file_init(handle, path_ro, path_rw, &SEMANAGE_IBPKEY_RTABLE,
 			    &SEMANAGE_IBPKEY_FILE_RTABLE, &dconfig->dbase) < 0)
 		return STATUS_ERR;
 

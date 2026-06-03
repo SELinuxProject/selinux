@@ -20,10 +20,9 @@ typedef struct dbase_file dbase_t;
 #include "debug.h"
 #include "handle.h"
 
-static int user_extra_print(semanage_handle_t * handle,
-			    const semanage_user_extra_t * user_extra, FILE * str)
+static int user_extra_print(semanage_handle_t *handle,
+			    const semanage_user_extra_t *user_extra, FILE *str)
 {
-
 	const char *name = semanage_user_extra_get_name(user_extra);
 	const char *prefix = semanage_user_extra_get_prefix(user_extra);
 
@@ -32,17 +31,17 @@ static int user_extra_print(semanage_handle_t * handle,
 
 	return STATUS_SUCCESS;
 
-      err:
-	ERR(handle, "could not print user extra data "
-	    "for %s to stream", name);
+err:
+	ERR(handle,
+	    "could not print user extra data "
+	    "for %s to stream",
+	    name);
 	return STATUS_ERR;
 }
 
-static int user_extra_parse(semanage_handle_t * handle,
-			    parse_info_t * info,
-			    semanage_user_extra_t * user_extra)
+static int user_extra_parse(semanage_handle_t *handle, parse_info_t *info,
+			    semanage_user_extra_t *user_extra)
 {
-
 	char *str = NULL;
 
 	if (parse_skip_space(handle, info) < 0)
@@ -88,11 +87,11 @@ static int user_extra_parse(semanage_handle_t * handle,
 
 	return STATUS_SUCCESS;
 
-      last:
+last:
 	parse_dispose_line(info);
 	return STATUS_NODATA;
 
-      err:
+err:
 	ERR(handle, "could not parse user extra data");
 	free(str);
 	parse_dispose_line(info);
@@ -105,26 +104,19 @@ static const record_file_table_t SEMANAGE_USER_EXTRA_FILE_RTABLE = {
 	.print = user_extra_print,
 };
 
-int user_extra_file_dbase_init(semanage_handle_t * handle,
-			       const char *path_ro,
-			       const char *path_rw,
-			       dbase_config_t * dconfig)
+int user_extra_file_dbase_init(semanage_handle_t *handle, const char *path_ro,
+			       const char *path_rw, dbase_config_t *dconfig)
 {
-
-	if (dbase_file_init(handle,
-			    path_ro,
-			    path_rw,
-			    &SEMANAGE_USER_EXTRA_RTABLE,
-			    &SEMANAGE_USER_EXTRA_FILE_RTABLE,
-			    &dconfig->dbase) < 0)
+	if (dbase_file_init(
+		    handle, path_ro, path_rw, &SEMANAGE_USER_EXTRA_RTABLE,
+		    &SEMANAGE_USER_EXTRA_FILE_RTABLE, &dconfig->dbase) < 0)
 		return STATUS_ERR;
 
 	dconfig->dtable = &SEMANAGE_FILE_DTABLE;
 	return STATUS_SUCCESS;
 }
 
-void user_extra_file_dbase_release(dbase_config_t * dconfig)
+void user_extra_file_dbase_release(dbase_config_t *dconfig)
 {
-
 	dbase_file_release(dconfig->dbase);
 }

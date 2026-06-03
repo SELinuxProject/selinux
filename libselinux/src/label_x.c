@@ -21,10 +21,10 @@
 
 /* A context specification. */
 typedef struct spec {
-	struct selabel_lookup_rec lr;	/* holds contexts for lookup result */
-	char *key;		/* key string */
-	int type;		/* type of record (prop, ext, client) */
-	int matches;		/* number of matches made during operation */
+	struct selabel_lookup_rec lr; /* holds contexts for lookup result */
+	char *key; /* key string */
+	int type; /* type of record (prop, ext, client) */
+	int matches; /* number of matches made during operation */
 } spec_t;
 
 struct saved_data {
@@ -112,7 +112,7 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 	/* Process arguments */
 	while (n) {
 		n--;
-		switch(opts[n].type) {
+		switch (opts[n].type) {
 		case SELABEL_OPT_PATH:
 			path = opts[n].value;
 			break;
@@ -214,7 +214,7 @@ static void close(struct selabel_handle *rec)
 	}
 
 	if (spec_arr)
-	    free(spec_arr);
+		free(spec_arr);
 
 	free(data);
 	rec->data = NULL;
@@ -252,8 +252,8 @@ static void stats(struct selabel_handle *rec)
 	for (i = 0; i < data->nspec; i++)
 		total += data->spec_arr[i].matches;
 
-	selinux_log(SELINUX_INFO, "%u entries, %u matches made\n",
-		  data->nspec, total);
+	selinux_log(SELINUX_INFO, "%u entries, %u matches made\n", data->nspec,
+		    total);
 }
 
 int selabel_x_init(struct selabel_handle *rec, const struct selinux_opt *opts,

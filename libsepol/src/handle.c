@@ -5,7 +5,6 @@
 
 sepol_handle_t *sepol_handle_create(void)
 {
-
 	sepol_handle_t *sh = malloc(sizeof(sepol_handle_t));
 	if (sh == NULL)
 		return NULL;
@@ -30,21 +29,21 @@ int sepol_get_preserve_tunables(sepol_handle_t *sh)
 	return sh->preserve_tunables;
 }
 
-void sepol_set_preserve_tunables(sepol_handle_t * sh, int preserve_tunables)
+void sepol_set_preserve_tunables(sepol_handle_t *sh, int preserve_tunables)
 {
-	assert(sh !=NULL);
+	assert(sh != NULL);
 	sh->preserve_tunables = preserve_tunables;
 }
 
 int sepol_get_disable_dontaudit(sepol_handle_t *sh)
 {
-	assert(sh !=NULL);
+	assert(sh != NULL);
 	return sh->disable_dontaudit;
 }
 
-void sepol_set_disable_dontaudit(sepol_handle_t * sh, int disable_dontaudit)
+void sepol_set_disable_dontaudit(sepol_handle_t *sh, int disable_dontaudit)
 {
-	assert(sh !=NULL);
+	assert(sh != NULL);
 	sh->disable_dontaudit = disable_dontaudit;
 }
 
@@ -54,7 +53,7 @@ void sepol_set_expand_consume_base(sepol_handle_t *sh, int consume_base)
 	sh->expand_consume_base = consume_base;
 }
 
-void sepol_handle_destroy(sepol_handle_t * sh)
+void sepol_handle_destroy(sepol_handle_t *sh)
 {
 	free(sh);
 }

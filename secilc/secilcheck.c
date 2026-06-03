@@ -63,7 +63,8 @@ static int get_binary_policy_db(const char *filename, sepol_policydb_t *pdb)
 		fprintf(stderr, "Could not stat file: %s\n", filename);
 		goto exit;
 	}
-	map = mmap(NULL, sb.st_size, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
+	map = mmap(NULL, sb.st_size, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd,
+		   0);
 	if (map == MAP_FAILED) {
 		fprintf(stderr, "Could not map file: %s\n", filename);
 		goto exit;
@@ -76,7 +77,7 @@ static int get_binary_policy_db(const char *filename, sepol_policydb_t *pdb)
 	sepol_policy_file_set_mem(pf, map, sb.st_size);
 
 	if (sepol_policydb_read(pdb, pf) < 0) {
-		fprintf(stderr,"Error reading binary policy: %s\n", filename);
+		fprintf(stderr, "Error reading binary policy: %s\n", filename);
 		sepol_policydb_free(pdb);
 		rc = SEPOL_ERR;
 		goto exit;
@@ -93,7 +94,8 @@ exit:
 	return rc;
 }
 
-static int add_decls_to_cil(const char *filename, sepol_policydb_t *pdb, struct cil_db *db)
+static int add_decls_to_cil(const char *filename, sepol_policydb_t *pdb,
+			    struct cil_db *db)
 {
 	FILE *cfp = NULL;
 	char *cptr = NULL;
@@ -102,7 +104,8 @@ static int add_decls_to_cil(const char *filename, sepol_policydb_t *pdb, struct 
 
 	cfp = open_memstream(&cptr, &csize);
 	if (!cfp) {
-		fprintf(stderr, "Failed to open dynamic memory buffer stream\n");
+		fprintf(stderr,
+			"Failed to open dynamic memory buffer stream\n");
 		goto exit;
 	}
 
@@ -118,7 +121,8 @@ static int add_decls_to_cil(const char *filename, sepol_policydb_t *pdb, struct 
 
 	/* Add to CIL db */
 	if (cil_add_file(db, filename, cptr, csize) < 0) {
-		fprintf(stderr, "Failed to add binary policy file: %s\n", filename);
+		fprintf(stderr, "Failed to add binary policy file: %s\n",
+			filename);
 		goto exit;
 	}
 
@@ -185,7 +189,8 @@ exit:
 
 static __attribute__((__noreturn__)) void usage(const char *prog)
 {
-	printf("Usage: %s [OPTION]... BIN_POLICY CIL_NEVERALLOW_FILE1...\n", prog);
+	printf("Usage: %s [OPTION]... BIN_POLICY CIL_NEVERALLOW_FILE1...\n",
+	       prog);
 	printf("\n");
 	printf("Options:\n");
 	printf("  -Q, --qualified-names          Allow names containing dots (qualified names).\n");
@@ -209,35 +214,36 @@ int main(int argc, char *argv[])
 	int opt_index = 0;
 	enum cil_log_level log_level = CIL_ERR;
 	static struct option long_opts[] = {
-		{"help", no_argument, 0, 'h'},
-		{"verbose", no_argument, 0, 'v'},
-		{"multiple-decls", no_argument, 0, 'm'},
-		{"qualified-names", no_argument, 0, 'Q'},
-		{0, 0, 0, 0}
+		{ "help", no_argument, 0, 'h' },
+		{ "verbose", no_argument, 0, 'v' },
+		{ "multiple-decls", no_argument, 0, 'm' },
+		{ "qualified-names", no_argument, 0, 'Q' },
+		{ 0, 0, 0, 0 }
 	};
 
 	while (1) {
-		opt_char = getopt_long(argc, argv, "hvQm", long_opts, &opt_index);
+		opt_char =
+			getopt_long(argc, argv, "hvQm", long_opts, &opt_index);
 		if (opt_char == -1) {
 			break;
 		}
 		switch (opt_char) {
-			case 'v':
-				log_level++;
-				break;
-			case 'm':
-				multiple_decls = 1;
-				break;
-			case 'Q':
-				qualified_names = 1;
-				break;
-			case 'h':
-				usage(argv[0]);
-			case '?':
-				break;
-			default:
-					fprintf(stderr, "Unsupported option: %s\n", optarg);
-				usage(argv[0]);
+		case 'v':
+			log_level++;
+			break;
+		case 'm':
+			multiple_decls = 1;
+			break;
+		case 'Q':
+			qualified_names = 1;
+			break;
+		case 'h':
+			usage(argv[0]);
+		case '?':
+			break;
+		default:
+			fprintf(stderr, "Unsupported option: %s\n", optarg);
+			usage(argv[0]);
 		}
 	}
 
@@ -270,7 +276,8 @@ int main(int argc, char *argv[])
 
 	do {
 		if (add_cil_file(argv[optind], db) < 0) {
-			fprintf(stderr, "Failed to add cil file to CIL files\n");
+			fprintf(stderr,
+				"Failed to add cil file to CIL files\n");
 			rc = SEPOL_ERR;
 			goto exit;
 		}

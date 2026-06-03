@@ -4,9 +4,10 @@
 #include <unistd.h>
 #include <selinux/selinux.h>
 
-static __attribute__ ((__noreturn__)) void usage(const char *progname)
+static __attribute__((__noreturn__)) void usage(const char *progname)
 {
-	fprintf(stderr, "usage:  %s [-a auditdata] scon tcon class perm\n"
+	fprintf(stderr,
+		"usage:  %s [-a auditdata] scon tcon class perm\n"
 		"\nWhere:\n\t"
 		"-a  Optional information added to audit message.\n",
 		progname);
@@ -14,7 +15,7 @@ static __attribute__ ((__noreturn__)) void usage(const char *progname)
 }
 
 static int cb_auditinfo(void *auditdata,
-			__attribute__((unused))security_class_t class,
+			__attribute__((unused)) security_class_t class,
 			char *msgbuf, size_t msgbufsize)
 {
 	return snprintf(msgbuf, msgbufsize, "%s", (char *)auditdata);
@@ -39,8 +40,9 @@ int main(int argc, char **argv)
 		usage(argv[0]);
 
 	if (audit_msg)
-		selinux_set_callback(SELINUX_CB_AUDIT,
-				     (union selinux_callback) { .func_audit = cb_auditinfo });
+		selinux_set_callback(
+			SELINUX_CB_AUDIT,
+			(union selinux_callback){ .func_audit = cb_auditinfo });
 
 	rc = selinux_check_access(argv[optind], argv[optind + 1],
 				  argv[optind + 2], argv[optind + 3],

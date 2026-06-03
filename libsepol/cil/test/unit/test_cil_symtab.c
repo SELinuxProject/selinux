@@ -36,26 +36,31 @@
 #include "../../src/cil_symtab.h"
 #include "../../src/cil_internal.h"
 
-void test_cil_symtab_insert(CuTest *tc) {
+void test_cil_symtab_insert(CuTest *tc)
+{
 	symtab_t *test_symtab = NULL;
-	char* test_name = "test";
+	char *test_name = "test";
 	struct cil_block *test_block = malloc(sizeof(*test_block));
 
 	struct cil_tree_node *test_ast_node;
 	cil_tree_node_init(&test_ast_node);
 
 	struct cil_db *test_db;
-	cil_db_init(&test_db);   
+	cil_db_init(&test_db);
 
 	test_ast_node->parent = test_db->ast->root;
 	test_ast_node->line = 1;
 
-	cil_symtab_array_init(test_block->symtab, cil_sym_sizes[CIL_SYM_ARRAY_BLOCK]);
+	cil_symtab_array_init(test_block->symtab,
+			      cil_sym_sizes[CIL_SYM_ARRAY_BLOCK]);
 
 	test_block->is_abstract = 0;
 
-	cil_get_symtab(test_db, test_ast_node->parent, &test_symtab, CIL_SYM_BLOCKS);
+	cil_get_symtab(test_db, test_ast_node->parent, &test_symtab,
+		       CIL_SYM_BLOCKS);
 
-	int rc = cil_symtab_insert(test_symtab, (hashtab_key_t)test_name, (struct cil_symtab_datum*)test_block, test_ast_node);
+	int rc = cil_symtab_insert(test_symtab, (hashtab_key_t)test_name,
+				   (struct cil_symtab_datum *)test_block,
+				   test_ast_node);
 	CuAssertIntEquals(tc, SEPOL_OK, rc);
 }

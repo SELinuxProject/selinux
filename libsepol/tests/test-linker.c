@@ -42,7 +42,7 @@
 #include <stdlib.h>
 
 #define NUM_MODS 2
-#define NUM_POLICIES NUM_MODS+1
+#define NUM_POLICIES NUM_MODS + 1
 
 #define BASEMOD NUM_MODS
 const char *policies[NUM_POLICIES] = {
@@ -60,23 +60,24 @@ int linker_test_init(void)
 {
 	int i;
 
-	if (test_load_policy(&linkedbase, POLICY_BASE, mls, "test-linker", policies[BASEMOD]))
+	if (test_load_policy(&linkedbase, POLICY_BASE, mls, "test-linker",
+			     policies[BASEMOD]))
 		return -1;
 
-	if (test_load_policy(&basenomods, POLICY_BASE, mls, "test-linker", policies[BASEMOD]))
+	if (test_load_policy(&basenomods, POLICY_BASE, mls, "test-linker",
+			     policies[BASEMOD]))
 		return -1;
 
 	for (i = 0; i < NUM_MODS; i++) {
-
 		modules[i] = calloc(1, sizeof(*modules[i]));
 		if (!modules[i]) {
 			fprintf(stderr, "out of memory!\n");
 			return -1;
 		}
 
-		if (test_load_policy(modules[i], POLICY_MOD, mls, "test-linker", policies[i]))
+		if (test_load_policy(modules[i], POLICY_MOD, mls, "test-linker",
+				     policies[i]))
 			return -1;
-
 	}
 
 	if (link_modules(NULL, &linkedbase, modules, NUM_MODS, 0)) {

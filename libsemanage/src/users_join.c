@@ -27,23 +27,19 @@ static const record_join_table_t SEMANAGE_USER_JOIN_RTABLE = {
 	.split = semanage_user_split,
 };
 
-int user_join_dbase_init(semanage_handle_t * handle,
-			 dbase_config_t * join1,
-			 dbase_config_t * join2, dbase_config_t * dconfig)
+int user_join_dbase_init(semanage_handle_t *handle, dbase_config_t *join1,
+			 dbase_config_t *join2, dbase_config_t *dconfig)
 {
-
-	if (dbase_join_init(handle,
-			    &SEMANAGE_USER_RTABLE,
-			    &SEMANAGE_USER_JOIN_RTABLE,
-			    join1, join2, &dconfig->dbase) < 0)
+	if (dbase_join_init(handle, &SEMANAGE_USER_RTABLE,
+			    &SEMANAGE_USER_JOIN_RTABLE, join1, join2,
+			    &dconfig->dbase) < 0)
 		return STATUS_ERR;
 
 	dconfig->dtable = &SEMANAGE_JOIN_DTABLE;
 	return STATUS_SUCCESS;
 }
 
-void user_join_dbase_release(dbase_config_t * dconfig)
+void user_join_dbase_release(dbase_config_t *dconfig)
 {
-
 	dbase_join_release(dconfig->dbase);
 }

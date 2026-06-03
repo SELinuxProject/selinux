@@ -32,8 +32,7 @@
 
 char *progname;
 
-__attribute__ ((format(printf, 1, 2)))
-static void log_err(const char *fmt, ...)
+__attribute__((format(printf, 1, 2))) static void log_err(const char *fmt, ...)
 {
 	va_list argptr;
 	va_start(argptr, fmt);
@@ -50,9 +49,12 @@ static __attribute__((__noreturn__)) void usage(int err)
 {
 	fprintf(stderr, "Usage: %s [OPTIONS] [IN_FILE [OUT_FILE]]\n", progname);
 	fprintf(stderr, "\n");
-	fprintf(stderr, "Read an SELinux policy package (.pp) and output the equivalent CIL.\n");
-	fprintf(stderr, "If IN_FILE is not provided or is -, read SELinux policy package from\n");
-	fprintf(stderr, "standard input. If OUT_FILE is not provided or is -, output CIL to\n");
+	fprintf(stderr,
+		"Read an SELinux policy package (.pp) and output the equivalent CIL.\n");
+	fprintf(stderr,
+		"If IN_FILE is not provided or is -, read SELinux policy package from\n");
+	fprintf(stderr,
+		"standard input. If OUT_FILE is not provided or is -, output CIL to\n");
 	fprintf(stderr, "standard output.\n");
 	fprintf(stderr, "\n");
 	fprintf(stderr, "Options:\n");
@@ -64,10 +66,8 @@ int main(int argc, char **argv)
 {
 	int rc = -1;
 	int opt;
-	static struct option long_opts[] = {
-		{ "help", 0, NULL, 'h' },
-		{ NULL, 0, NULL, 0 }
-	};
+	static struct option long_opts[] = { { "help", 0, NULL, 'h' },
+					     { NULL, 0, NULL, 0 } };
 	struct sepol_module_package *mod_pkg = NULL;
 	const char *ifile = NULL;
 	const char *ofile = NULL;
@@ -94,7 +94,8 @@ int main(int argc, char **argv)
 		ifile = argv[1];
 		in = fopen(ifile, "rb");
 		if (in == NULL) {
-			log_err("Failed to open %s: %s", ifile, strerror(errno));
+			log_err("Failed to open %s: %s", ifile,
+				strerror(errno));
 			rc = -1;
 			goto exit;
 		}
@@ -107,7 +108,8 @@ int main(int argc, char **argv)
 		ofile = argv[2];
 		out = fopen(ofile, "w");
 		if (out == NULL) {
-			log_err("Failed to open %s: %s", ofile, strerror(errno));
+			log_err("Failed to open %s: %s", ofile,
+				strerror(errno));
 			rc = -1;
 			goto exit;
 		}
@@ -141,7 +143,9 @@ int main(int argc, char **argv)
 			*separator = '\0';
 		}
 		if (mod_name && strcmp(mod_name, cil_name) != 0) {
-			fprintf(stderr,	"Warning: SELinux userspace will refer to the module from %s as %s rather than %s\n", ifile, mod_name, cil_name);
+			fprintf(stderr,
+				"Warning: SELinux userspace will refer to the module from %s as %s rather than %s\n",
+				ifile, mod_name, cil_name);
 		}
 		free(cil_path);
 	}

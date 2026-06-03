@@ -38,4 +38,3 @@ char *cil_strdup(const char *str);
 int cil_asprintf(char **strp, const char *fmt, ...);
 
 #endif /* CIL_MEM_H_ */
-

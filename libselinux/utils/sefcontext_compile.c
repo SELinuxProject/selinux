@@ -13,7 +13,6 @@
 #include "../src/label_file.h"
 #include "../src/regex.h"
 
-
 static const char *policy_file;
 static int ctx_err;
 
@@ -48,7 +47,8 @@ static int process_file(struct selabel_handle *rec, const char *filename)
 	line_num = 0;
 	rc = 0;
 	while ((nread = getline(&line_buf, &line_len, context_file)) > 0) {
-		rc = process_line(rec, filename, prefix, line_buf, nread, 0, ++line_num);
+		rc = process_line(rec, filename, prefix, line_buf, nread, 0,
+				  ++line_num);
 		if (rc || ctx_err) {
 			/* With -p option need to check and fail if ctx err as
 			 * process_line() context validation on Linux does not
@@ -65,21 +65,24 @@ out:
 	return rc;
 }
 
-static int literal_spec_to_sidtab(const struct literal_spec *lspec, struct sidtab *stab)
+static int literal_spec_to_sidtab(const struct literal_spec *lspec,
+				  struct sidtab *stab)
 {
 	security_id_t dummy;
 
 	return sidtab_context_to_sid(stab, lspec->lr.ctx_raw, &dummy);
 }
 
-static int regex_spec_to_sidtab(const struct regex_spec *rspec, struct sidtab *stab)
+static int regex_spec_to_sidtab(const struct regex_spec *rspec,
+				struct sidtab *stab)
 {
 	security_id_t dummy;
 
 	return sidtab_context_to_sid(stab, rspec->lr.ctx_raw, &dummy);
 }
 
-static int spec_node_to_sidtab(const struct spec_node *node, struct sidtab *stab)
+static int spec_node_to_sidtab(const struct spec_node *node,
+			       struct sidtab *stab)
 {
 	int rc;
 
@@ -114,7 +117,6 @@ static int create_sidtab(const struct saved_data *data, struct sidtab *stab)
 
 	return spec_node_to_sidtab(data->root, stab);
 }
-
 
 /*
  * File Format
@@ -167,7 +169,6 @@ static int create_sidtab(const struct saved_data *data, struct sidtab *stab)
  * u8      - file kind (LABEL_FILE_KIND_*)
  * [Regex] - serialized pattern of regex, subject to underlying regex library
  */
-
 
 static int security_id_compare(const void *a, const void *b)
 {
@@ -234,7 +235,8 @@ static int write_sidtab(FILE *bin_file, const struct sidtab *stab)
 	return 0;
 }
 
-static int write_literal_spec(FILE *bin_file, const struct literal_spec *lspec, const struct sidtab *stab)
+static int write_literal_spec(FILE *bin_file, const struct literal_spec *lspec,
+			      const struct sidtab *stab)
 {
 	const struct security_id *sid;
 	const char *orig_regex, *literal_match;
@@ -289,7 +291,9 @@ static int write_literal_spec(FILE *bin_file, const struct literal_spec *lspec, 
 	return 0;
 }
 
-static int write_regex_spec(FILE *bin_file, bool do_write_precompregex, const struct regex_spec *rspec, const struct sidtab *stab)
+static int write_regex_spec(FILE *bin_file, bool do_write_precompregex,
+			    const struct regex_spec *rspec,
+			    const struct sidtab *stab)
 {
 	const struct security_id *sid;
 	const char *regex;
@@ -348,7 +352,9 @@ static int write_regex_spec(FILE *bin_file, bool do_write_precompregex, const st
 	return 0;
 }
 
-static int write_spec_node(FILE *bin_file, bool do_write_precompregex, const struct spec_node *node, const struct sidtab *stab)
+static int write_spec_node(FILE *bin_file, bool do_write_precompregex,
+			   const struct spec_node *node,
+			   const struct sidtab *stab)
 {
 	size_t stem_len;
 	uint32_t data_u32;
@@ -376,7 +382,8 @@ static int write_spec_node(FILE *bin_file, bool do_write_precompregex, const str
 
 	/* write literal specs */
 	for (uint32_t i = 0; i < node->literal_specs_num; i++) {
-		rc = write_literal_spec(bin_file, &node->literal_specs[i], stab);
+		rc = write_literal_spec(bin_file, &node->literal_specs[i],
+					stab);
 		if (rc)
 			return rc;
 	}
@@ -389,7 +396,8 @@ static int write_spec_node(FILE *bin_file, bool do_write_precompregex, const str
 
 	/* write regex specs */
 	for (uint32_t i = 0; i < node->regex_specs_num; i++) {
-		rc = write_regex_spec(bin_file, do_write_precompregex, &node->regex_specs[i], stab);
+		rc = write_regex_spec(bin_file, do_write_precompregex,
+				      &node->regex_specs[i], stab);
 		if (rc)
 			return rc;
 	}
@@ -402,7 +410,8 @@ static int write_spec_node(FILE *bin_file, bool do_write_precompregex, const str
 
 	/* write child nodes */
 	for (uint32_t i = 0; i < node->children_num; i++) {
-		rc = write_spec_node(bin_file, do_write_precompregex, &node->children[i], stab);
+		rc = write_spec_node(bin_file, do_write_precompregex,
+				     &node->children[i], stab);
 		if (rc)
 			return rc;
 	}
@@ -410,8 +419,9 @@ static int write_spec_node(FILE *bin_file, bool do_write_precompregex, const str
 	return 0;
 }
 
-static int write_binary_file(const struct saved_data *data, const struct sidtab *stab,
-			     int fd, const char *path, bool do_write_precompregex,
+static int write_binary_file(const struct saved_data *data,
+			     const struct sidtab *stab, int fd,
+			     const char *path, bool do_write_precompregex,
 			     const char *progname)
 {
 	FILE *bin_file;
@@ -501,37 +511,39 @@ err_write:
 	goto err;
 
 err:
-	fprintf(stderr, "%s: failed to compile file context specifications: %s\n",
+	fprintf(stderr,
+		"%s: failed to compile file context specifications: %s\n",
 		progname,
 		(rc == -3) ? "regex serialization failure" :
-		((rc == -2) ? "invalid fcontext specification" : "write failure"));
+			     ((rc == -2) ? "invalid fcontext specification" :
+					   "write failure"));
 	goto out;
 }
 
-static __attribute__ ((__noreturn__)) void usage(const char *progname)
+static __attribute__((__noreturn__)) void usage(const char *progname)
 {
 	fprintf(stderr,
-	    "usage: %s [-iV] [-o out_file] [-p policy_file] fc_file\n"
-	    "Where:\n\t"
-	    "-o       Optional file name of the PCRE formatted binary\n\t"
-	    "         file to be output. If not specified the default\n\t"
-	    "         will be fc_file with the .bin suffix appended.\n\t"
-	    "-p       Optional binary policy file that will be used to\n\t"
-	    "         validate contexts defined in the fc_file.\n\t"
-	    "-r       Omit precompiled regular expressions from the output.\n\t"
-	    "         (PCRE2 only. Compiled PCRE2 regular expressions are\n\t"
-	    "         not portable across architectures. Use this flag\n\t"
-	    "         if you know that you build for an incompatible\n\t"
-	    "         architecture to save space. When linked against\n\t"
-	    "         PCRE1 this flag is ignored.)\n\t"
-	    "-i       Print regular expression info end exit. That is, back\n\t"
-	    "         end version and architecture identifier.\n\t"
-	    "         Arch identifier format (PCRE2):\n\t"
-	    "         <pointer width>-<size type width>-<endianness>, e.g.,\n\t"
-	    "         \"8-8-el\" for x86_64.\n\t"
-	    "-V       Print binary output format version and exit.\n\t"
-	    "fc_file  The text based file contexts file to be processed.\n",
-	    progname);
+		"usage: %s [-iV] [-o out_file] [-p policy_file] fc_file\n"
+		"Where:\n\t"
+		"-o       Optional file name of the PCRE formatted binary\n\t"
+		"         file to be output. If not specified the default\n\t"
+		"         will be fc_file with the .bin suffix appended.\n\t"
+		"-p       Optional binary policy file that will be used to\n\t"
+		"         validate contexts defined in the fc_file.\n\t"
+		"-r       Omit precompiled regular expressions from the output.\n\t"
+		"         (PCRE2 only. Compiled PCRE2 regular expressions are\n\t"
+		"         not portable across architectures. Use this flag\n\t"
+		"         if you know that you build for an incompatible\n\t"
+		"         architecture to save space. When linked against\n\t"
+		"         PCRE1 this flag is ignored.)\n\t"
+		"-i       Print regular expression info end exit. That is, back\n\t"
+		"         end version and architecture identifier.\n\t"
+		"         Arch identifier format (PCRE2):\n\t"
+		"         <pointer width>-<size type width>-<endianness>, e.g.,\n\t"
+		"         \"8-8-el\" for x86_64.\n\t"
+		"-V       Print binary output format version and exit.\n\t"
+		"fc_file  The text based file contexts file to be processed.\n",
+		progname);
 	exit(EXIT_FAILURE);
 }
 
@@ -566,10 +578,12 @@ int main(int argc, char *argv[])
 			do_write_precompregex = false;
 			break;
 		case 'i':
-			printf("%s (%s)\n", regex_version(), regex_arch_string());
+			printf("%s (%s)\n", regex_version(),
+			       regex_arch_string());
 			return 0;
 		case 'V':
-			printf("Compiled fcontext format version %d\n", SELINUX_COMPILED_FCONTEXT_MAX_VERS);
+			printf("Compiled fcontext format version %d\n",
+			       SELINUX_COMPILED_FCONTEXT_MAX_VERS);
 			return 0;
 		default:
 			usage(argv[0]);
@@ -581,7 +595,8 @@ int main(int argc, char *argv[])
 
 	path = argv[optind];
 	if (stat(path, &buf) < 0) {
-		fprintf(stderr, "%s: could not stat: %s: %s\n", argv[0], path, strerror(errno));
+		fprintf(stderr, "%s: could not stat: %s: %s\n", argv[0], path,
+			strerror(errno));
 		exit(EXIT_FAILURE);
 	}
 
@@ -590,8 +605,8 @@ int main(int argc, char *argv[])
 		policy_fp = fopen(policy_file, "re");
 
 		if (!policy_fp) {
-			fprintf(stderr, "%s: failed to open %s: %s\n",
-				argv[0], policy_file, strerror(errno));
+			fprintf(stderr, "%s: failed to open %s: %s\n", argv[0],
+				policy_file, strerror(errno));
 			exit(EXIT_FAILURE);
 		}
 
@@ -606,7 +621,8 @@ int main(int argc, char *argv[])
 	/* Generate dummy handle for process_line() function */
 	rec = (struct selabel_handle *)calloc(1, sizeof(*rec));
 	if (!rec) {
-		fprintf(stderr, "%s: calloc failed: %s\n", argv[0], strerror(errno));
+		fprintf(stderr, "%s: calloc failed: %s\n", argv[0],
+			strerror(errno));
 		if (policy_fp)
 			fclose(policy_fp);
 		exit(EXIT_FAILURE);
@@ -620,12 +636,14 @@ int main(int argc, char *argv[])
 	 * validation - unless the -p option is used in which case if an
 	 * error is detected, the process will be aborted. */
 	rec->validating = 1;
-	selinux_set_callback(SELINUX_CB_VALIDATE,
-			    (union selinux_callback) { .func_validate = &validate_context });
+	selinux_set_callback(
+		SELINUX_CB_VALIDATE,
+		(union selinux_callback){ .func_validate = &validate_context });
 
 	data = (struct saved_data *)calloc(1, sizeof(*data));
 	if (!data) {
-		fprintf(stderr, "%s: calloc failed: %s\n", argv[0], strerror(errno));
+		fprintf(stderr, "%s: calloc failed: %s\n", argv[0],
+			strerror(errno));
 		free(rec);
 		if (policy_fp)
 			fclose(policy_fp);
@@ -634,7 +652,8 @@ int main(int argc, char *argv[])
 
 	root = calloc(1, sizeof(*root));
 	if (!root) {
-		fprintf(stderr, "%s: calloc failed: %s\n", argv[0], strerror(errno));
+		fprintf(stderr, "%s: calloc failed: %s\n", argv[0],
+			strerror(errno));
 		free(data);
 		free(rec);
 		if (policy_fp)
@@ -655,7 +674,8 @@ int main(int argc, char *argv[])
 
 	rc = create_sidtab(data, &stab);
 	if (rc < 0) {
-		fprintf(stderr, "%s: failed to generate sidtab: %s\n", argv[0], strerror(errno));
+		fprintf(stderr, "%s: failed to generate sidtab: %s\n", argv[0],
+			strerror(errno));
 		goto err;
 	}
 
@@ -672,7 +692,8 @@ int main(int argc, char *argv[])
 
 	tmp = malloc(len + 7);
 	if (!tmp) {
-		fprintf(stderr, "%s: malloc failed: %s\n", argv[0], strerror(errno));
+		fprintf(stderr, "%s: malloc failed: %s\n", argv[0],
+			strerror(errno));
 		goto err;
 	}
 
@@ -684,25 +705,29 @@ int main(int argc, char *argv[])
 
 	fd = mkstemp(tmp);
 	if (fd < 0) {
-		fprintf(stderr, "%s: mkstemp %s failed: %s\n", argv[0], tmp, strerror(errno));
+		fprintf(stderr, "%s: mkstemp %s failed: %s\n", argv[0], tmp,
+			strerror(errno));
 		close(fd);
 		goto err;
 	}
 
 	rc = fchmod(fd, buf.st_mode);
 	if (rc < 0) {
-		fprintf(stderr, "%s: fchmod %s failed: %s\n", argv[0], tmp, strerror(errno));
+		fprintf(stderr, "%s: fchmod %s failed: %s\n", argv[0], tmp,
+			strerror(errno));
 		close(fd);
 		goto err_unlink;
 	}
 
-	rc = write_binary_file(data, &stab, fd, tmp, do_write_precompregex, argv[0]);
+	rc = write_binary_file(data, &stab, fd, tmp, do_write_precompregex,
+			       argv[0]);
 	if (rc < 0)
 		goto err_unlink;
 
 	rc = rename(tmp, stack_path);
 	if (rc < 0) {
-		fprintf(stderr, "%s: rename %s -> %s failed: %s\n", argv[0], tmp, stack_path, strerror(errno));
+		fprintf(stderr, "%s: rename %s -> %s failed: %s\n", argv[0],
+			tmp, stack_path, strerror(errno));
 		goto err_unlink;
 	}
 

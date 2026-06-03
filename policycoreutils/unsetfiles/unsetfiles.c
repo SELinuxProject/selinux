@@ -14,24 +14,22 @@
 
 #include <selinux/selinux.h>
 
-
 #define XATTR_NAME_SELINUX "security.selinux"
-
 
 static void usage(const char *progname)
 {
-	fprintf(stderr, "usage: %s [-nrvx] <path>\n\n"
-	                "Options:\n"
-	                "\t-n\tdon't remove any file labels\n"
-	                "\t-r\tremove labels recursive\n"
-	                "\t-v\tbe verbose\n"
-	                "\t-x\tdo not cross filesystem boundaries\n",
-	                progname);
+	fprintf(stderr,
+		"usage: %s [-nrvx] <path>\n\n"
+		"Options:\n"
+		"\t-n\tdon't remove any file labels\n"
+		"\t-r\tremove labels recursive\n"
+		"\t-v\tbe verbose\n"
+		"\t-x\tdo not cross filesystem boundaries\n",
+		progname);
 }
 
 static void unset(int atfd, const char *path, const char *fullpath,
-                  bool dry_run, bool recursive, bool verbose,
-                  dev_t root_dev)
+		  bool dry_run, bool recursive, bool verbose, dev_t root_dev)
 {
 	ssize_t ret;
 	int fd, rc;
@@ -40,9 +38,12 @@ static void unset(int atfd, const char *path, const char *fullpath,
 	ret = lgetxattr(fullpath, XATTR_NAME_SELINUX, NULL, 0);
 	if (ret <= 0) {
 		if (errno != ENODATA && errno != ENOTSUP)
-			fprintf(stderr, "Failed to get SELinux label of %s:  %m\n", fullpath);
+			fprintf(stderr,
+				"Failed to get SELinux label of %s:  %m\n",
+				fullpath);
 		else if (verbose)
-			printf("Failed to get SELinux label of %s:  %m\n", fullpath);
+			printf("Failed to get SELinux label of %s:  %m\n",
+			       fullpath);
 	} else {
 		if (dry_run) {
 			printf("Would remove SELinux label of %s\n", fullpath);
@@ -52,14 +53,17 @@ static void unset(int atfd, const char *path, const char *fullpath,
 
 			rc = lremovexattr(fullpath, XATTR_NAME_SELINUX);
 			if (rc < 0)
-				fprintf(stderr, "Failed to remove SELinux label of %s:  %m\n", fullpath);
+				fprintf(stderr,
+					"Failed to remove SELinux label of %s:  %m\n",
+					fullpath);
 		}
 	}
 
 	if (!recursive)
 		return;
 
-	fd = openat(atfd, path, O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC);
+	fd = openat(atfd, path,
+		    O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC);
 	if (fd < 0) {
 		if (errno != ENOTDIR)
 			fprintf(stderr, "Failed to open %s:  %m\n", fullpath);
@@ -71,14 +75,16 @@ static void unset(int atfd, const char *path, const char *fullpath,
 
 		rc = fstat(fd, &sb);
 		if (rc == -1) {
-			fprintf(stderr, "Failed to stat directory %s:  %m\n", fullpath);
+			fprintf(stderr, "Failed to stat directory %s:  %m\n",
+				fullpath);
 			close(fd);
 			return;
 		}
 
 		if (sb.st_dev != root_dev) {
 			if (verbose)
-				printf("Skipping directory %s due to filesystem boundary\n", fullpath);
+				printf("Skipping directory %s due to filesystem boundary\n",
+				       fullpath);
 
 			close(fd);
 			return;
@@ -100,21 +106,28 @@ static void unset(int atfd, const char *path, const char *fullpath,
 		entry = readdir(dir);
 		if (!entry) {
 			if (errno)
-				fprintf(stderr, "Failed to iterate directory %s:  %m\n", fullpath);
+				fprintf(stderr,
+					"Failed to iterate directory %s:  %m\n",
+					fullpath);
 			break;
 		}
 
-		if (entry->d_name[0] == '.' && (entry->d_name[1] == '\0' || (entry->d_name[1] == '.' && entry->d_name[2] == '\0')))
+		if (entry->d_name[0] == '.' &&
+		    (entry->d_name[1] == '\0' ||
+		     (entry->d_name[1] == '.' && entry->d_name[2] == '\0')))
 			continue;
 
-		rc = asprintf(&nextfullpath, "%s/%s", strcmp(fullpath, "/") == 0 ? "" : fullpath, entry->d_name);
+		rc = asprintf(&nextfullpath, "%s/%s",
+			      strcmp(fullpath, "/") == 0 ? "" : fullpath,
+			      entry->d_name);
 		if (rc < 0) {
 			fprintf(stderr, "Out of memory!\n");
 			closedir(dir);
 			return;
 		}
 
-		unset(dirfd(dir), entry->d_name, nextfullpath, dry_run, recursive, verbose, root_dev);
+		unset(dirfd(dir), entry->d_name, nextfullpath, dry_run,
+		      recursive, verbose, root_dev);
 
 		free(nextfullpath);
 	}
@@ -122,10 +135,10 @@ static void unset(int atfd, const char *path, const char *fullpath,
 	closedir(dir);
 }
 
-
 int main(int argc, char *argv[])
 {
-	bool dry_run = false, recursive = false, verbose = false, same_dev = false;
+	bool dry_run = false, recursive = false, verbose = false,
+	     same_dev = false;
 	int c;
 
 	while ((c = getopt(argc, argv, "hnrvx")) != -1) {
@@ -157,7 +170,8 @@ int main(int argc, char *argv[])
 	}
 
 	if (is_selinux_enabled()) {
-		fprintf(stderr, "Removing SELinux attributes on a SELinux enabled system is not supported!\n");
+		fprintf(stderr,
+			"Removing SELinux attributes on a SELinux enabled system is not supported!\n");
 		return EXIT_FAILURE;
 	}
 
@@ -170,13 +184,15 @@ int main(int argc, char *argv[])
 
 			rc = stat(argv[index], &sb);
 			if (rc == -1) {
-				fprintf(stderr, "Failed to stat %s:  %m\n", argv[index]);
+				fprintf(stderr, "Failed to stat %s:  %m\n",
+					argv[index]);
 				continue;
 			}
 
 			root_dev = sb.st_dev;
 		}
-		unset(AT_FDCWD, argv[index], argv[index], dry_run, recursive, verbose, root_dev);
+		unset(AT_FDCWD, argv[index], argv[index], dry_run, recursive,
+		      verbose, root_dev);
 	}
 
 	return EXIT_SUCCESS;

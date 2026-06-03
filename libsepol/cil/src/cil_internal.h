@@ -49,7 +49,8 @@
 #define CIL_MAX_NAME_LENGTH 2048
 
 #define CIL_DEGENERATE_INHERITANCE_DEPTH 10UL
-#define CIL_DEGENERATE_INHERITANCE_MINIMUM (0x01 << CIL_DEGENERATE_INHERITANCE_DEPTH)
+#define CIL_DEGENERATE_INHERITANCE_MINIMUM \
+	(0x01 << CIL_DEGENERATE_INHERITANCE_DEPTH)
 #define CIL_DEGENERATE_INHERITANCE_GROWTH 10UL
 
 enum cil_pass {
@@ -72,7 +73,6 @@ enum cil_pass {
 
 	CIL_PASS_NUM
 };
-
 
 /*
 	Keywords
@@ -273,7 +273,7 @@ enum cil_sym_index {
 	CIL_SYM_PERMX,
 	CIL_SYM_NUM,
 	CIL_SYM_UNKNOWN,
-	CIL_SYM_PERMS	// Special case for permissions. This symtab is not included in arrays
+	CIL_SYM_PERMS // Special case for permissions. This symtab is not included in arrays
 };
 
 enum cil_sym_array {
@@ -287,7 +287,7 @@ enum cil_sym_array {
 
 extern const int cil_sym_sizes[CIL_SYM_ARRAY_NUM][CIL_SYM_NUM];
 
-#define CIL_CLASS_SYM_SIZE	256
+#define CIL_CLASS_SYM_SIZE 256
 #define CIL_PERMS_PER_CLASS (sizeof(sepol_access_vector_t) * 8)
 
 struct cil_db {
@@ -544,22 +544,22 @@ struct cil_roletype {
 	void *type; /* type, alias, or attribute */
 };
 
-struct cil_type	{
+struct cil_type {
 	struct cil_symtab_datum datum;
 	struct cil_type *bounds;
 	int value;
 };
 
-#define CIL_ATTR_AVRULE		(1 << 0)
-#define CIL_ATTR_NEVERALLOW	(1 << 1)
-#define CIL_ATTR_CONSTRAINT	(1 << 2)
-#define CIL_ATTR_EXPAND_TRUE	(1 << 3)
-#define CIL_ATTR_EXPAND_FALSE	(1 << 4)
+#define CIL_ATTR_AVRULE (1 << 0)
+#define CIL_ATTR_NEVERALLOW (1 << 1)
+#define CIL_ATTR_CONSTRAINT (1 << 2)
+#define CIL_ATTR_EXPAND_TRUE (1 << 3)
+#define CIL_ATTR_EXPAND_FALSE (1 << 4)
 struct cil_typeattribute {
 	struct cil_symtab_datum datum;
 	struct cil_list *expr_list;
 	ebitmap_t *types;
-	int used;	// whether or not this attribute was used in a binary policy rule
+	int used; // whether or not this attribute was used in a binary policy rule
 	int keep;
 };
 
@@ -597,7 +597,6 @@ struct cil_nametypetransition {
 	struct cil_symtab_datum *name;
 	char *result_str;
 	void *result; /* type or alias */
-
 };
 
 struct cil_rangetransition {
@@ -621,17 +620,19 @@ struct cil_tunable {
 	uint16_t value;
 };
 
-#define CIL_AVRULE_ALLOWED     1
-#define CIL_AVRULE_AUDITALLOW  2
-#define CIL_AVRULE_DONTAUDIT   8
+#define CIL_AVRULE_ALLOWED 1
+#define CIL_AVRULE_AUDITALLOW 2
+#define CIL_AVRULE_DONTAUDIT 8
 #define CIL_AVRULE_NEVERALLOW 128
-#define CIL_AVRULE_AV         (AVRULE_ALLOWED | AVRULE_AUDITALLOW | AVRULE_DONTAUDIT | AVRULE_NEVERALLOW)
+#define CIL_AVRULE_AV                                            \
+	(AVRULE_ALLOWED | AVRULE_AUDITALLOW | AVRULE_DONTAUDIT | \
+	 AVRULE_NEVERALLOW)
 struct cil_avrule {
 	int is_extended;
 	uint32_t rule_kind;
 	char *src_str;
 	void *src; /* type, alias, or attribute */
-	char *tgt_str;	
+	char *tgt_str;
 	void *tgt; /* type, alias, or attribute */
 	union {
 		struct cil_list *classperms;
@@ -662,9 +663,9 @@ struct cil_deny_rule {
 };
 
 #define CIL_TYPE_TRANSITION 16
-#define CIL_TYPE_MEMBER     32
-#define CIL_TYPE_CHANGE     64
-#define CIL_AVRULE_TYPE       (AVRULE_TRANSITION | AVRULE_MEMBER | AVRULE_CHANGE)
+#define CIL_TYPE_MEMBER 32
+#define CIL_TYPE_CHANGE 64
+#define CIL_AVRULE_TYPE (AVRULE_TRANSITION | AVRULE_MEMBER | AVRULE_CHANGE)
 struct cil_type_rule {
 	uint32_t rule_kind;
 	char *src_str;
@@ -680,7 +681,7 @@ struct cil_type_rule {
 struct cil_roletransition {
 	char *src_str;
 	struct cil_role *src;
-	char *tgt_str;	
+	char *tgt_str;
 	void *tgt; /* type, alias, or attribute */
 	char *obj_str;
 	struct cil_class *obj;
@@ -866,7 +867,6 @@ struct cil_devicetreecon {
 	struct cil_context *context;
 };
 
-
 /* Ensure that CIL uses the same values as sepol services.h */
 enum cil_fsuse_types {
 	CIL_FSUSE_XATTR = SECURITY_FS_USE_XATTR,
@@ -881,7 +881,7 @@ struct cil_fsuse {
 	struct cil_context *context;
 };
 
-#define CIL_MLS_LEVELS "l1 l2 h1 h2" 
+#define CIL_MLS_LEVELS "l1 l2 h1 h2"
 #define CIL_CONSTRAIN_KEYS "t1 t2 r1 r2 u1 u2"
 #define CIL_MLSCONSTRAIN_KEYS CIL_MLS_LEVELS CIL_CONSTRAIN_KEYS
 #define CIL_CONSTRAIN_OPER "== != eq dom domby incomp not and or"
@@ -924,8 +924,8 @@ struct cil_call {
 	int copied;
 };
 
-#define CIL_TRUE	1
-#define CIL_FALSE	0
+#define CIL_TRUE 1
+#define CIL_FALSE 0
 
 struct cil_condblock {
 	enum cil_flavor flavor;
@@ -970,13 +970,13 @@ struct cil_default {
 
 /* Ensure that CIL uses the same values as sepol policydb.h */
 enum cil_default_object_range {
-	CIL_DEFAULT_SOURCE_LOW      = DEFAULT_SOURCE_LOW,
-	CIL_DEFAULT_SOURCE_HIGH     = DEFAULT_SOURCE_HIGH,
+	CIL_DEFAULT_SOURCE_LOW = DEFAULT_SOURCE_LOW,
+	CIL_DEFAULT_SOURCE_HIGH = DEFAULT_SOURCE_HIGH,
 	CIL_DEFAULT_SOURCE_LOW_HIGH = DEFAULT_SOURCE_LOW_HIGH,
-	CIL_DEFAULT_TARGET_LOW      = DEFAULT_TARGET_LOW,
-	CIL_DEFAULT_TARGET_HIGH     = DEFAULT_TARGET_HIGH,
+	CIL_DEFAULT_TARGET_LOW = DEFAULT_TARGET_LOW,
+	CIL_DEFAULT_TARGET_HIGH = DEFAULT_TARGET_HIGH,
 	CIL_DEFAULT_TARGET_LOW_HIGH = DEFAULT_TARGET_LOW_HIGH,
-	CIL_DEFAULT_GLBLUB          = DEFAULT_GLBLUB,
+	CIL_DEFAULT_GLBLUB = DEFAULT_GLBLUB,
 };
 
 /* Default labeling behavior for range */
@@ -1008,17 +1008,20 @@ void cil_root_destroy(struct cil_root *root);
 
 void cil_destroy_data(void **data, enum cil_flavor flavor);
 
-int cil_flavor_to_symtab_index(enum cil_flavor flavor, enum cil_sym_index *index);
-const char * cil_node_to_string(struct cil_tree_node *node);
+int cil_flavor_to_symtab_index(enum cil_flavor flavor,
+			       enum cil_sym_index *index);
+const char *cil_node_to_string(struct cil_tree_node *node);
 
 int cil_userprefixes_to_string(struct cil_db *db, char **out, size_t *size);
 int cil_selinuxusers_to_string(struct cil_db *db, char **out, size_t *size);
 int cil_filecons_to_string(struct cil_db *db, char **out, size_t *size);
 
-void cil_symtab_array_init(symtab_t symtab[], const int symtab_sizes[CIL_SYM_NUM]);
+void cil_symtab_array_init(symtab_t symtab[],
+			   const int symtab_sizes[CIL_SYM_NUM]);
 void cil_symtab_array_destroy(symtab_t symtab[]);
 void cil_destroy_ast_symtabs(struct cil_tree_node *root);
-int cil_get_symtab(struct cil_tree_node *ast_node, symtab_t **symtab, enum cil_sym_index sym_index);
+int cil_get_symtab(struct cil_tree_node *ast_node, symtab_t **symtab,
+		   enum cil_sym_index sym_index);
 int cil_string_to_uint32(const char *string, uint32_t *value, int base);
 int cil_string_to_uint64(const char *string, uint64_t *value, int base);
 

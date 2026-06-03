@@ -25,7 +25,6 @@ struct semanage_handle;
 
 /* Direct component of handle */
 struct semanage_direct_handle {
-
 	/* Locking */
 	int activelock_file_fd;
 	int translock_file_fd;

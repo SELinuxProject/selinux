@@ -24,13 +24,12 @@ extern int sepol_ibpkey_compare2(const sepol_ibpkey_t *ibpkey,
 				 const sepol_ibpkey_t *ibpkey2);
 
 extern int sepol_ibpkey_key_create(sepol_handle_t *handle,
-				   const char *subnet_prefix,
-				   int low, int high,
+				   const char *subnet_prefix, int low, int high,
 				   sepol_ibpkey_key_t **key_ptr);
 
 extern void sepol_ibpkey_key_unpack(const sepol_ibpkey_key_t *key,
-				    uint64_t *subnet_prefix,
-				    int *low, int *high);
+				    uint64_t *subnet_prefix, int *low,
+				    int *high);
 
 extern int sepol_ibpkey_key_extract(sepol_handle_t *handle,
 				    const sepol_ibpkey_t *ibpkey,
@@ -50,7 +49,8 @@ extern int sepol_ibpkey_get_subnet_prefix(sepol_handle_t *handle,
 					  const sepol_ibpkey_t *ibpkey,
 					  char **subnet_prefix);
 
-extern uint64_t sepol_ibpkey_get_subnet_prefix_bytes(const sepol_ibpkey_t *ibpkey);
+extern uint64_t
+sepol_ibpkey_get_subnet_prefix_bytes(const sepol_ibpkey_t *ibpkey);
 
 extern int sepol_ibpkey_set_subnet_prefix(sepol_handle_t *handle,
 					  sepol_ibpkey_t *ibpkey,
@@ -61,17 +61,17 @@ extern void sepol_ibpkey_set_subnet_prefix_bytes(sepol_ibpkey_t *ibpkey,
 
 extern sepol_context_t *sepol_ibpkey_get_con(const sepol_ibpkey_t *ibpkey);
 
-extern int sepol_ibpkey_set_con(sepol_handle_t *handle,
-				sepol_ibpkey_t *ibpkey, sepol_context_t *con);
+extern int sepol_ibpkey_set_con(sepol_handle_t *handle, sepol_ibpkey_t *ibpkey,
+				sepol_context_t *con);
 
-extern int sepol_ibpkey_create(sepol_handle_t *handle, sepol_ibpkey_t **ibpkey_ptr);
+extern int sepol_ibpkey_create(sepol_handle_t *handle,
+			       sepol_ibpkey_t **ibpkey_ptr);
 
 extern int sepol_ibpkey_clone(sepol_handle_t *handle,
 			      const sepol_ibpkey_t *ibpkey,
 			      sepol_ibpkey_t **ibpkey_ptr);
 
 extern void sepol_ibpkey_free(sepol_ibpkey_t *ibpkey);
-
 
 #ifdef __cplusplus
 }

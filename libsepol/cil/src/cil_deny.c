@@ -139,7 +139,9 @@ static int cil_perm_match(const struct cil_perm *p1, const struct cil_list *pl2)
 	return CIL_FALSE;
 }
 
-static int cil_class_perm_match(const struct cil_class *c1, const struct cil_perm *p1, const struct cil_list *cpl2)
+static int cil_class_perm_match(const struct cil_class *c1,
+				const struct cil_perm *p1,
+				const struct cil_list *cpl2)
 {
 	struct cil_list_item *curr;
 
@@ -156,7 +158,8 @@ static int cil_class_perm_match(const struct cil_class *c1, const struct cil_per
 				struct cil_list_item *p;
 				cil_list_for_each(p, cp->perms) {
 					struct cil_perm *cmp = p->data;
-					if (cil_class_perm_match(c1, p1, cmp->classperms)) {
+					if (cil_class_perm_match(
+						    c1, p1, cmp->classperms)) {
 						return CIL_TRUE;
 					}
 				}
@@ -172,7 +175,8 @@ static int cil_class_perm_match(const struct cil_class *c1, const struct cil_per
 	return CIL_FALSE;
 }
 
-static int cil_classperms_match_any(const struct cil_classperms *cp1, const struct cil_list *cpl2)
+static int cil_classperms_match_any(const struct cil_classperms *cp1,
+				    const struct cil_list *cpl2)
 {
 	struct cil_list_item *curr;
 
@@ -185,7 +189,8 @@ static int cil_classperms_match_any(const struct cil_classperms *cp1, const stru
 	return CIL_FALSE;
 }
 
-int cil_classperms_list_match_any(const struct cil_list *cpl1, const struct cil_list *cpl2)
+int cil_classperms_list_match_any(const struct cil_list *cpl1,
+				  const struct cil_list *cpl2)
 {
 	struct cil_list_item *curr;
 
@@ -204,7 +209,8 @@ int cil_classperms_list_match_any(const struct cil_list *cpl1, const struct cil_
 				struct cil_list_item *p;
 				cil_list_for_each(p, cp->perms) {
 					struct cil_perm *cmp = p->data;
-					if (cil_classperms_list_match_any(cmp->classperms, cpl2)) {
+					if (cil_classperms_list_match_any(
+						    cmp->classperms, cpl2)) {
 						return CIL_TRUE;
 					}
 				}
@@ -212,7 +218,8 @@ int cil_classperms_list_match_any(const struct cil_list *cpl1, const struct cil_
 		} else { /* SET */
 			struct cil_classperms_set *cp_set = curr->data;
 			struct cil_classpermission *cp = cp_set->set;
-			if (cil_classperms_list_match_any(cp->classperms, cpl2)) {
+			if (cil_classperms_list_match_any(cp->classperms,
+							  cpl2)) {
 				return CIL_TRUE;
 			}
 		}
@@ -220,7 +227,8 @@ int cil_classperms_list_match_any(const struct cil_list *cpl1, const struct cil_
 	return CIL_FALSE;
 }
 
-static int cil_classperms_match_all(const struct cil_classperms *cp1, const struct cil_list *cpl2)
+static int cil_classperms_match_all(const struct cil_classperms *cp1,
+				    const struct cil_list *cpl2)
 {
 	struct cil_list_item *curr;
 
@@ -233,7 +241,8 @@ static int cil_classperms_match_all(const struct cil_classperms *cp1, const stru
 	return CIL_TRUE;
 }
 
-int cil_classperms_list_match_all(const struct cil_list *cpl1, const struct cil_list *cpl2)
+int cil_classperms_list_match_all(const struct cil_list *cpl1,
+				  const struct cil_list *cpl2)
 {
 	struct cil_list_item *curr;
 
@@ -252,7 +261,8 @@ int cil_classperms_list_match_all(const struct cil_list *cpl1, const struct cil_
 				struct cil_list_item *p;
 				cil_list_for_each(p, cp->perms) {
 					struct cil_perm *cmp = p->data;
-					if (!cil_classperms_list_match_all(cmp->classperms, cpl2)) {
+					if (!cil_classperms_list_match_all(
+						    cmp->classperms, cpl2)) {
 						return CIL_FALSE;
 					}
 				}
@@ -260,7 +270,8 @@ int cil_classperms_list_match_all(const struct cil_list *cpl1, const struct cil_
 		} else { /* SET */
 			struct cil_classperms_set *cp_set = curr->data;
 			struct cil_classpermission *cp = cp_set->set;
-			if (!cil_classperms_list_match_all(cp->classperms, cpl2)) {
+			if (!cil_classperms_list_match_all(cp->classperms,
+							   cpl2)) {
 				return CIL_FALSE;
 			}
 		}
@@ -268,7 +279,8 @@ int cil_classperms_list_match_all(const struct cil_list *cpl1, const struct cil_
 	return CIL_TRUE;
 }
 
-static void cil_classperms_copy(struct cil_classperms **new, const struct cil_classperms *old)
+static void cil_classperms_copy(struct cil_classperms **new,
+				const struct cil_classperms *old)
 {
 	cil_classperms_init(new);
 	(*new)->class_str = old->class_str;
@@ -277,7 +289,8 @@ static void cil_classperms_copy(struct cil_classperms **new, const struct cil_cl
 	cil_copy_list(old->perms, &(*new)->perms);
 }
 
-static void cil_classperms_set_copy(struct cil_classperms_set **new, const struct cil_classperms_set *old)
+static void cil_classperms_set_copy(struct cil_classperms_set **new,
+				    const struct cil_classperms_set *old)
 {
 	cil_classperms_set_init(new);
 	(*new)->set_str = old->set_str;
@@ -317,7 +330,9 @@ void cil_classperms_list_copy(struct cil_list **new, const struct cil_list *old)
 }
 
 /* Append cp1 and cpl2 to result */
-static void cil_classperms_and(struct cil_list **result, const struct cil_classperms *cp1, const struct cil_list *cpl2)
+static void cil_classperms_and(struct cil_list **result,
+			       const struct cil_classperms *cp1,
+			       const struct cil_list *cpl2)
 {
 	struct cil_classperms *new_cp = NULL;
 	struct cil_list_item *curr;
@@ -337,16 +352,20 @@ static void cil_classperms_and(struct cil_list **result, const struct cil_classp
 				new_cp->class = cp1->class;
 				cil_list_init(&new_cp->perm_strs, CIL_PERM);
 				cil_list_init(&new_cp->perms, CIL_PERM);
-				cil_list_append(*result, CIL_CLASSPERMS, new_cp);
+				cil_list_append(*result, CIL_CLASSPERMS,
+						new_cp);
 			}
-			cil_list_append(new_cp->perm_strs, CIL_STRING, perm->datum.fqn);
+			cil_list_append(new_cp->perm_strs, CIL_STRING,
+					perm->datum.fqn);
 			cil_list_append(new_cp->perms, CIL_DATUM, perm);
 		}
 	}
 }
 
 /* Append cp1 and cpl2 to result */
-static void cil_classperms_map_and(struct cil_list **result, const struct cil_classperms *cp1, const struct cil_list *cpl2)
+static void cil_classperms_map_and(struct cil_list **result,
+				   const struct cil_classperms *cp1,
+				   const struct cil_list *cpl2)
 {
 	struct cil_classperms *new_cp = NULL;
 	struct cil_list_item *p;
@@ -360,17 +379,21 @@ static void cil_classperms_map_and(struct cil_list **result, const struct cil_cl
 				new_cp->class = cp1->class;
 				cil_list_init(&new_cp->perm_strs, CIL_PERM);
 				cil_list_init(&new_cp->perms, CIL_PERM);
-				cil_list_append(*result, CIL_CLASSPERMS, new_cp);
+				cil_list_append(*result, CIL_CLASSPERMS,
+						new_cp);
 			}
-			cil_list_append(new_cp->perm_strs, CIL_STRING, map_perm->datum.fqn);
+			cil_list_append(new_cp->perm_strs, CIL_STRING,
+					map_perm->datum.fqn);
 			cil_list_append(new_cp->perms, CIL_DATUM, map_perm);
 		} else {
 			struct cil_list *new_cpl = NULL;
-			cil_classperms_list_and(&new_cpl, map_perm->classperms, cpl2);
+			cil_classperms_list_and(&new_cpl, map_perm->classperms,
+						cpl2);
 			if (new_cpl) {
 				struct cil_list_item *i;
 				cil_list_for_each(i, new_cpl) {
-					cil_list_append(*result, i->flavor, i->data);
+					cil_list_append(*result, i->flavor,
+							i->data);
 				}
 				cil_list_destroy(&new_cpl, CIL_FALSE);
 			}
@@ -379,7 +402,9 @@ static void cil_classperms_map_and(struct cil_list **result, const struct cil_cl
 }
 
 /* Append cps1 and cpl2 to result */
-static void cil_classperms_set_and(struct cil_list **result, const struct cil_classperms_set *cps1, const struct cil_list *cpl2)
+static void cil_classperms_set_and(struct cil_list **result,
+				   const struct cil_classperms_set *cps1,
+				   const struct cil_list *cpl2)
 {
 	struct cil_classpermission *cp = cps1->set;
 
@@ -401,7 +426,9 @@ static void cil_classperms_set_and(struct cil_list **result, const struct cil_cl
 }
 
 /* result = cpl1 and cpl2 */
-void cil_classperms_list_and(struct cil_list **result, const struct cil_list *cpl1, const struct cil_list *cpl2)
+void cil_classperms_list_and(struct cil_list **result,
+			     const struct cil_list *cpl1,
+			     const struct cil_list *cpl2)
 {
 	struct cil_list_item *curr;
 
@@ -441,7 +468,9 @@ void cil_classperms_list_and(struct cil_list **result, const struct cil_list *cp
 }
 
 /* Append cp1 and not cpl2 to result */
-static void cil_classperms_andnot(struct cil_list **result, const struct cil_classperms *cp1, const struct cil_list *cpl2)
+static void cil_classperms_andnot(struct cil_list **result,
+				  const struct cil_classperms *cp1,
+				  const struct cil_list *cpl2)
 {
 	struct cil_classperms *new_cp = NULL;
 	struct cil_list_item *curr;
@@ -461,40 +490,49 @@ static void cil_classperms_andnot(struct cil_list **result, const struct cil_cla
 				new_cp->class = cp1->class;
 				cil_list_init(&new_cp->perm_strs, CIL_PERM);
 				cil_list_init(&new_cp->perms, CIL_PERM);
-				cil_list_append(*result, CIL_CLASSPERMS, new_cp);
+				cil_list_append(*result, CIL_CLASSPERMS,
+						new_cp);
 			}
-			cil_list_append(new_cp->perm_strs, CIL_STRING, perm->datum.fqn);
+			cil_list_append(new_cp->perm_strs, CIL_STRING,
+					perm->datum.fqn);
 			cil_list_append(new_cp->perms, CIL_DATUM, perm);
 		}
 	}
 }
 
 /* Append cp1 and not cpl2 to result */
-static void cil_classperms_map_andnot(struct cil_list **result, const struct cil_classperms *cp1, const struct cil_list *cpl2)
+static void cil_classperms_map_andnot(struct cil_list **result,
+				      const struct cil_classperms *cp1,
+				      const struct cil_list *cpl2)
 {
 	struct cil_classperms *new_cp = NULL;
 	struct cil_list_item *p;
 
 	cil_list_for_each(p, cp1->perms) {
 		struct cil_perm *map_perm = p->data;
-		if (!cil_classperms_list_match_any(map_perm->classperms, cpl2)) {
+		if (!cil_classperms_list_match_any(map_perm->classperms,
+						   cpl2)) {
 			if (new_cp == NULL) {
 				cil_classperms_init(&new_cp);
 				new_cp->class_str = cp1->class_str;
 				new_cp->class = cp1->class;
 				cil_list_init(&new_cp->perm_strs, CIL_PERM);
 				cil_list_init(&new_cp->perms, CIL_PERM);
-				cil_list_append(*result, CIL_CLASSPERMS, new_cp);
+				cil_list_append(*result, CIL_CLASSPERMS,
+						new_cp);
 			}
-			cil_list_append(new_cp->perm_strs, CIL_STRING, map_perm->datum.fqn);
+			cil_list_append(new_cp->perm_strs, CIL_STRING,
+					map_perm->datum.fqn);
 			cil_list_append(new_cp->perms, CIL_DATUM, map_perm);
 		} else {
 			struct cil_list *new_cpl = NULL;
-			cil_classperms_list_andnot(&new_cpl, map_perm->classperms, cpl2);
+			cil_classperms_list_andnot(&new_cpl,
+						   map_perm->classperms, cpl2);
 			if (new_cpl) {
 				struct cil_list_item *i;
 				cil_list_for_each(i, new_cpl) {
-					cil_list_append(*result, i->flavor, i->data);
+					cil_list_append(*result, i->flavor,
+							i->data);
 				}
 				cil_list_destroy(&new_cpl, CIL_FALSE);
 			}
@@ -503,7 +541,9 @@ static void cil_classperms_map_andnot(struct cil_list **result, const struct cil
 }
 
 /* Append cps1 and not cpl2 to result */
-static void cil_classperms_set_andnot(struct cil_list **result, const struct cil_classperms_set *cps1, const struct cil_list *cpl2)
+static void cil_classperms_set_andnot(struct cil_list **result,
+				      const struct cil_classperms_set *cps1,
+				      const struct cil_list *cpl2)
 {
 	struct cil_classpermission *cp = cps1->set;
 
@@ -525,7 +565,9 @@ static void cil_classperms_set_andnot(struct cil_list **result, const struct cil
 }
 
 /* result = cpl1 and not cpl2 */
-void cil_classperms_list_andnot(struct cil_list **result, const struct cil_list *cpl1, const struct cil_list *cpl2)
+void cil_classperms_list_andnot(struct cil_list **result,
+				const struct cil_list *cpl1,
+				const struct cil_list *cpl2)
 {
 	struct cil_list_item *curr;
 
@@ -578,7 +620,8 @@ static int cil_datum_cardinality(const struct cil_symtab_datum *d)
 }
 
 /* result = ALL and not d2 */
-static int cil_datum_not(ebitmap_t *result, const struct cil_symtab_datum *d, int max)
+static int cil_datum_not(ebitmap_t *result, const struct cil_symtab_datum *d,
+			 int max)
 {
 	int rc = SEPOL_OK;
 
@@ -616,7 +659,8 @@ exit:
 }
 
 /* result = d1 and d2 */
-static int cil_datums_and(ebitmap_t *result, const struct cil_symtab_datum *d1, const struct cil_symtab_datum *d2)
+static int cil_datums_and(ebitmap_t *result, const struct cil_symtab_datum *d1,
+			  const struct cil_symtab_datum *d2)
 {
 	int rc = SEPOL_OK;
 	enum cil_flavor f1 = FLAVOR(d1);
@@ -670,7 +714,9 @@ exit:
 }
 
 /* result = d1 and not d2 */
-static int cil_datums_andnot(ebitmap_t *result, const struct cil_symtab_datum *d1, const struct cil_symtab_datum *d2)
+static int cil_datums_andnot(ebitmap_t *result,
+			     const struct cil_symtab_datum *d1,
+			     const struct cil_symtab_datum *d2)
 {
 	int rc = SEPOL_OK;
 	enum cil_flavor f1 = FLAVOR(d1);
@@ -714,7 +760,8 @@ static int cil_datums_andnot(ebitmap_t *result, const struct cil_symtab_datum *d
 		/* Both are attributes */
 		struct cil_typeattribute *a1 = (struct cil_typeattribute *)d1;
 		struct cil_typeattribute *a2 = (struct cil_typeattribute *)d2;
-		rc = ebitmap_andnot(result, a1->types, a2->types, a1->types->highbit);
+		rc = ebitmap_andnot(result, a1->types, a2->types,
+				    a1->types->highbit);
 		if (rc != SEPOL_OK) {
 			ebitmap_destroy(result);
 			goto exit;
@@ -743,8 +790,9 @@ static char *cil_create_new_attribute_name(unsigned num)
 	int rc;
 
 	if (len >= CIL_MAX_NAME_LENGTH) {
-		cil_log(CIL_ERR, "Name length greater than max name length of %d",
-				CIL_MAX_NAME_LENGTH);
+		cil_log(CIL_ERR,
+			"Name length greater than max name length of %d",
+			CIL_MAX_NAME_LENGTH);
 		goto exit;
 	}
 
@@ -763,7 +811,8 @@ exit:
 	return s2;
 }
 
-static struct cil_list *cil_create_and_expr_list(enum cil_flavor f1, void *v1, enum cil_flavor f2, void *v2)
+static struct cil_list *cil_create_and_expr_list(enum cil_flavor f1, void *v1,
+						 enum cil_flavor f2, void *v2)
 {
 	struct cil_list *expr;
 
@@ -775,7 +824,10 @@ static struct cil_list *cil_create_and_expr_list(enum cil_flavor f1, void *v1, e
 	return expr;
 }
 
-static struct cil_list *cil_create_andnot_expr_list(enum cil_flavor f1, void *v1, enum cil_flavor f2, void *v2)
+static struct cil_list *cil_create_andnot_expr_list(enum cil_flavor f1,
+						    void *v1,
+						    enum cil_flavor f2,
+						    void *v2)
 {
 	struct cil_list *expr, *sub_expr;
 
@@ -790,7 +842,9 @@ static struct cil_list *cil_create_andnot_expr_list(enum cil_flavor f1, void *v1
 	return expr;
 }
 
-static struct cil_tree_node *cil_create_and_insert_node(struct cil_tree_node *prev, enum cil_flavor flavor, void *data)
+static struct cil_tree_node *
+cil_create_and_insert_node(struct cil_tree_node *prev, enum cil_flavor flavor,
+			   void *data)
 {
 	struct cil_tree_node *new;
 
@@ -806,7 +860,12 @@ static struct cil_tree_node *cil_create_and_insert_node(struct cil_tree_node *pr
 	return new;
 }
 
-static int cil_create_and_insert_attribute_and_set(struct cil_db *db, struct cil_tree_node *prev, struct cil_list *str_expr, struct cil_list *datum_expr, ebitmap_t *types, struct cil_symtab_datum **d)
+static int cil_create_and_insert_attribute_and_set(struct cil_db *db,
+						   struct cil_tree_node *prev,
+						   struct cil_list *str_expr,
+						   struct cil_list *datum_expr,
+						   ebitmap_t *types,
+						   struct cil_symtab_datum **d)
 {
 	struct cil_tree_node *attr_node = NULL;
 	char *name;
@@ -831,10 +890,13 @@ static int cil_create_and_insert_attribute_and_set(struct cil_db *db, struct cil
 	cil_list_append(attr->expr_list, CIL_LIST, datum_expr);
 	attr->types = types;
 	attr->used = CIL_ATTR_AVRULE;
-	attr->keep = (ebitmap_cardinality(types) < db->attrs_expand_size) ? CIL_FALSE : CIL_TRUE;
+	attr->keep = (ebitmap_cardinality(types) < db->attrs_expand_size) ?
+			     CIL_FALSE :
+			     CIL_TRUE;
 
 	attr_node = cil_create_and_insert_node(prev, CIL_TYPEATTRIBUTE, attr);
-	attrset_node = cil_create_and_insert_node(attr_node, CIL_TYPEATTRIBUTESET, attrset);
+	attrset_node = cil_create_and_insert_node(
+		attr_node, CIL_TYPEATTRIBUTESET, attrset);
 
 	rc = cil_get_symtab(prev->parent, &symtab, CIL_SYM_TYPES);
 	if (rc != SEPOL_OK) {
@@ -854,7 +916,8 @@ static int cil_create_and_insert_attribute_and_set(struct cil_db *db, struct cil
 
 exit:
 	if (attr_node) {
-		cil_destroy_typeattribute(attr_node->data); // This will not destroy datum_expr
+		cil_destroy_typeattribute(
+			attr_node->data); // This will not destroy datum_expr
 		free(attr_node);
 	}
 	if (attrset_node) {
@@ -869,7 +932,9 @@ struct attr_symtab_map_data {
 	ebitmap_t *types;
 };
 
-static int cil_check_attribute_in_symtab(__attribute__((unused))hashtab_key_t k, hashtab_datum_t d, void *args)
+static int
+cil_check_attribute_in_symtab(__attribute__((unused)) hashtab_key_t k,
+			      hashtab_datum_t d, void *args)
 {
 	struct attr_symtab_map_data *data = args;
 
@@ -882,7 +947,9 @@ static int cil_check_attribute_in_symtab(__attribute__((unused))hashtab_key_t k,
 	return SEPOL_OK;
 }
 
-static struct cil_symtab_datum *cil_check_for_previously_defined_attribute(struct cil_db *db, ebitmap_t *types, struct cil_symtab_datum *d)
+static struct cil_symtab_datum *
+cil_check_for_previously_defined_attribute(struct cil_db *db, ebitmap_t *types,
+					   struct cil_symtab_datum *d)
 {
 	symtab_t *local_symtab, *root_symtab;
 	struct attr_symtab_map_data data;
@@ -892,17 +959,20 @@ static struct cil_symtab_datum *cil_check_for_previously_defined_attribute(struc
 	data.types = types;
 
 	local_symtab = d->symtab;
-	root_symtab = &((struct cil_root *)db->ast->root->data)->symtab[CIL_SYM_TYPES];
+	root_symtab =
+		&((struct cil_root *)db->ast->root->data)->symtab[CIL_SYM_TYPES];
 
 	if (local_symtab != root_symtab) {
-		rc = cil_symtab_map(local_symtab, cil_check_attribute_in_symtab, &data);
+		rc = cil_symtab_map(local_symtab, cil_check_attribute_in_symtab,
+				    &data);
 		if (rc != SEPOL_OK) {
 			return NULL;
 		}
 	}
 
 	if (!data.d) {
-		rc = cil_symtab_map(root_symtab, cil_check_attribute_in_symtab, &data);
+		rc = cil_symtab_map(root_symtab, cil_check_attribute_in_symtab,
+				    &data);
 		if (rc != SEPOL_OK) {
 			return NULL;
 		}
@@ -911,7 +981,9 @@ static struct cil_symtab_datum *cil_check_for_previously_defined_attribute(struc
 	return data.d;
 }
 
-static int cil_create_attribute_all_and_not_d(struct cil_db *db, struct cil_symtab_datum *d, struct cil_symtab_datum **d3)
+static int cil_create_attribute_all_and_not_d(struct cil_db *db,
+					      struct cil_symtab_datum *d,
+					      struct cil_symtab_datum **d3)
 {
 	struct cil_list *str_expr;
 	struct cil_list *datum_expr;
@@ -924,8 +996,10 @@ static int cil_create_attribute_all_and_not_d(struct cil_db *db, struct cil_symt
 		return SEPOL_ERR;
 	}
 
-	str_expr = cil_create_andnot_expr_list(CIL_OP, (void *)CIL_ALL, CIL_STRING, d->fqn);
-	datum_expr = cil_create_andnot_expr_list(CIL_OP, (void *)CIL_ALL, CIL_DATUM, d);
+	str_expr = cil_create_andnot_expr_list(CIL_OP, (void *)CIL_ALL,
+					       CIL_STRING, d->fqn);
+	datum_expr = cil_create_andnot_expr_list(CIL_OP, (void *)CIL_ALL,
+						 CIL_DATUM, d);
 
 	types = cil_malloc(sizeof(*types));
 	rc = cil_datum_not(types, d, db->num_types);
@@ -953,7 +1027,8 @@ static int cil_create_attribute_all_and_not_d(struct cil_db *db, struct cil_symt
 		goto exit;
 	}
 
-	rc = cil_create_and_insert_attribute_and_set(db, NODE(d), str_expr, datum_expr, types, d3);
+	rc = cil_create_and_insert_attribute_and_set(db, NODE(d), str_expr,
+						     datum_expr, types, d3);
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
@@ -967,7 +1042,10 @@ exit:
 	return rc;
 }
 
-static int cil_create_attribute_d1_and_not_d2(struct cil_db *db, struct cil_symtab_datum *d1, struct cil_symtab_datum *d2, struct cil_symtab_datum **d3)
+static int cil_create_attribute_d1_and_not_d2(struct cil_db *db,
+					      struct cil_symtab_datum *d1,
+					      struct cil_symtab_datum *d2,
+					      struct cil_symtab_datum **d3)
 {
 	struct cil_list *str_expr;
 	struct cil_list *datum_expr;
@@ -985,7 +1063,8 @@ static int cil_create_attribute_d1_and_not_d2(struct cil_db *db, struct cil_symt
 		return SEPOL_OK;
 	}
 
-	str_expr = cil_create_andnot_expr_list(CIL_STRING, d1->fqn, CIL_STRING, d2->fqn);
+	str_expr = cil_create_andnot_expr_list(CIL_STRING, d1->fqn, CIL_STRING,
+					       d2->fqn);
 	datum_expr = cil_create_andnot_expr_list(CIL_DATUM, d1, CIL_DATUM, d2);
 
 	types = cil_malloc(sizeof(*types));
@@ -1013,7 +1092,8 @@ static int cil_create_attribute_d1_and_not_d2(struct cil_db *db, struct cil_symt
 		goto exit;
 	}
 
-	rc = cil_create_and_insert_attribute_and_set(db, NODE(d1), str_expr, datum_expr, types, d3);
+	rc = cil_create_and_insert_attribute_and_set(db, NODE(d1), str_expr,
+						     datum_expr, types, d3);
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
@@ -1027,7 +1107,10 @@ exit:
 	return rc;
 }
 
-static int cil_create_attribute_d1_and_d2(struct cil_db *db, struct cil_symtab_datum *d1, struct cil_symtab_datum *d2, struct cil_symtab_datum **d3)
+static int cil_create_attribute_d1_and_d2(struct cil_db *db,
+					  struct cil_symtab_datum *d1,
+					  struct cil_symtab_datum *d2,
+					  struct cil_symtab_datum **d3)
 {
 	struct cil_list *str_expr;
 	struct cil_list *datum_expr;
@@ -1045,7 +1128,8 @@ static int cil_create_attribute_d1_and_d2(struct cil_db *db, struct cil_symtab_d
 		return SEPOL_OK;
 	}
 
-	str_expr = cil_create_and_expr_list(CIL_STRING, d1->fqn, CIL_STRING, d2->fqn);
+	str_expr = cil_create_and_expr_list(CIL_STRING, d1->fqn, CIL_STRING,
+					    d2->fqn);
 	datum_expr = cil_create_and_expr_list(CIL_DATUM, d1, CIL_DATUM, d2);
 
 	types = cil_malloc(sizeof(*types));
@@ -1073,7 +1157,8 @@ static int cil_create_attribute_d1_and_d2(struct cil_db *db, struct cil_symtab_d
 		goto exit;
 	}
 
-	rc = cil_create_and_insert_attribute_and_set(db, NODE(d1), str_expr, datum_expr, types, d3);
+	rc = cil_create_and_insert_attribute_and_set(db, NODE(d1), str_expr,
+						     datum_expr, types, d3);
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
@@ -1087,7 +1172,9 @@ exit:
 	return rc;
 }
 
-static struct cil_avrule *cil_create_avrule(struct cil_symtab_datum *src, struct cil_symtab_datum *tgt, struct cil_list *classperms)
+static struct cil_avrule *cil_create_avrule(struct cil_symtab_datum *src,
+					    struct cil_symtab_datum *tgt,
+					    struct cil_list *classperms)
 {
 	struct cil_avrule *new;
 
@@ -1103,7 +1190,9 @@ static struct cil_avrule *cil_create_avrule(struct cil_symtab_datum *src, struct
 	return new;
 }
 
-static struct cil_tree_node *cil_create_and_add_avrule(struct cil_tree_node *curr, struct cil_symtab_datum *src, struct cil_symtab_datum *tgt, struct cil_list *classperms)
+static struct cil_tree_node *cil_create_and_add_avrule(
+	struct cil_tree_node *curr, struct cil_symtab_datum *src,
+	struct cil_symtab_datum *tgt, struct cil_list *classperms)
 {
 	struct cil_avrule *new_avrule;
 	struct cil_list *new_cp_list;
@@ -1117,7 +1206,12 @@ static struct cil_tree_node *cil_create_and_add_avrule(struct cil_tree_node *cur
 	return cil_create_and_insert_node(curr, CIL_AVRULE, new_avrule);
 }
 
-static int cil_remove_permissions_from_special_rule(struct cil_db *db, struct cil_tree_node *curr, struct cil_symtab_datum *s1, struct cil_symtab_datum *t1, struct cil_symtab_datum *s2, struct cil_symtab_datum *t2, struct cil_list *p4, struct cil_symtab_datum *s3, struct cil_symtab_datum *s4)
+static int cil_remove_permissions_from_special_rule(
+	struct cil_db *db, struct cil_tree_node *curr,
+	struct cil_symtab_datum *s1, struct cil_symtab_datum *t1,
+	struct cil_symtab_datum *s2, struct cil_symtab_datum *t2,
+	struct cil_list *p4, struct cil_symtab_datum *s3,
+	struct cil_symtab_datum *s4)
 {
 	int rc;
 
@@ -1131,7 +1225,8 @@ static int cil_remove_permissions_from_special_rule(struct cil_db *db, struct ci
 			curr = cil_create_and_add_avrule(curr, s4, t, p4);
 		} else {
 			struct cil_symtab_datum *s5, *s6, *ta, *tb;
-			rc = cil_create_attribute_d1_and_not_d2(db, s4, t2, &s5);
+			rc = cil_create_attribute_d1_and_not_d2(db, s4, t2,
+								&s5);
 			if (rc != SEPOL_OK) {
 				goto exit;
 			}
@@ -1143,14 +1238,16 @@ static int cil_remove_permissions_from_special_rule(struct cil_db *db, struct ci
 			if (rc != SEPOL_OK) {
 				goto exit;
 			}
-			rc = cil_create_attribute_d1_and_not_d2(db, ta, s4, &tb);
+			rc = cil_create_attribute_d1_and_not_d2(db, ta, s4,
+								&tb);
 			if (rc != SEPOL_OK) {
 				goto exit;
 			}
 			curr = cil_create_and_add_avrule(curr, s6, ta, p4);
 			curr = cil_create_and_add_avrule(curr, s5, tb, p4);
 			if (cil_datum_cardinality(s5) > 1) {
-				curr = cil_create_and_add_avrule(curr, s5, DATUM(db->othertype), p4);
+				curr = cil_create_and_add_avrule(
+					curr, s5, DATUM(db->othertype), p4);
 			}
 		}
 	} else if (t1 == DATUM(db->othertype)) {
@@ -1161,7 +1258,8 @@ static int cil_remove_permissions_from_special_rule(struct cil_db *db, struct ci
 			curr = cil_create_and_add_avrule(curr, s4, s3, p4);
 		} else {
 			struct cil_symtab_datum *s5, *s6, *tc, *td;
-			rc = cil_create_attribute_d1_and_not_d2(db, s4, t2, &s5);
+			rc = cil_create_attribute_d1_and_not_d2(db, s4, t2,
+								&s5);
 			if (rc != SEPOL_OK) {
 				goto exit;
 			}
@@ -1169,18 +1267,21 @@ static int cil_remove_permissions_from_special_rule(struct cil_db *db, struct ci
 			if (rc != SEPOL_OK) {
 				goto exit;
 			}
-			rc = cil_create_attribute_d1_and_not_d2(db, s1, t2, &tc);
+			rc = cil_create_attribute_d1_and_not_d2(db, s1, t2,
+								&tc);
 			if (rc != SEPOL_OK) {
 				goto exit;
 			}
-			rc = cil_create_attribute_d1_and_not_d2(db, s3, t2, &td);
+			rc = cil_create_attribute_d1_and_not_d2(db, s3, t2,
+								&td);
 			if (rc != SEPOL_OK) {
 				goto exit;
 			}
 			curr = cil_create_and_add_avrule(curr, s6, tc, p4);
 			curr = cil_create_and_add_avrule(curr, s5, td, p4);
 			if (cil_datum_cardinality(s5) > 1) {
-				curr = cil_create_and_add_avrule(curr, s5, DATUM(db->othertype), p4);
+				curr = cil_create_and_add_avrule(
+					curr, s5, DATUM(db->othertype), p4);
 			}
 		}
 	} else {
@@ -1189,7 +1290,8 @@ static int cil_remove_permissions_from_special_rule(struct cil_db *db, struct ci
 		if (rc != SEPOL_OK) {
 			goto exit;
 		}
-		curr = cil_create_and_add_avrule(curr, s8, DATUM(db->selftype), p4);
+		curr = cil_create_and_add_avrule(curr, s8, DATUM(db->selftype),
+						 p4);
 		if (t2 == DATUM(db->notselftype)) {
 			/* Nothing else is needed */
 		} else { /* t2 == DATUM(db->othertype) */
@@ -1207,7 +1309,10 @@ exit:
 	return rc;
 }
 
-static int cil_remove_permissions_from_rule(struct cil_db *db, struct cil_tree_node *allow_node, const struct cil_tree_node *deny_node)
+static int
+cil_remove_permissions_from_rule(struct cil_db *db,
+				 struct cil_tree_node *allow_node,
+				 const struct cil_tree_node *deny_node)
 {
 	struct cil_avrule *allow_rule = allow_node->data;
 	struct cil_deny_rule *deny_rule = deny_node->data;
@@ -1224,7 +1329,8 @@ static int cil_remove_permissions_from_rule(struct cil_db *db, struct cil_tree_n
 	int rc;
 
 	cil_classperms_list_andnot(&p3, p1, p2);
-	if (!cil_list_is_empty(p3)) {;
+	if (!cil_list_is_empty(p3)) {
+		;
 		curr = cil_create_and_add_avrule(curr, s1, t1, p3);
 	}
 	cil_destroy_classperms_list(&p3);
@@ -1232,8 +1338,11 @@ static int cil_remove_permissions_from_rule(struct cil_db *db, struct cil_tree_n
 
 	cil_classperms_list_and(&p4, p1, p2);
 	if (cil_list_is_empty(p4)) {
-		cil_tree_log(allow_node, CIL_ERR, "Allow rule did not match deny rule: No matching class and permissions");
-		cil_tree_log((struct cil_tree_node *)deny_node, CIL_ERR, "Deny rule");
+		cil_tree_log(
+			allow_node, CIL_ERR,
+			"Allow rule did not match deny rule: No matching class and permissions");
+		cil_tree_log((struct cil_tree_node *)deny_node, CIL_ERR,
+			     "Deny rule");
 		rc = SEPOL_ERR;
 		goto exit;
 	}
@@ -1245,7 +1354,7 @@ static int cil_remove_permissions_from_rule(struct cil_db *db, struct cil_tree_n
 	curr = cil_create_and_add_avrule(curr, s3, t1, p4);
 
 	if ((t1 == DATUM(db->selftype) && t2 == DATUM(db->selftype)) ||
-		(t1 == DATUM(db->notselftype) && t2 == DATUM(db->notselftype))) {
+	    (t1 == DATUM(db->notselftype) && t2 == DATUM(db->notselftype))) {
 		/* Nothing more needs to be done */
 		rc = SEPOL_OK;
 		goto exit;
@@ -1257,8 +1366,9 @@ static int cil_remove_permissions_from_rule(struct cil_db *db, struct cil_tree_n
 	}
 
 	if (t1 == DATUM(db->notselftype) || t1 == DATUM(db->othertype) ||
-		t2 == DATUM(db->notselftype) || t2 == DATUM(db->othertype)) {
-		rc = cil_remove_permissions_from_special_rule(db, curr, s1, t1, s2, t2, p4, s3, s4);
+	    t2 == DATUM(db->notselftype) || t2 == DATUM(db->othertype)) {
+		rc = cil_remove_permissions_from_special_rule(
+			db, curr, s1, t1, s2, t2, p4, s3, s4);
 		goto exit;
 	}
 
@@ -1268,7 +1378,8 @@ static int cil_remove_permissions_from_rule(struct cil_db *db, struct cil_tree_n
 		if (rc != SEPOL_OK) {
 			goto exit;
 		}
-		curr = cil_create_and_add_avrule(curr, s5, DATUM(db->selftype), p4);
+		curr = cil_create_and_add_avrule(curr, s5, DATUM(db->selftype),
+						 p4);
 	} else if (t1 != DATUM(db->selftype) && t2 == DATUM(db->selftype)) {
 		struct cil_symtab_datum *s7, *s8, *t8;
 		rc = cil_create_attribute_d1_and_not_d2(db, s4, t1, &s7);
@@ -1286,7 +1397,8 @@ static int cil_remove_permissions_from_rule(struct cil_db *db, struct cil_tree_n
 		curr = cil_create_and_add_avrule(curr, s7, t1, p4);
 		curr = cil_create_and_add_avrule(curr, s8, t8, p4);
 		if (cil_datum_cardinality(s8) > 1) {
-			curr = cil_create_and_add_avrule(curr, s8, DATUM(db->othertype), p4);
+			curr = cil_create_and_add_avrule(
+				curr, s8, DATUM(db->othertype), p4);
 		}
 	} else {
 		struct cil_symtab_datum *t3;
@@ -1304,7 +1416,9 @@ exit:
 	return rc;
 }
 
-static int cil_find_matching_allow_rules(struct cil_list *matching, struct cil_tree_node *start, struct cil_tree_node *deny_node)
+static int cil_find_matching_allow_rules(struct cil_list *matching,
+					 struct cil_tree_node *start,
+					 struct cil_tree_node *deny_node)
 {
 	struct cil_deny_rule *deny_rule = deny_node->data;
 	struct cil_avrule target;
@@ -1315,10 +1429,12 @@ static int cil_find_matching_allow_rules(struct cil_list *matching, struct cil_t
 	target.tgt = deny_rule->tgt;
 	target.perms.classperms = deny_rule->classperms;
 
-	return cil_find_matching_avrule_in_ast(start, CIL_AVRULE, &target, matching, CIL_FALSE);
+	return cil_find_matching_avrule_in_ast(start, CIL_AVRULE, &target,
+					       matching, CIL_FALSE);
 }
 
-static int cil_process_deny_rule(struct cil_db *db, struct cil_tree_node *start, struct cil_tree_node *deny_node)
+static int cil_process_deny_rule(struct cil_db *db, struct cil_tree_node *start,
+				 struct cil_tree_node *deny_node)
 {
 	struct cil_list *matching;
 	struct cil_list_item *item;
@@ -1333,12 +1449,12 @@ static int cil_process_deny_rule(struct cil_db *db, struct cil_tree_node *start,
 
 	cil_list_for_each(item, matching) {
 		struct cil_tree_node *allow_node = item->data;
-		rc = cil_remove_permissions_from_rule(db, allow_node, deny_node);
+		rc = cil_remove_permissions_from_rule(db, allow_node,
+						      deny_node);
 		cil_tree_node_remove(allow_node);
 		if (rc != SEPOL_OK) {
 			goto exit;
 		}
-
 	}
 
 exit:
@@ -1346,7 +1462,9 @@ exit:
 	return rc;
 }
 
-static int cil_process_deny_rules(struct cil_db *db, struct cil_tree_node *start, struct cil_list *deny_rules)
+static int cil_process_deny_rules(struct cil_db *db,
+				  struct cil_tree_node *start,
+				  struct cil_list *deny_rules)
 {
 	struct cil_list_item *item;
 	int rc = SEPOL_OK;
@@ -1364,7 +1482,8 @@ exit:
 	return rc;
 }
 
-static int __cil_find_deny_rules(struct cil_tree_node *node,  uint32_t *finished, void *extra_args)
+static int __cil_find_deny_rules(struct cil_tree_node *node, uint32_t *finished,
+				 void *extra_args)
 {
 	struct cil_list *deny_rules = extra_args;
 
@@ -1395,15 +1514,18 @@ int cil_process_deny_rules_in_ast(struct cil_db *db)
 	}
 
 	start = db->ast->root;
-	rc = cil_tree_walk(start, __cil_find_deny_rules, NULL, NULL, deny_rules);
+	rc = cil_tree_walk(start, __cil_find_deny_rules, NULL, NULL,
+			   deny_rules);
 	if (rc != SEPOL_OK) {
-		cil_log(CIL_ERR, "An error occurred while getting deny rules\n");
+		cil_log(CIL_ERR,
+			"An error occurred while getting deny rules\n");
 		goto exit;
 	}
 
 	rc = cil_process_deny_rules(db, start, deny_rules);
 	if (rc != SEPOL_OK) {
-		cil_log(CIL_ERR, "An error occurred while processing deny rules\n");
+		cil_log(CIL_ERR,
+			"An error occurred while processing deny rules\n");
 		goto exit;
 	}
 

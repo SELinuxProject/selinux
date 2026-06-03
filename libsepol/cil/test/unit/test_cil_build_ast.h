@@ -501,7 +501,7 @@ void test_cil_gen_avrule_targetdomainnull_neg(CuTest *tc);
 void test_cil_gen_avrule_objectclassnull_neg(CuTest *tc);
 void test_cil_gen_avrule_permsnull_neg(CuTest *tc);
 void test_cil_gen_avrule_twolists_neg(CuTest *);
-//TODO: add cases to cover  parse_current->next->cl_head != NULL || parse_current->next->next->cl_head != NULL 
+//TODO: add cases to cover  parse_current->next->cl_head != NULL || parse_current->next->next->cl_head != NULL
 // || parse_current->next->next->next->cl_head != NULL
 
 void test_cil_gen_type_rule_transition(CuTest *);
@@ -522,7 +522,7 @@ void test_cil_gen_type_rule_change_objnull_neg(CuTest *);
 void test_cil_gen_type_rule_change_resultnull_neg(CuTest *);
 void test_cil_gen_type_rule_change_extra_neg(CuTest *);
 
-void test_cil_gen_type_rule_member(CuTest *); 
+void test_cil_gen_type_rule_member(CuTest *);
 void test_cil_gen_type_rule_member_currnull_neg(CuTest *);
 void test_cil_gen_type_rule_member_astnull_neg(CuTest *);
 void test_cil_gen_type_rule_member_srcnull_neg(CuTest *);
@@ -581,7 +581,7 @@ void test_cil_gen_sensalias_aliaslist_neg(CuTest *);
 void test_cil_gen_sensalias_extra_neg(CuTest *);
 
 void test_cil_gen_category(CuTest *);
-void test_cil_gen_category_dbnull_neg(CuTest *); 
+void test_cil_gen_category_dbnull_neg(CuTest *);
 void test_cil_gen_category_astnull_neg(CuTest *);
 void test_cil_gen_category_currnull_neg(CuTest *);
 void test_cil_gen_category_catnull_neg(CuTest *);
@@ -1121,74 +1121,74 @@ void test_cil_build_ast_node_helper_roletype_neg(CuTest *tc);
 void test_cil_build_ast_node_helper_userrole(CuTest *tc);
 void test_cil_build_ast_node_helper_userrole_neg(CuTest *tc);
 
-void test_cil_build_ast_node_helper_gen_classcommon(CuTest *tc); 
+void test_cil_build_ast_node_helper_gen_classcommon(CuTest *tc);
 void test_cil_build_ast_node_helper_gen_classcommon_neg(CuTest *tc);
 
-void test_cil_build_ast_node_helper_gen_dominance(CuTest *tc); 
+void test_cil_build_ast_node_helper_gen_dominance(CuTest *tc);
 void test_cil_build_ast_node_helper_gen_dominance_neg(CuTest *tc);
 
-void test_cil_build_ast_node_helper_gen_senscat(CuTest *tc); 
+void test_cil_build_ast_node_helper_gen_senscat(CuTest *tc);
 void test_cil_build_ast_node_helper_gen_senscat_neg(CuTest *tc);
 
-void test_cil_build_ast_node_helper_gen_level(CuTest *tc); 
+void test_cil_build_ast_node_helper_gen_level(CuTest *tc);
 void test_cil_build_ast_node_helper_gen_level_neg(CuTest *tc);
 
-void test_cil_build_ast_node_helper_gen_levelrange(CuTest *tc); 
+void test_cil_build_ast_node_helper_gen_levelrange(CuTest *tc);
 void test_cil_build_ast_node_helper_gen_levelrange_neg(CuTest *tc);
 
-void test_cil_build_ast_node_helper_gen_constrain(CuTest *tc); 
+void test_cil_build_ast_node_helper_gen_constrain(CuTest *tc);
 void test_cil_build_ast_node_helper_gen_constrain_neg(CuTest *tc);
-void test_cil_build_ast_node_helper_gen_mlsconstrain(CuTest *tc); 
+void test_cil_build_ast_node_helper_gen_mlsconstrain(CuTest *tc);
 void test_cil_build_ast_node_helper_gen_mlsconstrain_neg(CuTest *tc);
 
-void test_cil_build_ast_node_helper_gen_context(CuTest *tc); 
+void test_cil_build_ast_node_helper_gen_context(CuTest *tc);
 void test_cil_build_ast_node_helper_gen_context_neg(CuTest *tc);
 
-void test_cil_build_ast_node_helper_gen_filecon(CuTest *tc); 
+void test_cil_build_ast_node_helper_gen_filecon(CuTest *tc);
 void test_cil_build_ast_node_helper_gen_filecon_neg(CuTest *tc);
 
-void test_cil_build_ast_node_helper_gen_portcon(CuTest *tc); 
+void test_cil_build_ast_node_helper_gen_portcon(CuTest *tc);
 void test_cil_build_ast_node_helper_gen_portcon_neg(CuTest *tc);
 
-void test_cil_build_ast_node_helper_gen_nodecon(CuTest *tc); 
+void test_cil_build_ast_node_helper_gen_nodecon(CuTest *tc);
 void test_cil_build_ast_node_helper_gen_nodecon_neg(CuTest *tc);
 
-void test_cil_build_ast_node_helper_gen_genfscon(CuTest *tc); 
+void test_cil_build_ast_node_helper_gen_genfscon(CuTest *tc);
 void test_cil_build_ast_node_helper_gen_genfscon_neg(CuTest *tc);
 
-void test_cil_build_ast_node_helper_gen_netifcon(CuTest *tc); 
+void test_cil_build_ast_node_helper_gen_netifcon(CuTest *tc);
 void test_cil_build_ast_node_helper_gen_netifcon_neg(CuTest *tc);
 
-void test_cil_build_ast_node_helper_gen_pirqcon(CuTest *tc); 
+void test_cil_build_ast_node_helper_gen_pirqcon(CuTest *tc);
 void test_cil_build_ast_node_helper_gen_pirqcon_neg(CuTest *tc);
 
-void test_cil_build_ast_node_helper_gen_iomemcon(CuTest *tc); 
+void test_cil_build_ast_node_helper_gen_iomemcon(CuTest *tc);
 void test_cil_build_ast_node_helper_gen_iomemcon_neg(CuTest *tc);
 
-void test_cil_build_ast_node_helper_gen_ioportcon(CuTest *tc); 
+void test_cil_build_ast_node_helper_gen_ioportcon(CuTest *tc);
 void test_cil_build_ast_node_helper_gen_ioportcon_neg(CuTest *tc);
 
-void test_cil_build_ast_node_helper_gen_pcidevicecon(CuTest *tc); 
+void test_cil_build_ast_node_helper_gen_pcidevicecon(CuTest *tc);
 void test_cil_build_ast_node_helper_gen_pcidevicecon_neg(CuTest *tc);
 
-void test_cil_build_ast_node_helper_gen_fsuse(CuTest *tc); 
+void test_cil_build_ast_node_helper_gen_fsuse(CuTest *tc);
 void test_cil_build_ast_node_helper_gen_fsuse_neg(CuTest *tc);
 
-void test_cil_build_ast_node_helper_gen_macro(CuTest *tc); 
+void test_cil_build_ast_node_helper_gen_macro(CuTest *tc);
 void test_cil_build_ast_node_helper_gen_macro_neg(CuTest *tc);
 void test_cil_build_ast_node_helper_gen_macro_nested_macro_neg(CuTest *tc);
 void test_cil_build_ast_node_helper_gen_macro_nested_tunif_neg(CuTest *tc);
 
-void test_cil_build_ast_node_helper_gen_call(CuTest *tc); 
+void test_cil_build_ast_node_helper_gen_call(CuTest *tc);
 void test_cil_build_ast_node_helper_gen_call_neg(CuTest *tc);
 
-void test_cil_build_ast_node_helper_gen_optional(CuTest *tc); 
+void test_cil_build_ast_node_helper_gen_optional(CuTest *tc);
 void test_cil_build_ast_node_helper_gen_optional_neg(CuTest *tc);
 
-void test_cil_build_ast_node_helper_gen_policycap(CuTest *tc); 
+void test_cil_build_ast_node_helper_gen_policycap(CuTest *tc);
 void test_cil_build_ast_node_helper_gen_policycap_neg(CuTest *tc);
 
-void test_cil_build_ast_node_helper_gen_ipaddr(CuTest *tc); 
+void test_cil_build_ast_node_helper_gen_ipaddr(CuTest *tc);
 void test_cil_build_ast_node_helper_gen_ipaddr_neg(CuTest *tc);
 
 void test_cil_build_ast_node_helper_extraargsnull_neg(CuTest *);

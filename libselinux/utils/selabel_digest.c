@@ -6,13 +6,13 @@
 #include <selinux/selinux.h>
 #include <selinux/label.h>
 
-static __attribute__ ((__noreturn__)) void usage(const char *progname)
+static __attribute__((__noreturn__)) void usage(const char *progname)
 {
 	fprintf(stderr,
 		"usage: %s -b backend [-v] [-B] [-i] [-f file]\n\n"
 		"Where:\n\t"
 		"-b  The backend - \"file\", \"media\", \"x\", \"db\" or "
-			"\"prop\"\n\t"
+		"\"prop\"\n\t"
 		"-v  Run \"cat <specfile_list> | openssl dgst -sha1 -hex\"\n\t"
 		"    on the list of specfiles to compare the SHA1 digests.\n\t"
 		"-B  Use base specfiles only (valid for \"-b file\" only).\n\t"
@@ -23,7 +23,8 @@ static __attribute__ ((__noreturn__)) void usage(const char *progname)
 	exit(1);
 }
 
-static int run_check_digest(const char *cmd, const char *selabel_digest, size_t digest_len)
+static int run_check_digest(const char *cmd, const char *selabel_digest,
+			    size_t digest_len)
 {
 	FILE *fp;
 	char files_digest[128];
@@ -32,7 +33,8 @@ static int run_check_digest(const char *cmd, const char *selabel_digest, size_t 
 
 	fp = popen(cmd, "r");
 	if (!fp) {
-		fprintf(stderr, "Failed to run command '%s':  %s\n", cmd, strerror(errno));
+		fprintf(stderr, "Failed to run command '%s':  %s\n", cmd,
+			strerror(errno));
 		return -1;
 	}
 
@@ -45,8 +47,8 @@ static int run_check_digest(const char *cmd, const char *selabel_digest, size_t 
 	rc = strncmp(selabel_digest, files_ptr + 1, digest_len * 2);
 	if (rc) {
 		printf("Failed validation:\n\tselabel_digest: %s\n\t"
-				    "files_digest:   %s\n",
-				    selabel_digest, files_ptr + 1);
+		       "files_digest:   %s\n",
+		       selabel_digest, files_ptr + 1);
 	} else {
 		printf("Passed validation - digest: %s\n", selabel_digest);
 	}
@@ -69,11 +71,10 @@ int main(int argc, char **argv)
 	char *sha1_buf = NULL;
 
 	struct selabel_handle *hnd;
-	struct selinux_opt selabel_option[] = {
-		{ SELABEL_OPT_PATH, file },
-		{ SELABEL_OPT_DIGEST, digest },
-		{ SELABEL_OPT_BASEONLY, baseonly }
-	};
+	struct selinux_opt selabel_option[] = { { SELABEL_OPT_PATH, file },
+						{ SELABEL_OPT_DIGEST, digest },
+						{ SELABEL_OPT_BASEONLY,
+						  baseonly } };
 
 	if (argc < 3)
 		usage(argv[0]);
@@ -95,7 +96,7 @@ int main(int argc, char **argv)
 				backend = SELABEL_CTX_ANDROID_SERVICE;
 			} else {
 				fprintf(stderr, "Unknown backend: %s\n",
-								    optarg);
+					optarg);
 				usage(argv[0]);
 			}
 			break;
@@ -122,7 +123,8 @@ int main(int argc, char **argv)
 	selabel_option[1].value = digest;
 	selabel_option[2].value = baseonly;
 
-	hnd = selabel_open(backend, selabel_option, backend == SELABEL_CTX_FILE ? 3 : 2);
+	hnd = selabel_open(backend, selabel_option,
+			   backend == SELABEL_CTX_FILE ? 3 : 2);
 	if (!hnd) {
 		switch (errno) {
 		case EOVERFLOW:
@@ -131,13 +133,13 @@ int main(int argc, char **argv)
 			break;
 		default:
 			fprintf(stderr, "ERROR: selabel_open: %s\n",
-						    strerror(errno));
+				strerror(errno));
 		}
 		return -1;
 	}
 
 	rc = selabel_digest(hnd, &sha1_digest, &digest_len, &specfiles,
-							    &num_specfiles);
+			    &num_specfiles);
 
 	if (rc) {
 		switch (errno) {
@@ -146,7 +148,7 @@ int main(int argc, char **argv)
 			break;
 		default:
 			fprintf(stderr, "selabel_digest ERROR: %s\n",
-						    strerror(errno));
+				strerror(errno));
 		}
 		goto err;
 	}
@@ -154,7 +156,7 @@ int main(int argc, char **argv)
 	sha1_buf = malloc(digest_len * 2 + 1);
 	if (!sha1_buf) {
 		fprintf(stderr, "Could not malloc buffer ERROR: %s\n",
-						    strerror(errno));
+			strerror(errno));
 		rc = -1;
 		goto err;
 	}
@@ -174,7 +176,8 @@ int main(int argc, char **argv)
 			cmd_ptr = &cmd_buf[0];
 			ret = snprintf(cmd_ptr, cmd_rem, "/usr/bin/cat ");
 			if (ret < 0 || (size_t)ret >= cmd_rem) {
-				fprintf(stderr, "Could not format validate command\n");
+				fprintf(stderr,
+					"Could not format validate command\n");
 				rc = -1;
 				goto err;
 			}
@@ -184,9 +187,11 @@ int main(int argc, char **argv)
 
 		for (i = 0; i < num_specfiles; i++) {
 			if (validate) {
-				ret = snprintf(cmd_ptr, cmd_rem, "%s ", specfiles[i]);
+				ret = snprintf(cmd_ptr, cmd_rem, "%s ",
+					       specfiles[i]);
 				if (ret < 0 || (size_t)ret >= cmd_rem) {
-					fprintf(stderr, "Could not format validate command\n");
+					fprintf(stderr,
+						"Could not format validate command\n");
 					rc = -1;
 					goto err;
 				}
@@ -198,9 +203,11 @@ int main(int argc, char **argv)
 		}
 
 		if (validate) {
-			ret = snprintf(cmd_ptr, cmd_rem, "| /usr/bin/openssl dgst -sha1 -hex");
+			ret = snprintf(cmd_ptr, cmd_rem,
+				       "| /usr/bin/openssl dgst -sha1 -hex");
 			if (ret < 0 || (size_t)ret >= cmd_rem) {
-				fprintf(stderr, "Could not format validate command\n");
+				fprintf(stderr,
+					"Could not format validate command\n");
 				rc = -1;
 				goto err;
 			}

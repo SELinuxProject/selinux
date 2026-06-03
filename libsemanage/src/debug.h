@@ -33,48 +33,45 @@
 #define STATUS_ERR -1
 #define STATUS_NODATA 1
 
-#define msg_write(handle_arg, level_arg,                   \
-	          channel_arg, func_arg, ...) do {         \
-	                                                   \
-        if ((handle_arg)->msg_callback) {                  \
-                int errsv__ = errno;                       \
-                                                           \
-                (handle_arg)->msg_fname = func_arg;        \
-                (handle_arg)->msg_channel = channel_arg;   \
-                (handle_arg)->msg_level = level_arg;       \
-                                                           \
-                (handle_arg)->msg_callback(                \
-                        (handle_arg)->msg_callback_arg,    \
-                        handle_arg, __VA_ARGS__);          \
-                                                           \
-                errno = errsv__;                           \
-        }                                                  \
-} while(0)
+#define msg_write(handle_arg, level_arg, channel_arg, func_arg, ...)           \
+	do {                                                                   \
+		if ((handle_arg)->msg_callback) {                              \
+			int errsv__ = errno;                                   \
+                                                                               \
+			(handle_arg)->msg_fname = func_arg;                    \
+			(handle_arg)->msg_channel = channel_arg;               \
+			(handle_arg)->msg_level = level_arg;                   \
+                                                                               \
+			(handle_arg)                                           \
+				->msg_callback((handle_arg)->msg_callback_arg, \
+					       handle_arg, __VA_ARGS__);       \
+                                                                               \
+			errno = errsv__;                                       \
+		}                                                              \
+	} while (0)
 
-#define ERR(handle, ...) \
-	msg_write(handle, SEMANAGE_MSG_ERR, "libsemanage", \
-	__FUNCTION__, __VA_ARGS__)
+#define ERR(handle, ...)                                                 \
+	msg_write(handle, SEMANAGE_MSG_ERR, "libsemanage", __FUNCTION__, \
+		  __VA_ARGS__)
 
-#define INFO(handle, ...) \
-	msg_write(handle, SEMANAGE_MSG_INFO, "libsemanage", \
-	__FUNCTION__, __VA_ARGS__)
+#define INFO(handle, ...)                                                 \
+	msg_write(handle, SEMANAGE_MSG_INFO, "libsemanage", __FUNCTION__, \
+		  __VA_ARGS__)
 
-#define WARN(handle, ...) \
-	msg_write(handle, SEMANAGE_MSG_WARN, "libsemanage", \
-	__FUNCTION__, __VA_ARGS__)
-
-#ifdef __GNUC__
-__attribute__ ((format(printf, 3, 4)))
-#endif
-extern void semanage_msg_default_handler(void *varg,
-						semanage_handle_t * handle,
-						const char *fmt, ...);
+#define WARN(handle, ...)                                                 \
+	msg_write(handle, SEMANAGE_MSG_WARN, "libsemanage", __FUNCTION__, \
+		  __VA_ARGS__)
 
 #ifdef __GNUC__
-__attribute__ ((format(printf, 3, 4)))
+__attribute__((format(printf, 3, 4)))
 #endif
-extern void semanage_msg_relay_handler(void *varg,
-					      sepol_handle_t * handle,
-					      const char *fmt, ...);
+extern void semanage_msg_default_handler(void *varg, semanage_handle_t *handle,
+					 const char *fmt, ...);
+
+#ifdef __GNUC__
+__attribute__((format(printf, 3, 4)))
+#endif
+extern void semanage_msg_relay_handler(void *varg, sepol_handle_t *handle,
+				       const char *fmt, ...);
 
 #endif

@@ -26,43 +26,35 @@ typedef semanage_bool_key_t record_key_t;
 #include <selinux/selinux.h>
 
 /* Key */
-int semanage_bool_key_create(semanage_handle_t * handle,
-			     const char *name, semanage_bool_key_t ** key)
+int semanage_bool_key_create(semanage_handle_t *handle, const char *name,
+			     semanage_bool_key_t **key)
 {
-
 	return sepol_bool_key_create(handle->sepolh, name, key);
 }
 
-int semanage_bool_key_extract(semanage_handle_t * handle,
-			      const semanage_bool_t * boolean,
-			      semanage_bool_key_t ** key)
+int semanage_bool_key_extract(semanage_handle_t *handle,
+			      const semanage_bool_t *boolean,
+			      semanage_bool_key_t **key)
 {
-
 	return sepol_bool_key_extract(handle->sepolh, boolean, key);
 }
 
-
-void semanage_bool_key_free(semanage_bool_key_t * key)
+void semanage_bool_key_free(semanage_bool_key_t *key)
 {
 	sepol_bool_key_free(key);
 }
 
-
-int semanage_bool_compare(const semanage_bool_t * boolean,
-			  const semanage_bool_key_t * key)
+int semanage_bool_compare(const semanage_bool_t *boolean,
+			  const semanage_bool_key_t *key)
 {
-
 	return sepol_bool_compare(boolean, key);
 }
 
-
-int semanage_bool_compare2(const semanage_bool_t * boolean,
-			   const semanage_bool_t * boolean2)
+int semanage_bool_compare2(const semanage_bool_t *boolean,
+			   const semanage_bool_t *boolean2)
 {
-
 	return sepol_bool_compare2(boolean, boolean2);
 }
-
 
 static int semanage_bool_compare2_qsort(const void *p1, const void *p2)
 {
@@ -73,15 +65,13 @@ static int semanage_bool_compare2_qsort(const void *p1, const void *p2)
 }
 
 /* Name */
-const char *semanage_bool_get_name(const semanage_bool_t * boolean)
+const char *semanage_bool_get_name(const semanage_bool_t *boolean)
 {
-
 	return sepol_bool_get_name(boolean);
 }
 
-
-int semanage_bool_set_name(semanage_handle_t * handle,
-			   semanage_bool_t * boolean, const char *name)
+int semanage_bool_set_name(semanage_handle_t *handle, semanage_bool_t *boolean,
+			   const char *name)
 {
 	int rc = -1;
 	const char *prefix = semanage_root();
@@ -140,46 +130,34 @@ out:
 	return rc;
 }
 
-
 /* Value */
-int semanage_bool_get_value(const semanage_bool_t * boolean)
+int semanage_bool_get_value(const semanage_bool_t *boolean)
 {
-
 	return sepol_bool_get_value(boolean);
 }
 
-
-void semanage_bool_set_value(semanage_bool_t * boolean, int value)
+void semanage_bool_set_value(semanage_bool_t *boolean, int value)
 {
-
 	sepol_bool_set_value(boolean, value);
 }
 
-
 /* Create/Clone/Destroy */
-int semanage_bool_create(semanage_handle_t * handle,
-			 semanage_bool_t ** bool_ptr)
+int semanage_bool_create(semanage_handle_t *handle, semanage_bool_t **bool_ptr)
 {
-
 	return sepol_bool_create(handle->sepolh, bool_ptr);
 }
 
-
-int semanage_bool_clone(semanage_handle_t * handle,
-			const semanage_bool_t * boolean,
-			semanage_bool_t ** bool_ptr)
+int semanage_bool_clone(semanage_handle_t *handle,
+			const semanage_bool_t *boolean,
+			semanage_bool_t **bool_ptr)
 {
-
 	return sepol_bool_clone(handle->sepolh, boolean, bool_ptr);
 }
 
-
-void semanage_bool_free(semanage_bool_t * boolean)
+void semanage_bool_free(semanage_bool_t *boolean)
 {
-
 	sepol_bool_free(boolean);
 }
-
 
 /* Record base functions */
 const record_table_t SEMANAGE_BOOL_RTABLE = {

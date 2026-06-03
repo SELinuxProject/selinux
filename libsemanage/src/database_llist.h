@@ -15,7 +15,6 @@ typedef struct cache_entry {
 
 /* LLIST dbase */
 typedef struct dbase_llist {
-
 	/* Method tables */
 	const record_table_t *rtable;
 	const dbase_table_t *dtable;
@@ -31,9 +30,8 @@ typedef struct dbase_llist {
 
 /* Helpers for internal use only */
 
-static inline void dbase_llist_cache_init(dbase_llist_t * dbase)
+static inline void dbase_llist_cache_init(dbase_llist_t *dbase)
 {
-
 	dbase->cache = NULL;
 	dbase->cache_tail = NULL;
 	dbase->cache_sz = 0;
@@ -41,82 +39,74 @@ static inline void dbase_llist_cache_init(dbase_llist_t * dbase)
 	dbase->modified = 0;
 }
 
-static inline void dbase_llist_init(dbase_llist_t * dbase,
-				    const record_table_t * rtable,
-				    const dbase_table_t * dtable)
+static inline void dbase_llist_init(dbase_llist_t *dbase,
+				    const record_table_t *rtable,
+				    const dbase_table_t *dtable)
 {
-
 	dbase->rtable = rtable;
 	dbase->dtable = dtable;
 	dbase_llist_cache_init(dbase);
 }
 
-extern int dbase_llist_cache_prepend(semanage_handle_t * handle,
-				     dbase_llist_t * dbase,
-				     const record_t * data);
+extern int dbase_llist_cache_prepend(semanage_handle_t *handle,
+				     dbase_llist_t *dbase,
+				     const record_t *data);
 
-extern int dbase_llist_needs_resync(semanage_handle_t * handle,
-				    dbase_llist_t * dbase);
+extern int dbase_llist_needs_resync(semanage_handle_t *handle,
+				    dbase_llist_t *dbase);
 
-extern int dbase_llist_set_serial(semanage_handle_t * handle,
-				  dbase_llist_t * dbase);
+extern int dbase_llist_set_serial(semanage_handle_t *handle,
+				  dbase_llist_t *dbase);
 
-static inline void dbase_llist_set_modified(dbase_llist_t * dbase, int status)
+static inline void dbase_llist_set_modified(dbase_llist_t *dbase, int status)
 {
 	dbase->modified = status;
 }
 
 /* LLIST - cache/transactions */
-extern void dbase_llist_drop_cache(dbase_llist_t * dbase);
+extern void dbase_llist_drop_cache(dbase_llist_t *dbase);
 
-static inline int dbase_llist_is_modified(const dbase_llist_t * dbase)
+static inline int dbase_llist_is_modified(const dbase_llist_t *dbase)
 {
-
 	return dbase->modified;
 }
 
 /* LLIST - polymorphism */
-static inline const record_table_t *dbase_llist_get_rtable(const dbase_llist_t * dbase)
+static inline const record_table_t *
+dbase_llist_get_rtable(const dbase_llist_t *dbase)
 {
 	return dbase->rtable;
 }
 
 /* LLIST - dbase API */
-extern int dbase_llist_exists(semanage_handle_t * handle,
-			      dbase_llist_t * dbase,
-			      const record_key_t * key, int *response);
+extern int dbase_llist_exists(semanage_handle_t *handle, dbase_llist_t *dbase,
+			      const record_key_t *key, int *response);
 
-extern int dbase_llist_add(semanage_handle_t * handle,
-			   dbase_llist_t * dbase,
-			   const record_key_t * key, const record_t * data);
+extern int dbase_llist_add(semanage_handle_t *handle, dbase_llist_t *dbase,
+			   const record_key_t *key, const record_t *data);
 
-extern int dbase_llist_set(semanage_handle_t * handle,
-			   dbase_llist_t * dbase,
-			   const record_key_t * key, const record_t * data);
+extern int dbase_llist_set(semanage_handle_t *handle, dbase_llist_t *dbase,
+			   const record_key_t *key, const record_t *data);
 
-extern int dbase_llist_modify(semanage_handle_t * handle,
-			      dbase_llist_t * dbase,
-			      const record_key_t * key, const record_t * data);
+extern int dbase_llist_modify(semanage_handle_t *handle, dbase_llist_t *dbase,
+			      const record_key_t *key, const record_t *data);
 
-extern int dbase_llist_count(semanage_handle_t * handle,
-			     dbase_llist_t * dbase, unsigned int *response);
+extern int dbase_llist_count(semanage_handle_t *handle, dbase_llist_t *dbase,
+			     unsigned int *response);
 
-extern int dbase_llist_query(semanage_handle_t * handle,
-			     dbase_llist_t * dbase,
-			     const record_key_t * key, record_t ** response);
+extern int dbase_llist_query(semanage_handle_t *handle, dbase_llist_t *dbase,
+			     const record_key_t *key, record_t **response);
 
-extern int dbase_llist_iterate(semanage_handle_t * handle,
-			       dbase_llist_t * dbase,
-			       int (*fn) (const record_t * record,
-					  void *fn_arg), void *arg);
+extern int dbase_llist_iterate(semanage_handle_t *handle, dbase_llist_t *dbase,
+			       int (*fn)(const record_t *record, void *fn_arg),
+			       void *arg);
 
-extern int dbase_llist_del(semanage_handle_t * handle,
-			   dbase_llist_t * dbase, const record_key_t * key);
+extern int dbase_llist_del(semanage_handle_t *handle, dbase_llist_t *dbase,
+			   const record_key_t *key);
 
-extern int dbase_llist_clear(semanage_handle_t * handle, dbase_llist_t * dbase);
+extern int dbase_llist_clear(semanage_handle_t *handle, dbase_llist_t *dbase);
 
-extern int dbase_llist_list(semanage_handle_t * handle,
-			    dbase_llist_t * dbase,
-			    record_t *** records, unsigned int *count);
+extern int dbase_llist_list(semanage_handle_t *handle, dbase_llist_t *dbase,
+			    record_t ***records, unsigned int *count);
 
 #endif

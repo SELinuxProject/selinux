@@ -25,30 +25,28 @@
 
 #include <semanage/handle.h>
 
-#define SEMANAGE_MSG_ERR  1
+#define SEMANAGE_MSG_ERR 1
 #define SEMANAGE_MSG_WARN 2
 #define SEMANAGE_MSG_INFO 3
 
-extern int semanage_msg_get_level(semanage_handle_t * handle);
+extern int semanage_msg_get_level(semanage_handle_t *handle);
 
-extern const char *semanage_msg_get_channel(semanage_handle_t * handle);
+extern const char *semanage_msg_get_channel(semanage_handle_t *handle);
 
-extern const char *semanage_msg_get_fname(semanage_handle_t * handle);
+extern const char *semanage_msg_get_fname(semanage_handle_t *handle);
 
 /* Set the messaging callback.
  * By the default, the callback will print
  * the message on standard output, in a
  * particular format. Passing NULL here
  * indicates that messaging should be suppressed */
-extern void semanage_msg_set_callback(semanage_handle_t * handle,
+extern void semanage_msg_set_callback(
+	semanage_handle_t *handle,
 #ifdef __GNUC__
-				      __attribute__ ((format(printf, 3, 4)))
+	__attribute__((format(printf, 3, 4)))
 #endif
-				      void (*msg_callback) (void *varg,
-							    semanage_handle_t *
-							    handle,
-							    const char *fmt,
-							    ...),
-				      void *msg_callback_arg);
+	void (*msg_callback)(void *varg, semanage_handle_t *handle,
+			     const char *fmt, ...),
+	void *msg_callback_arg);
 
 #endif

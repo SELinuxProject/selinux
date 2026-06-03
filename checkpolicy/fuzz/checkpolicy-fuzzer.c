@@ -183,9 +183,11 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 	default:
 		return 0;
 	}
-	static_assert(0x7F - 'A' >= POLICYDB_VERSION_MAX, "Max policy version should be representable");
+	static_assert(0x7F - 'A' >= POLICYDB_VERSION_MAX,
+		      "Max policy version should be representable");
 	policyvers = data[2] - 'A';
-	if (policyvers < POLICYDB_VERSION_MIN || policyvers > POLICYDB_VERSION_MAX)
+	if (policyvers < POLICYDB_VERSION_MIN ||
+	    policyvers > POLICYDB_VERSION_MAX)
 		return 0;
 	data += 3;
 	size -= 3;
@@ -209,24 +211,27 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 		if (policydb_init(&kernpolicydb))
 			goto exit;
 
-		if (expand_module(NULL, &parsepolicydb, &kernpolicydb, VERBOSE, /*check_assertions=*/0))
+		if (expand_module(NULL, &parsepolicydb, &kernpolicydb, VERBOSE,
+				  /*check_assertions=*/0))
 			goto exit;
 
-		(void) check_assertions(NULL, &kernpolicydb, kernpolicydb.global->branch_list->avrules);
-		(void) hierarchy_check_constraints(NULL, &kernpolicydb);
+		(void)check_assertions(
+			NULL, &kernpolicydb,
+			kernpolicydb.global->branch_list->avrules);
+		(void)hierarchy_check_constraints(NULL, &kernpolicydb);
 
 		kernpolicydb.policyvers = policyvers;
 
-		assert(kernpolicydb.policy_type     == POLICY_KERN);
-		assert(kernpolicydb.handle_unknown  == SEPOL_DENY_UNKNOWN);
-		assert(kernpolicydb.mls             == mls);
+		assert(kernpolicydb.policy_type == POLICY_KERN);
+		assert(kernpolicydb.handle_unknown == SEPOL_DENY_UNKNOWN);
+		assert(kernpolicydb.mls == mls);
 		assert(kernpolicydb.target_platform == platform);
 
 		finalpolicydb = &kernpolicydb;
 	} else {
-		assert(parsepolicydb.policy_type     == POLICY_MOD);
-		assert(parsepolicydb.handle_unknown  == SEPOL_DENY_UNKNOWN);
-		assert(parsepolicydb.mls             == mls);
+		assert(parsepolicydb.policy_type == POLICY_MOD);
+		assert(parsepolicydb.handle_unknown == SEPOL_DENY_UNKNOWN);
+		assert(parsepolicydb.mls == mls);
 		assert(parsepolicydb.target_platform == platform);
 
 		finalpolicydb = &parsepolicydb;
@@ -235,7 +240,8 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 	if (policydb_load_isids(finalpolicydb, &sidtab))
 		goto exit;
 
-	if (finalpolicydb->policy_type == POLICY_KERN && policydb_optimize(finalpolicydb))
+	if (finalpolicydb->policy_type == POLICY_KERN &&
+	    policydb_optimize(finalpolicydb))
 		goto exit;
 
 	if (policydb_sort_ocontexts(finalpolicydb))
@@ -252,13 +258,16 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 	if (write_binary_policy(devnull, finalpolicydb))
 		abort();
 
-	if (finalpolicydb->policy_type == POLICY_KERN && sepol_kernel_policydb_to_conf(devnull, finalpolicydb))
+	if (finalpolicydb->policy_type == POLICY_KERN &&
+	    sepol_kernel_policydb_to_conf(devnull, finalpolicydb))
 		abort();
 
-	if (finalpolicydb->policy_type == POLICY_KERN && sepol_kernel_policydb_to_cil(devnull, finalpolicydb))
+	if (finalpolicydb->policy_type == POLICY_KERN &&
+	    sepol_kernel_policydb_to_cil(devnull, finalpolicydb))
 		abort();
 
-	if (finalpolicydb->policy_type == POLICY_MOD && sepol_module_policydb_to_cil(devnull, finalpolicydb, /*linked=*/0))
+	if (finalpolicydb->policy_type == POLICY_MOD &&
+	    sepol_module_policydb_to_cil(devnull, finalpolicydb, /*linked=*/0))
 		abort();
 
 exit:

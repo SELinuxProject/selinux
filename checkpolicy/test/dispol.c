@@ -35,38 +35,38 @@
 
 static const struct command {
 	enum {
-		EOL    = 0,
+		EOL = 0,
 		HEADER = 1,
-		CMD    = 1 << 1,
-		NOOPT  = 1 << 2,
+		CMD = 1 << 1,
+		NOOPT = 1 << 2,
 	} meta;
 	char cmd;
 	const char *desc;
 } commands[] = {
-	{HEADER, 0, "\nSelect a command:"},
-	{CMD,       '1',  "display unconditional AVTAB" },
-	{CMD,       '2',  "display conditional AVTAB (entirely)"},
-	{CMD,       '3',  "display conditional AVTAB (only ENABLED rules)"},
-	{CMD,       '4',  "display conditional AVTAB (only DISABLED rules)"},
-	{CMD,       '5',  "display booleans"},
-	{CMD,       '6',  "display conditional expressions"},
-	{CMD|NOOPT, '7',  "change a boolean value"},
-	{CMD,       '8',  "display role transitions"},
-	{HEADER, 0, ""},
-	{CMD,       'c',  "display policy capabilities"},
-	{CMD,       'C',  "display classes"},
-	{CMD,       'u',  "display users"},
-	{CMD,       'r',  "display roles"},
-	{CMD,       't',  "display types"},
-	{CMD,       'a',  "display type attributes"},
-	{CMD,       'p',  "display the list of permissive types"},
-	{CMD,       'U',  "display unknown handling setting"},
-	{CMD,       'F',  "display filename_trans rules"},
-	{HEADER, 0, ""},
-	{CMD|NOOPT, 'f',  "set output file"},
-	{CMD|NOOPT, 'm',  "display menu"},
-	{CMD|NOOPT, 'q',  "quit"},
-	{EOL,   0, "" },
+	{ HEADER, 0, "\nSelect a command:" },
+	{ CMD, '1', "display unconditional AVTAB" },
+	{ CMD, '2', "display conditional AVTAB (entirely)" },
+	{ CMD, '3', "display conditional AVTAB (only ENABLED rules)" },
+	{ CMD, '4', "display conditional AVTAB (only DISABLED rules)" },
+	{ CMD, '5', "display booleans" },
+	{ CMD, '6', "display conditional expressions" },
+	{ CMD | NOOPT, '7', "change a boolean value" },
+	{ CMD, '8', "display role transitions" },
+	{ HEADER, 0, "" },
+	{ CMD, 'c', "display policy capabilities" },
+	{ CMD, 'C', "display classes" },
+	{ CMD, 'u', "display users" },
+	{ CMD, 'r', "display roles" },
+	{ CMD, 't', "display types" },
+	{ CMD, 'a', "display type attributes" },
+	{ CMD, 'p', "display the list of permissive types" },
+	{ CMD, 'U', "display unknown handling setting" },
+	{ CMD, 'F', "display filename_trans rules" },
+	{ HEADER, 0, "" },
+	{ CMD | NOOPT, 'f', "set output file" },
+	{ CMD | NOOPT, 'm', "display menu" },
+	{ CMD | NOOPT, 'q', "quit" },
+	{ EOL, 0, "" },
 };
 
 static __attribute__((__noreturn__)) void usage(const char *progname)
@@ -87,8 +87,8 @@ static __attribute__((__noreturn__)) void usage(const char *progname)
 	exit(1);
 }
 
-static int render_access_mask(uint32_t mask, avtab_key_t * key, policydb_t * p,
-		       FILE * fp)
+static int render_access_mask(uint32_t mask, avtab_key_t *key, policydb_t *p,
+			      FILE *fp)
 {
 	char *perm = sepol_av_to_string(p, key->target_class, mask);
 	fprintf(fp, "{");
@@ -98,13 +98,13 @@ static int render_access_mask(uint32_t mask, avtab_key_t * key, policydb_t * p,
 	return 0;
 }
 
-static int render_type(uint32_t type, policydb_t * p, FILE * fp)
+static int render_type(uint32_t type, policydb_t *p, FILE *fp)
 {
 	fprintf(fp, "%s", p->p_type_val_to_name[type - 1]);
 	return 0;
 }
 
-static int render_key(avtab_key_t * key, policydb_t * p, FILE * fp)
+static int render_key(avtab_key_t *key, policydb_t *p, FILE *fp)
 {
 	char *stype, *ttype, *tclass;
 	stype = p->p_type_val_to_name[key->source_type - 1];
@@ -123,24 +123,21 @@ static int render_key(avtab_key_t * key, policydb_t * p, FILE * fp)
 }
 
 /* 'what' values for this function */
-#define	RENDER_UNCONDITIONAL	0x0001	/* render all regardless of enabled state */
-#define RENDER_ENABLED		0x0002
-#define RENDER_DISABLED		0x0004
-#define RENDER_CONDITIONAL	(RENDER_ENABLED|RENDER_DISABLED)
+#define RENDER_UNCONDITIONAL 0x0001 /* render all regardless of enabled state */
+#define RENDER_ENABLED 0x0002
+#define RENDER_DISABLED 0x0004
+#define RENDER_CONDITIONAL (RENDER_ENABLED | RENDER_DISABLED)
 
-static int render_av_rule(avtab_key_t * key, avtab_datum_t * datum, uint32_t what,
-		   policydb_t * p, FILE * fp)
+static int render_av_rule(avtab_key_t *key, avtab_datum_t *datum, uint32_t what,
+			  policydb_t *p, FILE *fp)
 {
 	if (!(what & RENDER_UNCONDITIONAL)) {
-		if (what != RENDER_CONDITIONAL && (((what & RENDER_ENABLED)
-						    && !(key->
-							 specified &
-							 AVTAB_ENABLED))
-						   || ((what & RENDER_DISABLED)
-						       && (key->
-							   specified &
-							   AVTAB_ENABLED)))) {
-			return 0;	/* doesn't match selection criteria */
+		if (what != RENDER_CONDITIONAL &&
+		    (((what & RENDER_ENABLED) &&
+		      !(key->specified & AVTAB_ENABLED)) ||
+		     ((what & RENDER_DISABLED) &&
+		      (key->specified & AVTAB_ENABLED)))) {
+			return 0; /* doesn't match selection criteria */
 		}
 	}
 
@@ -215,7 +212,7 @@ static int render_av_rule(avtab_key_t * key, avtab_datum_t * datum, uint32_t wha
 	return 0;
 }
 
-static int display_avtab(avtab_t * a, uint32_t what, policydb_t * p, FILE * fp)
+static int display_avtab(avtab_t *a, uint32_t what, policydb_t *p, FILE *fp)
 {
 	unsigned int i;
 	avtab_ptr_t cur;
@@ -230,9 +227,8 @@ static int display_avtab(avtab_t * a, uint32_t what, policydb_t * p, FILE * fp)
 	return 0;
 }
 
-static void display_expr(policydb_t * p, cond_expr_t * exp, FILE * fp)
+static void display_expr(policydb_t *p, cond_expr_t *exp, FILE *fp)
 {
-
 	cond_expr_t *cur;
 	for (cur = exp; cur != NULL; cur = cur->next) {
 		switch (cur->expr_type) {
@@ -265,7 +261,7 @@ static void display_expr(policydb_t * p, cond_expr_t * exp, FILE * fp)
 	}
 }
 
-static int display_cond_expressions(policydb_t * p, FILE * fp)
+static int display_cond_expressions(policydb_t *p, FILE *fp)
 {
 	cond_node_t *cur;
 	cond_av_list_t *av_cur;
@@ -275,13 +271,15 @@ static int display_cond_expressions(policydb_t * p, FILE * fp)
 		display_expr(p, cur->expr, fp);
 		fprintf(fp, "current state: %d\n", cur->cur_state);
 		fprintf(fp, "True list:\n");
-		for (av_cur = cur->true_list; av_cur != NULL; av_cur = av_cur->next) {
+		for (av_cur = cur->true_list; av_cur != NULL;
+		     av_cur = av_cur->next) {
 			fprintf(fp, "\t");
 			render_av_rule(&av_cur->node->key, &av_cur->node->datum,
 				       RENDER_CONDITIONAL, p, fp);
 		}
 		fprintf(fp, "False list:\n");
-		for (av_cur = cur->false_list; av_cur != NULL; av_cur = av_cur->next) {
+		for (av_cur = cur->false_list; av_cur != NULL;
+		     av_cur = av_cur->next) {
 			fprintf(fp, "\t");
 			render_av_rule(&av_cur->node->key, &av_cur->node->datum,
 				       RENDER_CONDITIONAL, p, fp);
@@ -290,7 +288,7 @@ static int display_cond_expressions(policydb_t * p, FILE * fp)
 	return 0;
 }
 
-static int display_handle_unknown(policydb_t * p, FILE * out_fp)
+static int display_handle_unknown(policydb_t *p, FILE *out_fp)
 {
 	if (p->handle_unknown == ALLOW_UNKNOWN)
 		fprintf(out_fp, "Allow unknown classes and permissions\n");
@@ -303,7 +301,7 @@ static int display_handle_unknown(policydb_t * p, FILE * out_fp)
 	return 0;
 }
 
-static int change_bool(char *name, int state, policydb_t * p, FILE * fp)
+static int change_bool(char *name, int state, policydb_t *p, FILE *fp)
 {
 	cond_bool_datum_t *boolean;
 
@@ -317,7 +315,7 @@ static int change_bool(char *name, int state, policydb_t * p, FILE * fp)
 	return 0;
 }
 
-static int display_booleans(policydb_t * p, FILE *fp)
+static int display_booleans(policydb_t *p, FILE *fp)
 {
 	uint32_t i;
 
@@ -329,7 +327,7 @@ static int display_booleans(policydb_t * p, FILE *fp)
 	return 0;
 }
 
-static void display_policycaps(policydb_t * p, FILE * fp)
+static void display_policycaps(policydb_t *p, FILE *fp)
 {
 	ebitmap_node_t *node;
 	const char *capname;
@@ -347,7 +345,7 @@ static void display_policycaps(policydb_t * p, FILE * fp)
 	}
 }
 
-static int display_classes(policydb_t * p, FILE *fp)
+static int display_classes(policydb_t *p, FILE *fp)
 {
 	uint32_t i;
 
@@ -373,7 +371,8 @@ static void display_permissive(policydb_t *p, FILE *fp)
 	ebitmap_node_t *node;
 	unsigned int i;
 
-	fprintf(fp, "permissive sids (#%u):\n", ebitmap_cardinality(&p->permissive_map));
+	fprintf(fp, "permissive sids (#%u):\n",
+		ebitmap_cardinality(&p->permissive_map));
 	ebitmap_for_each_positive_bit(&p->permissive_map, node, i) {
 		fprintf(fp, "\t");
 		display_id(p, fp, SYM_TYPES, i - 1, "");
@@ -381,7 +380,7 @@ static void display_permissive(policydb_t *p, FILE *fp)
 	}
 }
 
-static int display_users(policydb_t * p, FILE *fp)
+static int display_users(policydb_t *p, FILE *fp)
 {
 	uint32_t i;
 
@@ -395,7 +394,7 @@ static int display_users(policydb_t * p, FILE *fp)
 	return 0;
 }
 
-static int display_roles(policydb_t * p, FILE *fp)
+static int display_roles(policydb_t *p, FILE *fp)
 {
 	uint32_t i;
 
@@ -409,7 +408,7 @@ static int display_roles(policydb_t * p, FILE *fp)
 	return 0;
 }
 
-static int display_types(policydb_t * p, FILE *fp)
+static int display_types(policydb_t *p, FILE *fp)
 {
 	uint32_t i;
 
@@ -426,7 +425,7 @@ static int display_types(policydb_t * p, FILE *fp)
 	return 0;
 }
 
-static int display_attributes(policydb_t * p, FILE *fp)
+static int display_attributes(policydb_t *p, FILE *fp)
 {
 	uint32_t i;
 
@@ -462,8 +461,7 @@ struct filenametr_display_args {
 	FILE *fp;
 };
 
-static int filenametr_display(hashtab_key_t key,
-			      hashtab_datum_t datum,
+static int filenametr_display(hashtab_key_t key, hashtab_datum_t datum,
 			      void *ptr)
 {
 	struct filename_trans_key *ft = (struct filename_trans_key *)key;
@@ -487,7 +485,6 @@ static int filenametr_display(hashtab_key_t key,
 
 	return 0;
 }
-
 
 static void display_filename_trans(policydb_t *p, FILE *fp)
 {
@@ -525,13 +522,15 @@ int main(int argc, char **argv)
 	struct policy_file pf;
 	policydb_t policydb;
 
-	if (argc < 2 || strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0)
+	if (argc < 2 || strcmp(argv[1], "-h") == 0 ||
+	    strcmp(argv[1], "--help") == 0)
 		usage(argv[0]);
 
 	bpol = argv[1];
-	if (strcmp (bpol, "--actions") == 0 || strcmp (bpol, "-a") == 0) {
+	if (strcmp(bpol, "--actions") == 0 || strcmp(bpol, "-a") == 0) {
 		if (argc != 4) {
-			fprintf(stderr, "%s: unexpected number of arguments\n", argv[0]);
+			fprintf(stderr, "%s: unexpected number of arguments\n",
+				argv[0]);
 			usage(argv[0]);
 		}
 		ops = argv[2];
@@ -543,20 +542,19 @@ int main(int argc, char **argv)
 
 	fd = open(bpol, O_RDONLY);
 	if (fd < 0) {
-		fprintf(stderr, "Can't open '%s':  %s\n",
-			bpol, strerror(errno));
+		fprintf(stderr, "Can't open '%s':  %s\n", bpol,
+			strerror(errno));
 		exit(1);
 	}
 	if (fstat(fd, &sb) < 0) {
-		fprintf(stderr, "Can't stat '%s':  %s\n",
-			bpol, strerror(errno));
+		fprintf(stderr, "Can't stat '%s':  %s\n", bpol,
+			strerror(errno));
 		exit(1);
 	}
-	map =
-	    mmap(NULL, sb.st_size, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
+	map = mmap(NULL, sb.st_size, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd,
+		   0);
 	if (map == MAP_FAILED) {
-		fprintf(stderr, "Can't map '%s':  %s\n",
-			bpol, strerror(errno));
+		fprintf(stderr, "Can't map '%s':  %s\n", bpol, strerror(errno));
 		exit(1);
 	}
 
@@ -571,7 +569,7 @@ int main(int argc, char **argv)
 		fprintf(stderr, "%s:  Out of memory!\n", argv[0]);
 		exit(1);
 	}
-	ret = policydb_read(&policydb, &pf, ops? 0: 1);
+	ret = policydb_read(&policydb, &pf, ops ? 0 : 1);
 	if (ret) {
 		fprintf(stderr,
 			"%s:  error(s) encountered while parsing configuration\n",
@@ -588,20 +586,19 @@ int main(int argc, char **argv)
 	for (;;) {
 		if (ops) {
 			puts("");
-			ans[0] = *ops? *ops++: 'q';
+			ans[0] = *ops ? *ops++ : 'q';
 			ans[1] = '\0';
 		} else {
 			printf("\nCommand (\'m\' for menu):  ");
 			if (fgets(ans, sizeof(ans), stdin) == NULL) {
 				if (feof(stdin))
 					break;
-				fprintf(stderr, "fgets failed at line %d: %s\n", __LINE__,
-					strerror(errno));
+				fprintf(stderr, "fgets failed at line %d: %s\n",
+					__LINE__, strerror(errno));
 				continue;
 			}
 		}
 		switch (ans[0]) {
-
 		case '1':
 			display_avtab(&policydb.te_avtab, RENDER_UNCONDITIONAL,
 				      &policydb, out_fp);
@@ -627,8 +624,8 @@ int main(int argc, char **argv)
 		case '7':
 			printf("name? ");
 			if (fgets(ans, sizeof(ans), stdin) == NULL) {
-				fprintf(stderr, "fgets failed at line %d: %s\n", __LINE__,
-						strerror(errno));
+				fprintf(stderr, "fgets failed at line %d: %s\n",
+					__LINE__, strerror(errno));
 				break;
 			}
 			ans[strlen(ans) - 1] = 0;
@@ -641,8 +638,8 @@ int main(int argc, char **argv)
 
 			printf("state? ");
 			if (fgets(ans, sizeof(ans), stdin) == NULL) {
-				fprintf(stderr, "fgets failed at line %d: %s\n", __LINE__,
-						strerror(errno));
+				fprintf(stderr, "fgets failed at line %d: %s\n",
+					__LINE__, strerror(errno));
 				break;
 			}
 			ans[strlen(ans) - 1] = 0;
@@ -683,14 +680,15 @@ int main(int argc, char **argv)
 			display_handle_unknown(&policydb, out_fp);
 			break;
 		case 'f':
-			printf
-			    ("\nFilename for output (<CR> for screen output): ");
-			if (fgets(OutfileName, sizeof(OutfileName), stdin) == NULL) {
-				fprintf(stderr, "fgets failed at line %d: %s\n", __LINE__,
-						strerror(errno));
+			printf("\nFilename for output (<CR> for screen output): ");
+			if (fgets(OutfileName, sizeof(OutfileName), stdin) ==
+			    NULL) {
+				fprintf(stderr, "fgets failed at line %d: %s\n",
+					__LINE__, strerror(errno));
 				break;
 			}
-			OutfileName[strlen(OutfileName) - 1] = '\0';	/* fix_string (remove LF) */
+			OutfileName[strlen(OutfileName) - 1] =
+				'\0'; /* fix_string (remove LF) */
 			if (strlen(OutfileName) == 0)
 				out_fp = stdout;
 			else if ((out_fp = fopen(OutfileName, "w")) == NULL) {
@@ -715,7 +713,6 @@ int main(int argc, char **argv)
 			printf("\nInvalid choice\n");
 			menu();
 			break;
-
 		}
 	}
 }

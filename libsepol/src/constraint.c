@@ -25,7 +25,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
-int constraint_expr_init(constraint_expr_t * expr)
+int constraint_expr_init(constraint_expr_t *expr)
 {
 	memset(expr, 0, sizeof(*expr));
 	ebitmap_init(&expr->names);
@@ -36,7 +36,7 @@ int constraint_expr_init(constraint_expr_t * expr)
 	return 0;
 }
 
-void constraint_expr_destroy(constraint_expr_t * expr)
+void constraint_expr_destroy(constraint_expr_t *expr)
 {
 	constraint_expr_t *next;
 

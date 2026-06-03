@@ -40,4 +40,3 @@ int security_policyvers(void)
 
 	return vers;
 }
-

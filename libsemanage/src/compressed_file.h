@@ -72,7 +72,7 @@ void unmap_compressed_file(struct file_contents *contents);
  *
  * @return 0 on success, -1 otherwise.
  */
-int write_compressed_file(semanage_handle_t *sh, const char *path,
-			  void *data, size_t len);
+int write_compressed_file(semanage_handle_t *sh, const char *path, void *data,
+			  size_t len);
 
 #endif

@@ -6,7 +6,6 @@
 #include "debug.h"
 
 struct sepol_iface {
-
 	/* Interface name */
 	char *name;
 
@@ -18,18 +17,16 @@ struct sepol_iface {
 };
 
 struct sepol_iface_key {
-
 	/* Interface name */
 	char *name;
 };
 
 /* Key */
-int sepol_iface_key_create(sepol_handle_t * handle,
-			   const char *name, sepol_iface_key_t ** key_ptr)
+int sepol_iface_key_create(sepol_handle_t *handle, const char *name,
+			   sepol_iface_key_t **key_ptr)
 {
-
 	sepol_iface_key_t *tmp_key =
-	    (sepol_iface_key_t *) malloc(sizeof(sepol_iface_key_t));
+		(sepol_iface_key_t *)malloc(sizeof(sepol_iface_key_t));
 
 	if (!tmp_key) {
 		ERR(handle, "out of memory, could not create interface key");
@@ -47,29 +44,26 @@ int sepol_iface_key_create(sepol_handle_t * handle,
 	return STATUS_SUCCESS;
 }
 
-
-void sepol_iface_key_unpack(const sepol_iface_key_t * key, const char **name)
+void sepol_iface_key_unpack(const sepol_iface_key_t *key, const char **name)
 {
-
 	*name = key->name;
 }
 
-
-int sepol_iface_key_extract(sepol_handle_t * handle,
-			    const sepol_iface_t * iface,
-			    sepol_iface_key_t ** key_ptr)
+int sepol_iface_key_extract(sepol_handle_t *handle, const sepol_iface_t *iface,
+			    sepol_iface_key_t **key_ptr)
 {
-
 	if (sepol_iface_key_create(handle, iface->name, key_ptr) < 0) {
-		ERR(handle, "could not extract key from "
-		    "interface %s", iface->name);
+		ERR(handle,
+		    "could not extract key from "
+		    "interface %s",
+		    iface->name);
 		return STATUS_ERR;
 	}
 
 	return STATUS_SUCCESS;
 }
 
-void sepol_iface_key_free(sepol_iface_key_t * key)
+void sepol_iface_key_free(sepol_iface_key_t *key)
 {
 	if (!key)
 		return;
@@ -77,30 +71,27 @@ void sepol_iface_key_free(sepol_iface_key_t * key)
 	free(key);
 }
 
-int sepol_iface_compare(const sepol_iface_t * iface,
-			const sepol_iface_key_t * key)
+int sepol_iface_compare(const sepol_iface_t *iface,
+			const sepol_iface_key_t *key)
 {
-
 	return strcmp(iface->name, key->name);
 }
 
-int sepol_iface_compare2(const sepol_iface_t * iface,
-			 const sepol_iface_t * iface2)
+int sepol_iface_compare2(const sepol_iface_t *iface,
+			 const sepol_iface_t *iface2)
 {
-
 	return strcmp(iface->name, iface2->name);
 }
 
 /* Create */
-int sepol_iface_create(sepol_handle_t * handle, sepol_iface_t ** iface)
+int sepol_iface_create(sepol_handle_t *handle, sepol_iface_t **iface)
 {
-
 	sepol_iface_t *tmp_iface =
-	    (sepol_iface_t *) malloc(sizeof(sepol_iface_t));
+		(sepol_iface_t *)malloc(sizeof(sepol_iface_t));
 
 	if (!tmp_iface) {
 		ERR(handle, "out of memory, could not create "
-		    "interface record");
+			    "interface record");
 		return STATUS_ERR;
 	}
 
@@ -112,22 +103,19 @@ int sepol_iface_create(sepol_handle_t * handle, sepol_iface_t ** iface)
 	return STATUS_SUCCESS;
 }
 
-
 /* Name */
-const char *sepol_iface_get_name(const sepol_iface_t * iface)
+const char *sepol_iface_get_name(const sepol_iface_t *iface)
 {
-
 	return iface->name;
 }
 
-
-int sepol_iface_set_name(sepol_handle_t * handle,
-			 sepol_iface_t * iface, const char *name)
+int sepol_iface_set_name(sepol_handle_t *handle, sepol_iface_t *iface,
+			 const char *name)
 {
-
 	char *tmp_name = strdup(name);
 	if (!tmp_name) {
-		ERR(handle, "out of memory, " "could not set interface name");
+		ERR(handle, "out of memory, "
+			    "could not set interface name");
 		return STATUS_ERR;
 	}
 	free(iface->name);
@@ -135,19 +123,15 @@ int sepol_iface_set_name(sepol_handle_t * handle,
 	return STATUS_SUCCESS;
 }
 
-
 /* Interface Context */
-sepol_context_t *sepol_iface_get_ifcon(const sepol_iface_t * iface)
+sepol_context_t *sepol_iface_get_ifcon(const sepol_iface_t *iface)
 {
-
 	return iface->netif_con;
 }
 
-
-int sepol_iface_set_ifcon(sepol_handle_t * handle,
-			  sepol_iface_t * iface, sepol_context_t * con)
+int sepol_iface_set_ifcon(sepol_handle_t *handle, sepol_iface_t *iface,
+			  sepol_context_t *con)
 {
-
 	sepol_context_t *newcon;
 
 	if (sepol_context_clone(handle, con, &newcon) < 0) {
@@ -160,19 +144,15 @@ int sepol_iface_set_ifcon(sepol_handle_t * handle,
 	return STATUS_SUCCESS;
 }
 
-
 /* Message Context */
-sepol_context_t *sepol_iface_get_msgcon(const sepol_iface_t * iface)
+sepol_context_t *sepol_iface_get_msgcon(const sepol_iface_t *iface)
 {
-
 	return iface->netmsg_con;
 }
 
-
-int sepol_iface_set_msgcon(sepol_handle_t * handle,
-			   sepol_iface_t * iface, sepol_context_t * con)
+int sepol_iface_set_msgcon(sepol_handle_t *handle, sepol_iface_t *iface,
+			   sepol_context_t *con)
 {
-
 	sepol_context_t *newcon;
 	if (sepol_context_clone(handle, con, &newcon) < 0) {
 		ERR(handle, "out of memory, could not set message context");
@@ -184,12 +164,10 @@ int sepol_iface_set_msgcon(sepol_handle_t * handle,
 	return STATUS_SUCCESS;
 }
 
-
 /* Deep copy clone */
-int sepol_iface_clone(sepol_handle_t * handle,
-		      const sepol_iface_t * iface, sepol_iface_t ** iface_ptr)
+int sepol_iface_clone(sepol_handle_t *handle, const sepol_iface_t *iface,
+		      sepol_iface_t **iface_ptr)
 {
-
 	sepol_iface_t *new_iface = NULL;
 	if (sepol_iface_create(handle, &new_iface) < 0)
 		goto err;
@@ -198,28 +176,27 @@ int sepol_iface_clone(sepol_handle_t * handle,
 		goto err;
 
 	if (iface->netif_con &&
-	    (sepol_context_clone
-	     (handle, iface->netif_con, &new_iface->netif_con) < 0))
+	    (sepol_context_clone(handle, iface->netif_con,
+				 &new_iface->netif_con) < 0))
 		goto err;
 
 	if (iface->netmsg_con &&
-	    (sepol_context_clone
-	     (handle, iface->netmsg_con, &new_iface->netmsg_con) < 0))
+	    (sepol_context_clone(handle, iface->netmsg_con,
+				 &new_iface->netmsg_con) < 0))
 		goto err;
 
 	*iface_ptr = new_iface;
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not clone interface record");
 	sepol_iface_free(new_iface);
 	return STATUS_ERR;
 }
 
 /* Destroy */
-void sepol_iface_free(sepol_iface_t * iface)
+void sepol_iface_free(sepol_iface_t *iface)
 {
-
 	if (!iface)
 		return;
 
@@ -228,4 +205,3 @@ void sepol_iface_free(sepol_iface_t * iface)
 	sepol_context_free(iface->netmsg_con);
 	free(iface);
 }
-

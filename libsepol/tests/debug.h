@@ -23,5 +23,5 @@
 #include <sepol/policydb/policydb.h>
 #include <sepol/policydb/conditional.h>
 
-extern void print_ebitmap(ebitmap_t * bitmap, FILE * fp);
-extern void display_expr(policydb_t * p, cond_expr_t * exp, FILE * fp);
+extern void print_ebitmap(ebitmap_t *bitmap, FILE *fp);
+extern void display_expr(policydb_t *p, cond_expr_t *exp, FILE *fp);

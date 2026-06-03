@@ -31,8 +31,8 @@ typedef struct symtab_datum {
 } symtab_datum_t;
 
 typedef struct {
-	hashtab_t table;	/* hash table (keyed on a string) */
-	uint32_t nprim;		/* number of primary names in table */
+	hashtab_t table; /* hash table (keyed on a string) */
+	uint32_t nprim; /* number of primary names in table */
 } symtab_t;
 
 extern int symtab_init(symtab_t *, unsigned int size);
@@ -42,6 +42,6 @@ extern void symtab_destroy(symtab_t *);
 }
 #endif
 
-#endif				/* _SYMTAB_H_ */
+#endif /* _SYMTAB_H_ */
 
 /* FLASK */

@@ -18,22 +18,22 @@ extern int is_selinux_mls_enabled(void);
 /* No longer used; here for compatibility with legacy callers. */
 typedef char *security_context_t
 #ifdef __GNUC__
-__attribute__ ((deprecated))
+	__attribute__((deprecated))
 #endif
-;
+	;
 
 /* Free the memory allocated for a context by any of the below get* calls. */
-extern void freecon(char * con);
+extern void freecon(char *con);
 
 /* Free the memory allocated for a context array by security_compute_user. */
-extern void freeconary(char ** con);
+extern void freeconary(char **con);
 
 /* Wrappers for the /proc/pid/attr API. */
 
 /* Get current context, and set *con to refer to it.
    Caller must free via freecon. */
-extern int getcon(char ** con);
-extern int getcon_raw(char ** con);
+extern int getcon(char **con);
+extern int getcon_raw(char **con);
 
 /* Set the current security context to con.  
    Note that use of this function requires that the entire application
@@ -43,93 +43,93 @@ extern int getcon_raw(char ** con);
    instead. Note that the application may lose access to its open descriptors
    as a result of a setcon() unless policy allows it to use descriptors opened
    by the old context. */
-extern int setcon(const char * con);
-extern int setcon_raw(const char * con);
+extern int setcon(const char *con);
+extern int setcon_raw(const char *con);
 
 /* Get context of process identified by pid, and 
    set *con to refer to it.  Caller must free via freecon. */
-extern int getpidcon(pid_t pid, char ** con);
-extern int getpidcon_raw(pid_t pid, char ** con);
+extern int getpidcon(pid_t pid, char **con);
+extern int getpidcon_raw(pid_t pid, char **con);
 
 /* Get previous context (prior to last exec), and set *con to refer to it.
    Caller must free via freecon. */
-extern int getprevcon(char ** con);
-extern int getprevcon_raw(char ** con);
+extern int getprevcon(char **con);
+extern int getprevcon_raw(char **con);
 
 /* Get previous context (prior to last exec) of process identified by pid, and
    set *con to refer to it.  Caller must free via freecon. */
-extern int getpidprevcon(pid_t pid, char ** con);
-extern int getpidprevcon_raw(pid_t pid, char ** con);
+extern int getpidprevcon(pid_t pid, char **con);
+extern int getpidprevcon_raw(pid_t pid, char **con);
 
 /* Get exec context, and set *con to refer to it.
    Sets *con to NULL if no exec context has been set, i.e. using default.
    If non-NULL, caller must free via freecon. */
-extern int getexeccon(char ** con);
-extern int getexeccon_raw(char ** con);
+extern int getexeccon(char **con);
+extern int getexeccon_raw(char **con);
 
 /* Set exec security context for the next execve. 
    Call with NULL if you want to reset to the default. */
-extern int setexeccon(const char * con);
-extern int setexeccon_raw(const char * con);
+extern int setexeccon(const char *con);
+extern int setexeccon_raw(const char *con);
 
 /* Get fscreate context, and set *con to refer to it.
    Sets *con to NULL if no fs create context has been set, i.e. using default.
    If non-NULL, caller must free via freecon. */
-extern int getfscreatecon(char ** con);
-extern int getfscreatecon_raw(char ** con);
+extern int getfscreatecon(char **con);
+extern int getfscreatecon_raw(char **con);
 
 /* Set the fscreate security context for subsequent file creations.
    Call with NULL if you want to reset to the default. */
-extern int setfscreatecon(const char * context);
-extern int setfscreatecon_raw(const char * context);
+extern int setfscreatecon(const char *context);
+extern int setfscreatecon_raw(const char *context);
 
 /* Get keycreate context, and set *con to refer to it.
    Sets *con to NULL if no key create context has been set, i.e. using default.
    If non-NULL, caller must free via freecon. */
-extern int getkeycreatecon(char ** con);
-extern int getkeycreatecon_raw(char ** con);
+extern int getkeycreatecon(char **con);
+extern int getkeycreatecon_raw(char **con);
 
 /* Set the keycreate security context for subsequent key creations.
    Call with NULL if you want to reset to the default. */
-extern int setkeycreatecon(const char * context);
-extern int setkeycreatecon_raw(const char * context);
+extern int setkeycreatecon(const char *context);
+extern int setkeycreatecon_raw(const char *context);
 
 /* Get sockcreate context, and set *con to refer to it.
    Sets *con to NULL if no socket create context has been set, i.e. using default.
    If non-NULL, caller must free via freecon. */
-extern int getsockcreatecon(char ** con);
-extern int getsockcreatecon_raw(char ** con);
+extern int getsockcreatecon(char **con);
+extern int getsockcreatecon_raw(char **con);
 
 /* Set the sockcreate security context for subsequent socket creations.
    Call with NULL if you want to reset to the default. */
-extern int setsockcreatecon(const char * context);
-extern int setsockcreatecon_raw(const char * context);
+extern int setsockcreatecon(const char *context);
+extern int setsockcreatecon_raw(const char *context);
 
 /* Wrappers for the xattr API. */
 
 /* Get file context, and set *con to refer to it.
    Caller must free via freecon. */
-extern int getfilecon(const char *path, char ** con);
-extern int getfilecon_raw(const char *path, char ** con);
-extern int lgetfilecon(const char *path, char ** con);
-extern int lgetfilecon_raw(const char *path, char ** con);
-extern int fgetfilecon(int fd, char ** con);
-extern int fgetfilecon_raw(int fd, char ** con);
+extern int getfilecon(const char *path, char **con);
+extern int getfilecon_raw(const char *path, char **con);
+extern int lgetfilecon(const char *path, char **con);
+extern int lgetfilecon_raw(const char *path, char **con);
+extern int fgetfilecon(int fd, char **con);
+extern int fgetfilecon_raw(int fd, char **con);
 
 /* Set file context */
-extern int setfilecon(const char *path, const char * con);
-extern int setfilecon_raw(const char *path, const char * con);
-extern int lsetfilecon(const char *path, const char * con);
-extern int lsetfilecon_raw(const char *path, const char * con);
-extern int fsetfilecon(int fd, const char * con);
-extern int fsetfilecon_raw(int fd, const char * con);
+extern int setfilecon(const char *path, const char *con);
+extern int setfilecon_raw(const char *path, const char *con);
+extern int lsetfilecon(const char *path, const char *con);
+extern int lsetfilecon_raw(const char *path, const char *con);
+extern int fsetfilecon(int fd, const char *con);
+extern int fsetfilecon_raw(int fd, const char *con);
 
 /* Wrappers for the socket API */
 
 /* Get context of peer socket, and set *con to refer to it.
    Caller must free via freecon. */
-extern int getpeercon(int fd, char ** con);
-extern int getpeercon_raw(int fd, char ** con);
+extern int getpeercon(int fd, char **con);
+extern int getpeercon_raw(int fd, char **con);
 
 /* Wrappers for the selinuxfs (policy) API. */
 
@@ -146,7 +146,7 @@ struct av_decision {
 };
 
 /* Definitions of av_decision.flags */
-#define SELINUX_AVD_FLAGS_PERMISSIVE	0x0001
+#define SELINUX_AVD_FLAGS_PERMISSIVE 0x0001
 
 /* Structure for passing options, used by AVC and label subsystems */
 struct selinux_opt {
@@ -158,106 +158,86 @@ struct selinux_opt {
 union selinux_callback {
 	/* log the printf-style format and arguments,
 	   with the type code indicating the type of message */
-	int 
+	int
 #ifdef __GNUC__
-__attribute__ ((format(printf, 2, 3)))
+		__attribute__((format(printf, 2, 3)))
 #endif
-	(*func_log) (int type, const char *fmt, ...);
+		(*func_log)(int type, const char *fmt, ...);
 	/* store a string representation of auditdata (corresponding
 	   to the given security class) into msgbuf. */
-	int (*func_audit) (void *auditdata, security_class_t cls,
-			   char *msgbuf, size_t msgbufsize);
+	int (*func_audit)(void *auditdata, security_class_t cls, char *msgbuf,
+			  size_t msgbufsize);
 	/* validate the supplied context, modifying if necessary */
-	int (*func_validate) (char **ctx);
+	int (*func_validate)(char **ctx);
 	/* netlink callback for setenforce message */
-	int (*func_setenforce) (int enforcing);
+	int (*func_setenforce)(int enforcing);
 	/* netlink callback for policyload message */
-	int (*func_policyload) (int seqno);
+	int (*func_policyload)(int seqno);
 };
 
-#define SELINUX_CB_LOG		0
-#define SELINUX_CB_AUDIT	1
-#define SELINUX_CB_VALIDATE	2
-#define SELINUX_CB_SETENFORCE	3
-#define SELINUX_CB_POLICYLOAD	4
+#define SELINUX_CB_LOG 0
+#define SELINUX_CB_AUDIT 1
+#define SELINUX_CB_VALIDATE 2
+#define SELINUX_CB_SETENFORCE 3
+#define SELINUX_CB_POLICYLOAD 4
 
 extern union selinux_callback selinux_get_callback(int type);
 extern void selinux_set_callback(int type, union selinux_callback cb);
 
-	/* Logging type codes, passed to the logging callback */
-#define SELINUX_ERROR	        0
-#define SELINUX_WARNING		1
-#define SELINUX_INFO		2
-#define SELINUX_AVC		3
-#define SELINUX_POLICYLOAD	4
-#define SELINUX_SETENFORCE	5
-#define SELINUX_TRANS_DIR	"/var/run/setrans"
+/* Logging type codes, passed to the logging callback */
+#define SELINUX_ERROR 0
+#define SELINUX_WARNING 1
+#define SELINUX_INFO 2
+#define SELINUX_AVC 3
+#define SELINUX_POLICYLOAD 4
+#define SELINUX_SETENFORCE 5
+#define SELINUX_TRANS_DIR "/var/run/setrans"
 
 /* Compute an access decision. */
-extern int security_compute_av(const char * scon,
-			       const char * tcon,
+extern int security_compute_av(const char *scon, const char *tcon,
 			       security_class_t tclass,
 			       access_vector_t requested,
 			       struct av_decision *avd);
-extern int security_compute_av_raw(const char * scon,
-				   const char * tcon,
+extern int security_compute_av_raw(const char *scon, const char *tcon,
 				   security_class_t tclass,
 				   access_vector_t requested,
 				   struct av_decision *avd);
 
-extern int security_compute_av_flags(const char * scon,
-				     const char * tcon,
+extern int security_compute_av_flags(const char *scon, const char *tcon,
 				     security_class_t tclass,
 				     access_vector_t requested,
 				     struct av_decision *avd);
-extern int security_compute_av_flags_raw(const char * scon,
-					 const char * tcon,
+extern int security_compute_av_flags_raw(const char *scon, const char *tcon,
 					 security_class_t tclass,
 					 access_vector_t requested,
 					 struct av_decision *avd);
 
 /* Compute a labeling decision and set *newcon to refer to it.
    Caller must free via freecon. */
-extern int security_compute_create(const char * scon,
-				   const char * tcon,
-				   security_class_t tclass,
-				   char ** newcon);
-extern int security_compute_create_raw(const char * scon,
-				       const char * tcon,
-				       security_class_t tclass,
-				       char ** newcon);
-extern int security_compute_create_name(const char * scon,
-					const char * tcon,
+extern int security_compute_create(const char *scon, const char *tcon,
+				   security_class_t tclass, char **newcon);
+extern int security_compute_create_raw(const char *scon, const char *tcon,
+				       security_class_t tclass, char **newcon);
+extern int security_compute_create_name(const char *scon, const char *tcon,
 					security_class_t tclass,
-					const char *objname,
-					char ** newcon);
-extern int security_compute_create_name_raw(const char * scon,
-					    const char * tcon,
+					const char *objname, char **newcon);
+extern int security_compute_create_name_raw(const char *scon, const char *tcon,
 					    security_class_t tclass,
-					    const char *objname,
-					    char ** newcon);
+					    const char *objname, char **newcon);
 
 /* Compute a relabeling decision and set *newcon to refer to it.
    Caller must free via freecon. */
-extern int security_compute_relabel(const char * scon,
-				    const char * tcon,
-				    security_class_t tclass,
-				    char ** newcon);
-extern int security_compute_relabel_raw(const char * scon,
-					const char * tcon,
-					security_class_t tclass,
-					char ** newcon);
+extern int security_compute_relabel(const char *scon, const char *tcon,
+				    security_class_t tclass, char **newcon);
+extern int security_compute_relabel_raw(const char *scon, const char *tcon,
+					security_class_t tclass, char **newcon);
 
 /* Compute a polyinstantiation member decision and set *newcon to refer to it.
    Caller must free via freecon. */
-extern int security_compute_member(const char * scon,
-				   const char * tcon,
-				   security_class_t tclass,
-				   char ** newcon);
-extern int security_compute_member_raw(const char * scon,
-				       const char * tcon,
-				       security_class_t tclass,
-				       char ** newcon);
+extern int security_compute_member(const char *scon, const char *tcon,
+				   security_class_t tclass, char **newcon);
+extern int security_compute_member_raw(const char *scon, const char *tcon,
+				       security_class_t tclass, char **newcon);
 
 /*
  * Compute the set of reachable user contexts and set *con to refer to
@@ -266,28 +246,23 @@ extern int security_compute_member_raw(const char * scon,
  * one of its variant interfaces instead.
  */
 #ifdef __GNUC__
-__attribute__ ((deprecated))
+__attribute__((deprecated))
 #endif
-extern int security_compute_user(const char * scon,
-				 const char *username,
-				 char *** con);
+extern int security_compute_user(const char *scon, const char *username,
+				 char ***con);
 #ifdef __GNUC__
-__attribute__ ((deprecated))
+__attribute__((deprecated))
 #endif
-extern int security_compute_user_raw(const char * scon,
-				     const char *username,
-				     char *** con);
+extern int security_compute_user_raw(const char *scon, const char *username,
+				     char ***con);
 
 /* Validate a transition. This determines whether a transition from scon to newcon
    using tcon as the target for object class tclass is valid in the loaded policy.
    This checks against the mlsvalidatetrans and validatetrans constraints in the loaded policy.
    Returns 0 if allowed and -1 if an error occurred with errno set */
-extern int security_validatetrans(const char *scon,
-				  const char *tcon,
-				  security_class_t tclass,
-				  const char *newcon);
-extern int security_validatetrans_raw(const char *scon,
-				      const char *tcon,
+extern int security_validatetrans(const char *scon, const char *tcon,
+				  security_class_t tclass, const char *newcon);
+extern int security_validatetrans_raw(const char *scon, const char *tcon,
 				      security_class_t tclass,
 				      const char *newcon);
 
@@ -296,10 +271,8 @@ extern int security_load_policy(const void *data, size_t len);
 
 /* Get the context of an initial kernel security identifier by name.  
    Caller must free via freecon */
-extern int security_get_initial_context(const char *name,
-					char ** con);
-extern int security_get_initial_context_raw(const char *name,
-					    char ** con);
+extern int security_get_initial_context(const char *name, char **con);
+extern int security_get_initial_context_raw(const char *name, char **con);
 
 /*
  * Make a policy image and load it.
@@ -338,27 +311,25 @@ typedef struct {
 /* save a list of booleans in a single transaction. 'permanent' is no
  * longer supported, set to 0.
  */
-extern int security_set_boolean_list(size_t boolcnt,
-				     SELboolean * boollist, int permanent);
+extern int security_set_boolean_list(size_t boolcnt, SELboolean *boollist,
+				     int permanent);
 
 /* Load policy boolean settings. Deprecated as local policy booleans no
  * longer supported. Will always return -1.
  */
 extern int security_load_booleans(char *path)
 #ifdef __GNUC__
-__attribute__ ((deprecated))
+	__attribute__((deprecated))
 #endif
-;
+	;
 
 /* Check the validity of a security context. */
-extern int security_check_context(const char * con);
-extern int security_check_context_raw(const char * con);
+extern int security_check_context(const char *con);
+extern int security_check_context_raw(const char *con);
 
 /* Canonicalize a security context. */
-extern int security_canonicalize_context(const char * con,
-					 char ** canoncon);
-extern int security_canonicalize_context_raw(const char * con,
-					     char ** canoncon);
+extern int security_canonicalize_context(const char *con, char **canoncon);
+extern int security_canonicalize_context_raw(const char *con, char **canoncon);
 
 /* Get the enforce flag value. */
 extern int security_getenforce(void);
@@ -378,7 +349,7 @@ extern int security_get_checkreqprot(void);
 /* Disable SELinux at runtime (must be done prior to initial policy load).
    Unsupported since Linux 6.4. */
 #ifdef __GNUC__
-__attribute__ ((deprecated))
+__attribute__((deprecated))
 #endif
 extern int security_disable(void);
 
@@ -443,8 +414,8 @@ extern access_vector_t string_to_av_perm(security_class_t tclass,
 
 /* Returns an access vector in a string representation.  User must free the
  * returned string via free(). */
-extern int security_av_string(security_class_t tclass,
-			      access_vector_t av, char **result);
+extern int security_av_string(security_class_t tclass, access_vector_t av,
+			      char **result);
 
 /* Display an access vector in a string representation. */
 extern void print_access_vector(security_class_t tclass, access_vector_t av);
@@ -457,31 +428,32 @@ extern void selinux_flush_class_cache(void);
    then this defaults to fprintf(stderr, fmt, ...). */
 extern void set_matchpathcon_printf(void
 #ifdef __GNUC__
-   __attribute__ ((format(printf, 1, 2)))
+				    __attribute__((format(printf, 1, 2)))
 #endif
-   (*f) (const char *fmt, ...));
+				    (*f)(const char *fmt, ...));
 
 /* Set the function used by matchpathcon_init when checking the
    validity of a context in the file contexts configuration.  If not set,
    then this defaults to a test based on security_check_context().  
    The function is also responsible for reporting any such error, and
    may include the 'path' and 'lineno' in such error messages. */
-extern void set_matchpathcon_invalidcon(int (*f) (const char *path,
-						  unsigned lineno,
-						  char *context));
+extern void set_matchpathcon_invalidcon(int (*f)(const char *path,
+						 unsigned lineno,
+						 char *context));
 
 /* Same as above, but also allows canonicalization of the context,
    by changing *context to refer to the canonical form.  If not set,
    and invalidcon is also not set, then this defaults to calling
    security_canonicalize_context(). */
-extern void set_matchpathcon_canoncon(int (*f) (const char *path,
-						unsigned lineno,
-						char **context));
+extern void set_matchpathcon_canoncon(int (*f)(const char *path,
+					       unsigned lineno,
+					       char **context));
 
 /* Set flags controlling operation of matchpathcon_init or matchpathcon. */
-#define MATCHPATHCON_BASEONLY 1	/* Only process the base file_contexts file. */
-#define MATCHPATHCON_NOTRANS  2	/* Do not perform any context translation. */
-#define MATCHPATHCON_VALIDATE 4	/* Validate/canonicalize contexts at init time. */
+#define MATCHPATHCON_BASEONLY 1 /* Only process the base file_contexts file. */
+#define MATCHPATHCON_NOTRANS 2 /* Do not perform any context translation. */
+#define MATCHPATHCON_VALIDATE \
+	4 /* Validate/canonicalize contexts at init time. */
 extern void set_matchpathcon_flags(unsigned int flags);
 
 /* Load the file contexts configuration specified by 'path'
@@ -494,9 +466,10 @@ extern void set_matchpathcon_flags(unsigned int flags);
    from them if present. */
 extern int matchpathcon_init(const char *path)
 #ifdef __GNUC__
-   __attribute__ ((deprecated("Use selabel_open with backend SELABEL_CTX_FILE")))
+	__attribute__((
+		deprecated("Use selabel_open with backend SELABEL_CTX_FILE")))
 #endif
-;
+	;
 
 /* Same as matchpathcon_init, but only load entries with
    regexes that have stems that are prefixes of 'prefix'. */
@@ -505,9 +478,9 @@ extern int matchpathcon_init_prefix(const char *path, const char *prefix);
 /* Free the memory allocated by matchpathcon_init. */
 extern void matchpathcon_fini(void)
 #ifdef __GNUC__
-   __attribute__ ((deprecated("Use selabel_close")))
+	__attribute__((deprecated("Use selabel_close")))
 #endif
-;
+	;
 
 /* Resolve all of the symlinks and relative portions of a pathname, but NOT
  * the final component (same a realpath() unless the final component is a
@@ -520,24 +493,23 @@ extern int realpath_not_final(const char *name, char *resolved_path);
    Caller must free via freecon.
    If matchpathcon_init has not already been called, then this function
    will call it upon its first invocation with a NULL path. */
-extern int matchpathcon(const char *path,
-			mode_t mode, char ** con)
+extern int matchpathcon(const char *path, mode_t mode, char **con)
 #ifdef __GNUC__
-	__attribute__ ((deprecated("Use selabel_lookup instead")))
+	__attribute__((deprecated("Use selabel_lookup instead")))
 #endif
-;
+	;
 
 /* Same as above, but return a specification index for 
    later use in a matchpathcon_filespec_add() call - see below. */
-extern int matchpathcon_index(const char *path,
-			      mode_t mode, char ** con);
+extern int matchpathcon_index(const char *path, mode_t mode, char **con);
 
 /* Maintain an association between an inode and a specification index,
    and check whether a conflicting specification is already associated
    with the same inode (e.g. due to multiple hard links).  If so, then
    use the latter of the two specifications based on their order in the 
    file contexts configuration.  Return the used specification index. */
-#if defined(_FILE_OFFSET_BITS) && _FILE_OFFSET_BITS == 64 && defined(__INO64_T_TYPE) && !defined(__INO_T_MATCHES_INO64_T)
+#if defined(_FILE_OFFSET_BITS) && _FILE_OFFSET_BITS == 64 && \
+	defined(__INO64_T_TYPE) && !defined(__INO_T_MATCHES_INO64_T)
 #define matchpathcon_filespec_add matchpathcon_filespec_add64
 #endif
 extern int matchpathcon_filespec_add(ino_t ino, int specind, const char *file);
@@ -556,7 +528,7 @@ extern void matchpathcon_checkmatches(char *str);
 /* Match the specified media and against the media contexts 
    configuration and set *con to refer to the resulting context.
    Caller must free con via freecon. */
-extern int matchmediacon(const char *media, char ** con);
+extern int matchmediacon(const char *media, char **con);
 
 /*
   selinux_getenforcemode reads the /etc/selinux/config file and determines 
@@ -623,16 +595,16 @@ extern const char *selinux_booleans_subs_path(void);
 /* Deprecated as local policy booleans no longer supported. */
 extern const char *selinux_booleans_path(void)
 #ifdef __GNUC__
-__attribute__ ((deprecated))
+	__attribute__((deprecated))
 #endif
-;
+	;
 extern const char *selinux_customizable_types_path(void);
 /* Deprecated as policy ./users no longer supported. */
 extern const char *selinux_users_path(void)
 #ifdef __GNUC__
-__attribute__ ((deprecated))
+	__attribute__((deprecated))
 #endif
-;
+	;
 extern const char *selinux_usersconf_path(void);
 extern const char *selinux_translations_path(void);
 extern const char *selinux_colors_path(void);
@@ -656,25 +628,27 @@ extern const char *selinux_path(void);
  * If auditing or logging is configured the appropriate callbacks will be called
  * and passed the auditdata field
  */
-extern int selinux_check_access(const char * scon, const char * tcon, const char *tclass, const char *perm, void *auditdata);
+extern int selinux_check_access(const char *scon, const char *tcon,
+				const char *tclass, const char *perm,
+				void *auditdata);
 
 /* Check a permission in the passwd class.
    Return 0 if granted or -1 otherwise. */
 extern int selinux_check_passwd_access(access_vector_t requested)
 #ifdef __GNUC__
-  __attribute__ ((deprecated("Use selinux_check_access")))
+	__attribute__((deprecated("Use selinux_check_access")))
 #endif
-;
+	;
 
 extern int checkPasswdAccess(access_vector_t requested)
 #ifdef __GNUC__
-   __attribute__ ((deprecated("Use selinux_check_access")))
+	__attribute__((deprecated("Use selinux_check_access")))
 #endif
-;
+	;
 
 /* Check if the tty_context is defined as a securetty
    Return 0 if secure, < 0 otherwise. */
-extern int selinux_check_securetty_context(const char * tty_context);
+extern int selinux_check_securetty_context(const char *tty_context);
 
 /* Set the path to the selinuxfs mount point explicitly.
    Normally, this is determined automatically during libselinux 
@@ -694,36 +668,32 @@ extern int setexecfilecon(const char *filename, const char *fallback_type);
 
 #ifndef DISABLE_RPM
 /* Execute a helper for rpm in an appropriate security context. */
-extern int rpm_execcon(unsigned int verified,
-		       const char *filename,
+extern int rpm_execcon(unsigned int verified, const char *filename,
 		       char *const argv[], char *const envp[])
 #ifdef __GNUC__
 	__attribute__((deprecated("Use setexecfilecon and execve")))
 #endif
-;
+	;
 #endif
 
 /* Returns whether a file context is customizable, and should not 
    be relabeled . */
-extern int is_context_customizable(const char * scontext);
+extern int is_context_customizable(const char *scontext);
 
 /* Perform context translation between the human-readable format
    ("translated") and the internal system format ("raw"). 
    Caller must free the resulting context via freecon.  
    Returns -1 upon an error or 0 otherwise.
    If passed NULL, sets the returned context to NULL and returns 0. */
-extern int selinux_trans_to_raw_context(const char * trans,
-					char ** rawp);
-extern int selinux_raw_to_trans_context(const char * raw,
-					char ** transp);
+extern int selinux_trans_to_raw_context(const char *trans, char **rawp);
+extern int selinux_raw_to_trans_context(const char *raw, char **transp);
 
 /* Perform context translation between security contexts
    and display colors.  Returns a space-separated list of ten
    ten hex RGB triples prefixed by hash marks, e.g. "#ff0000".
    Caller must free the resulting string via free.
    Returns -1 upon an error or 0 otherwise. */
-extern int selinux_raw_context_to_color(const char * raw,
-					char **color_str);
+extern int selinux_raw_context_to_color(const char *raw, char **color_str);
 
 /* Get the SELinux username and level to use for a given Linux username. 
    These values may then be passed into the get_ordered_context_list*
@@ -737,12 +707,11 @@ extern int getseuserbyname(const char *linuxuser, char **seuser, char **level);
    and get_default_context* functions to obtain a context for the user.
    Returns 0 on success or -1 otherwise.
    Caller must free the returned strings via free. */
-extern int getseuser(const char *username, const char *service, 
-		     char **r_seuser, char **r_level);
+extern int getseuser(const char *username, const char *service, char **r_seuser,
+		     char **r_level);
 
 /* Compare two file contexts, return 0 if equivalent. */
-extern int selinux_file_context_cmp(const char * a,
-			     const char * b);
+extern int selinux_file_context_cmp(const char *a, const char *b);
 
 /* 
  * Verify the context of the file 'path' against policy.

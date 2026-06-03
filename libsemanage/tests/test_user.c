@@ -96,7 +96,7 @@ int user_add_tests(CU_pSuite suite)
 	CU_add_test(suite, "user_list", test_user_list);
 
 	CU_add_test(suite, "user_modify_del_query_local",
-				test_user_modify_del_query_local);
+		    test_user_modify_del_query_local);
 	CU_add_test(suite, "user_exists_local", test_user_exists_local);
 	CU_add_test(suite, "user_count_local", test_user_count_local);
 	CU_add_test(suite, "user_iterate_local", test_user_iterate_local);
@@ -120,12 +120,12 @@ static semanage_user_t *get_user_nth(int idx)
 	res = semanage_user_list(sh, &records, &count);
 
 	CU_ASSERT_FATAL(res >= 0);
-	CU_ASSERT_FATAL(count >= (unsigned int) idx + 1);
+	CU_ASSERT_FATAL(count >= (unsigned int)idx + 1);
 
 	user = records[idx];
 
 	for (unsigned int i = 0; i < count; i++)
-		if (i != (unsigned int) idx)
+		if (i != (unsigned int)idx)
 			semanage_user_free(records[i]);
 
 	free(records);
@@ -376,8 +376,8 @@ static void test_user_roles(void)
 	CU_ASSERT(semanage_user_add_role(sh, user, "my_role_r") == 0);
 	CU_ASSERT(semanage_user_get_num_roles(user) == 2);
 
-	CU_ASSERT(semanage_user_get_roles(sh, user, &roles_arr,
-					  &num_roles) >= 0);
+	CU_ASSERT(semanage_user_get_roles(sh, user, &roles_arr, &num_roles) >=
+		  0);
 	CU_ASSERT(num_roles == 2);
 	CU_ASSERT_STRING_EQUAL(roles_arr[0], "role_r");
 	CU_ASSERT_STRING_EQUAL(roles_arr[1], "my_role_r");
@@ -515,7 +515,8 @@ static void test_user_count(void)
 /* Function semanage_user_iterate */
 static unsigned int counter_user_iterate = 0;
 
-static int handler_user_iterate(__attribute__((unused)) const semanage_user_t *record,
+static int handler_user_iterate(__attribute__((unused))
+				const semanage_user_t *record,
 				__attribute__((unused)) void *varg)
 {
 	counter_user_iterate++;
@@ -649,7 +650,8 @@ static void test_user_count_local(void)
 /* Function semanage_user_iterate_local */
 static unsigned int counter_user_iterate_local = 0;
 
-static int handler_user_iterate_local(__attribute__((unused)) const semanage_user_t *record,
+static int handler_user_iterate_local(__attribute__((unused))
+				      const semanage_user_t *record,
 				      __attribute__((unused)) void *varg)
 {
 	counter_user_iterate_local++;

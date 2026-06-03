@@ -32,47 +32,49 @@
 
 #include "semanage/semanage.h"
 
-#define CU_ASSERT_CONTEXT_EQUAL(CON1,CON2) \
-	do { \
-		char *str__; \
-		char *str2__; \
-		CU_ASSERT(semanage_context_to_string(sh, CON1, &str__) >= 0); \
+#define CU_ASSERT_CONTEXT_EQUAL(CON1, CON2)                                    \
+	do {                                                                   \
+		char *str__;                                                   \
+		char *str2__;                                                  \
+		CU_ASSERT(semanage_context_to_string(sh, CON1, &str__) >= 0);  \
 		CU_ASSERT(semanage_context_to_string(sh, CON2, &str2__) >= 0); \
-		CU_ASSERT_STRING_EQUAL(str__, str2__); \
-		free(str2__); \
-		free(str__); \
+		CU_ASSERT_STRING_EQUAL(str__, str2__);                         \
+		free(str2__);                                                  \
+		free(str__);                                                   \
 	} while (0)
-
 
 /* Override CU_*_FATAL() in order to help static analyzers by really asserting that an assertion holds */
 #ifdef __CHECKER__
 
 #undef CU_ASSERT_FATAL
-#define CU_ASSERT_FATAL(value) do { \
+#define CU_ASSERT_FATAL(value)        \
+	do {                          \
 		int value_ = (value); \
-		CU_ASSERT(value_); \
-		assert(value_); \
+		CU_ASSERT(value_);    \
+		assert(value_);       \
 	} while (0)
 
 #undef CU_FAIL_FATAL
-#define CU_FAIL_FATAL(msg) do { \
+#define CU_FAIL_FATAL(msg)    \
+	do {                  \
 		CU_FAIL(msg); \
-		assert(0); \
+		assert(0);    \
 	} while (0)
 
 #undef CU_ASSERT_PTR_NOT_NULL_FATAL
-#define CU_ASSERT_PTR_NOT_NULL_FATAL(value) do { \
-		const void *value_ = (value); \
+#define CU_ASSERT_PTR_NOT_NULL_FATAL(value)     \
+	do {                                    \
+		const void *value_ = (value);   \
 		CU_ASSERT_PTR_NOT_NULL(value_); \
-		assert(value_ != NULL); \
+		assert(value_ != NULL);         \
 	} while (0)
 
 #endif /* __CHECKER__ */
 
 #define I_NULL (-1)
-#define I_FIRST  0
+#define I_FIRST 0
 #define I_SECOND 1
-#define I_THIRD  2
+#define I_THIRD 2
 
 extern semanage_handle_t *sh;
 

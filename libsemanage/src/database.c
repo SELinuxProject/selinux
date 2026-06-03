@@ -6,30 +6,25 @@
 #include "database.h"
 #include "debug.h"
 
-static int assert_init(semanage_handle_t * handle, const dbase_config_t * dconfig)
+static int assert_init(semanage_handle_t *handle, const dbase_config_t *dconfig)
 {
-
 	if (dconfig->dtable == NULL) {
-
-		ERR(handle,
-		    "A direct or server connection is needed "
-		    "to use this function - please call "
-		    "the corresponding connect() method");
+		ERR(handle, "A direct or server connection is needed "
+			    "to use this function - please call "
+			    "the corresponding connect() method");
 		return STATUS_ERR;
 	}
 
 	return STATUS_SUCCESS;
 }
 
-static int enter_ro(semanage_handle_t * handle, dbase_config_t * dconfig)
+static int enter_ro(semanage_handle_t *handle, dbase_config_t *dconfig)
 {
-
 	if (assert_init(handle, dconfig) < 0)
 		goto err;
 
 	if (!handle->is_in_transaction &&
 	    handle->conf->store_type == SEMANAGE_CON_DIRECT) {
-
 		if (semanage_get_active_lock(handle) < 0) {
 			ERR(handle, "could not get the active lock");
 			goto err;
@@ -41,14 +36,13 @@ static int enter_ro(semanage_handle_t * handle, dbase_config_t * dconfig)
 
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not enter read-only section");
 	return STATUS_ERR;
 }
 
-static inline int exit_ro(semanage_handle_t * handle)
+static inline int exit_ro(semanage_handle_t *handle)
 {
-
 	int commit_num = handle->funcs->get_serial(handle);
 
 	if (!handle->is_in_transaction &&
@@ -58,9 +52,8 @@ static inline int exit_ro(semanage_handle_t * handle)
 	return commit_num;
 }
 
-static int enter_rw(semanage_handle_t * handle, dbase_config_t * dconfig)
+static int enter_rw(semanage_handle_t *handle, dbase_config_t *dconfig)
 {
-
 	if (assert_init(handle, dconfig) < 0)
 		goto err;
 
@@ -74,16 +67,14 @@ static int enter_rw(semanage_handle_t * handle, dbase_config_t * dconfig)
 
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not enter read-write section");
 	return STATUS_ERR;
 }
 
-int dbase_modify(semanage_handle_t * handle,
-		 dbase_config_t * dconfig,
-		 const record_key_t * key, const record_t * data)
+int dbase_modify(semanage_handle_t *handle, dbase_config_t *dconfig,
+		 const record_key_t *key, const record_t *data)
 {
-
 	if (enter_rw(handle, dconfig) < 0)
 		return STATUS_ERR;
 
@@ -93,11 +84,9 @@ int dbase_modify(semanage_handle_t * handle,
 	return STATUS_SUCCESS;
 }
 
-int dbase_set(semanage_handle_t * handle,
-	      dbase_config_t * dconfig,
-	      const record_key_t * key, const record_t * data)
+int dbase_set(semanage_handle_t *handle, dbase_config_t *dconfig,
+	      const record_key_t *key, const record_t *data)
 {
-
 	if (enter_rw(handle, dconfig) < 0)
 		return STATUS_ERR;
 
@@ -107,10 +96,9 @@ int dbase_set(semanage_handle_t * handle,
 	return STATUS_SUCCESS;
 }
 
-int dbase_del(semanage_handle_t * handle,
-	      dbase_config_t * dconfig, const record_key_t * key)
+int dbase_del(semanage_handle_t *handle, dbase_config_t *dconfig,
+	      const record_key_t *key)
 {
-
 	if (enter_rw(handle, dconfig) < 0)
 		return STATUS_ERR;
 
@@ -120,11 +108,9 @@ int dbase_del(semanage_handle_t * handle,
 	return STATUS_SUCCESS;
 }
 
-int dbase_query(semanage_handle_t * handle,
-		dbase_config_t * dconfig,
-		const record_key_t * key, record_t ** response)
+int dbase_query(semanage_handle_t *handle, dbase_config_t *dconfig,
+		const record_key_t *key, record_t **response)
 {
-
 	if (enter_ro(handle, dconfig) < 0)
 		return STATUS_ERR;
 
@@ -136,15 +122,14 @@ int dbase_query(semanage_handle_t * handle,
 	return exit_ro(handle);
 }
 
-int dbase_exists(semanage_handle_t * handle,
-		 dbase_config_t * dconfig,
-		 const record_key_t * key, int *response)
+int dbase_exists(semanage_handle_t *handle, dbase_config_t *dconfig,
+		 const record_key_t *key, int *response)
 {
-
 	if (enter_ro(handle, dconfig) < 0)
 		return STATUS_ERR;
 
-	if (dconfig->dtable->exists(handle, dconfig->dbase, key, response) < 0) {
+	if (dconfig->dtable->exists(handle, dconfig->dbase, key, response) <
+	    0) {
 		exit_ro(handle);
 		return STATUS_ERR;
 	}
@@ -152,10 +137,9 @@ int dbase_exists(semanage_handle_t * handle,
 	return exit_ro(handle);
 }
 
-int dbase_count(semanage_handle_t * handle,
-		dbase_config_t * dconfig, unsigned int *response)
+int dbase_count(semanage_handle_t *handle, dbase_config_t *dconfig,
+		unsigned int *response)
 {
-
 	if (enter_ro(handle, dconfig) < 0)
 		return STATUS_ERR;
 
@@ -167,12 +151,9 @@ int dbase_count(semanage_handle_t * handle,
 	return exit_ro(handle);
 }
 
-int dbase_iterate(semanage_handle_t * handle,
-		  dbase_config_t * dconfig,
-		  int (*fn) (const record_t * record,
-			     void *fn_arg), void *fn_arg)
+int dbase_iterate(semanage_handle_t *handle, dbase_config_t *dconfig,
+		  int (*fn)(const record_t *record, void *fn_arg), void *fn_arg)
 {
-
 	if (enter_ro(handle, dconfig) < 0)
 		return STATUS_ERR;
 
@@ -184,11 +165,9 @@ int dbase_iterate(semanage_handle_t * handle,
 	return exit_ro(handle);
 }
 
-int dbase_list(semanage_handle_t * handle,
-	       dbase_config_t * dconfig,
-	       record_t *** records, unsigned int *count)
+int dbase_list(semanage_handle_t *handle, dbase_config_t *dconfig,
+	       record_t ***records, unsigned int *count)
 {
-
 	if (enter_ro(handle, dconfig) < 0)
 		return STATUS_ERR;
 

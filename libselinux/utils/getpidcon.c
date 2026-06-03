@@ -23,7 +23,8 @@ int main(int argc, char **argv)
 
 	rc = getpidcon(pid, &buf);
 	if (rc < 0) {
-		fprintf(stderr, "%s:  getpidcon() failed:  %s\n", argv[0], strerror(errno));
+		fprintf(stderr, "%s:  getpidcon() failed:  %s\n", argv[0],
+			strerror(errno));
 		exit(3);
 	}
 

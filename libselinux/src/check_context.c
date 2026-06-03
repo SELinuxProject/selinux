@@ -9,7 +9,7 @@
 #include "policy.h"
 #include <limits.h>
 
-int security_check_context_raw(const char * con)
+int security_check_context_raw(const char *con)
 {
 	char path[PATH_MAX];
 	int fd, ret;
@@ -31,11 +31,10 @@ int security_check_context_raw(const char * con)
 	return 0;
 }
 
-
-int security_check_context(const char * con)
+int security_check_context(const char *con)
 {
 	int ret;
-	char * rcon;
+	char *rcon;
 
 	if (selinux_trans_to_raw_context(con, &rcon))
 		return -1;
@@ -46,4 +45,3 @@ int security_check_context(const char * con)
 
 	return ret;
 }
-

@@ -5,8 +5,7 @@
 #include <errno.h>
 #include <selinux/selinux.h>
 
-int main(int argc __attribute__ ((unused)),
-	 char **argv __attribute__ ((unused)))
+int main(int argc __attribute__((unused)), char **argv __attribute__((unused)))
 {
 	int rc;
 
@@ -18,7 +17,9 @@ int main(int argc __attribute__ ((unused)),
 	if (rc == 1) {
 		rc = security_getenforce();
 		if (rc < 0) {
-			fprintf(stderr, "getenforce:  security_getenforce() failed:  %s\n", strerror(errno));
+			fprintf(stderr,
+				"getenforce:  security_getenforce() failed:  %s\n",
+				strerror(errno));
 			return 2;
 		}
 

@@ -7,10 +7,9 @@
 
 /* Construct a policydb from the supplied (data, len) pair */
 
-int policydb_from_image(sepol_handle_t * handle,
-			void *data, size_t len, policydb_t * policydb)
+int policydb_from_image(sepol_handle_t *handle, void *data, size_t len,
+			policydb_t *policydb)
 {
-
 	policy_file_t pf;
 
 	policy_file_init(&pf);
@@ -31,10 +30,9 @@ int policydb_from_image(sepol_handle_t * handle,
 
 /* Write a policydb to a memory region, and return the (data, len) pair. */
 
-int policydb_to_image(sepol_handle_t * handle,
-		      policydb_t * policydb, void **newdata, size_t * newlen)
+int policydb_to_image(sepol_handle_t *handle, policydb_t *policydb,
+		      void **newdata, size_t *newlen)
 {
-
 	void *tmp_data = NULL;
 	size_t tmp_len;
 	policy_file_t pf;
@@ -92,7 +90,7 @@ int policydb_to_image(sepol_handle_t * handle,
 	/* Recover */
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not create policy image");
 
 	/* Recover */

@@ -26,13 +26,13 @@ struct selabel_handle;
  */
 
 /* file contexts */
-#define SELABEL_CTX_FILE	0
+#define SELABEL_CTX_FILE 0
 /* media contexts */
-#define SELABEL_CTX_MEDIA	1
+#define SELABEL_CTX_MEDIA 1
 /* x contexts */
-#define SELABEL_CTX_X		2
+#define SELABEL_CTX_X 2
 /* db objects */
-#define SELABEL_CTX_DB		3
+#define SELABEL_CTX_DB 3
 /* Android property service contexts */
 #define SELABEL_CTX_ANDROID_PROP 4
 /* Android service contexts */
@@ -43,19 +43,19 @@ struct selabel_handle;
  */
 
 /* no-op option, useful for unused slots in an array of options */
-#define SELABEL_OPT_UNUSED	0
+#define SELABEL_OPT_UNUSED 0
 /* validate contexts before returning them (boolean value) */
-#define SELABEL_OPT_VALIDATE	1
+#define SELABEL_OPT_VALIDATE 1
 /* don't use local customizations to backend data (boolean value) */
-#define SELABEL_OPT_BASEONLY	2
+#define SELABEL_OPT_BASEONLY 2
 /* specify an alternate path to use when loading backend data */
-#define SELABEL_OPT_PATH	3
+#define SELABEL_OPT_PATH 3
 /* select a subset of the search space as an optimization (file backend) */
-#define SELABEL_OPT_SUBSET	4
+#define SELABEL_OPT_SUBSET 4
 /* require a hash calculation on spec files */
-#define SELABEL_OPT_DIGEST	5
+#define SELABEL_OPT_DIGEST 5
 /* total number of options */
-#define SELABEL_NOPT		6
+#define SELABEL_NOPT 6
 
 /*
  * Label operations
@@ -104,7 +104,8 @@ extern int selabel_lookup(struct selabel_handle *handle, char **con,
 extern int selabel_lookup_raw(struct selabel_handle *handle, char **con,
 			      const char *key, int type);
 
-extern bool selabel_partial_match(struct selabel_handle *handle, const char *key);
+extern bool selabel_partial_match(struct selabel_handle *handle,
+				  const char *key);
 
 extern bool selabel_get_digests_all_partial_matches(struct selabel_handle *rec,
 						    const char *key,
@@ -112,12 +113,14 @@ extern bool selabel_get_digests_all_partial_matches(struct selabel_handle *rec,
 						    uint8_t **xattr_digest,
 						    size_t *digest_len);
 extern bool selabel_hash_all_partial_matches(struct selabel_handle *rec,
-					     const char *key, uint8_t* digest);
+					     const char *key, uint8_t *digest);
 
 extern int selabel_lookup_best_match(struct selabel_handle *rec, char **con,
-				     const char *key, const char **aliases, int type);
+				     const char *key, const char **aliases,
+				     int type);
 extern int selabel_lookup_best_match_raw(struct selabel_handle *rec, char **con,
-					 const char *key, const char **aliases, int type);
+					 const char *key, const char **aliases,
+					 int type);
 
 /**
  * selabel_digest - Retrieve the SHA1 digest and the list of specfiles used to
@@ -132,9 +135,9 @@ extern int selabel_lookup_best_match_raw(struct selabel_handle *rec, char **con,
  *
  * Return %0 on success, -%1 with @errno set on failure.
  */
-extern int selabel_digest(struct selabel_handle *rec,
-			  unsigned char **digest, size_t *digest_len,
-			  char ***specfiles, size_t *num_specfiles);
+extern int selabel_digest(struct selabel_handle *rec, unsigned char **digest,
+			  size_t *digest_len, char ***specfiles,
+			  size_t *num_specfiles);
 
 enum selabel_cmp_result {
 	SELABEL_SUBSET,
@@ -171,29 +174,29 @@ extern void selabel_stats(struct selabel_handle *handle);
  */
 
 /* X backend */
-#define SELABEL_X_PROP		1
-#define SELABEL_X_EXT		2
-#define SELABEL_X_CLIENT	3
-#define SELABEL_X_EVENT		4
-#define SELABEL_X_SELN		5
-#define SELABEL_X_POLYPROP	6
-#define SELABEL_X_POLYSELN	7
+#define SELABEL_X_PROP 1
+#define SELABEL_X_EXT 2
+#define SELABEL_X_CLIENT 3
+#define SELABEL_X_EVENT 4
+#define SELABEL_X_SELN 5
+#define SELABEL_X_POLYPROP 6
+#define SELABEL_X_POLYSELN 7
 
 /* DB backend */
-#define SELABEL_DB_DATABASE	1
-#define SELABEL_DB_SCHEMA	2
-#define SELABEL_DB_TABLE	3
-#define SELABEL_DB_COLUMN	4
-#define SELABEL_DB_SEQUENCE	5
-#define SELABEL_DB_VIEW		6
-#define SELABEL_DB_PROCEDURE	7
-#define SELABEL_DB_BLOB		8
-#define SELABEL_DB_TUPLE	9
-#define SELABEL_DB_LANGUAGE	10
+#define SELABEL_DB_DATABASE 1
+#define SELABEL_DB_SCHEMA 2
+#define SELABEL_DB_TABLE 3
+#define SELABEL_DB_COLUMN 4
+#define SELABEL_DB_SEQUENCE 5
+#define SELABEL_DB_VIEW 6
+#define SELABEL_DB_PROCEDURE 7
+#define SELABEL_DB_BLOB 8
+#define SELABEL_DB_TUPLE 9
+#define SELABEL_DB_LANGUAGE 10
 #define SELABEL_DB_EXCEPTION 11
 #define SELABEL_DB_DATATYPE 12
 
 #ifdef __cplusplus
 }
 #endif
-#endif	/* _SELABEL_H_ */
+#endif /* _SELABEL_H_ */

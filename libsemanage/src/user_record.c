@@ -30,54 +30,42 @@ struct semanage_user {
 };
 
 /* Key */
-int semanage_user_key_create(semanage_handle_t * handle,
-			     const char *name, semanage_user_key_t ** key)
+int semanage_user_key_create(semanage_handle_t *handle, const char *name,
+			     semanage_user_key_t **key)
 {
-
 	return sepol_user_key_create(handle->sepolh, name, key);
 }
 
-
-int semanage_user_key_extract(semanage_handle_t * handle,
-			      const semanage_user_t * user,
-			      semanage_user_key_t ** key)
+int semanage_user_key_extract(semanage_handle_t *handle,
+			      const semanage_user_t *user,
+			      semanage_user_key_t **key)
 {
-
 	return semanage_user_base_key_extract(handle, user->base, key);
 }
 
-
-void semanage_user_key_free(semanage_user_key_t * key)
+void semanage_user_key_free(semanage_user_key_t *key)
 {
-
 	sepol_user_key_free(key);
 }
 
-
- void semanage_user_key_unpack(const semanage_user_key_t * key,
-				     const char **name)
+void semanage_user_key_unpack(const semanage_user_key_t *key, const char **name)
 {
-
 	sepol_user_key_unpack(key, name);
 }
 
-int semanage_user_compare(const semanage_user_t * user,
-			  const semanage_user_key_t * key)
+int semanage_user_compare(const semanage_user_t *user,
+			  const semanage_user_key_t *key)
 {
-
 	const char *name;
 	sepol_user_key_unpack(key, &name);
 	return strcmp(user->name, name);
 }
 
-
-int semanage_user_compare2(const semanage_user_t * user,
-			   const semanage_user_t * user2)
+int semanage_user_compare2(const semanage_user_t *user,
+			   const semanage_user_t *user2)
 {
-
 	return strcmp(user->name, user2->name);
 }
-
 
 static int semanage_user_compare2_qsort(const void *p1, const void *p2)
 {
@@ -88,16 +76,14 @@ static int semanage_user_compare2_qsort(const void *p1, const void *p2)
 }
 
 /* Name */
-const char *semanage_user_get_name(const semanage_user_t * user)
+const char *semanage_user_get_name(const semanage_user_t *user)
 {
 	return user->name;
 }
 
-
-int semanage_user_set_name(semanage_handle_t * handle,
-			   semanage_user_t * user, const char *name)
+int semanage_user_set_name(semanage_handle_t *handle, semanage_user_t *user,
+			   const char *name)
 {
-
 	char *tmp_name = strdup(name);
 	if (!tmp_name)
 		goto omem;
@@ -112,112 +98,90 @@ int semanage_user_set_name(semanage_handle_t * handle,
 	user->name = tmp_name;
 	return STATUS_SUCCESS;
 
-      omem:
+omem:
 	ERR(handle, "out of memory");
 
-      err:
+err:
 	ERR(handle, "could not set user name to %s", name);
 	free(tmp_name);
 	return STATUS_ERR;
 }
 
-
 /* Labeling prefix */
-const char *semanage_user_get_prefix(const semanage_user_t * user)
+const char *semanage_user_get_prefix(const semanage_user_t *user)
 {
-
 	return semanage_user_extra_get_prefix(user->extra);
 }
 
-int semanage_user_set_prefix(semanage_handle_t * handle,
-			     semanage_user_t * user, const char *name)
+int semanage_user_set_prefix(semanage_handle_t *handle, semanage_user_t *user,
+			     const char *name)
 {
-
 	return semanage_user_extra_set_prefix(handle, user->extra, name);
 }
 
 /* MLS */
-const char *semanage_user_get_mlslevel(const semanage_user_t * user)
+const char *semanage_user_get_mlslevel(const semanage_user_t *user)
 {
-
 	return semanage_user_base_get_mlslevel(user->base);
 }
 
-
-int semanage_user_set_mlslevel(semanage_handle_t * handle,
-			       semanage_user_t * user, const char *mls_level)
+int semanage_user_set_mlslevel(semanage_handle_t *handle, semanage_user_t *user,
+			       const char *mls_level)
 {
-
 	return semanage_user_base_set_mlslevel(handle, user->base, mls_level);
 }
 
-
-const char *semanage_user_get_mlsrange(const semanage_user_t * user)
+const char *semanage_user_get_mlsrange(const semanage_user_t *user)
 {
-
 	return semanage_user_base_get_mlsrange(user->base);
 }
 
-
-int semanage_user_set_mlsrange(semanage_handle_t * handle,
-			       semanage_user_t * user, const char *mls_range)
+int semanage_user_set_mlsrange(semanage_handle_t *handle, semanage_user_t *user,
+			       const char *mls_range)
 {
-
 	return semanage_user_base_set_mlsrange(handle, user->base, mls_range);
 }
 
-
 /* Role management */
-int semanage_user_get_num_roles(const semanage_user_t * user)
+int semanage_user_get_num_roles(const semanage_user_t *user)
 {
-
 	return semanage_user_base_get_num_roles(user->base);
 }
 
-int semanage_user_add_role(semanage_handle_t * handle,
-			   semanage_user_t * user, const char *role)
+int semanage_user_add_role(semanage_handle_t *handle, semanage_user_t *user,
+			   const char *role)
 {
-
 	return semanage_user_base_add_role(handle, user->base, role);
 }
 
-
-void semanage_user_del_role(semanage_user_t * user, const char *role)
+void semanage_user_del_role(semanage_user_t *user, const char *role)
 {
-
 	semanage_user_base_del_role(user->base, role);
 }
 
-int semanage_user_has_role(const semanage_user_t * user, const char *role)
+int semanage_user_has_role(const semanage_user_t *user, const char *role)
 {
-
 	return semanage_user_base_has_role(user->base, role);
 }
 
-int semanage_user_get_roles(semanage_handle_t * handle,
-			    const semanage_user_t * user,
+int semanage_user_get_roles(semanage_handle_t *handle,
+			    const semanage_user_t *user,
 			    const char ***roles_arr, unsigned int *num_roles)
 {
-
 	return semanage_user_base_get_roles(handle, user->base, roles_arr,
 					    num_roles);
 }
 
-
-int semanage_user_set_roles(semanage_handle_t * handle,
-			    semanage_user_t * user,
+int semanage_user_set_roles(semanage_handle_t *handle, semanage_user_t *user,
 			    const char **roles_arr, unsigned int num_roles)
 {
-
 	return semanage_user_base_set_roles(handle, user->base, roles_arr,
 					    num_roles);
 }
 
 /* Create/Clone/Destroy */
-int semanage_user_create(semanage_handle_t * handle,
-			 semanage_user_t ** user_ptr)
+int semanage_user_create(semanage_handle_t *handle, semanage_user_t **user_ptr)
 {
-
 	semanage_user_t *tmp_user = calloc(1, sizeof(semanage_user_t));
 	if (!tmp_user)
 		goto omem;
@@ -234,21 +198,18 @@ int semanage_user_create(semanage_handle_t * handle,
 	*user_ptr = tmp_user;
 	return STATUS_SUCCESS;
 
-      omem:
+omem:
 	ERR(handle, "out of memory");
 
-      err:
+err:
 	ERR(handle, "could not create user record");
 	semanage_user_free(tmp_user);
 	return STATUS_ERR;
 }
 
-
-int semanage_user_clone(semanage_handle_t * handle,
-			const semanage_user_t * user,
-			semanage_user_t ** user_ptr)
+int semanage_user_clone(semanage_handle_t *handle, const semanage_user_t *user,
+			semanage_user_t **user_ptr)
 {
-
 	semanage_user_t *tmp_user = calloc(1, sizeof(semanage_user_t));
 	if (!tmp_user)
 		goto omem;
@@ -267,19 +228,17 @@ int semanage_user_clone(semanage_handle_t * handle,
 	*user_ptr = tmp_user;
 	return STATUS_SUCCESS;
 
-      omem:
+omem:
 	ERR(handle, "out of memory");
 
-      err:
+err:
 	ERR(handle, "could not clone user record");
 	semanage_user_free(tmp_user);
 	return STATUS_ERR;
 }
 
-
-void semanage_user_free(semanage_user_t * user)
+void semanage_user_free(semanage_user_t *user)
 {
-
 	if (!user)
 		return;
 
@@ -289,14 +248,12 @@ void semanage_user_free(semanage_user_t * user)
 	free(user);
 }
 
-
 /* Join properties */
- int semanage_user_join(semanage_handle_t * handle,
-			      const semanage_user_base_t * record1,
-			      const semanage_user_extra_t * record2,
-			      semanage_user_t ** result)
+int semanage_user_join(semanage_handle_t *handle,
+		       const semanage_user_base_t *record1,
+		       const semanage_user_extra_t *record2,
+		       semanage_user_t **result)
 {
-
 	const char *name;
 	semanage_user_t *tmp_user = calloc(1, sizeof(semanage_user_t));
 	if (!tmp_user)
@@ -324,17 +281,17 @@ void semanage_user_free(semanage_user_t * user)
 
 	/* Join extra record if it exists, create a blank one otherwise */
 	if (record2) {
-		if (semanage_user_extra_clone(handle, record2, &tmp_user->extra)
-		    < 0)
+		if (semanage_user_extra_clone(handle, record2,
+					      &tmp_user->extra) < 0)
 			goto err;
 	} else {
 		if (semanage_user_extra_create(handle, &tmp_user->extra) < 0)
 			goto err;
-		if (semanage_user_extra_set_name(handle, tmp_user->extra, name)
-		    < 0)
+		if (semanage_user_extra_set_name(handle, tmp_user->extra,
+						 name) < 0)
 			goto err;
-		if (semanage_user_extra_set_prefix
-		    (handle, tmp_user->extra, "user") < 0)
+		if (semanage_user_extra_set_prefix(handle, tmp_user->extra,
+						   "user") < 0)
 			goto err;
 	}
 
@@ -344,22 +301,21 @@ void semanage_user_free(semanage_user_t * user)
 	*result = tmp_user;
 	return STATUS_SUCCESS;
 
-      omem:
+omem:
 	ERR(handle, "out of memory");
 
-      err:
+err:
 	ERR(handle, "could not join data records for user %s",
 	    semanage_user_base_get_name(record1));
 	semanage_user_free(tmp_user);
 	return STATUS_ERR;
 }
 
- int semanage_user_split(semanage_handle_t * handle,
-			       const semanage_user_t * record,
-			       semanage_user_base_t ** split1,
-			       semanage_user_extra_t ** split2)
+int semanage_user_split(semanage_handle_t *handle,
+			const semanage_user_t *record,
+			semanage_user_base_t **split1,
+			semanage_user_extra_t **split2)
 {
-
 	semanage_user_base_t *tmp_base_user = NULL;
 	semanage_user_extra_t *tmp_extra_user = NULL;
 
@@ -374,7 +330,7 @@ void semanage_user_free(semanage_user_t * user)
 	*split2 = tmp_extra_user;
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not split data records for user %s",
 	    semanage_user_get_name(record));
 	semanage_user_base_free(tmp_base_user);

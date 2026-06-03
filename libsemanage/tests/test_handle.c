@@ -172,8 +172,8 @@ static void test_access_check(void)
 	/* test with handle */
 	setup_handle(SH_HANDLE);
 	res = semanage_access_check(sh);
-	CU_ASSERT(res == 0 || res == SEMANAGE_CAN_READ
-		  || res == SEMANAGE_CAN_WRITE);
+	CU_ASSERT(res == 0 || res == SEMANAGE_CAN_READ ||
+		  res == SEMANAGE_CAN_WRITE);
 	cleanup_handle(SH_HANDLE);
 
 	/* test with invalid store */
@@ -184,8 +184,8 @@ static void test_access_check(void)
 	/* test connected */
 	setup_handle(SH_CONNECT);
 	res = semanage_access_check(sh);
-	CU_ASSERT(res == 0 || res == SEMANAGE_CAN_READ
-		  || res == SEMANAGE_CAN_WRITE);
+	CU_ASSERT(res == 0 || res == SEMANAGE_CAN_READ ||
+		  res == SEMANAGE_CAN_WRITE);
 	cleanup_handle(SH_CONNECT);
 }
 
@@ -235,8 +235,10 @@ static void test_mls_enabled(void)
 static int msg_set_callback_count = 0;
 
 static void helper_msg_set_callback(__attribute__((unused)) void *varg,
-				    __attribute__((unused)) semanage_handle_t *handle,
-				    __attribute__((unused)) const char *fmt, ...)
+				    __attribute__((unused))
+				    semanage_handle_t *handle,
+				    __attribute__((unused)) const char *fmt,
+				    ...)
 {
 	msg_set_callback_count++;
 }
@@ -291,8 +293,8 @@ static void test_root(void)
 }
 
 /* Function semanage_select_store */
-static void helper_select_store(const char *name, enum semanage_connect_type type,
-			 int exp_res)
+static void helper_select_store(const char *name,
+				enum semanage_connect_type type, int exp_res)
 {
 	setup_handle(SH_HANDLE);
 

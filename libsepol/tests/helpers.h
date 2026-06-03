@@ -34,27 +34,29 @@
 #include <assert.h>
 
 #undef CU_ASSERT_FATAL
-#define CU_ASSERT_FATAL(value) do { \
+#define CU_ASSERT_FATAL(value)        \
+	do {                          \
 		int _value = (value); \
-		CU_ASSERT(_value); \
-		assert(_value); \
+		CU_ASSERT(_value);    \
+		assert(_value);       \
 	} while (0)
 
 #undef CU_FAIL_FATAL
-#define CU_FAIL_FATAL(msg) do { \
+#define CU_FAIL_FATAL(msg)    \
+	do {                  \
 		CU_FAIL(msg); \
-		assert(0); \
+		assert(0);    \
 	} while (0)
 
 #undef CU_ASSERT_PTR_NOT_NULL_FATAL
-#define CU_ASSERT_PTR_NOT_NULL_FATAL(value) do { \
-		const void *_value = (value); \
+#define CU_ASSERT_PTR_NOT_NULL_FATAL(value)     \
+	do {                                    \
+		const void *_value = (value);   \
 		CU_ASSERT_PTR_NOT_NULL(_value); \
-		assert(_value != NULL); \
+		assert(_value != NULL);         \
 	} while (0)
 
 #endif /* __CHECKER__ */
-
 
 /* Load a source policy into p. policydb_init will called within this function.
  * 
@@ -74,7 +76,8 @@
  *  0            success
  * -1            error - the policydb will be destroyed but not freed.
  */
-extern int test_load_policy(policydb_t * p, int policy_type, int mls, const char *test_name, const char *policy_name);
+extern int test_load_policy(policydb_t *p, int policy_type, int mls,
+			    const char *test_name, const char *policy_name);
 
 /* Find an avrule_decl_t by a unique symbol. If the symbol is declared in more
  * than one decl an error is returned.
@@ -83,6 +86,7 @@ extern int test_load_policy(policydb_t * p, int policy_type, int mls, const char
  *  decl      success 
  *  NULL      error (including more than one declaration)
  */
-extern avrule_decl_t *test_find_decl_by_sym(policydb_t * p, int symtab, const char *sym);
+extern avrule_decl_t *test_find_decl_by_sym(policydb_t *p, int symtab,
+					    const char *sym);
 
 #endif

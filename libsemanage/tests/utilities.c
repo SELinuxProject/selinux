@@ -33,12 +33,12 @@ semanage_handle_t *sh = NULL;
  */
 void test_msg_handler(__attribute__((unused)) void *varg,
 		      __attribute__((unused)) semanage_handle_t *handle,
-		      __attribute__((unused)) const char *fmt,
-		      ...)
+		      __attribute__((unused)) const char *fmt, ...)
 {
 }
 
-int create_test_store(void) {
+int create_test_store(void)
+{
 	FILE *fptr;
 
 	if (mkdir("test-policy", 0700) < 0)
@@ -70,15 +70,18 @@ int create_test_store(void) {
 	return 0;
 }
 
-void disable_test_store(void) {
+void disable_test_store(void)
+{
 	test_store_enabled = 0;
 }
 
-void enable_test_store(void) {
+void enable_test_store(void)
+{
 	test_store_enabled = 1;
 }
 
-static int write_test_policy(char *data, size_t data_len) {
+static int write_test_policy(char *data, size_t data_len)
+{
 	FILE *fptr = fopen("test-policy/store/active/policy.kern", "wb+");
 
 	if (!fptr) {
@@ -97,7 +100,8 @@ static int write_test_policy(char *data, size_t data_len) {
 	return 0;
 }
 
-int write_test_policy_from_file(const char *filename) {
+int write_test_policy_from_file(const char *filename)
+{
 	char *buf = NULL;
 	size_t len = 0;
 	FILE *fptr = fopen(filename, "rb");
@@ -112,7 +116,7 @@ int write_test_policy_from_file(const char *filename) {
 	len = ftell(fptr);
 	fseek(fptr, 0, SEEK_SET);
 
-	buf = (char *) malloc(len);
+	buf = (char *)malloc(len);
 
 	if (!buf) {
 		perror("malloc");
@@ -128,15 +132,16 @@ int write_test_policy_from_file(const char *filename) {
 	return rc;
 }
 
-int write_test_policy_src(unsigned char *data, unsigned int data_len) {
+int write_test_policy_src(unsigned char *data, unsigned int data_len)
+{
 	if (mkdir("test-policy/store/active/modules/100", 0700) < 0)
 		return -1;
 
 	if (mkdir("test-policy/store/active/modules/100/base", 0700) < 0)
 		return -1;
 
-	FILE *fptr = fopen("test-policy/store/active/modules/100/base/cil",
-			   "w+");
+	FILE *fptr =
+		fopen("test-policy/store/active/modules/100/base/cil", "w+");
 
 	if (!fptr) {
 		perror("fopen");
@@ -170,14 +175,15 @@ int write_test_policy_src(unsigned char *data, unsigned int data_len) {
 	return 0;
 }
 
-int destroy_test_store(void) {
+int destroy_test_store(void)
+{
 	FTS *ftsp = NULL;
 	FTSENT *curr = NULL;
 	int ret = 0;
 
 	disable_test_store();
 
-	char *files[] = { (char *) "test-policy", NULL };
+	char *files[] = { (char *)"test-policy", NULL };
 
 	ftsp = fts_open(files, FTS_NOCHDIR | FTS_PHYSICAL | FTS_XDEV, NULL);
 
@@ -202,7 +208,8 @@ int destroy_test_store(void) {
 	return ret;
 }
 
-void helper_handle_create(void) {
+void helper_handle_create(void)
+{
 	if (test_store_enabled)
 		semanage_set_root("test-policy");
 
@@ -215,32 +222,37 @@ void helper_handle_create(void) {
 		semanage_set_create_store(sh, 1);
 		semanage_set_reload(sh, 0);
 		semanage_set_store_root(sh, "");
-		semanage_select_store(sh, "store",
-				      SEMANAGE_CON_DIRECT);
+		semanage_select_store(sh, "store", SEMANAGE_CON_DIRECT);
 	}
 }
 
-void helper_handle_destroy(void) {
+void helper_handle_destroy(void)
+{
 	semanage_handle_destroy(sh);
 }
 
-void helper_connect(void) {
+void helper_connect(void)
+{
 	CU_ASSERT(semanage_connect(sh) >= 0);
 }
 
-void helper_disconnect(void) {
+void helper_disconnect(void)
+{
 	CU_ASSERT(semanage_disconnect(sh) >= 0);
 }
 
-void helper_begin_transaction(void) {
+void helper_begin_transaction(void)
+{
 	CU_ASSERT(semanage_begin_transaction(sh) >= 0);
 }
 
-void helper_commit(void) {
+void helper_commit(void)
+{
 	CU_ASSERT(semanage_commit(sh) >= 0);
 }
 
-void setup_handle(level_t level) {
+void setup_handle(level_t level)
+{
 	if (level >= SH_NULL)
 		sh = NULL;
 
@@ -254,7 +266,8 @@ void setup_handle(level_t level) {
 		helper_begin_transaction();
 }
 
-void cleanup_handle(level_t level) {
+void cleanup_handle(level_t level)
+{
 	if (level >= SH_TRANS)
 		helper_commit();
 
@@ -268,7 +281,8 @@ void cleanup_handle(level_t level) {
 		sh = NULL;
 }
 
-void setup_handle_invalid_store(level_t level) {
+void setup_handle_invalid_store(level_t level)
+{
 	CU_ASSERT(level >= SH_HANDLE);
 
 	helper_handle_create();

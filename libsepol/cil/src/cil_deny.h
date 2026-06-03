@@ -26,11 +26,18 @@
 #ifndef CIL_DENY_H_
 #define CIL_DENY_H_
 
-int cil_classperms_list_match_any(const struct cil_list *cpl1, const struct cil_list *cpl2);
-int cil_classperms_list_match_all(const struct cil_list *cpl1, const struct cil_list *cpl2);
-void cil_classperms_list_copy(struct cil_list **new, const struct cil_list *old);
-void cil_classperms_list_and(struct cil_list **result, const struct cil_list *cpl1, const struct cil_list *cpl2);
-void cil_classperms_list_andnot(struct cil_list **result, const struct cil_list *cpl1, const struct cil_list *cpl2);
+int cil_classperms_list_match_any(const struct cil_list *cpl1,
+				  const struct cil_list *cpl2);
+int cil_classperms_list_match_all(const struct cil_list *cpl1,
+				  const struct cil_list *cpl2);
+void cil_classperms_list_copy(struct cil_list **new,
+			      const struct cil_list *old);
+void cil_classperms_list_and(struct cil_list **result,
+			     const struct cil_list *cpl1,
+			     const struct cil_list *cpl2);
+void cil_classperms_list_andnot(struct cil_list **result,
+				const struct cil_list *cpl1,
+				const struct cil_list *cpl2);
 int cil_process_deny_rules_in_ast(struct cil_db *db);
 
 #endif /* CIL_DENY_H_ */

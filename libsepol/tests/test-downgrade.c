@@ -31,8 +31,8 @@
 #include <limits.h>
 #include <CUnit/Basic.h>
 
-#define POLICY_BIN_HI	"policies/test-downgrade/policy.hi"
-#define POLICY_BIN_LO	"policies/test-downgrade/policy.lo"
+#define POLICY_BIN_HI "policies/test-downgrade/policy.hi"
+#define POLICY_BIN_LO "policies/test-downgrade/policy.lo"
 
 static policydb_t policydb;
 
@@ -103,8 +103,7 @@ void test_downgrade(void)
 {
 	if (do_downgrade_test(0) < 0)
 		fprintf(stderr,
-		        "\nError during downgrade testing of Non-MLS policy\n");
-
+			"\nError during downgrade testing of Non-MLS policy\n");
 
 	if (do_downgrade_test(1) < 0)
 		fprintf(stderr,
@@ -135,7 +134,8 @@ int do_downgrade_test(int mls)
 
 	/* Read in the hi policy from file */
 	if (read_binary_policy(POLICY_BIN_HI, &policydb) != 0) {
-		fprintf(stderr, "error reading %spolicy binary\n", mls ? "mls " : "");
+		fprintf(stderr, "error reading %spolicy binary\n",
+			mls ? "mls " : "");
 		CU_FAIL("Unable to read the binary policy");
 		return -1;
 	}
@@ -149,12 +149,12 @@ int do_downgrade_test(int mls)
 
 		/* Try downgrading to each possible version. */
 		for (lo = hi - 1; lo >= POLICYDB_VERSION_MIN; lo--) {
-
 			/* Reduce policy version */
 			policydb.policyvers = lo;
 
 			/* Write out modified binary policy */
-			if (write_binary_policy(POLICY_BIN_LO, &policydb) != 0) {
+			if (write_binary_policy(POLICY_BIN_LO, &policydb) !=
+			    0) {
 				/*
 				 * Error from MLS to pre-MLS is expected due
 				 * to MLS re-implementation in version 19.
@@ -162,9 +162,11 @@ int do_downgrade_test(int mls)
 				if (mls && lo < POLICYDB_VERSION_MLS)
 					continue;
 
-				fprintf(stderr, "error writing %spolicy binary, version %d (downgraded from %d)\n", mls ? "mls " : "", lo, hi);
+				fprintf(stderr,
+					"error writing %spolicy binary, version %d (downgraded from %d)\n",
+					mls ? "mls " : "", lo, hi);
 				CU_FAIL("Failed to write downgraded binary policy");
-					return -1;
+				return -1;
 			}
 
 			/* Make sure we can read back what we wrote. */
@@ -173,8 +175,11 @@ int do_downgrade_test(int mls)
 					__FUNCTION__);
 				return -1;
 			}
-			if (read_binary_policy(POLICY_BIN_LO, &policydb_tmp) != 0) {
-				fprintf(stderr, "error reading %spolicy binary, version %d (downgraded from %d)\n", mls ? "mls " : "", lo, hi);
+			if (read_binary_policy(POLICY_BIN_LO, &policydb_tmp) !=
+			    0) {
+				fprintf(stderr,
+					"error reading %spolicy binary, version %d (downgraded from %d)\n",
+					mls ? "mls " : "", lo, hi);
 				CU_FAIL("Unable to read downgraded binary policy");
 				return -1;
 			}
@@ -182,9 +187,9 @@ int do_downgrade_test(int mls)
 		}
 		/* Restore version number */
 		policydb.policyvers = version;
-    }
+	}
 
-    return 0;
+	return 0;
 }
 
 /*
@@ -251,7 +256,7 @@ int write_binary_policy(const char *path, policydb_t *p)
 	sepol_msg_set_callback(handle, NULL, NULL);
 
 	/* Open the binary policy file for writing */
-	if ((out_fp = fopen(path, "w" )) == NULL) {
+	if ((out_fp = fopen(path, "w")) == NULL) {
 		fprintf(stderr, "Unable to open %s: %s\n", path,
 			strerror(errno));
 		sepol_handle_destroy(handle);

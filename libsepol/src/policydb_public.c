@@ -6,7 +6,7 @@
 
 /* Policy file interfaces. */
 
-int sepol_policy_file_create(sepol_policy_file_t ** pf)
+int sepol_policy_file_create(sepol_policy_file_t **pf)
 {
 	*pf = calloc(1, sizeof(sepol_policy_file_t));
 	if (!(*pf))
@@ -14,8 +14,7 @@ int sepol_policy_file_create(sepol_policy_file_t ** pf)
 	return 0;
 }
 
-void sepol_policy_file_set_mem(sepol_policy_file_t * spf,
-			       char *data, size_t len)
+void sepol_policy_file_set_mem(sepol_policy_file_t *spf, char *data, size_t len)
 {
 	struct policy_file *pf = &spf->pf;
 	if (!len) {
@@ -29,7 +28,7 @@ void sepol_policy_file_set_mem(sepol_policy_file_t * spf,
 	return;
 }
 
-void sepol_policy_file_set_fp(sepol_policy_file_t * spf, FILE * fp)
+void sepol_policy_file_set_fp(sepol_policy_file_t *spf, FILE *fp)
 {
 	struct policy_file *pf = &spf->pf;
 	pf->type = PF_USE_STDIO;
@@ -37,7 +36,7 @@ void sepol_policy_file_set_fp(sepol_policy_file_t * spf, FILE * fp)
 	return;
 }
 
-int sepol_policy_file_get_len(sepol_policy_file_t * spf, size_t * len)
+int sepol_policy_file_get_len(sepol_policy_file_t *spf, size_t *len)
 {
 	struct policy_file *pf = &spf->pf;
 	if (pf->type != PF_LEN)
@@ -46,20 +45,20 @@ int sepol_policy_file_get_len(sepol_policy_file_t * spf, size_t * len)
 	return 0;
 }
 
-void sepol_policy_file_set_handle(sepol_policy_file_t * pf,
-				  sepol_handle_t * handle)
+void sepol_policy_file_set_handle(sepol_policy_file_t *pf,
+				  sepol_handle_t *handle)
 {
 	pf->pf.handle = handle;
 }
 
-void sepol_policy_file_free(sepol_policy_file_t * pf)
+void sepol_policy_file_free(sepol_policy_file_t *pf)
 {
 	free(pf);
 }
 
 /* Policydb interfaces. */
 
-int sepol_policydb_create(sepol_policydb_t ** sp)
+int sepol_policydb_create(sepol_policydb_t **sp)
 {
 	policydb_t *p;
 	*sp = malloc(sizeof(sepol_policydb_t));
@@ -74,15 +73,13 @@ int sepol_policydb_create(sepol_policydb_t ** sp)
 	return 0;
 }
 
-
-void sepol_policydb_free(sepol_policydb_t * p)
+void sepol_policydb_free(sepol_policydb_t *p)
 {
 	if (!p)
 		return;
 	policydb_destroy(&p->p);
 	free(p);
 }
-
 
 int sepol_policy_kern_vers_min(void)
 {
@@ -94,7 +91,7 @@ int sepol_policy_kern_vers_max(void)
 	return POLICYDB_VERSION_MAX;
 }
 
-int sepol_policydb_set_typevers(sepol_policydb_t * sp, unsigned int type)
+int sepol_policydb_set_typevers(sepol_policydb_t *sp, unsigned int type)
 {
 	struct policydb *p = &sp->p;
 	switch (type) {
@@ -112,7 +109,7 @@ int sepol_policydb_set_typevers(sepol_policydb_t * sp, unsigned int type)
 	return 0;
 }
 
-int sepol_policydb_set_vers(sepol_policydb_t * sp, unsigned int vers)
+int sepol_policydb_set_vers(sepol_policydb_t *sp, unsigned int vers)
 {
 	struct policydb *p = &sp->p;
 	switch (p->policy_type) {
@@ -122,8 +119,8 @@ int sepol_policydb_set_vers(sepol_policydb_t * sp, unsigned int vers)
 		break;
 	case POLICY_BASE:
 	case POLICY_MOD:
-		if (vers < MOD_POLICYDB_VERSION_MIN
-		    || vers > MOD_POLICYDB_VERSION_MAX)
+		if (vers < MOD_POLICYDB_VERSION_MIN ||
+		    vers > MOD_POLICYDB_VERSION_MAX)
 			return -1;
 		break;
 	default:
@@ -133,7 +130,7 @@ int sepol_policydb_set_vers(sepol_policydb_t * sp, unsigned int vers)
 	return 0;
 }
 
-int sepol_policydb_set_handle_unknown(sepol_policydb_t * sp,
+int sepol_policydb_set_handle_unknown(sepol_policydb_t *sp,
 				      unsigned int handle_unknown)
 {
 	struct policydb *p = &sp->p;
@@ -147,12 +144,12 @@ int sepol_policydb_set_handle_unknown(sepol_policydb_t * sp,
 		return -1;
 	}
 
-	p->handle_unknown = handle_unknown;		
+	p->handle_unknown = handle_unknown;
 	return 0;
 }
 
-int sepol_policydb_set_target_platform(sepol_policydb_t * sp,
-				      int target_platform)
+int sepol_policydb_set_target_platform(sepol_policydb_t *sp,
+				       int target_platform)
 {
 	struct policydb *p = &sp->p;
 
@@ -164,41 +161,39 @@ int sepol_policydb_set_target_platform(sepol_policydb_t * sp,
 		return -1;
 	}
 
-	p->target_platform = target_platform;		
+	p->target_platform = target_platform;
 	return 0;
 }
 
-int sepol_policydb_optimize(sepol_policydb_t * p)
+int sepol_policydb_optimize(sepol_policydb_t *p)
 {
 	return policydb_optimize(&p->p);
 }
 
-int sepol_policydb_read(sepol_policydb_t * p, sepol_policy_file_t * pf)
+int sepol_policydb_read(sepol_policydb_t *p, sepol_policy_file_t *pf)
 {
 	return policydb_read(&p->p, &pf->pf, 0);
 }
 
-int sepol_policydb_write(sepol_policydb_t * p, sepol_policy_file_t * pf)
+int sepol_policydb_write(sepol_policydb_t *p, sepol_policy_file_t *pf)
 {
 	return policydb_write(&p->p, &pf->pf);
 }
 
-int sepol_policydb_from_image(sepol_handle_t * handle,
-			      void *data, size_t len, sepol_policydb_t * p)
+int sepol_policydb_from_image(sepol_handle_t *handle, void *data, size_t len,
+			      sepol_policydb_t *p)
 {
 	return policydb_from_image(handle, data, len, &p->p);
 }
 
-int sepol_policydb_to_image(sepol_handle_t * handle,
-			    sepol_policydb_t * p, void **newdata,
-			    size_t * newlen)
+int sepol_policydb_to_image(sepol_handle_t *handle, sepol_policydb_t *p,
+			    void **newdata, size_t *newlen)
 {
 	return policydb_to_image(handle, &p->p, newdata, newlen);
 }
 
-int sepol_policydb_mls_enabled(const sepol_policydb_t * p)
+int sepol_policydb_mls_enabled(const sepol_policydb_t *p)
 {
-
 	return p->p.mls;
 }
 
@@ -207,7 +202,7 @@ int sepol_policydb_mls_enabled(const sepol_policydb_t * p)
  * the packet class is not defined in the policy.
  */
 #define PACKET_CLASS_NAME "packet"
-int sepol_policydb_compat_net(const sepol_policydb_t * p)
+int sepol_policydb_compat_net(const sepol_policydb_t *p)
 {
 	return (hashtab_search(p->p.p_classes.table, PACKET_CLASS_NAME) ==
 		NULL);

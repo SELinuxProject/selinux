@@ -7,7 +7,7 @@
 #include <selinux/selinux.h>
 #include <selinux/label.h>
 
-static __attribute__ ((__noreturn__)) void usage(const char *progname)
+static __attribute__((__noreturn__)) void usage(const char *progname)
 {
 	fprintf(stderr,
 		"usage: %s [-v] [-r] -p path [-m mode] [-f file] [link...]\n\n"
@@ -58,10 +58,8 @@ int main(int argc, char **argv)
 	char **links = NULL;
 
 	struct selabel_handle *hnd;
-	struct selinux_opt options[] = {
-		{ SELABEL_OPT_PATH, file },
-		{ SELABEL_OPT_VALIDATE, validate }
-	};
+	struct selinux_opt options[] = { { SELABEL_OPT_PATH, file },
+					 { SELABEL_OPT_VALIDATE, validate } };
 
 	if (argc < 3)
 		usage(argv[0]);
@@ -114,19 +112,20 @@ int main(int argc, char **argv)
 
 	hnd = selabel_open(SELABEL_CTX_FILE, options, 2);
 	if (!hnd) {
-		fprintf(stderr, "ERROR: selabel_open - Could not obtain "
-							     "handle:  %s\n",
-							     strerror(errno));
+		fprintf(stderr,
+			"ERROR: selabel_open - Could not obtain "
+			"handle:  %s\n",
+			strerror(errno));
 		rc = -1;
 		goto out;
 	}
 
 	if (raw)
 		rc = selabel_lookup_best_match_raw(hnd, &context, path,
-					    (const char **)links, mode);
+						   (const char **)links, mode);
 	else
 		rc = selabel_lookup_best_match(hnd, &context, path,
-					    (const char **)links, mode);
+					       (const char **)links, mode);
 
 	selabel_close(hnd);
 
@@ -134,16 +133,19 @@ int main(int argc, char **argv)
 		switch (errno) {
 		case ENOENT:
 			fprintf(stderr, "ERROR: selabel_lookup_best_match "
-				    "failed to find a valid context.\n");
+					"failed to find a valid context.\n");
 			break;
 		case EINVAL:
-			fprintf(stderr, "ERROR: selabel_lookup_best_match "
+			fprintf(stderr,
+				"ERROR: selabel_lookup_best_match "
 				"failed to validate context, or path / mode "
 				"are invalid.\n");
 			break;
 		default:
-			fprintf(stderr, "selabel_lookup_best_match ERROR: "
-					    "%s\n", strerror(errno));
+			fprintf(stderr,
+				"selabel_lookup_best_match ERROR: "
+				"%s\n",
+				strerror(errno));
 		}
 	} else {
 		printf("Best match context: %s\n", context);

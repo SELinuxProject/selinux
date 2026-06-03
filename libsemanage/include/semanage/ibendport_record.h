@@ -22,8 +22,7 @@ extern int semanage_ibendport_compare2(const semanage_ibendport_t *ibendport,
 				       const semanage_ibendport_t *ibendport2);
 
 extern int semanage_ibendport_key_create(semanage_handle_t *handle,
-					 const char *ibdev_name,
-					 int port,
+					 const char *ibdev_name, int port,
 					 semanage_ibendport_key_t **key_ptr);
 
 extern int semanage_ibendport_key_extract(semanage_handle_t *handle,
@@ -32,9 +31,10 @@ extern int semanage_ibendport_key_extract(semanage_handle_t *handle,
 
 extern void semanage_ibendport_key_free(semanage_ibendport_key_t *key);
 
-extern int semanage_ibendport_get_ibdev_name(semanage_handle_t *handle,
-					     const semanage_ibendport_t *ibendport,
-					     char **ibdev_name_ptr);
+extern int
+semanage_ibendport_get_ibdev_name(semanage_handle_t *handle,
+				  const semanage_ibendport_t *ibendport,
+				  char **ibdev_name_ptr);
 
 extern int semanage_ibendport_set_ibdev_name(semanage_handle_t *handle,
 					     semanage_ibendport_t *ibendport,
@@ -42,9 +42,11 @@ extern int semanage_ibendport_set_ibdev_name(semanage_handle_t *handle,
 
 extern int semanage_ibendport_get_port(const semanage_ibendport_t *ibendport);
 
-extern void semanage_ibendport_set_port(semanage_ibendport_t *ibendport, int port);
+extern void semanage_ibendport_set_port(semanage_ibendport_t *ibendport,
+					int port);
 
-extern semanage_context_t *semanage_ibendport_get_con(const semanage_ibendport_t *ibendport);
+extern semanage_context_t *
+semanage_ibendport_get_con(const semanage_ibendport_t *ibendport);
 
 extern int semanage_ibendport_set_con(semanage_handle_t *handle,
 				      semanage_ibendport_t *ibendport,

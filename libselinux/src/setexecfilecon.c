@@ -6,7 +6,7 @@
 
 int setexecfilecon(const char *filename, const char *fallback_type)
 {
-	char * mycon = NULL, *fcon = NULL, *newcon = NULL;
+	char *mycon = NULL, *fcon = NULL, *newcon = NULL;
 	context_t con = NULL;
 	int rc = 0;
 
@@ -21,7 +21,8 @@ int setexecfilecon(const char *filename, const char *fallback_type)
 	if (rc < 0)
 		goto out;
 
-	rc = security_compute_create(mycon, fcon, string_to_security_class("process"), &newcon);
+	rc = security_compute_create(
+		mycon, fcon, string_to_security_class("process"), &newcon);
 	if (rc < 0)
 		goto out;
 
@@ -40,7 +41,7 @@ int setexecfilecon(const char *filename, const char *fallback_type)
 	}
 
 	rc = setexeccon(newcon);
-      out:
+out:
 
 	if (rc < 0 && security_getenforce() == 0)
 		rc = 0;
@@ -53,7 +54,7 @@ int setexecfilecon(const char *filename, const char *fallback_type)
 }
 
 #ifndef DISABLE_RPM
-int rpm_execcon(unsigned int verified __attribute__ ((unused)),
+int rpm_execcon(unsigned int verified __attribute__((unused)),
 		const char *filename, char *const argv[], char *const envp[])
 {
 	int rc;

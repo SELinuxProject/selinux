@@ -22,9 +22,9 @@
 extern "C" {
 #endif
 
-typedef char *hashtab_key_t;	/* generic key type */
-typedef const char *const_hashtab_key_t;	/* constant generic key type */
-typedef void *hashtab_datum_t;	/* generic datum type */
+typedef char *hashtab_key_t; /* generic key type */
+typedef const char *const_hashtab_key_t; /* constant generic key type */
+typedef void *hashtab_datum_t; /* generic datum type */
 
 typedef struct hashtab_node *hashtab_ptr_t;
 
@@ -35,11 +35,13 @@ typedef struct hashtab_node {
 } hashtab_node_t;
 
 typedef struct hashtab_val {
-	hashtab_ptr_t *htable;	/* hash table */
-	unsigned int size;	/* number of slots in hash table */
-	uint32_t nel;		/* number of elements in hash table */
-	unsigned int (*hash_value) (struct hashtab_val * h, const_hashtab_key_t key);	/* hash function */
-	int (*keycmp) (struct hashtab_val * h, const_hashtab_key_t key1, const_hashtab_key_t key2);	/* key comparison function */
+	hashtab_ptr_t *htable; /* hash table */
+	unsigned int size; /* number of slots in hash table */
+	uint32_t nel; /* number of elements in hash table */
+	unsigned int (*hash_value)(struct hashtab_val *h,
+				   const_hashtab_key_t key); /* hash function */
+	int (*keycmp)(struct hashtab_val *h, const_hashtab_key_t key1,
+		      const_hashtab_key_t key2); /* key comparison function */
 } hashtab_val_t;
 
 typedef hashtab_val_t *hashtab_t;
@@ -50,13 +52,11 @@ typedef hashtab_val_t *hashtab_t;
    Returns NULL if insufficient space is available or
    the new hash table otherwise.
  */
-extern hashtab_t hashtab_create(unsigned int (*hash_value) (hashtab_t h,
-							    const_hashtab_key_t
-							    key),
-				int (*keycmp) (hashtab_t h,
-					       const_hashtab_key_t key1,
-					       const_hashtab_key_t key2),
-				unsigned int size);
+extern hashtab_t
+hashtab_create(unsigned int (*hash_value)(hashtab_t h, const_hashtab_key_t key),
+	       int (*keycmp)(hashtab_t h, const_hashtab_key_t key1,
+			     const_hashtab_key_t key2),
+	       unsigned int size);
 /*
    Inserts the specified (key, datum) pair into the specified hash table.
 
@@ -75,9 +75,9 @@ extern int hashtab_insert(hashtab_t h, hashtab_key_t k, hashtab_datum_t d);
    SEPOL_OK otherwise.
  */
 extern int hashtab_remove(hashtab_t h, hashtab_key_t k,
-			  void (*destroy) (hashtab_key_t k,
-					   hashtab_datum_t d,
-					   void *args), void *args);
+			  void (*destroy)(hashtab_key_t k, hashtab_datum_t d,
+					  void *args),
+			  void *args);
 
 /*
    Searches for the entry with the specified key in the hash table.
@@ -104,9 +104,9 @@ extern void hashtab_destroy(hashtab_t h);
    return to its caller.
  */
 extern int hashtab_map(hashtab_t h,
-		       int (*apply) (hashtab_key_t k,
-				     hashtab_datum_t d,
-				     void *args), void *args);
+		       int (*apply)(hashtab_key_t k, hashtab_datum_t d,
+				    void *args),
+		       void *args);
 
 extern void hashtab_hash_eval(hashtab_t h, const char *tag);
 

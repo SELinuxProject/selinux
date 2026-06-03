@@ -14,8 +14,8 @@
 #include <sepol/policydb/hashtab.h>
 #include <sepol/policydb/symtab.h>
 
-ignore_unsigned_overflow_
-static unsigned int symhash(hashtab_t h, const_hashtab_key_t key)
+ignore_unsigned_overflow_ static unsigned int symhash(hashtab_t h,
+						      const_hashtab_key_t key)
 {
 	unsigned int hash = 5381;
 	unsigned char c;
@@ -26,14 +26,13 @@ static unsigned int symhash(hashtab_t h, const_hashtab_key_t key)
 	return hash & (h->size - 1);
 }
 
-static int symcmp(hashtab_t h
-		  __attribute__ ((unused)), const_hashtab_key_t key1,
+static int symcmp(hashtab_t h __attribute__((unused)), const_hashtab_key_t key1,
 		  const_hashtab_key_t key2)
 {
 	return strcmp(key1, key2);
 }
 
-int symtab_init(symtab_t * s, unsigned int size)
+int symtab_init(symtab_t *s, unsigned int size)
 {
 	s->table = hashtab_create(symhash, symcmp, size);
 	if (!s->table)
@@ -42,7 +41,7 @@ int symtab_init(symtab_t * s, unsigned int size)
 	return 0;
 }
 
-void symtab_destroy(symtab_t * s)
+void symtab_destroy(symtab_t *s)
 {
 	if (!s)
 		return;

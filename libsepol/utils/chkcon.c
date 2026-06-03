@@ -6,7 +6,7 @@
 #include <string.h>
 #include <errno.h>
 
-void usage(char*) __attribute__((noreturn));
+void usage(char *) __attribute__((noreturn));
 
 void usage(char *progname)
 {
@@ -23,13 +23,13 @@ int main(int argc, char **argv)
 
 	fp = fopen(argv[1], "r");
 	if (!fp) {
-		fprintf(stderr, "Can't open '%s':  %s\n",
-			argv[1], strerror(errno));
+		fprintf(stderr, "Can't open '%s':  %s\n", argv[1],
+			strerror(errno));
 		exit(1);
 	}
 	if (sepol_set_policydb_from_file(fp) < 0) {
-		fprintf(stderr, "Error while processing %s:  %s\n",
-			argv[1], strerror(errno));
+		fprintf(stderr, "Error while processing %s:  %s\n", argv[1],
+			strerror(errno));
 		exit(1);
 	}
 	fclose(fp);

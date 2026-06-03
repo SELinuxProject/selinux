@@ -8,7 +8,9 @@
 #include "selinux_internal.h"
 #include "policy.h"
 
-static ssize_t fgetxattr_wrapper(int fd, const char *name, void *value, size_t size) {
+static ssize_t fgetxattr_wrapper(int fd, const char *name, void *value,
+				 size_t size)
+{
 	char buf[40];
 	int fd_flag, saved_errno = errno;
 	ssize_t ret;
@@ -32,7 +34,7 @@ static ssize_t fgetxattr_wrapper(int fd, const char *name, void *value, size_t s
 	return ret;
 }
 
-int fgetfilecon_raw(int fd, char ** context)
+int fgetfilecon_raw(int fd, char **context)
 {
 	char *buf;
 	ssize_t size;
@@ -60,7 +62,7 @@ int fgetfilecon_raw(int fd, char ** context)
 		memset(buf, 0, size);
 		ret = fgetxattr_wrapper(fd, XATTR_NAME_SELINUX, buf, size - 1);
 	}
-      out:
+out:
 	if (ret == 0) {
 		/* Re-map empty attribute values to errors. */
 		errno = ENOTSUP;
@@ -73,10 +75,9 @@ int fgetfilecon_raw(int fd, char ** context)
 	return ret;
 }
 
-
-int fgetfilecon(int fd, char ** context)
+int fgetfilecon(int fd, char **context)
 {
-	char * rcontext = NULL;
+	char *rcontext = NULL;
 	int ret;
 
 	*context = NULL;

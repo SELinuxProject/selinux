@@ -19,7 +19,6 @@ typedef struct dbase_join dbase_t;
 
 /* JOIN dbase */
 struct dbase_join {
-
 	/* Parent object - must always be
 	 * the first field - here we are using
 	 * a linked list to store the records */
@@ -34,9 +33,8 @@ struct dbase_join {
 	const record_join_table_t *rjtable;
 };
 
-static int dbase_join_cache(semanage_handle_t * handle, dbase_join_t * dbase)
+static int dbase_join_cache(semanage_handle_t *handle, dbase_join_t *dbase)
 {
-
 	/* Extract all the object tables information */
 	dbase_t *dbase1 = dbase->join1->dbase;
 	dbase_t *dbase2 = dbase->join2->dbase;
@@ -78,10 +76,12 @@ static int dbase_join_cache(semanage_handle_t * handle, dbase_join_t * dbase)
 
 	/* Sort for quicker merge later */
 	if (rcount1 > 1) {
-		qsort(records1, rcount1, sizeof(record1_t *), rtable1->compare2_qsort);
+		qsort(records1, rcount1, sizeof(record1_t *),
+		      rtable1->compare2_qsort);
 	}
 	if (rcount2 > 1) {
-		qsort(records2, rcount2, sizeof(record2_t *), rtable2->compare2_qsort);
+		qsort(records2, rcount2, sizeof(record2_t *),
+		      rtable2->compare2_qsort);
 	}
 
 	/* Now merge into this dbase */
@@ -108,24 +108,24 @@ static int dbase_join_cache(semanage_handle_t * handle, dbase_join_t * dbase)
 
 		/* Missing record1 data */
 		if (rc < 0) {
-			if (rjtable->join(handle, NULL,
-					  records2[j], &record) < 0)
+			if (rjtable->join(handle, NULL, records2[j], &record) <
+			    0)
 				goto err;
 			j++;
 		}
 
 		/* Missing record2 data */
 		else if (rc > 0) {
-			if (rjtable->join(handle, records1[i],
-					  NULL, &record) < 0)
+			if (rjtable->join(handle, records1[i], NULL, &record) <
+			    0)
 				goto err;
 			i++;
 		}
 
 		/* Both records available */
 		else {
-			if (rjtable->join(handle, records1[i],
-					  records2[j], &record) < 0)
+			if (rjtable->join(handle, records1[i], records2[j],
+					  &record) < 0)
 				goto err;
 
 			i++;
@@ -153,7 +153,7 @@ static int dbase_join_cache(semanage_handle_t * handle, dbase_join_t * dbase)
 	free(records2);
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not cache join database");
 	for (i = 0; i < rcount1; i++)
 		rtable1->free(records1[i]);
@@ -168,9 +168,8 @@ static int dbase_join_cache(semanage_handle_t * handle, dbase_join_t * dbase)
 }
 
 /* Flush database */
-static int dbase_join_flush(semanage_handle_t * handle, dbase_join_t * dbase)
+static int dbase_join_flush(semanage_handle_t *handle, dbase_join_t *dbase)
 {
-
 	/* Extract all the object tables information */
 	dbase_t *dbase1 = dbase->join1->dbase;
 	dbase_t *dbase2 = dbase->join2->dbase;
@@ -202,7 +201,6 @@ static int dbase_join_flush(semanage_handle_t * handle, dbase_join_t * dbase)
 
 	/* For each record, split, and add parts into their corresponding databases */
 	for (ptr = dbase->llist.cache_tail; ptr != NULL; ptr = ptr->prev) {
-
 		if (rtable->key_extract(handle, ptr->data, &rkey) < 0)
 			goto err;
 
@@ -229,7 +227,7 @@ static int dbase_join_flush(semanage_handle_t * handle, dbase_join_t * dbase)
 	dbase_llist_set_modified(&dbase->llist, 0);
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not flush join database");
 	rtable->key_free(rkey);
 	rtable1->free(record1);
@@ -237,13 +235,10 @@ static int dbase_join_flush(semanage_handle_t * handle, dbase_join_t * dbase)
 	return STATUS_ERR;
 }
 
-int dbase_join_init(semanage_handle_t * handle,
-		    const record_table_t * rtable,
-		    const record_join_table_t * rjtable,
-		    dbase_config_t * join1,
-		    dbase_config_t * join2, dbase_t ** dbase)
+int dbase_join_init(semanage_handle_t *handle, const record_table_t *rtable,
+		    const record_join_table_t *rjtable, dbase_config_t *join1,
+		    dbase_config_t *join2, dbase_t **dbase)
 {
-
 	dbase_join_t *tmp_dbase = malloc(sizeof(dbase_join_t));
 
 	if (!tmp_dbase)
@@ -259,16 +254,15 @@ int dbase_join_init(semanage_handle_t * handle,
 
 	return STATUS_SUCCESS;
 
-      omem:
+omem:
 	ERR(handle, "out of memory, could not initialize join database");
 	free(tmp_dbase);
 	return STATUS_ERR;
 }
 
 /* Release dbase resources */
-void dbase_join_release(dbase_join_t * dbase)
+void dbase_join_release(dbase_join_t *dbase)
 {
-
 	if (!dbase)
 		return;
 

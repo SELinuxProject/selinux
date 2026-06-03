@@ -10,7 +10,7 @@
 
 /* Attempt to rollback the transaction. No need to check error
    codes since this is rolling back something that blew up. */
-static __attribute__ ((__noreturn__)) void rollback(int argc, char **argv)
+static __attribute__((__noreturn__)) void rollback(int argc, char **argv)
 {
 	int i;
 
@@ -22,7 +22,6 @@ static __attribute__ ((__noreturn__)) void rollback(int argc, char **argv)
 
 int main(int argc, char **argv)
 {
-
 	int rc, i, commit = 0;
 
 	if (is_selinux_enabled() <= 0) {
@@ -62,13 +61,12 @@ int main(int argc, char **argv)
 			break;
 		default:
 			if (errno == ENOENT)
-				printf
-				    ("Boolean does not exist - rolling back all changes.\n");
+				printf("Boolean does not exist - rolling back all changes.\n");
 			else
 				printf("%s - rolling back all changes.\n",
 				       strerror(errno));
 			rollback(i, argv);
-			break;	/* Not reached. */
+			break; /* Not reached. */
 		}
 	}
 
@@ -88,7 +86,6 @@ int main(int argc, char **argv)
 					syslog(LOG_NOTICE,
 					       "The %s policy boolean was toggled by uid:%u",
 					       argv[i], getuid());
-
 			}
 			return 0;
 		}

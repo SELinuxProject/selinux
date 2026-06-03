@@ -41,7 +41,9 @@
 #include "cil_parser.h"
 #include "cil_strpool.h"
 
-struct cil_tree_node *cil_tree_get_next_path(struct cil_tree_node *node, char **info_kind, uint32_t *hll_line, char **path)
+struct cil_tree_node *cil_tree_get_next_path(struct cil_tree_node *node,
+					     char **info_kind,
+					     uint32_t *hll_line, char **path)
 {
 	int rc;
 
@@ -53,13 +55,18 @@ struct cil_tree_node *cil_tree_get_next_path(struct cil_tree_node *node, char **
 
 	while (node) {
 		if (node->flavor == CIL_NODE && node->data == NULL) {
-			if (node->cl_head && node->cl_head->data == CIL_KEY_SRC_INFO) {
-				if (!node->cl_head->next || !node->cl_head->next->next || !node->cl_head->next->next->next) {
+			if (node->cl_head &&
+			    node->cl_head->data == CIL_KEY_SRC_INFO) {
+				if (!node->cl_head->next ||
+				    !node->cl_head->next->next ||
+				    !node->cl_head->next->next->next) {
 					goto exit;
 				}
 				/* Parse Tree */
 				*info_kind = node->cl_head->next->data;
-				rc = cil_string_to_uint32(node->cl_head->next->next->data, hll_line, 10);
+				rc = cil_string_to_uint32(
+					node->cl_head->next->next->data,
+					hll_line, 10);
 				if (rc != SEPOL_OK) {
 					goto exit;
 				}
@@ -68,12 +75,12 @@ struct cil_tree_node *cil_tree_get_next_path(struct cil_tree_node *node, char **
 			}
 			node = node->parent;
 		} else if (node->flavor == CIL_SRC_INFO) {
-				/* AST */
-				struct cil_src_info *info = node->data;
-				*info_kind = info->kind;
-				*hll_line = info->hll_line;
-				*path = info->path;
-				return node;
+			/* AST */
+			struct cil_src_info *info = node->data;
+			*info_kind = info->kind;
+			*hll_line = info->hll_line;
+			*path = info->path;
+			return node;
 		} else {
 			if (node->flavor == CIL_CALL) {
 				struct cil_call *call = node->data;
@@ -101,7 +108,8 @@ char *cil_tree_get_cil_path(struct cil_tree_node *node)
 	char *path;
 
 	while (node) {
-		node = cil_tree_get_next_path(node, &info_kind, &hll_line, &path);
+		node = cil_tree_get_next_path(node, &info_kind, &hll_line,
+					      &path);
 		if (node && info_kind == CIL_KEY_SRC_CIL) {
 			return path;
 		}
@@ -110,7 +118,9 @@ char *cil_tree_get_cil_path(struct cil_tree_node *node)
 	return NULL;
 }
 
-__attribute__((format (printf, 3, 4))) void cil_tree_log(struct cil_tree_node *node, enum cil_log_level lvl, const char* msg, ...)
+__attribute__((format(printf, 3, 4))) void
+cil_tree_log(struct cil_tree_node *node, enum cil_log_level lvl,
+	     const char *msg, ...)
 {
 	va_list ap;
 
@@ -133,20 +143,22 @@ __attribute__((format (printf, 3, 4))) void cil_tree_log(struct cil_tree_node *n
 				char *info_kind;
 				uint32_t hll_line;
 
-				node = cil_tree_get_next_path(node, &info_kind, &hll_line, &path);
+				node = cil_tree_get_next_path(node, &info_kind,
+							      &hll_line, &path);
 				if (!node || info_kind == CIL_KEY_SRC_CIL) {
 					break;
 				}
 				if (info_kind == CIL_KEY_SRC_HLL_LMS) {
-					hll_line += hll_offset - node->hll_offset - 1;
+					hll_line += hll_offset -
+						    node->hll_offset - 1;
 				}
 
-				cil_log(lvl," from %s:%u", path, hll_line);
+				cil_log(lvl, " from %s:%u", path, hll_line);
 			} while (1);
 		}
 	}
 
-	cil_log(lvl,"\n");
+	cil_log(lvl, "\n");
 }
 
 int cil_tree_subtree_has_decl(struct cil_tree_node *node)
@@ -170,9 +182,9 @@ int cil_tree_init(struct cil_tree **tree)
 	struct cil_tree *new_tree = cil_malloc(sizeof(*new_tree));
 
 	cil_tree_node_init(&new_tree->root);
-	
+
 	*tree = new_tree;
-	
+
 	return SEPOL_OK;
 }
 
@@ -299,11 +311,13 @@ void cil_tree_node_remove(struct cil_tree_node *node)
    extra_args:               any additional data to be passed to the helper functions
 */
 
-static int cil_tree_walk_core(struct cil_tree_node *node,
-					   int (*process_node)(struct cil_tree_node *node, uint32_t *finished, void *extra_args),
-					   int (*first_child)(struct cil_tree_node *node, void *extra_args), 
-					   int (*last_child)(struct cil_tree_node *node, void *extra_args), 
-					   void *extra_args)
+static int cil_tree_walk_core(
+	struct cil_tree_node *node,
+	int (*process_node)(struct cil_tree_node *node, uint32_t *finished,
+			    void *extra_args),
+	int (*first_child)(struct cil_tree_node *node, void *extra_args),
+	int (*last_child)(struct cil_tree_node *node, void *extra_args),
+	void *extra_args)
 {
 	int rc = SEPOL_ERR;
 
@@ -323,7 +337,8 @@ static int cil_tree_walk_core(struct cil_tree_node *node,
 		}
 
 		if (node->cl_head != NULL && !(finished & CIL_TREE_SKIP_HEAD)) {
-			rc = cil_tree_walk(node, process_node, first_child, last_child, extra_args);
+			rc = cil_tree_walk(node, process_node, first_child,
+					   last_child, extra_args);
 			if (rc != SEPOL_OK) {
 				return rc;
 			}
@@ -335,11 +350,14 @@ static int cil_tree_walk_core(struct cil_tree_node *node,
 	return SEPOL_OK;
 }
 
-int cil_tree_walk(struct cil_tree_node *node, 
-				  int (*process_node)(struct cil_tree_node *node, uint32_t *finished, void *extra_args), 
-				  int (*first_child)(struct cil_tree_node *node, void *extra_args), 
-				  int (*last_child)(struct cil_tree_node *node, void *extra_args), 
-				  void *extra_args)
+int cil_tree_walk(struct cil_tree_node *node,
+		  int (*process_node)(struct cil_tree_node *node,
+				      uint32_t *finished, void *extra_args),
+		  int (*first_child)(struct cil_tree_node *node,
+				     void *extra_args),
+		  int (*last_child)(struct cil_tree_node *node,
+				    void *extra_args),
+		  void *extra_args)
 {
 	int rc = SEPOL_ERR;
 
@@ -355,7 +373,8 @@ int cil_tree_walk(struct cil_tree_node *node,
 		}
 	}
 
-	rc = cil_tree_walk_core(node->cl_head, process_node, first_child, last_child, extra_args);
+	rc = cil_tree_walk_core(node->cl_head, process_node, first_child,
+				last_child, extra_args);
 	if (rc != SEPOL_OK) {
 		return rc;
 	}

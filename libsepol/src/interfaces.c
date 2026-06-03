@@ -9,15 +9,13 @@
 #include "iface_internal.h"
 
 /* Create a low level structure from record */
-static int iface_from_record(sepol_handle_t * handle,
-			     const policydb_t * policydb,
-			     ocontext_t ** iface, const sepol_iface_t * record)
+static int iface_from_record(sepol_handle_t *handle, const policydb_t *policydb,
+			     ocontext_t **iface, const sepol_iface_t *record)
 {
-
 	ocontext_t *tmp_iface = NULL;
 	context_struct_t *tmp_con = NULL;
 
-	tmp_iface = (ocontext_t *) calloc(1, sizeof(ocontext_t));
+	tmp_iface = (ocontext_t *)calloc(1, sizeof(ocontext_t));
 	if (!tmp_iface)
 		goto omem;
 
@@ -27,8 +25,8 @@ static int iface_from_record(sepol_handle_t * handle,
 		goto omem;
 
 	/* Interface Context */
-	if (context_from_record(handle, policydb,
-				&tmp_con, sepol_iface_get_ifcon(record)) < 0)
+	if (context_from_record(handle, policydb, &tmp_con,
+				sepol_iface_get_ifcon(record)) < 0)
 		goto err;
 	context_cpy(&tmp_iface->context[0], tmp_con);
 	context_destroy(tmp_con);
@@ -36,8 +34,8 @@ static int iface_from_record(sepol_handle_t * handle,
 	tmp_con = NULL;
 
 	/* Message Context */
-	if (context_from_record(handle, policydb,
-				&tmp_con, sepol_iface_get_msgcon(record)) < 0)
+	if (context_from_record(handle, policydb, &tmp_con,
+				sepol_iface_get_msgcon(record)) < 0)
 		goto err;
 	context_cpy(&tmp_iface->context[1], tmp_con);
 	context_destroy(tmp_con);
@@ -47,10 +45,10 @@ static int iface_from_record(sepol_handle_t * handle,
 	*iface = tmp_iface;
 	return STATUS_SUCCESS;
 
-      omem:
+omem:
 	ERR(handle, "out of memory");
 
-      err:
+err:
 	if (tmp_iface != NULL) {
 		free(tmp_iface->u.name);
 		context_destroy(&tmp_iface->context[0]);
@@ -63,11 +61,9 @@ static int iface_from_record(sepol_handle_t * handle,
 	return STATUS_ERR;
 }
 
-static int iface_to_record(sepol_handle_t * handle,
-			   const policydb_t * policydb,
-			   ocontext_t * iface, sepol_iface_t ** record)
+static int iface_to_record(sepol_handle_t *handle, const policydb_t *policydb,
+			   ocontext_t *iface, sepol_iface_t **record)
 {
-
 	char *name = iface->u.name;
 	context_struct_t *ifcon = &iface->context[0];
 	context_struct_t *msgcon = &iface->context[1];
@@ -98,7 +94,7 @@ static int iface_to_record(sepol_handle_t * handle,
 	*record = tmp_record;
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not convert interface %s to record", name);
 	sepol_context_free(tmp_con);
 	sepol_iface_free(tmp_record);
@@ -106,11 +102,10 @@ static int iface_to_record(sepol_handle_t * handle,
 }
 
 /* Check if an interface exists */
-int sepol_iface_exists(sepol_handle_t * handle __attribute__ ((unused)),
-		       const sepol_policydb_t * p,
-		       const sepol_iface_key_t * key, int *response)
+int sepol_iface_exists(sepol_handle_t *handle __attribute__((unused)),
+		       const sepol_policydb_t *p, const sepol_iface_key_t *key,
+		       int *response)
 {
-
 	const policydb_t *policydb = &p->p;
 	ocontext_t *c, *head;
 
@@ -130,11 +125,9 @@ int sepol_iface_exists(sepol_handle_t * handle __attribute__ ((unused)),
 }
 
 /* Query an interface */
-int sepol_iface_query(sepol_handle_t * handle,
-		      const sepol_policydb_t * p,
-		      const sepol_iface_key_t * key, sepol_iface_t ** response)
+int sepol_iface_query(sepol_handle_t *handle, const sepol_policydb_t *p,
+		      const sepol_iface_key_t *key, sepol_iface_t **response)
 {
-
 	const policydb_t *policydb = &p->p;
 	ocontext_t *c, *head;
 
@@ -144,7 +137,6 @@ int sepol_iface_query(sepol_handle_t * handle,
 	head = policydb->ocontexts[OCON_NETIF];
 	for (c = head; c; c = c->next) {
 		if (!strcmp(name, c->u.name)) {
-
 			if (iface_to_record(handle, policydb, c, response) < 0)
 				goto err;
 
@@ -155,18 +147,15 @@ int sepol_iface_query(sepol_handle_t * handle,
 	*response = NULL;
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not query interface %s", name);
 	return STATUS_ERR;
 }
 
 /* Load an interface into policy */
-int sepol_iface_modify(sepol_handle_t * handle,
-		       sepol_policydb_t * p,
-		       const sepol_iface_key_t * key,
-		       const sepol_iface_t * data)
+int sepol_iface_modify(sepol_handle_t *handle, sepol_policydb_t *p,
+		       const sepol_iface_key_t *key, const sepol_iface_t *data)
 {
-
 	policydb_t *policydb = &p->p;
 	ocontext_t *head, *prev, *c, *iface = NULL;
 
@@ -180,7 +169,6 @@ int sepol_iface_modify(sepol_handle_t * handle,
 	head = policydb->ocontexts[OCON_NETIF];
 	for (c = head; c; c = c->next) {
 		if (!strcmp(name, c->u.name)) {
-
 			/* Replace */
 			iface->next = c->next;
 			if (prev == NULL)
@@ -202,7 +190,7 @@ int sepol_iface_modify(sepol_handle_t * handle,
 	policydb->ocontexts[OCON_NETIF] = iface;
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "error while loading interface %s", name);
 
 	if (iface != NULL) {
@@ -215,10 +203,9 @@ int sepol_iface_modify(sepol_handle_t * handle,
 }
 
 /* Return the number of interfaces */
-extern int sepol_iface_count(sepol_handle_t * handle __attribute__ ((unused)),
-			     const sepol_policydb_t * p, unsigned int *response)
+extern int sepol_iface_count(sepol_handle_t *handle __attribute__((unused)),
+			     const sepol_policydb_t *p, unsigned int *response)
 {
-
 	unsigned int count = 0;
 	ocontext_t *c, *head;
 	const policydb_t *policydb = &p->p;
@@ -232,12 +219,10 @@ extern int sepol_iface_count(sepol_handle_t * handle __attribute__ ((unused)),
 	return STATUS_SUCCESS;
 }
 
-int sepol_iface_iterate(sepol_handle_t * handle,
-			const sepol_policydb_t * p,
-			int (*fn) (const sepol_iface_t * iface,
-				   void *fn_arg), void *arg)
+int sepol_iface_iterate(sepol_handle_t *handle, const sepol_policydb_t *p,
+			int (*fn)(const sepol_iface_t *iface, void *fn_arg),
+			void *arg)
 {
-
 	const policydb_t *policydb = &p->p;
 	ocontext_t *c, *head;
 	sepol_iface_t *iface = NULL;
@@ -264,7 +249,7 @@ int sepol_iface_iterate(sepol_handle_t * handle,
 
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not iterate over interfaces");
 	sepol_iface_free(iface);
 	return STATUS_ERR;

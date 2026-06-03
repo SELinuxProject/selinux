@@ -136,12 +136,12 @@ static semanage_port_t *get_port_nth(int idx)
 	res = semanage_port_list(sh, &records, &count);
 
 	CU_ASSERT_FATAL(res >= 0);
-	CU_ASSERT_FATAL(count >= (unsigned int) idx + 1);
+	CU_ASSERT_FATAL(count >= (unsigned int)idx + 1);
 
 	port = records[idx];
 
 	for (unsigned int i = 0; i < count; i++)
-		if (i != (unsigned int) idx)
+		if (i != (unsigned int)idx)
 			semanage_port_free(records[i]);
 
 	free(records);
@@ -232,8 +232,8 @@ static void helper_port_compare(int idx1, int idx2)
 
 static void test_port_compare(void)
 {
-	helper_port_compare(I_FIRST,  I_FIRST);
-	helper_port_compare(I_FIRST,  I_SECOND);
+	helper_port_compare(I_FIRST, I_FIRST);
+	helper_port_compare(I_FIRST, I_SECOND);
 	helper_port_compare(I_SECOND, I_FIRST);
 	helper_port_compare(I_SECOND, I_SECOND);
 }
@@ -268,8 +268,8 @@ static void helper_port_compare2(int idx1, int idx2)
 
 static void test_port_compare2(void)
 {
-	helper_port_compare2(I_FIRST,  I_FIRST);
-	helper_port_compare2(I_FIRST,  I_SECOND);
+	helper_port_compare2(I_FIRST, I_FIRST);
+	helper_port_compare2(I_FIRST, I_SECOND);
 	helper_port_compare2(I_SECOND, I_FIRST);
 	helper_port_compare2(I_SECOND, I_SECOND);
 }
@@ -479,11 +479,11 @@ static void test_port_query(void)
 	/* test */
 	CU_ASSERT(semanage_port_query(sh, key, &port) >= 0);
 	CU_ASSERT(semanage_port_get_low(port) ==
-			  semanage_port_get_low(port_exp));
+		  semanage_port_get_low(port_exp));
 	CU_ASSERT(semanage_port_get_high(port) ==
-			  semanage_port_get_high(port_exp));
+		  semanage_port_get_high(port_exp));
 	CU_ASSERT(semanage_port_get_proto(port) ==
-			  semanage_port_get_proto(port_exp));
+		  semanage_port_get_proto(port_exp));
 
 	con = semanage_port_get_con(port);
 	con_exp = semanage_port_get_con(port_exp);
@@ -539,7 +539,8 @@ static void test_port_count(void)
 /* Function semanage_port_iterate */
 static unsigned int counter_port_iterate = 0;
 
-static int handler_port_iterate(__attribute__((unused)) const semanage_port_t *record,
+static int handler_port_iterate(__attribute__((unused))
+				const semanage_port_t *record,
 				__attribute__((unused)) void *varg)
 {
 	counter_port_iterate++;
@@ -638,11 +639,11 @@ static void test_port_query_local(void)
 	/* test */
 	CU_ASSERT(semanage_port_query_local(sh, key, &port) >= 0);
 	CU_ASSERT(semanage_port_get_low(port) ==
-			  semanage_port_get_low(port_exp));
+		  semanage_port_get_low(port_exp));
 	CU_ASSERT(semanage_port_get_high(port) ==
-			  semanage_port_get_high(port_exp));
+		  semanage_port_get_high(port_exp));
 	CU_ASSERT(semanage_port_get_proto(port) ==
-			  semanage_port_get_proto(port_exp));
+		  semanage_port_get_proto(port_exp));
 
 	con = semanage_port_get_con(port);
 	con_exp = semanage_port_get_con(port_exp);
@@ -717,7 +718,8 @@ static void test_port_count_local(void)
 /* Function semanage_port_iterate_local */
 static unsigned int counter_port_iterate_local = 0;
 
-static int handler_port_iterate_local(__attribute__((unused)) const semanage_port_t *record,
+static int handler_port_iterate_local(__attribute__((unused))
+				      const semanage_port_t *record,
 				      __attribute__((unused)) void *varg)
 {
 	counter_port_iterate_local++;
@@ -836,10 +838,10 @@ static void helper_port_validate_local_twoports(void)
 	semanage_port_set_proto(port1, 0);
 	semanage_port_set_proto(port2, 0);
 
-	CU_ASSERT(semanage_context_from_string(sh,
-			       "system_u:object_r:user_home_t:s0", &con1) >= 0);
-	CU_ASSERT(semanage_context_from_string(sh,
-				"system_u:object_r:user_tmp_t:s0", &con2) >= 0);
+	CU_ASSERT(semanage_context_from_string(
+			  sh, "system_u:object_r:user_home_t:s0", &con1) >= 0);
+	CU_ASSERT(semanage_context_from_string(
+			  sh, "system_u:object_r:user_tmp_t:s0", &con2) >= 0);
 
 	semanage_port_set_con(sh, port1, con1);
 	semanage_port_set_con(sh, port2, con2);

@@ -37,33 +37,36 @@ struct avtab_match_args {
 	bool conditional;
 };
 
-static const char* policy_name(const policydb_t *p) {
+static const char *policy_name(const policydb_t *p)
+{
 	return p->name ?: "policy.conf";
 }
 
-static void report_failure(sepol_handle_t *handle, const policydb_t *p, const avrule_t *narule,
-			   unsigned int stype, unsigned int ttype,
-			   const class_perm_node_t *curperm, uint32_t perms)
+static void report_failure(sepol_handle_t *handle, const policydb_t *p,
+			   const avrule_t *narule, unsigned int stype,
+			   unsigned int ttype, const class_perm_node_t *curperm,
+			   uint32_t perms)
 {
 	char *permstr = sepol_av_to_string(p, curperm->tclass, perms);
 
 	if (narule->source_filename) {
-		ERR(handle, "neverallow on line %lu of %s (or line %lu of %s) violated by allow %s %s:%s {%s };",
-		    narule->source_line, narule->source_filename, narule->line, policy_name(p),
-		    p->p_type_val_to_name[stype],
+		ERR(handle,
+		    "neverallow on line %lu of %s (or line %lu of %s) violated by allow %s %s:%s {%s };",
+		    narule->source_line, narule->source_filename, narule->line,
+		    policy_name(p), p->p_type_val_to_name[stype],
 		    p->p_type_val_to_name[ttype],
 		    p->p_class_val_to_name[curperm->tclass - 1],
 		    permstr ?: "<format-failure>");
 	} else if (narule->line) {
-		ERR(handle, "neverallow on line %lu violated by allow %s %s:%s {%s };",
+		ERR(handle,
+		    "neverallow on line %lu violated by allow %s %s:%s {%s };",
 		    narule->line, p->p_type_val_to_name[stype],
 		    p->p_type_val_to_name[ttype],
 		    p->p_class_val_to_name[curperm->tclass - 1],
 		    permstr ?: "<format-failure>");
 	} else {
 		ERR(handle, "neverallow violated by allow %s %s:%s {%s };",
-		    p->p_type_val_to_name[stype],
-		    p->p_type_val_to_name[ttype],
+		    p->p_type_val_to_name[stype], p->p_type_val_to_name[ttype],
 		    p->p_class_val_to_name[curperm->tclass - 1],
 		    permstr ?: "<format-failure>");
 	}
@@ -71,7 +74,8 @@ static void report_failure(sepol_handle_t *handle, const policydb_t *p, const av
 	free(permstr);
 }
 
-static bool match_any_class_permissions(const class_perm_node_t *cp, uint32_t class, uint32_t data)
+static bool match_any_class_permissions(const class_perm_node_t *cp,
+					uint32_t class, uint32_t data)
 {
 	for (; cp; cp = cp->next) {
 		if ((cp->tclass == class) && (cp->data & data))
@@ -81,7 +85,9 @@ static bool match_any_class_permissions(const class_perm_node_t *cp, uint32_t cl
 	return false;
 }
 
-static bool extended_permissions_and(const uint32_t *perms1, const uint32_t *perms2) {
+static bool extended_permissions_and(const uint32_t *perms1,
+				     const uint32_t *perms2)
+{
 	size_t i;
 	for (i = 0; i < EXTENDED_PERMS_LEN; i++) {
 		if (perms1[i] & perms2[i])
@@ -91,26 +97,29 @@ static bool extended_permissions_and(const uint32_t *perms1, const uint32_t *per
 	return false;
 }
 
-static bool check_extended_permissions(const av_extended_perms_t *neverallow, const avtab_extended_perms_t *allow)
+static bool check_extended_permissions(const av_extended_perms_t *neverallow,
+				       const avtab_extended_perms_t *allow)
 {
 	bool rc = false;
-	if ((neverallow->specified == AVRULE_XPERMS_IOCTLFUNCTION)
-			&& (allow->specified == AVTAB_XPERMS_IOCTLFUNCTION)) {
+	if ((neverallow->specified == AVRULE_XPERMS_IOCTLFUNCTION) &&
+	    (allow->specified == AVTAB_XPERMS_IOCTLFUNCTION)) {
 		if (neverallow->driver == allow->driver)
-			rc = extended_permissions_and(neverallow->perms, allow->perms);
-	} else if ((neverallow->specified == AVRULE_XPERMS_IOCTLFUNCTION)
-			&& (allow->specified == AVTAB_XPERMS_IOCTLDRIVER)) {
+			rc = extended_permissions_and(neverallow->perms,
+						      allow->perms);
+	} else if ((neverallow->specified == AVRULE_XPERMS_IOCTLFUNCTION) &&
+		   (allow->specified == AVTAB_XPERMS_IOCTLDRIVER)) {
 		rc = xperm_test(neverallow->driver, allow->perms);
-	} else if ((neverallow->specified == AVRULE_XPERMS_IOCTLDRIVER)
-			&& (allow->specified == AVTAB_XPERMS_IOCTLFUNCTION)) {
+	} else if ((neverallow->specified == AVRULE_XPERMS_IOCTLDRIVER) &&
+		   (allow->specified == AVTAB_XPERMS_IOCTLFUNCTION)) {
 		rc = xperm_test(allow->driver, neverallow->perms);
-	} else if ((neverallow->specified == AVRULE_XPERMS_IOCTLDRIVER)
-			&& (allow->specified == AVTAB_XPERMS_IOCTLDRIVER)) {
+	} else if ((neverallow->specified == AVRULE_XPERMS_IOCTLDRIVER) &&
+		   (allow->specified == AVTAB_XPERMS_IOCTLDRIVER)) {
 		rc = extended_permissions_and(neverallow->perms, allow->perms);
-	} else if ((neverallow->specified == AVRULE_XPERMS_NLMSG)
-			&& (allow->specified == AVTAB_XPERMS_NLMSG)) {
+	} else if ((neverallow->specified == AVRULE_XPERMS_NLMSG) &&
+		   (allow->specified == AVTAB_XPERMS_NLMSG)) {
 		if (neverallow->driver == allow->driver)
-			rc = extended_permissions_and(neverallow->perms, allow->perms);
+			rc = extended_permissions_and(neverallow->perms,
+						      allow->perms);
 	}
 
 	return rc;
@@ -118,53 +127,57 @@ static bool check_extended_permissions(const av_extended_perms_t *neverallow, co
 
 /* Compute which allowed extended permissions violate the neverallow rule */
 static void extended_permissions_violated(avtab_extended_perms_t *result,
-					const av_extended_perms_t *neverallow,
-					const avtab_extended_perms_t *allow)
+					  const av_extended_perms_t *neverallow,
+					  const avtab_extended_perms_t *allow)
 {
 	size_t i;
-	if ((neverallow->specified == AVRULE_XPERMS_IOCTLFUNCTION)
-			&& (allow->specified == AVTAB_XPERMS_IOCTLFUNCTION)) {
+	if ((neverallow->specified == AVRULE_XPERMS_IOCTLFUNCTION) &&
+	    (allow->specified == AVTAB_XPERMS_IOCTLFUNCTION)) {
 		result->specified = AVTAB_XPERMS_IOCTLFUNCTION;
 		result->driver = allow->driver;
 		for (i = 0; i < EXTENDED_PERMS_LEN; i++)
-			result->perms[i] = neverallow->perms[i] & allow->perms[i];
-	} else if ((neverallow->specified == AVRULE_XPERMS_IOCTLFUNCTION)
-			&& (allow->specified == AVTAB_XPERMS_IOCTLDRIVER)) {
+			result->perms[i] = neverallow->perms[i] &
+					   allow->perms[i];
+	} else if ((neverallow->specified == AVRULE_XPERMS_IOCTLFUNCTION) &&
+		   (allow->specified == AVTAB_XPERMS_IOCTLDRIVER)) {
 		result->specified = AVTAB_XPERMS_IOCTLFUNCTION;
 		result->driver = neverallow->driver;
 		memcpy(result->perms, neverallow->perms, sizeof(result->perms));
-	} else if ((neverallow->specified == AVRULE_XPERMS_IOCTLDRIVER)
-			&& (allow->specified == AVTAB_XPERMS_IOCTLFUNCTION)) {
+	} else if ((neverallow->specified == AVRULE_XPERMS_IOCTLDRIVER) &&
+		   (allow->specified == AVTAB_XPERMS_IOCTLFUNCTION)) {
 		result->specified = AVTAB_XPERMS_IOCTLFUNCTION;
 		result->driver = allow->driver;
 		memcpy(result->perms, allow->perms, sizeof(result->perms));
-	} else if ((neverallow->specified == AVRULE_XPERMS_IOCTLDRIVER)
-			&& (allow->specified == AVTAB_XPERMS_IOCTLDRIVER)) {
+	} else if ((neverallow->specified == AVRULE_XPERMS_IOCTLDRIVER) &&
+		   (allow->specified == AVTAB_XPERMS_IOCTLDRIVER)) {
 		result->specified = AVTAB_XPERMS_IOCTLDRIVER;
 		for (i = 0; i < EXTENDED_PERMS_LEN; i++)
-			result->perms[i] = neverallow->perms[i] & allow->perms[i];
-	} else if ((neverallow->specified == AVRULE_XPERMS_NLMSG)
-			&& (allow->specified == AVTAB_XPERMS_NLMSG)) {
+			result->perms[i] = neverallow->perms[i] &
+					   allow->perms[i];
+	} else if ((neverallow->specified == AVRULE_XPERMS_NLMSG) &&
+		   (allow->specified == AVTAB_XPERMS_NLMSG)) {
 		result->specified = AVTAB_XPERMS_NLMSG;
 		result->driver = allow->driver;
 		for (i = 0; i < EXTENDED_PERMS_LEN; i++)
-			result->perms[i] = neverallow->perms[i] & allow->perms[i];
+			result->perms[i] = neverallow->perms[i] &
+					   allow->perms[i];
 	}
 }
 
-static bool match_node_key(const struct avtab_node *node, const avtab_key_t *key)
+static bool match_node_key(const struct avtab_node *node,
+			   const avtab_key_t *key)
 {
-	return node->key.source_type == key->source_type
-		&& node->key.target_type == key->target_type
-		&& node->key.target_class == key->target_class;
+	return node->key.source_type == key->source_type &&
+	       node->key.target_type == key->target_type &&
+	       node->key.target_class == key->target_class;
 }
 
 /* Same scenarios of interest as check_assertion_extended_permissions */
-static int report_assertion_extended_permissions(sepol_handle_t *handle,
-				policydb_t *p, const avrule_t *narule,
-				unsigned int stype, unsigned int ttype,
-				const class_perm_node_t *curperm, uint32_t perms,
-				const avtab_key_t *k, bool conditional)
+static int report_assertion_extended_permissions(
+	sepol_handle_t *handle, policydb_t *p, const avrule_t *narule,
+	unsigned int stype, unsigned int ttype,
+	const class_perm_node_t *curperm, uint32_t perms, const avtab_key_t *k,
+	bool conditional)
 {
 	avtab_ptr_t node;
 	avtab_key_t tmp_key;
@@ -185,39 +198,53 @@ static int report_assertion_extended_permissions(sepol_handle_t *handle,
 		ebitmap_for_each_positive_bit(tattr, tnode, j) {
 			tmp_key.target_type = j + 1;
 			for (node = avtab_search_node(&p->te_avtab, &tmp_key);
-			     node;
-			     node = avtab_search_node_next(node, tmp_key.specified)) {
+			     node; node = avtab_search_node_next(
+					   node, tmp_key.specified)) {
 				xperms = node->datum.xperms;
-				if ((xperms->specified != AVTAB_XPERMS_IOCTLFUNCTION)
-						&& (xperms->specified != AVTAB_XPERMS_IOCTLDRIVER)
-						&& (xperms->specified != AVTAB_XPERMS_NLMSG))
+				if ((xperms->specified !=
+				     AVTAB_XPERMS_IOCTLFUNCTION) &&
+				    (xperms->specified !=
+				     AVTAB_XPERMS_IOCTLDRIVER) &&
+				    (xperms->specified != AVTAB_XPERMS_NLMSG))
 					continue;
 				found_xperm = true;
 				/* failure on the extended permission check_extended_permissions */
-				if (check_extended_permissions(narule->xperms, xperms)) {
+				if (check_extended_permissions(narule->xperms,
+							       xperms)) {
 					char *permstring;
 
-					extended_permissions_violated(&error, narule->xperms, xperms);
-					permstring = sepol_extended_perms_to_string(&error);
+					extended_permissions_violated(
+						&error, narule->xperms, xperms);
+					permstring =
+						sepol_extended_perms_to_string(
+							&error);
 
-					ERR(handle, "neverallowxperm on line %lu of %s (or line %lu of %s) violated by\n"
-							"  allowxperm %s %s:%s %s;",
-							narule->source_line, narule->source_filename, narule->line, policy_name(p),
-							p->p_type_val_to_name[i],
-							p->p_type_val_to_name[j],
-							p->p_class_val_to_name[curperm->tclass - 1],
-							permstring ?: "<format-failure>");
+					ERR(handle,
+					    "neverallowxperm on line %lu of %s (or line %lu of %s) violated by\n"
+					    "  allowxperm %s %s:%s %s;",
+					    narule->source_line,
+					    narule->source_filename,
+					    narule->line, policy_name(p),
+					    p->p_type_val_to_name[i],
+					    p->p_type_val_to_name[j],
+					    p->p_class_val_to_name
+						    [curperm->tclass - 1],
+					    permstring ?: "<format-failure>");
 
 					free(permstring);
 					errors++;
 				}
 			}
 
-			for (const cond_list_t *cl = p->cond_list; cl; cl = cl->next) {
-				bool found_true_base = false, found_true_xperm = false;
-				bool found_false_base = false, found_false_xperm = false;
+			for (const cond_list_t *cl = p->cond_list; cl;
+			     cl = cl->next) {
+				bool found_true_base = false,
+				     found_true_xperm = false;
+				bool found_false_base = false,
+				     found_false_xperm = false;
 
-				for (const cond_av_list_t *cal = cl->true_list; cal; cal = cal->next) {
+				for (const cond_av_list_t *cal = cl->true_list;
+				     cal; cal = cal->next) {
 					node = cal->node; /* node->next is not from the same condition */
 					if (!node)
 						continue;
@@ -225,41 +252,61 @@ static int report_assertion_extended_permissions(sepol_handle_t *handle,
 					if (!match_node_key(node, &tmp_key))
 						continue;
 
-					if (match_any_class_permissions(narule->perms, node->key.target_class, node->datum.data)) {
+					if (match_any_class_permissions(
+						    narule->perms,
+						    node->key.target_class,
+						    node->datum.data)) {
 						found_true_base = true;
 						continue;
 					}
 
-					if (!(node->key.specified & AVTAB_XPERMS_ALLOWED))
+					if (!(node->key.specified &
+					      AVTAB_XPERMS_ALLOWED))
 						continue;
 
 					xperms = node->datum.xperms;
-					if ((xperms->specified != AVTAB_XPERMS_IOCTLFUNCTION)
-							&& (xperms->specified != AVTAB_XPERMS_IOCTLDRIVER)
-							&& (xperms->specified != AVTAB_XPERMS_NLMSG))
+					if ((xperms->specified !=
+					     AVTAB_XPERMS_IOCTLFUNCTION) &&
+					    (xperms->specified !=
+					     AVTAB_XPERMS_IOCTLDRIVER) &&
+					    (xperms->specified !=
+					     AVTAB_XPERMS_NLMSG))
 						continue;
 					found_true_xperm = true;
 					/* failure on the extended permission check_extended_permissions */
-					if (check_extended_permissions(narule->xperms, xperms)) {
+					if (check_extended_permissions(
+						    narule->xperms, xperms)) {
 						char *permstring;
 
-						extended_permissions_violated(&error, narule->xperms, xperms);
-						permstring = sepol_extended_perms_to_string(&error);
+						extended_permissions_violated(
+							&error, narule->xperms,
+							xperms);
+						permstring =
+							sepol_extended_perms_to_string(
+								&error);
 
-						ERR(handle, "neverallowxperm on line %lu of %s (or line %lu of %s) violated by\n"
-								"  allowxperm %s %s:%s %s;",
-								narule->source_line, narule->source_filename, narule->line, policy_name(p),
-								p->p_type_val_to_name[i],
-								p->p_type_val_to_name[j],
-								p->p_class_val_to_name[curperm->tclass - 1],
-								permstring ?: "<format-failure>");
+						ERR(handle,
+						    "neverallowxperm on line %lu of %s (or line %lu of %s) violated by\n"
+						    "  allowxperm %s %s:%s %s;",
+						    narule->source_line,
+						    narule->source_filename,
+						    narule->line,
+						    policy_name(p),
+						    p->p_type_val_to_name[i],
+						    p->p_type_val_to_name[j],
+						    p->p_class_val_to_name
+							    [curperm->tclass -
+							     1],
+						    permstring ?:
+							    "<format-failure>");
 
 						free(permstring);
 						errors++;
 					}
 				}
 
-				for (const cond_av_list_t *cal = cl->false_list; cal; cal = cal->next) {
+				for (const cond_av_list_t *cal = cl->false_list;
+				     cal; cal = cal->next) {
 					node = cal->node; /* node->next is not from the same condition */
 					if (!node)
 						continue;
@@ -267,34 +314,53 @@ static int report_assertion_extended_permissions(sepol_handle_t *handle,
 					if (!match_node_key(node, &tmp_key))
 						continue;
 
-					if (match_any_class_permissions(narule->perms, node->key.target_class, node->datum.data)) {
+					if (match_any_class_permissions(
+						    narule->perms,
+						    node->key.target_class,
+						    node->datum.data)) {
 						found_false_base = true;
 						continue;
 					}
 
-					if (!(node->key.specified & AVTAB_XPERMS_ALLOWED))
+					if (!(node->key.specified &
+					      AVTAB_XPERMS_ALLOWED))
 						continue;
 
 					xperms = node->datum.xperms;
-					if ((xperms->specified != AVTAB_XPERMS_IOCTLFUNCTION)
-							&& (xperms->specified != AVTAB_XPERMS_IOCTLDRIVER)
-							&& (xperms->specified != AVTAB_XPERMS_NLMSG))
+					if ((xperms->specified !=
+					     AVTAB_XPERMS_IOCTLFUNCTION) &&
+					    (xperms->specified !=
+					     AVTAB_XPERMS_IOCTLDRIVER) &&
+					    (xperms->specified !=
+					     AVTAB_XPERMS_NLMSG))
 						continue;
 					found_false_xperm = true;
 					/* failure on the extended permission check_extended_permissions */
-					if (check_extended_permissions(narule->xperms, xperms)) {
+					if (check_extended_permissions(
+						    narule->xperms, xperms)) {
 						char *permstring;
 
-						extended_permissions_violated(&error, narule->xperms, xperms);
-						permstring = sepol_extended_perms_to_string(&error);
+						extended_permissions_violated(
+							&error, narule->xperms,
+							xperms);
+						permstring =
+							sepol_extended_perms_to_string(
+								&error);
 
-						ERR(handle, "neverallowxperm on line %lu of %s (or line %lu of %s) violated by\n"
-								"  allowxperm %s %s:%s %s;",
-								narule->source_line, narule->source_filename, narule->line, policy_name(p),
-								p->p_type_val_to_name[i],
-								p->p_type_val_to_name[j],
-								p->p_class_val_to_name[curperm->tclass - 1],
-								permstring ?: "<format-failure>");
+						ERR(handle,
+						    "neverallowxperm on line %lu of %s (or line %lu of %s) violated by\n"
+						    "  allowxperm %s %s:%s %s;",
+						    narule->source_line,
+						    narule->source_filename,
+						    narule->line,
+						    policy_name(p),
+						    p->p_type_val_to_name[i],
+						    p->p_type_val_to_name[j],
+						    p->p_class_val_to_name
+							    [curperm->tclass -
+							     1],
+						    permstring ?:
+							    "<format-failure>");
 
 						free(permstring);
 						errors++;
@@ -303,7 +369,10 @@ static int report_assertion_extended_permissions(sepol_handle_t *handle,
 
 				if (found_true_xperm && found_false_xperm)
 					found_xperm = true;
-				else if (conditional && ((found_true_base && !found_true_xperm) || (found_false_base && !found_false_xperm)))
+				else if (conditional && ((found_true_base &&
+							  !found_true_xperm) ||
+							 (found_false_base &&
+							  !found_false_xperm)))
 					found_cond_conflict = true;
 			}
 		}
@@ -313,13 +382,14 @@ static int report_assertion_extended_permissions(sepol_handle_t *handle,
 		/* failure on the regular permissions */
 		char *permstr = sepol_av_to_string(p, curperm->tclass, perms);
 
-		ERR(handle, "neverallowxperm on line %lu of %s (or line %lu of %s) violated by\n"
-				"  allow %s %s:%s {%s };",
-				narule->source_line, narule->source_filename, narule->line, policy_name(p),
-				p->p_type_val_to_name[stype],
-				p->p_type_val_to_name[ttype],
-				p->p_class_val_to_name[curperm->tclass - 1],
-				permstr ?: "<format-failure>");
+		ERR(handle,
+		    "neverallowxperm on line %lu of %s (or line %lu of %s) violated by\n"
+		    "  allow %s %s:%s {%s };",
+		    narule->source_line, narule->source_filename, narule->line,
+		    policy_name(p), p->p_type_val_to_name[stype],
+		    p->p_type_val_to_name[ttype],
+		    p->p_class_val_to_name[curperm->tclass - 1],
+		    permstr ?: "<format-failure>");
 
 		free(permstr);
 		errors++;
@@ -328,7 +398,8 @@ static int report_assertion_extended_permissions(sepol_handle_t *handle,
 	return errors;
 }
 
-static int report_assertion_avtab_matches(avtab_key_t *k, avtab_datum_t *d, void *args)
+static int report_assertion_avtab_matches(avtab_key_t *k, avtab_datum_t *d,
+					  void *args)
 {
 	int rc = 0;
 	struct avtab_match_args *a = (struct avtab_match_args *)args;
@@ -346,7 +417,8 @@ static int report_assertion_avtab_matches(avtab_key_t *k, avtab_datum_t *d, void
 	if ((k->specified & AVTAB_ALLOWED) == 0)
 		return 0;
 
-	if (!match_any_class_permissions(narule->perms, k->target_class, d->data))
+	if (!match_any_class_permissions(narule->perms, k->target_class,
+					 d->data))
 		return 0;
 
 	ebitmap_init(&src_matches);
@@ -364,20 +436,24 @@ static int report_assertion_avtab_matches(avtab_key_t *k, avtab_datum_t *d, void
 	if (is_narule_notself) {
 		if (ebitmap_is_empty(&narule->ttypes.types)) {
 			/* avrule tgt is of the form ~self */
-			rc = ebitmap_cpy(&tgt_matches, &p->attr_type_map[k->target_type -1]);
+			rc = ebitmap_cpy(&tgt_matches,
+					 &p->attr_type_map[k->target_type - 1]);
 		} else {
 			/* avrule tgt is of the form {ATTR -self} */
-			rc = ebitmap_and(&tgt_matches, &narule->ttypes.types, &p->attr_type_map[k->target_type - 1]);
+			rc = ebitmap_and(&tgt_matches, &narule->ttypes.types,
+					 &p->attr_type_map[k->target_type - 1]);
 		}
 		if (rc)
 			goto oom;
 	} else {
-		rc = ebitmap_and(&tgt_matches, &narule->ttypes.types, &p->attr_type_map[k->target_type -1]);
+		rc = ebitmap_and(&tgt_matches, &narule->ttypes.types,
+				 &p->attr_type_map[k->target_type - 1]);
 		if (rc < 0)
 			goto oom;
 
 		if (is_narule_self) {
-			rc = ebitmap_and(&self_matches, &src_matches, &p->attr_type_map[k->target_type - 1]);
+			rc = ebitmap_and(&self_matches, &src_matches,
+					 &p->attr_type_map[k->target_type - 1]);
 			if (rc < 0)
 				goto oom;
 
@@ -393,7 +469,6 @@ static int report_assertion_avtab_matches(avtab_key_t *k, avtab_datum_t *d, void
 		goto exit;
 
 	for (cp = narule->perms; cp; cp = cp->next) {
-
 		perms = cp->data & d->data;
 		if ((cp->tclass != k->target_class) || !perms) {
 			continue;
@@ -405,13 +480,17 @@ static int report_assertion_avtab_matches(avtab_key_t *k, avtab_datum_t *d, void
 					continue;
 				if (is_narule_notself && i == j)
 					continue;
-				if (narule->specified == AVRULE_XPERMS_NEVERALLOW) {
-					a->errors += report_assertion_extended_permissions(handle,p, narule,
-											i, j, cp, perms, k,
-											a->conditional);
+				if (narule->specified ==
+				    AVRULE_XPERMS_NEVERALLOW) {
+					a->errors +=
+						report_assertion_extended_permissions(
+							handle, p, narule, i, j,
+							cp, perms, k,
+							a->conditional);
 				} else {
 					a->errors++;
-					report_failure(handle, p, narule, i, j, cp, perms);
+					report_failure(handle, p, narule, i, j,
+						       cp, perms);
 				}
 			}
 		}
@@ -425,7 +504,8 @@ exit:
 	return rc;
 }
 
-static int report_assertion_failures(sepol_handle_t *handle, policydb_t *p, const avrule_t *narule)
+static int report_assertion_failures(sepol_handle_t *handle, policydb_t *p,
+				     const avrule_t *narule)
 {
 	int rc;
 	struct avtab_match_args args = {
@@ -441,7 +521,8 @@ static int report_assertion_failures(sepol_handle_t *handle, policydb_t *p, cons
 		goto oom;
 
 	args.conditional = true;
-	rc = avtab_map(&p->te_cond_avtab, report_assertion_avtab_matches, &args);
+	rc = avtab_map(&p->te_cond_avtab, report_assertion_avtab_matches,
+		       &args);
 	if (rc < 0)
 		goto oom;
 
@@ -455,10 +536,9 @@ oom:
  * Look up the extended permissions in avtab and verify that neverallowed
  * permissions are not granted.
  */
-static bool check_assertion_extended_permissions_avtab(const avrule_t *narule,
-						unsigned int stype, unsigned int ttype,
-						const avtab_key_t *k, policydb_t *p,
-						bool conditional)
+static bool check_assertion_extended_permissions_avtab(
+	const avrule_t *narule, unsigned int stype, unsigned int ttype,
+	const avtab_key_t *k, policydb_t *p, bool conditional)
 {
 	avtab_ptr_t node;
 	avtab_key_t tmp_key;
@@ -478,24 +558,31 @@ static bool check_assertion_extended_permissions_avtab(const avrule_t *narule,
 		ebitmap_for_each_positive_bit(tattr, tnode, j) {
 			tmp_key.target_type = j + 1;
 			for (node = avtab_search_node(&p->te_avtab, &tmp_key);
-			     node;
-			     node = avtab_search_node_next(node, tmp_key.specified)) {
+			     node; node = avtab_search_node_next(
+					   node, tmp_key.specified)) {
 				xperms = node->datum.xperms;
 
-				if ((xperms->specified != AVTAB_XPERMS_IOCTLFUNCTION)
-						&& (xperms->specified != AVTAB_XPERMS_IOCTLDRIVER)
-						&& (xperms->specified != AVTAB_XPERMS_NLMSG))
+				if ((xperms->specified !=
+				     AVTAB_XPERMS_IOCTLFUNCTION) &&
+				    (xperms->specified !=
+				     AVTAB_XPERMS_IOCTLDRIVER) &&
+				    (xperms->specified != AVTAB_XPERMS_NLMSG))
 					continue;
 				found_xperm = true;
-				if (check_extended_permissions(neverallow_xperms, xperms))
+				if (check_extended_permissions(
+					    neverallow_xperms, xperms))
 					return true;
 			}
 
-			for (const cond_list_t *cl = p->cond_list; cl; cl = cl->next) {
-				bool found_true_base = false, found_true_xperm = false;
-				bool found_false_base = false, found_false_xperm = false;
+			for (const cond_list_t *cl = p->cond_list; cl;
+			     cl = cl->next) {
+				bool found_true_base = false,
+				     found_true_xperm = false;
+				bool found_false_base = false,
+				     found_false_xperm = false;
 
-				for (const cond_av_list_t *cal = cl->true_list; cal; cal = cal->next) {
+				for (const cond_av_list_t *cal = cl->true_list;
+				     cal; cal = cal->next) {
 					node = cal->node; /* node->next is not from the same condition */
 					if (!node)
 						continue;
@@ -503,26 +590,37 @@ static bool check_assertion_extended_permissions_avtab(const avrule_t *narule,
 					if (!match_node_key(node, &tmp_key))
 						continue;
 
-					if ((node->key.specified & AVTAB_ALLOWED) && match_any_class_permissions(narule->perms, node->key.target_class, node->datum.data)) {
+					if ((node->key.specified &
+					     AVTAB_ALLOWED) &&
+					    match_any_class_permissions(
+						    narule->perms,
+						    node->key.target_class,
+						    node->datum.data)) {
 						found_true_base = true;
 						continue;
 					}
 
-					if (!(node->key.specified & AVTAB_XPERMS_ALLOWED))
+					if (!(node->key.specified &
+					      AVTAB_XPERMS_ALLOWED))
 						continue;
 
 					xperms = node->datum.xperms;
 
-					if ((xperms->specified != AVTAB_XPERMS_IOCTLFUNCTION)
-							&& (xperms->specified != AVTAB_XPERMS_IOCTLDRIVER)
-							&& (xperms->specified != AVTAB_XPERMS_NLMSG))
+					if ((xperms->specified !=
+					     AVTAB_XPERMS_IOCTLFUNCTION) &&
+					    (xperms->specified !=
+					     AVTAB_XPERMS_IOCTLDRIVER) &&
+					    (xperms->specified !=
+					     AVTAB_XPERMS_NLMSG))
 						continue;
 					found_true_xperm = true;
-					if (check_extended_permissions(neverallow_xperms, xperms))
+					if (check_extended_permissions(
+						    neverallow_xperms, xperms))
 						return true;
 				}
 
-				for (const cond_av_list_t *cal = cl->false_list; cal; cal = cal->next) {
+				for (const cond_av_list_t *cal = cl->false_list;
+				     cal; cal = cal->next) {
 					node = cal->node; /* node->next is not from the same condition */
 					if (!node)
 						continue;
@@ -530,28 +628,41 @@ static bool check_assertion_extended_permissions_avtab(const avrule_t *narule,
 					if (!match_node_key(node, &tmp_key))
 						continue;
 
-					if ((node->key.specified & AVTAB_ALLOWED) && match_any_class_permissions(narule->perms, node->key.target_class, node->datum.data)) {
+					if ((node->key.specified &
+					     AVTAB_ALLOWED) &&
+					    match_any_class_permissions(
+						    narule->perms,
+						    node->key.target_class,
+						    node->datum.data)) {
 						found_false_base = true;
 						continue;
 					}
 
-					if (!(node->key.specified & AVTAB_XPERMS_ALLOWED))
+					if (!(node->key.specified &
+					      AVTAB_XPERMS_ALLOWED))
 						continue;
 
 					xperms = node->datum.xperms;
 
-					if ((xperms->specified != AVTAB_XPERMS_IOCTLFUNCTION)
-							&& (xperms->specified != AVTAB_XPERMS_IOCTLDRIVER)
-							&& (xperms->specified != AVTAB_XPERMS_NLMSG))
+					if ((xperms->specified !=
+					     AVTAB_XPERMS_IOCTLFUNCTION) &&
+					    (xperms->specified !=
+					     AVTAB_XPERMS_IOCTLDRIVER) &&
+					    (xperms->specified !=
+					     AVTAB_XPERMS_NLMSG))
 						continue;
 					found_false_xperm = true;
-					if (check_extended_permissions(neverallow_xperms, xperms))
+					if (check_extended_permissions(
+						    neverallow_xperms, xperms))
 						return true;
 				}
 
 				if (found_true_xperm && found_false_xperm)
 					found_xperm = true;
-				else if (conditional && ((found_true_base && !found_true_xperm) || (found_false_base && !found_false_xperm)))
+				else if (conditional && ((found_true_base &&
+							  !found_true_xperm) ||
+							 (found_false_base &&
+							  !found_false_xperm)))
 					found_cond_conflict = true;
 			}
 		}
@@ -577,8 +688,8 @@ static bool check_assertion_extended_permissions_avtab(const avrule_t *narule,
  *    granted
  */
 static int check_assertion_extended_permissions(const avrule_t *narule,
-						const avtab_key_t *k, policydb_t *p,
-						bool conditional)
+						const avtab_key_t *k,
+						policydb_t *p, bool conditional)
 {
 	ebitmap_t src_matches, tgt_matches, self_matches;
 	unsigned int i, j;
@@ -604,20 +715,24 @@ static int check_assertion_extended_permissions(const avrule_t *narule,
 	if (is_narule_notself) {
 		if (ebitmap_is_empty(&narule->ttypes.types)) {
 			/* avrule tgt is of the form ~self */
-			rc = ebitmap_cpy(&tgt_matches, &p->attr_type_map[k->target_type -1]);
+			rc = ebitmap_cpy(&tgt_matches,
+					 &p->attr_type_map[k->target_type - 1]);
 		} else {
 			/* avrule tgt is of the form {ATTR -self} */
-			rc = ebitmap_and(&tgt_matches, &narule->ttypes.types, &p->attr_type_map[k->target_type - 1]);
+			rc = ebitmap_and(&tgt_matches, &narule->ttypes.types,
+					 &p->attr_type_map[k->target_type - 1]);
 		}
 		if (rc < 0)
 			goto oom;
 	} else {
-		rc = ebitmap_and(&tgt_matches, &narule->ttypes.types, &p->attr_type_map[k->target_type -1]);
+		rc = ebitmap_and(&tgt_matches, &narule->ttypes.types,
+				 &p->attr_type_map[k->target_type - 1]);
 		if (rc < 0)
 			goto oom;
 
 		if (is_narule_self) {
-			rc = ebitmap_and(&self_matches, &src_matches, &p->attr_type_map[k->target_type - 1]);
+			rc = ebitmap_and(&self_matches, &src_matches,
+					 &p->attr_type_map[k->target_type - 1]);
 			if (rc < 0)
 				goto oom;
 
@@ -640,7 +755,8 @@ static int check_assertion_extended_permissions(const avrule_t *narule,
 				continue;
 			if (is_narule_notself && i == j)
 				continue;
-			if (check_assertion_extended_permissions_avtab(narule, i, j, k, p, conditional)) {
+			if (check_assertion_extended_permissions_avtab(
+				    narule, i, j, k, p, conditional)) {
 				rc = 1;
 				goto exit;
 			}
@@ -657,7 +773,8 @@ exit:
 	return rc;
 }
 
-static int check_assertion_notself_match(const avtab_key_t *k, const avrule_t *narule, policydb_t *p)
+static int check_assertion_notself_match(const avtab_key_t *k,
+					 const avrule_t *narule, policydb_t *p)
 {
 	ebitmap_t src_matches, tgt_matches;
 	unsigned int num_src_matches, num_tgt_matches;
@@ -666,16 +783,19 @@ static int check_assertion_notself_match(const avtab_key_t *k, const avrule_t *n
 	ebitmap_init(&src_matches);
 	ebitmap_init(&tgt_matches);
 
-	rc = ebitmap_and(&src_matches, &narule->stypes.types, &p->attr_type_map[k->source_type - 1]);
+	rc = ebitmap_and(&src_matches, &narule->stypes.types,
+			 &p->attr_type_map[k->source_type - 1]);
 	if (rc < 0)
 		goto oom;
 
 	if (ebitmap_is_empty(&narule->ttypes.types)) {
 		/* avrule tgt is of the form ~self */
-		rc = ebitmap_cpy(&tgt_matches, &p->attr_type_map[k->target_type - 1]);
+		rc = ebitmap_cpy(&tgt_matches,
+				 &p->attr_type_map[k->target_type - 1]);
 	} else {
 		/* avrule tgt is of the form {ATTR -self} */
-		rc = ebitmap_and(&tgt_matches, &narule->ttypes.types, &p->attr_type_map[k->target_type - 1]);
+		rc = ebitmap_and(&tgt_matches, &narule->ttypes.types,
+				 &p->attr_type_map[k->target_type - 1]);
 	}
 	if (rc < 0)
 		goto oom;
@@ -712,7 +832,8 @@ nomatch:
 	return rc;
 }
 
-static int check_assertion_self_match(const avtab_key_t *k, const avrule_t *narule, policydb_t *p)
+static int check_assertion_self_match(const avtab_key_t *k,
+				      const avrule_t *narule, policydb_t *p)
 {
 	ebitmap_t src_matches;
 	int rc;
@@ -721,11 +842,13 @@ static int check_assertion_self_match(const avtab_key_t *k, const avrule_t *naru
 	 * and the key's source.
 	 */
 
-	rc = ebitmap_and(&src_matches, &narule->stypes.types, &p->attr_type_map[k->source_type - 1]);
+	rc = ebitmap_and(&src_matches, &narule->stypes.types,
+			 &p->attr_type_map[k->source_type - 1]);
 	if (rc < 0)
 		goto oom;
 
-	if (!ebitmap_match_any(&src_matches, &p->attr_type_map[k->target_type - 1])) {
+	if (!ebitmap_match_any(&src_matches,
+			       &p->attr_type_map[k->target_type - 1])) {
 		rc = 0;
 		goto nomatch;
 	}
@@ -738,7 +861,8 @@ nomatch:
 	return rc;
 }
 
-static int check_assertion_avtab_match(avtab_key_t *k, avtab_datum_t *d, void *args)
+static int check_assertion_avtab_match(avtab_key_t *k, avtab_datum_t *d,
+				       void *args)
 {
 	int rc;
 	struct avtab_match_args *a = (struct avtab_match_args *)args;
@@ -748,10 +872,12 @@ static int check_assertion_avtab_match(avtab_key_t *k, avtab_datum_t *d, void *a
 	if ((k->specified & AVTAB_ALLOWED) == 0)
 		goto nomatch;
 
-	if (!match_any_class_permissions(narule->perms, k->target_class, d->data))
+	if (!match_any_class_permissions(narule->perms, k->target_class,
+					 d->data))
 		goto nomatch;
 
-	if (!ebitmap_match_any(&narule->stypes.types, &p->attr_type_map[k->source_type - 1]))
+	if (!ebitmap_match_any(&narule->stypes.types,
+			       &p->attr_type_map[k->source_type - 1]))
 		goto nomatch;
 
 	if (narule->flags & RULE_NOTSELF) {
@@ -762,7 +888,8 @@ static int check_assertion_avtab_match(avtab_key_t *k, avtab_datum_t *d, void *a
 			goto nomatch;
 	} else {
 		/* neverallow may have tgts even if it uses SELF */
-		if (!ebitmap_match_any(&narule->ttypes.types, &p->attr_type_map[k->target_type -1])) {
+		if (!ebitmap_match_any(&narule->ttypes.types,
+				       &p->attr_type_map[k->target_type - 1])) {
 			if (narule->flags == RULE_SELF) {
 				rc = check_assertion_self_match(k, narule, p);
 				if (rc < 0)
@@ -776,7 +903,8 @@ static int check_assertion_avtab_match(avtab_key_t *k, avtab_datum_t *d, void *a
 	}
 
 	if (narule->specified == AVRULE_XPERMS_NEVERALLOW) {
-		rc = check_assertion_extended_permissions(narule, k, p, a->conditional);
+		rc = check_assertion_extended_permissions(narule, k, p,
+							  a->conditional);
 		if (rc < 0)
 			goto oom;
 		if (rc == 0)
@@ -806,31 +934,35 @@ int check_assertion(policydb_t *p, const avrule_t *narule)
 
 	if (rc == 0) {
 		args.conditional = true;
-		rc = avtab_map(&p->te_cond_avtab, check_assertion_avtab_match, &args);
+		rc = avtab_map(&p->te_cond_avtab, check_assertion_avtab_match,
+			       &args);
 	}
 
 	return rc;
 }
 
-int check_assertions(sepol_handle_t * handle, policydb_t * p,
-		     const avrule_t * narules)
+int check_assertions(sepol_handle_t *handle, policydb_t *p,
+		     const avrule_t *narules)
 {
 	int rc;
 	const avrule_t *a;
 	unsigned long errors = 0;
 
 	for (a = narules; a != NULL; a = a->next) {
-		if (!(a->specified & (AVRULE_NEVERALLOW | AVRULE_XPERMS_NEVERALLOW)))
+		if (!(a->specified &
+		      (AVRULE_NEVERALLOW | AVRULE_XPERMS_NEVERALLOW)))
 			continue;
 		rc = check_assertion(p, a);
 		if (rc < 0) {
-			ERR(handle, "Error occurred while checking neverallows");
+			ERR(handle,
+			    "Error occurred while checking neverallows");
 			return -1;
 		}
 		if (rc) {
 			rc = report_assertion_failures(handle, p, a);
 			if (rc < 0) {
-				ERR(handle, "Error occurred while checking neverallows");
+				ERR(handle,
+				    "Error occurred while checking neverallows");
 				return -1;
 			}
 			errors += rc;

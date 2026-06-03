@@ -11,13 +11,13 @@
 extern int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size);
 
 #define MEMFD_FILE_NAME "file_contexts"
-#define CTRL_PARTIAL  (1U << 0)
+#define CTRL_PARTIAL (1U << 0)
 #define CTRL_FIND_ALL (1U << 1)
-#define CTRL_MODE     (1U << 2)
+#define CTRL_MODE (1U << 2)
 
-
-__attribute__ ((format(printf, 2, 3)))
-static int null_log(int type __attribute__((unused)), const char *fmt __attribute__((unused)), ...)
+__attribute__((format(printf, 2, 3))) static int
+null_log(int type __attribute__((unused)),
+	 const char *fmt __attribute__((unused)), ...)
 {
 	return 0;
 }
@@ -55,9 +55,9 @@ static int write_full(int fd, const void *data, size_t size)
 	return 0;
 }
 
-static FILE* convert_data(const uint8_t *data, size_t size)
+static FILE *convert_data(const uint8_t *data, size_t size)
 {
-	FILE* stream;
+	FILE *stream;
 	int fd, rc;
 
 	fd = memfd_create(MEMFD_FILE_NAME, MFD_CLOEXEC);
@@ -90,7 +90,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 	struct selabel_handle rec;
 	struct saved_data sdata = {};
 	struct spec_node *root = NULL;
-	FILE* fp = NULL;
+	FILE *fp = NULL;
 	struct lookup_result *result = NULL;
 	uint8_t control;
 	uint8_t *fcontext_data = NULL;
@@ -113,11 +113,10 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 	if (control & ~(CTRL_PARTIAL | CTRL_FIND_ALL | CTRL_MODE))
 		return 0;
 
-	partial  = control & CTRL_PARTIAL;
+	partial = control & CTRL_PARTIAL;
 	find_all = control & CTRL_FIND_ALL;
 	/* S_IFSOCK has the highest integer value */
-	mode     = (control & CTRL_MODE) ? S_IFSOCK : 0;
-
+	mode = (control & CTRL_MODE) ? S_IFSOCK : 0;
 
 	/*
 	 * Split the fuzzer input into two pieces: the textual fcontext definition and the lookup key
@@ -142,19 +141,21 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 	memcpy(key, sep + 4, key_len);
 	key[key_len] = '\0';
 
-
 	/*
 	 * Mock selabel handle
 	 */
-	rec = (struct selabel_handle) {
+	rec = (struct selabel_handle){
 		.backend = SELABEL_CTX_FILE,
 		.validating = 1,
 		.data = &sdata,
 	};
 
-	selinux_set_callback(SELINUX_CB_LOG, (union selinux_callback) { .func_log = &null_log });
+	selinux_set_callback(SELINUX_CB_LOG,
+			     (union selinux_callback){ .func_log = &null_log });
 	/* validate to pre-compile regular expressions */
-	selinux_set_callback(SELINUX_CB_VALIDATE, (union selinux_callback) { .func_validate = &validate_context });
+	selinux_set_callback(
+		SELINUX_CB_VALIDATE,
+		(union selinux_callback){ .func_validate = &validate_context });
 
 	root = calloc(1, sizeof(*root));
 	if (!root)
@@ -167,7 +168,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 		goto cleanup;
 
 	errno = 0;
-	rc = process_text_file(fp, /*prefix=*/ NULL, &rec, MEMFD_FILE_NAME, 0);
+	rc = process_text_file(fp, /*prefix=*/NULL, &rec, MEMFD_FILE_NAME, 0);
 	if (rc) {
 		assert(errno != 0);
 		goto cleanup;
@@ -193,7 +194,6 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 		assert(res->lr->validated);
 		assert(res->prefix_len <= strlen(res->regex_str));
 	}
-
 
 cleanup:
 	free_lookup_result(result);

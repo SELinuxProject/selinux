@@ -68,8 +68,8 @@ static int __cil_is_reserved_name(const char *name, enum cil_flavor flavor)
 	case CIL_TYPE:
 	case CIL_TYPEATTRIBUTE:
 	case CIL_TYPEALIAS:
-		if ((name == CIL_KEY_ALL) || (name == CIL_KEY_SELF) || (name == CIL_KEY_NOTSELF)
-			|| (name == CIL_KEY_OTHER))
+		if ((name == CIL_KEY_ALL) || (name == CIL_KEY_SELF) ||
+		    (name == CIL_KEY_NOTSELF) || (name == CIL_KEY_OTHER))
 			return CIL_TRUE;
 		break;
 	case CIL_CAT:
@@ -86,14 +86,16 @@ static int __cil_is_reserved_name(const char *name, enum cil_flavor flavor)
 	}
 
 	/* Everything not under the default case is also checked for these */
-	if ((name == CIL_KEY_AND) || (name == CIL_KEY_OR) || (name == CIL_KEY_NOT) || (name == CIL_KEY_XOR)) {
+	if ((name == CIL_KEY_AND) || (name == CIL_KEY_OR) ||
+	    (name == CIL_KEY_NOT) || (name == CIL_KEY_XOR)) {
 		return CIL_TRUE;
 	}
 
 	return CIL_FALSE;
 }
 
-int cil_verify_name(const struct cil_db *db, const char *name, enum cil_flavor flavor)
+int cil_verify_name(const struct cil_db *db, const char *name,
+		    enum cil_flavor flavor)
 {
 	int rc = SEPOL_ERR;
 	int len;
@@ -106,28 +108,36 @@ int cil_verify_name(const struct cil_db *db, const char *name, enum cil_flavor f
 
 	len = strlen(name);
 	if (len >= CIL_MAX_NAME_LENGTH) {
-		cil_log(CIL_ERR, "Name length greater than max name length of %d", 
+		cil_log(CIL_ERR,
+			"Name length greater than max name length of %d",
 			CIL_MAX_NAME_LENGTH);
 		rc = SEPOL_ERR;
 		goto exit;
 	}
 
 	if (!isalpha(name[0])) {
-			cil_log(CIL_ERR, "First character in %s is not a letter\n", name);
-			goto exit;
+		cil_log(CIL_ERR, "First character in %s is not a letter\n",
+			name);
+		goto exit;
 	}
 
 	if (db->qualified_names == CIL_FALSE) {
 		for (i = 1; i < len; i++) {
-			if (!isalnum(name[i]) && name[i] != '_' && name[i] != '-') {
-				cil_log(CIL_ERR, "Invalid character \"%c\" in %s\n", name[i], name);
+			if (!isalnum(name[i]) && name[i] != '_' &&
+			    name[i] != '-') {
+				cil_log(CIL_ERR,
+					"Invalid character \"%c\" in %s\n",
+					name[i], name);
 				goto exit;
 			}
 		}
 	} else {
 		for (i = 1; i < len; i++) {
-			if (!isalnum(name[i]) && name[i] != '_' && name[i] != '-' && name[i] != '.') {
-				cil_log(CIL_ERR, "Invalid character \"%c\" in %s\n", name[i], name);
+			if (!isalnum(name[i]) && name[i] != '_' &&
+			    name[i] != '-' && name[i] != '.') {
+				cil_log(CIL_ERR,
+					"Invalid character \"%c\" in %s\n",
+					name[i], name);
 				goto exit;
 			}
 		}
@@ -145,26 +155,34 @@ exit:
 	return rc;
 }
 
-int __cil_verify_syntax(struct cil_tree_node *parse_current, enum cil_syntax s[], size_t len)
+int __cil_verify_syntax(struct cil_tree_node *parse_current,
+			enum cil_syntax s[], size_t len)
 {
 	struct cil_tree_node *c = parse_current;
 	size_t i = 0;
 
 	while (i < len && c != NULL) {
-		if ((s[i] & CIL_SYN_STRING) && c->data != NULL && c->cl_head == NULL) {
+		if ((s[i] & CIL_SYN_STRING) && c->data != NULL &&
+		    c->cl_head == NULL) {
 			c = c->next;
 			i++;
-		} else if ((s[i] & CIL_SYN_LIST) && c->data == NULL && c->cl_head != NULL) {
+		} else if ((s[i] & CIL_SYN_LIST) && c->data == NULL &&
+			   c->cl_head != NULL) {
 			c = c->next;
 			i++;
-		} else if ((s[i] & CIL_SYN_EMPTY_LIST) && c->data == NULL && c->cl_head == NULL) {
+		} else if ((s[i] & CIL_SYN_EMPTY_LIST) && c->data == NULL &&
+			   c->cl_head == NULL) {
 			c = c->next;
 			i++;
-		} else if ((s[i] & CIL_SYN_N_LISTS) || (s[i] & CIL_SYN_N_STRINGS)) {
+		} else if ((s[i] & CIL_SYN_N_LISTS) ||
+			   (s[i] & CIL_SYN_N_STRINGS)) {
 			while (c != NULL) {
-				if ((s[i] & CIL_SYN_N_LISTS) && c->data == NULL && c->cl_head != NULL) {
+				if ((s[i] & CIL_SYN_N_LISTS) &&
+				    c->data == NULL && c->cl_head != NULL) {
 					c = c->next;
-				} else if ((s[i] & CIL_SYN_N_STRINGS) && c->data != NULL && c->cl_head == NULL) {
+				} else if ((s[i] & CIL_SYN_N_STRINGS) &&
+					   c->data != NULL &&
+					   c->cl_head == NULL) {
 					c = c->next;
 				} else {
 					goto exit;
@@ -186,16 +204,15 @@ exit:
 	return SEPOL_ERR;
 }
 
-int cil_verify_expr_syntax(struct cil_tree_node *current, enum cil_flavor op, enum cil_flavor expr_flavor)
+int cil_verify_expr_syntax(struct cil_tree_node *current, enum cil_flavor op,
+			   enum cil_flavor expr_flavor)
 {
 	int rc;
-	enum cil_syntax syntax[] = {
-		CIL_SYN_STRING,
-		CIL_SYN_STRING | CIL_SYN_LIST,
-		CIL_SYN_STRING | CIL_SYN_LIST,
-		CIL_SYN_END
-	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	enum cil_syntax syntax[] = { CIL_SYN_STRING,
+				     CIL_SYN_STRING | CIL_SYN_LIST,
+				     CIL_SYN_STRING | CIL_SYN_LIST,
+				     CIL_SYN_END };
+	int syntax_len = sizeof(syntax) / sizeof(*syntax);
 
 	switch (op) {
 	case CIL_NOT:
@@ -208,14 +225,18 @@ int cil_verify_expr_syntax(struct cil_tree_node *current, enum cil_flavor op, en
 		break;
 	case CIL_EQ:
 	case CIL_NEQ:
-		if (expr_flavor != CIL_BOOL && expr_flavor != CIL_TUNABLE ) {
-			cil_log(CIL_ERR,"Invalid operator (%s) for set expression\n", (char*)current->data);
+		if (expr_flavor != CIL_BOOL && expr_flavor != CIL_TUNABLE) {
+			cil_log(CIL_ERR,
+				"Invalid operator (%s) for set expression\n",
+				(char *)current->data);
 			goto exit;
 		}
 		break;
 	case CIL_ALL:
 		if (expr_flavor == CIL_BOOL || expr_flavor == CIL_TUNABLE) {
-			cil_log(CIL_ERR,"Invalid operator (%s) for boolean or tunable expression\n", (char*)current->data);
+			cil_log(CIL_ERR,
+				"Invalid operator (%s) for boolean or tunable expression\n",
+				(char *)current->data);
 			goto exit;
 		}
 		syntax[1] = CIL_SYN_END;
@@ -223,7 +244,9 @@ int cil_verify_expr_syntax(struct cil_tree_node *current, enum cil_flavor op, en
 		break;
 	case CIL_RANGE:
 		if (expr_flavor != CIL_CAT && expr_flavor != CIL_PERMISSIONX) {
-			cil_log(CIL_ERR,"Operator (%s) only valid for catset and permissionx expression\n", (char*)current->data);
+			cil_log(CIL_ERR,
+				"Operator (%s) only valid for catset and permissionx expression\n",
+				(char *)current->data);
 			goto exit;
 		}
 		syntax[1] = CIL_SYN_STRING;
@@ -235,7 +258,9 @@ int cil_verify_expr_syntax(struct cil_tree_node *current, enum cil_flavor op, en
 		syntax_len = 2;
 		break;
 	default:
-		cil_log(CIL_ERR,"Unexpected value (%s) for expression operator\n", (char*)current->data);
+		cil_log(CIL_ERR,
+			"Unexpected value (%s) for expression operator\n",
+			(char *)current->data);
 		goto exit;
 	}
 
@@ -250,59 +275,82 @@ exit:
 	return SEPOL_ERR;
 }
 
-int cil_verify_constraint_leaf_expr_syntax(enum cil_flavor l_flavor, enum cil_flavor r_flavor, enum cil_flavor op, enum cil_flavor expr_flavor)
+int cil_verify_constraint_leaf_expr_syntax(enum cil_flavor l_flavor,
+					   enum cil_flavor r_flavor,
+					   enum cil_flavor op,
+					   enum cil_flavor expr_flavor)
 {
 	if (r_flavor == CIL_STRING || r_flavor == CIL_LIST) {
-		if (l_flavor == CIL_CONS_L1 || l_flavor == CIL_CONS_L2 || l_flavor == CIL_CONS_H1 || l_flavor == CIL_CONS_H2 ) {
-			cil_log(CIL_ERR, "l1, l2, h1, and h2 cannot be used on the left side with a string or list on the right side\n");
+		if (l_flavor == CIL_CONS_L1 || l_flavor == CIL_CONS_L2 ||
+		    l_flavor == CIL_CONS_H1 || l_flavor == CIL_CONS_H2) {
+			cil_log(CIL_ERR,
+				"l1, l2, h1, and h2 cannot be used on the left side with a string or list on the right side\n");
 			goto exit;
-		} else if (l_flavor == CIL_CONS_U3 || l_flavor == CIL_CONS_R3 || l_flavor == CIL_CONS_T3) {
-			if (expr_flavor != CIL_VALIDATETRANS && expr_flavor != CIL_MLSVALIDATETRANS) {
-				cil_log(CIL_ERR, "u3, r3, and t3 can only be used with (mls)validatetrans rules\n");
+		} else if (l_flavor == CIL_CONS_U3 || l_flavor == CIL_CONS_R3 ||
+			   l_flavor == CIL_CONS_T3) {
+			if (expr_flavor != CIL_VALIDATETRANS &&
+			    expr_flavor != CIL_MLSVALIDATETRANS) {
+				cil_log(CIL_ERR,
+					"u3, r3, and t3 can only be used with (mls)validatetrans rules\n");
 				goto exit;
 			}
 		}
 	} else {
-		if (r_flavor == CIL_CONS_U1 || r_flavor == CIL_CONS_R1 || r_flavor == CIL_CONS_T1) {
-			cil_log(CIL_ERR, "u1, r1, and t1 are not allowed on the right side\n");
+		if (r_flavor == CIL_CONS_U1 || r_flavor == CIL_CONS_R1 ||
+		    r_flavor == CIL_CONS_T1) {
+			cil_log(CIL_ERR,
+				"u1, r1, and t1 are not allowed on the right side\n");
 			goto exit;
-		} else if (r_flavor == CIL_CONS_U3 || r_flavor == CIL_CONS_R3 || r_flavor == CIL_CONS_T3) {
-			cil_log(CIL_ERR, "u3, r3, and t3 are not allowed on the right side\n");
+		} else if (r_flavor == CIL_CONS_U3 || r_flavor == CIL_CONS_R3 ||
+			   r_flavor == CIL_CONS_T3) {
+			cil_log(CIL_ERR,
+				"u3, r3, and t3 are not allowed on the right side\n");
 			goto exit;
 		} else if (r_flavor == CIL_CONS_U2) {
 			if (op != CIL_EQ && op != CIL_NEQ) {
-				cil_log(CIL_ERR, "u2 on the right side must be used with eq or neq as the operator\n");
+				cil_log(CIL_ERR,
+					"u2 on the right side must be used with eq or neq as the operator\n");
 				goto exit;
 			} else if (l_flavor != CIL_CONS_U1) {
-				cil_log(CIL_ERR, "u2 on the right side must be used with u1 on the left\n");
+				cil_log(CIL_ERR,
+					"u2 on the right side must be used with u1 on the left\n");
 				goto exit;
 			}
 		} else if (r_flavor == CIL_CONS_R2) {
 			if (l_flavor != CIL_CONS_R1) {
-				cil_log(CIL_ERR, "r2 on the right side must be used with r1 on the left\n");
+				cil_log(CIL_ERR,
+					"r2 on the right side must be used with r1 on the left\n");
 				goto exit;
 			}
 		} else if (r_flavor == CIL_CONS_T2) {
 			if (op != CIL_EQ && op != CIL_NEQ) {
-				cil_log(CIL_ERR, "t2 on the right side must be used with eq or neq as the operator\n");
+				cil_log(CIL_ERR,
+					"t2 on the right side must be used with eq or neq as the operator\n");
 				goto exit;
 			} else if (l_flavor != CIL_CONS_T1) {
-				cil_log(CIL_ERR, "t2 on the right side must be used with t1 on the left\n");
+				cil_log(CIL_ERR,
+					"t2 on the right side must be used with t1 on the left\n");
 				goto exit;
 			}
 		} else if (r_flavor == CIL_CONS_L2) {
-			if (l_flavor != CIL_CONS_L1 && l_flavor != CIL_CONS_H1) {
-				cil_log(CIL_ERR, "l2 on the right side must be used with l1 or h1 on the left\n");
+			if (l_flavor != CIL_CONS_L1 &&
+			    l_flavor != CIL_CONS_H1) {
+				cil_log(CIL_ERR,
+					"l2 on the right side must be used with l1 or h1 on the left\n");
 				goto exit;
 			}
 		} else if (r_flavor == CIL_CONS_H2) {
-			if (l_flavor != CIL_CONS_L1 && l_flavor != CIL_CONS_L2 && l_flavor != CIL_CONS_H1 ) {
-				cil_log(CIL_ERR, "h2 on the right side must be used with l1, l2, or h1 on the left\n");
+			if (l_flavor != CIL_CONS_L1 &&
+			    l_flavor != CIL_CONS_L2 &&
+			    l_flavor != CIL_CONS_H1) {
+				cil_log(CIL_ERR,
+					"h2 on the right side must be used with l1, l2, or h1 on the left\n");
 				goto exit;
 			}
 		} else if (r_flavor == CIL_CONS_H1) {
 			if (l_flavor != CIL_CONS_L1) {
-				cil_log(CIL_ERR, "h1 on the right side must be used with l1 on the left\n");
+				cil_log(CIL_ERR,
+					"h1 on the right side must be used with l1 on the left\n");
 				goto exit;
 			}
 		}
@@ -314,16 +362,13 @@ exit:
 	return SEPOL_ERR;
 }
 
-int cil_verify_constraint_expr_syntax(struct cil_tree_node *current, enum cil_flavor op)
+int cil_verify_constraint_expr_syntax(struct cil_tree_node *current,
+				      enum cil_flavor op)
 {
 	int rc;
-	enum cil_syntax syntax[] = {
-		CIL_SYN_STRING,
-		CIL_SYN_END,
-		CIL_SYN_END,
-		CIL_SYN_END
-	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	enum cil_syntax syntax[] = { CIL_SYN_STRING, CIL_SYN_END, CIL_SYN_END,
+				     CIL_SYN_END };
+	int syntax_len = sizeof(syntax) / sizeof(*syntax);
 
 	switch (op) {
 	case CIL_NOT:
@@ -347,7 +392,9 @@ int cil_verify_constraint_expr_syntax(struct cil_tree_node *current, enum cil_fl
 		syntax[2] = CIL_SYN_STRING;
 		break;
 	default:
-		cil_log(CIL_ERR, "Invalid operator (%s) for constraint expression\n", (char*)current->data);
+		cil_log(CIL_ERR,
+			"Invalid operator (%s) for constraint expression\n",
+			(char *)current->data);
 		goto exit;
 	}
 
@@ -373,7 +420,8 @@ int cil_verify_conditional_blocks(struct cil_tree_node *current)
 	} else if (current->cl_head->data == CIL_KEY_CONDFALSE) {
 		found_false = CIL_TRUE;
 	} else {
-		cil_tree_log(current, CIL_ERR, "Expected true or false block in conditional");
+		cil_tree_log(current, CIL_ERR,
+			     "Expected true or false block in conditional");
 		return SEPOL_ERR;
 	}
 
@@ -381,16 +429,22 @@ int cil_verify_conditional_blocks(struct cil_tree_node *current)
 	if (current != NULL) {
 		if (current->cl_head->data == CIL_KEY_CONDTRUE) {
 			if (found_true) {
-				cil_tree_log(current, CIL_ERR, "More than one true block in conditional");
+				cil_tree_log(
+					current, CIL_ERR,
+					"More than one true block in conditional");
 				return SEPOL_ERR;
 			}
 		} else if (current->cl_head->data == CIL_KEY_CONDFALSE) {
 			if (found_false) {
-				cil_tree_log(current, CIL_ERR, "More than one false block in conditional");
+				cil_tree_log(
+					current, CIL_ERR,
+					"More than one false block in conditional");
 				return SEPOL_ERR;
 			}
 		} else {
-			cil_tree_log(current, CIL_ERR, "Expected true or false block in conditional");
+			cil_tree_log(
+				current, CIL_ERR,
+				"Expected true or false block in conditional");
 			return SEPOL_ERR;
 		}
 	}
@@ -398,7 +452,9 @@ int cil_verify_conditional_blocks(struct cil_tree_node *current)
 	return SEPOL_OK;
 }
 
-int cil_verify_decl_does_not_shadow_macro_parameter(struct cil_macro *macro, struct cil_tree_node *node, const char *name)
+int cil_verify_decl_does_not_shadow_macro_parameter(struct cil_macro *macro,
+						    struct cil_tree_node *node,
+						    const char *name)
 {
 	struct cil_list_item *item;
 	struct cil_list *param_list = macro->params;
@@ -407,10 +463,14 @@ int cil_verify_decl_does_not_shadow_macro_parameter(struct cil_macro *macro, str
 			struct cil_param *param = item->data;
 			if (param->str == name) {
 				if (param->flavor == node->flavor) {
-					cil_log(CIL_ERR, "Declaration of %s %s shadows a macro parameter with the same flavor\n", cil_node_to_string(node), name);
+					cil_log(CIL_ERR,
+						"Declaration of %s %s shadows a macro parameter with the same flavor\n",
+						cil_node_to_string(node), name);
 					return SEPOL_ERR;
 				} else {
-					cil_log(CIL_WARN, "Declaration of %s %s has same name as a macro parameter with a different flavor\n", cil_node_to_string(node), name);
+					cil_log(CIL_WARN,
+						"Declaration of %s %s has same name as a macro parameter with a different flavor\n",
+						cil_node_to_string(node), name);
 				}
 			}
 		}
@@ -418,9 +478,12 @@ int cil_verify_decl_does_not_shadow_macro_parameter(struct cil_macro *macro, str
 	return SEPOL_OK;
 }
 
-static int cil_verify_no_self_reference(enum cil_flavor flavor, struct cil_symtab_datum *datum, struct cil_stack *stack);
+static int cil_verify_no_self_reference(enum cil_flavor flavor,
+					struct cil_symtab_datum *datum,
+					struct cil_stack *stack);
 
-static int __verify_no_self_reference_in_expr(struct cil_list *expr, struct cil_stack *stack)
+static int __verify_no_self_reference_in_expr(struct cil_list *expr,
+					      struct cil_stack *stack)
 {
 	struct cil_list_item *item;
 	int rc = SEPOL_OK;
@@ -431,10 +494,12 @@ static int __verify_no_self_reference_in_expr(struct cil_list *expr, struct cil_
 
 	cil_list_for_each(item, expr) {
 		if (item->flavor == CIL_DATUM) {
-			struct cil_symtab_datum* datum = item->data;
-			rc = cil_verify_no_self_reference(FLAVOR(datum), datum, stack);
+			struct cil_symtab_datum *datum = item->data;
+			rc = cil_verify_no_self_reference(FLAVOR(datum), datum,
+							  stack);
 		} else if (item->flavor == CIL_LIST) {
-			rc = __verify_no_self_reference_in_expr(item->data, stack);
+			rc = __verify_no_self_reference_in_expr(item->data,
+								stack);
 		}
 		if (rc != SEPOL_OK) {
 			return SEPOL_ERR;
@@ -444,7 +509,9 @@ static int __verify_no_self_reference_in_expr(struct cil_list *expr, struct cil_
 	return SEPOL_OK;
 }
 
-static int cil_verify_no_self_reference(enum cil_flavor flavor, struct cil_symtab_datum *datum, struct cil_stack *stack)
+static int cil_verify_no_self_reference(enum cil_flavor flavor,
+					struct cil_symtab_datum *datum,
+					struct cil_stack *stack)
 {
 	struct cil_stack_item *item;
 	int i = 0;
@@ -453,28 +520,33 @@ static int cil_verify_no_self_reference(enum cil_flavor flavor, struct cil_symta
 	cil_stack_for_each(stack, i, item) {
 		struct cil_symtab_datum *prev = item->data;
 		if (datum == prev) {
-			cil_tree_log(NODE(datum), CIL_ERR, "Self-reference found for %s", datum->name);
+			cil_tree_log(NODE(datum), CIL_ERR,
+				     "Self-reference found for %s",
+				     datum->name);
 			return SEPOL_ERR;
 		}
 	}
 
 	switch (flavor) {
 	case CIL_USERATTRIBUTE: {
-		struct cil_userattribute *attr = (struct cil_userattribute *)datum;
+		struct cil_userattribute *attr =
+			(struct cil_userattribute *)datum;
 		cil_stack_push(stack, CIL_DATUM, datum);
 		rc = __verify_no_self_reference_in_expr(attr->expr_list, stack);
 		cil_stack_pop(stack);
 		break;
 	}
 	case CIL_ROLEATTRIBUTE: {
-		struct cil_roleattribute *attr = (struct cil_roleattribute *)datum;
+		struct cil_roleattribute *attr =
+			(struct cil_roleattribute *)datum;
 		cil_stack_push(stack, CIL_DATUM, datum);
 		rc = __verify_no_self_reference_in_expr(attr->expr_list, stack);
 		cil_stack_pop(stack);
 		break;
 	}
 	case CIL_TYPEATTRIBUTE: {
-		struct cil_typeattribute *attr = (struct cil_typeattribute *)datum;
+		struct cil_typeattribute *attr =
+			(struct cil_typeattribute *)datum;
 		cil_stack_push(stack, CIL_DATUM, datum);
 		rc = __verify_no_self_reference_in_expr(attr->expr_list, stack);
 		cil_stack_pop(stack);
@@ -483,7 +555,8 @@ static int cil_verify_no_self_reference(enum cil_flavor flavor, struct cil_symta
 	case CIL_CATSET: {
 		struct cil_catset *set = (struct cil_catset *)datum;
 		cil_stack_push(stack, CIL_DATUM, datum);
-		rc = __verify_no_self_reference_in_expr(set->cats->datum_expr, stack);
+		rc = __verify_no_self_reference_in_expr(set->cats->datum_expr,
+							stack);
 		cil_stack_pop(stack);
 		break;
 	}
@@ -507,8 +580,9 @@ int __cil_verify_ranges(struct cil_list *list)
 	cil_list_for_each(curr, list) {
 		/* range */
 		if (curr->flavor == CIL_LIST) {
-			range = ((struct cil_list*)curr->data)->head;
-			if (range == NULL || range->next == NULL || range->next->next != NULL) {
+			range = ((struct cil_list *)curr->data)->head;
+			if (range == NULL || range->next == NULL ||
+			    range->next->next != NULL) {
 				goto exit;
 			}
 		}
@@ -517,11 +591,12 @@ int __cil_verify_ranges(struct cil_list *list)
 	return SEPOL_OK;
 
 exit:
-	cil_log(CIL_ERR,"Invalid Range syntax\n");
+	cil_log(CIL_ERR, "Invalid Range syntax\n");
 	return rc;
 }
 
-int cil_verify_completed_ordered_list(struct cil_list *complete, struct cil_list *ordered_lists)
+int cil_verify_completed_ordered_list(struct cil_list *complete,
+				      struct cil_list *ordered_lists)
 {
 	struct cil_list_item *cprev, *ccurr, *cnext;
 	int found_prev, found_next;
@@ -544,20 +619,25 @@ int cil_verify_completed_ordered_list(struct cil_list *complete, struct cil_list
 			cil_list_for_each(ocurr, ordered->datums) {
 				onext = ocurr ? ocurr->next : NULL;
 				if (ccurr->data == ocurr->data) {
-					if (found_prev == CIL_FALSE && ((!cprev && !oprev) ||
-						(cprev && oprev && cprev->data == oprev->data))) {
+					if (found_prev == CIL_FALSE &&
+					    ((!cprev && !oprev) ||
+					     (cprev && oprev &&
+					      cprev->data == oprev->data))) {
 						found_prev = CIL_TRUE;
 						change = CIL_TRUE;
 					}
-					if (found_next == CIL_FALSE && ((!cnext && !onext) ||
-						(cnext && onext && cnext->data == onext->data))) {
+					if (found_next == CIL_FALSE &&
+					    ((!cnext && !onext) ||
+					     (cnext && onext &&
+					      cnext->data == onext->data))) {
 						found_next = CIL_TRUE;
 						change = CIL_TRUE;
 					}
 					if (found_prev && found_next) {
 						cprev = ccurr;
 						ccurr = cnext;
-						cnext = ccurr ? ccurr->next : NULL;
+						cnext = ccurr ? ccurr->next :
+								NULL;
 						found_prev = CIL_FALSE;
 						found_next = CIL_FALSE;
 						if (!ccurr) {
@@ -571,14 +651,17 @@ int cil_verify_completed_ordered_list(struct cil_list *complete, struct cil_list
 		}
 		if (!change) {
 			rc = SEPOL_ERR;
-			cil_log(CIL_ERR, "Unable to verify the order of %s\n", DATUM(ccurr->data)->fqn);
-			cil_log(CIL_ERR, "Found in the following ordering rules:\n");
+			cil_log(CIL_ERR, "Unable to verify the order of %s\n",
+				DATUM(ccurr->data)->fqn);
+			cil_log(CIL_ERR,
+				"Found in the following ordering rules:\n");
 			cil_list_for_each(curr_list, ordered_lists) {
 				node = curr_list->data;
 				ordered = node->data;
 				cil_list_for_each(ocurr, ordered->datums) {
 					if (ccurr->data == ocurr->data) {
-						cil_tree_log(node, CIL_ERR, "    ");
+						cil_tree_log(node, CIL_ERR,
+							     "    ");
 					}
 				}
 			}
@@ -597,7 +680,9 @@ struct cil_args_verify_order {
 	uint32_t *flavor;
 };
 
-int __cil_verify_ordered_node_helper(struct cil_tree_node *node, __attribute__((unused)) uint32_t *finished, void *extra_args)
+int __cil_verify_ordered_node_helper(struct cil_tree_node *node,
+				     __attribute__((unused)) uint32_t *finished,
+				     void *extra_args)
 {
 	struct cil_args_verify_order *args = extra_args;
 	uint32_t *flavor = args->flavor;
@@ -606,25 +691,36 @@ int __cil_verify_ordered_node_helper(struct cil_tree_node *node, __attribute__((
 		if (node->flavor == CIL_SID) {
 			struct cil_sid *sid = node->data;
 			if (sid->ordered == CIL_FALSE) {
-				cil_tree_log(node, CIL_ERR, "SID %s not in sidorder statement", sid->datum.name);
+				cil_tree_log(node, CIL_ERR,
+					     "SID %s not in sidorder statement",
+					     sid->datum.name);
 				return SEPOL_ERR;
 			}
 		} else if (node->flavor == CIL_CLASS) {
 			struct cil_class *class = node->data;
 			if (class->ordered == CIL_FALSE) {
-				cil_tree_log(node, CIL_ERR, "Class %s not in classorder statement", class->datum.name);
+				cil_tree_log(
+					node, CIL_ERR,
+					"Class %s not in classorder statement",
+					class->datum.name);
 				return SEPOL_ERR;
 			}
 		} else if (node->flavor == CIL_CAT) {
 			struct cil_cat *cat = node->data;
 			if (cat->ordered == CIL_FALSE) {
-				cil_tree_log(node, CIL_ERR, "Category %s not in categoryorder statement", cat->datum.name);
+				cil_tree_log(
+					node, CIL_ERR,
+					"Category %s not in categoryorder statement",
+					cat->datum.name);
 				return SEPOL_ERR;
 			}
 		} else if (node->flavor == CIL_SENS) {
 			struct cil_sens *sens = node->data;
 			if (sens->ordered == CIL_FALSE) {
-				cil_tree_log(node, CIL_ERR, "Sensitivity %s not in sensitivityorder statement", sens->datum.name);
+				cil_tree_log(
+					node, CIL_ERR,
+					"Sensitivity %s not in sensitivityorder statement",
+					sens->datum.name);
 				return SEPOL_ERR;
 			}
 		}
@@ -640,7 +736,8 @@ int __cil_verify_ordered(struct cil_tree_node *current, enum cil_flavor flavor)
 
 	extra_args.flavor = &flavor;
 
-	rc = cil_tree_walk(current, __cil_verify_ordered_node_helper, NULL, NULL, &extra_args);
+	rc = cil_tree_walk(current, __cil_verify_ordered_node_helper, NULL,
+			   NULL, &extra_args);
 
 	return rc;
 }
@@ -651,15 +748,20 @@ int __cil_verify_initsids(struct cil_list *sids)
 	struct cil_list_item *i;
 
 	if (sids->head == NULL) {
-		cil_log(CIL_ERR, "At least one initial sid must be defined in the policy\n");
+		cil_log(CIL_ERR,
+			"At least one initial sid must be defined in the policy\n");
 		return SEPOL_ERR;
 	}
 
 	cil_list_for_each(i, sids) {
 		struct cil_sid *sid = i->data;
 		if (sid->context == NULL) {
-			struct cil_tree_node *node = sid->datum.nodes->head->data;
-			cil_tree_log(node, CIL_INFO, "No context assigned to SID %s, omitting from policy",sid->datum.name);
+			struct cil_tree_node *node =
+				sid->datum.nodes->head->data;
+			cil_tree_log(
+				node, CIL_INFO,
+				"No context assigned to SID %s, omitting from policy",
+				sid->datum.name);
 		}
 	}
 
@@ -680,18 +782,20 @@ static int __cil_is_cat_in_cats(struct cil_cat *cat, struct cil_cats *cats)
 	return CIL_FALSE;
 }
 
-
 static int __cil_verify_cat_in_cats(struct cil_cat *cat, struct cil_cats *cats)
 {
 	if (__cil_is_cat_in_cats(cat, cats) != CIL_TRUE) {
-		cil_log(CIL_ERR, "Failed to find category %s in category list\n", cat->datum.name);
+		cil_log(CIL_ERR,
+			"Failed to find category %s in category list\n",
+			cat->datum.name);
 		return SEPOL_ERR;
 	}
 
 	return SEPOL_OK;
 }
 
-static int __cil_verify_cats_associated_with_sens(struct cil_sens *sens, struct cil_cats *cats)
+static int __cil_verify_cats_associated_with_sens(struct cil_sens *sens,
+						  struct cil_cats *cats)
 {
 	int rc = SEPOL_OK;
 	struct cil_list_item *i, *j;
@@ -701,7 +805,9 @@ static int __cil_verify_cats_associated_with_sens(struct cil_sens *sens, struct 
 	}
 
 	if (!sens->cats_list) {
-		cil_log(CIL_ERR, "No categories can be used with sensitivity %s\n", sens->datum.name);
+		cil_log(CIL_ERR,
+			"No categories can be used with sensitivity %s\n",
+			sens->datum.name);
 		return SEPOL_ERR;
 	}
 
@@ -716,8 +822,9 @@ static int __cil_verify_cats_associated_with_sens(struct cil_sens *sens, struct 
 		}
 
 		if (ok != CIL_TRUE) {
-			cil_log(CIL_ERR, "Category %s cannot be used with sensitivity %s\n", 
-					cat->datum.name, sens->datum.name);
+			cil_log(CIL_ERR,
+				"Category %s cannot be used with sensitivity %s\n",
+				cat->datum.name, sens->datum.name);
 			rc = SEPOL_ERR;
 		}
 	}
@@ -725,7 +832,9 @@ static int __cil_verify_cats_associated_with_sens(struct cil_sens *sens, struct 
 	return rc;
 }
 
-static int __cil_verify_levelrange_sensitivity(struct cil_db *db, struct cil_sens *low, struct cil_sens *high)
+static int __cil_verify_levelrange_sensitivity(struct cil_db *db,
+					       struct cil_sens *low,
+					       struct cil_sens *high)
 {
 	struct cil_list_item *curr;
 	int found = CIL_FALSE;
@@ -748,13 +857,13 @@ static int __cil_verify_levelrange_sensitivity(struct cil_db *db, struct cil_sen
 	return SEPOL_OK;
 
 exit:
-	cil_log(CIL_ERR, "Sensitivity %s does not dominate %s\n", 
+	cil_log(CIL_ERR, "Sensitivity %s does not dominate %s\n",
 		high->datum.name, low->datum.name);
 	return rc;
-
 }
 
-static int __cil_verify_levelrange_cats(struct cil_cats *low, struct cil_cats *high)
+static int __cil_verify_levelrange_cats(struct cil_cats *low,
+					struct cil_cats *high)
 {
 	int rc = SEPOL_ERR;
 	struct cil_list_item *item;
@@ -778,7 +887,8 @@ static int __cil_verify_levelrange_cats(struct cil_cats *low, struct cil_cats *h
 	return SEPOL_OK;
 
 exit:
-	cil_log(CIL_ERR, "Low level category set must be a subset of the high level category set\n");
+	cil_log(CIL_ERR,
+		"Low level category set must be a subset of the high level category set\n");
 	return rc;
 }
 
@@ -786,7 +896,8 @@ static int __cil_verify_levelrange(struct cil_db *db, struct cil_levelrange *lr)
 {
 	int rc = SEPOL_ERR;
 
-	rc = __cil_verify_levelrange_sensitivity(db, lr->low->sens, lr->high->sens);
+	rc = __cil_verify_levelrange_sensitivity(db, lr->low->sens,
+						 lr->high->sens);
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
@@ -796,25 +907,30 @@ static int __cil_verify_levelrange(struct cil_db *db, struct cil_levelrange *lr)
 		goto exit;
 	}
 
-	rc = __cil_verify_cats_associated_with_sens(lr->low->sens, lr->low->cats);
+	rc = __cil_verify_cats_associated_with_sens(lr->low->sens,
+						    lr->low->cats);
 	if (rc != SEPOL_OK) {
-		cil_log(CIL_ERR, "Low level sensitivity and categories are not associated\n");
+		cil_log(CIL_ERR,
+			"Low level sensitivity and categories are not associated\n");
 		goto exit;
 	}
 
-	rc = __cil_verify_cats_associated_with_sens(lr->high->sens, lr->high->cats);
+	rc = __cil_verify_cats_associated_with_sens(lr->high->sens,
+						    lr->high->cats);
 	if (rc != SEPOL_OK) {
-		cil_log(CIL_ERR, "High level sensitivity and categories are not associated\n");
+		cil_log(CIL_ERR,
+			"High level sensitivity and categories are not associated\n");
 		goto exit;
 	}
-	
+
 	return SEPOL_OK;
 
 exit:
 	return rc;
 }
 
-static int __cil_verify_named_levelrange(struct cil_db *db, struct cil_tree_node *node)
+static int __cil_verify_named_levelrange(struct cil_db *db,
+					 struct cil_tree_node *node)
 {
 	int rc = SEPOL_ERR;
 	struct cil_levelrange *lr = node->data;
@@ -836,10 +952,12 @@ static int __cil_verify_user_pre_eval(struct cil_tree_node *node)
 	struct cil_user *user = node->data;
 
 	if (user->dftlevel == NULL) {
-		cil_log(CIL_ERR, "User %s does not have a default level\n", user->datum.name);
+		cil_log(CIL_ERR, "User %s does not have a default level\n",
+			user->datum.name);
 		goto exit;
 	} else if (user->range == NULL) {
-		cil_log(CIL_ERR, "User %s does not have a level range\n", user->datum.name);
+		cil_log(CIL_ERR, "User %s does not have a level range\n",
+			user->datum.name);
 		goto exit;
 	} else if (user->bounds != NULL) {
 		int steps = 0;
@@ -849,7 +967,9 @@ static int __cil_verify_user_pre_eval(struct cil_tree_node *node)
 
 		while (u2 != NULL) {
 			if (u1 == u2) {
-				cil_log(CIL_ERR, "Circular bounds found for user %s\n", u1->datum.name);
+				cil_log(CIL_ERR,
+					"Circular bounds found for user %s\n",
+					u1->datum.name);
 				goto exit;
 			}
 
@@ -870,7 +990,8 @@ exit:
 	return rc;
 }
 
-static int __cil_verify_user_post_eval(struct cil_db *db, struct cil_tree_node *node)
+static int __cil_verify_user_post_eval(struct cil_db *db,
+				       struct cil_tree_node *node)
 {
 	int rc = SEPOL_ERR;
 	struct cil_user *user = node->data;
@@ -900,7 +1021,8 @@ static int __cil_verify_role(struct cil_tree_node *node)
 
 	while (r2 != NULL) {
 		if (r1 == r2) {
-			cil_log(CIL_ERR, "Circular bounds found for role %s\n", r1->datum.name);
+			cil_log(CIL_ERR, "Circular bounds found for role %s\n",
+				r1->datum.name);
 			goto exit;
 		}
 
@@ -931,7 +1053,8 @@ static int __cil_verify_type(struct cil_tree_node *node)
 
 	while (t2 != NULL) {
 		if (t1 == t2) {
-			cil_log(CIL_ERR, "Circular bounds found for type %s\n", t1->datum.name);
+			cil_log(CIL_ERR, "Circular bounds found for type %s\n",
+				t1->datum.name);
 			goto exit;
 		}
 
@@ -967,24 +1090,28 @@ static int __cil_verify_context(struct cil_db *db, struct cil_context *ctx)
 
 	if (user->roles != NULL) {
 		if (!ebitmap_get_bit(user->roles, role->value)) {
-			cil_log(CIL_ERR, "Role %s is invalid for user %s\n", ctx->role_str, ctx->user_str);
+			cil_log(CIL_ERR, "Role %s is invalid for user %s\n",
+				ctx->role_str, ctx->user_str);
 			rc = SEPOL_ERR;
 			goto exit;
 		}
 	} else {
-		cil_log(CIL_ERR, "No roles given to the user %s\n", ctx->user_str);
+		cil_log(CIL_ERR, "No roles given to the user %s\n",
+			ctx->user_str);
 		rc = SEPOL_ERR;
 		goto exit;
 	}
 
 	if (role->types != NULL) {
 		if (!ebitmap_get_bit(role->types, type->value)) {
-			cil_log(CIL_ERR, "Type %s is invalid for role %s\n", ctx->type_str, ctx->role_str);
+			cil_log(CIL_ERR, "Type %s is invalid for role %s\n",
+				ctx->type_str, ctx->role_str);
 			rc = SEPOL_ERR;
 			goto exit;
 		}
 	} else {
-		cil_log(CIL_ERR, "No types associated with role %s\n", ctx->role_str);
+		cil_log(CIL_ERR, "No types associated with role %s\n",
+			ctx->role_str);
 		rc = SEPOL_ERR;
 		goto exit;
 	}
@@ -1004,7 +1131,8 @@ static int __cil_verify_context(struct cil_db *db, struct cil_context *ctx)
 			if (sens == user_low->sens) {
 				found = CIL_TRUE;
 			} else if (sens == ctx_low->sens) {
-				cil_log(CIL_ERR, "Range %s is invalid for user %s\n", 
+				cil_log(CIL_ERR,
+					"Range %s is invalid for user %s\n",
 					ctx->range_str, ctx->user_str);
 				rc = SEPOL_ERR;
 				goto exit;
@@ -1015,7 +1143,8 @@ static int __cil_verify_context(struct cil_db *db, struct cil_context *ctx)
 			if (sens == ctx_high->sens) {
 				break;
 			} else if (sens == user_high->sens) {
-				cil_log(CIL_ERR, "Range %s is invalid for user %s\n", 
+				cil_log(CIL_ERR,
+					"Range %s is invalid for user %s\n",
 					ctx->range_str, ctx->user_str);
 				rc = SEPOL_ERR;
 				goto exit;
@@ -1029,7 +1158,8 @@ exit:
 	return rc;
 }
 
-static int __cil_verify_named_context(struct cil_db *db, struct cil_tree_node *node)
+static int __cil_verify_named_context(struct cil_db *db,
+				      struct cil_tree_node *node)
 {
 	int rc = SEPOL_ERR;
 	struct cil_context *ctx = node->data;
@@ -1094,7 +1224,10 @@ exit:
 }
 */
 
-static int __cil_verify_booleanif_helper(struct cil_tree_node *node, __attribute__((unused)) uint32_t *finished, __attribute__((unused)) void *extra_args)
+static int
+__cil_verify_booleanif_helper(struct cil_tree_node *node,
+			      __attribute__((unused)) uint32_t *finished,
+			      __attribute__((unused)) void *extra_args)
 {
 	int rc = SEPOL_ERR;
 	struct cil_tree_node *rule_node = node;
@@ -1107,9 +1240,13 @@ static int __cil_verify_booleanif_helper(struct cil_tree_node *node, __attribute
 		avrule = rule_node->data;
 		if (avrule->rule_kind == CIL_AVRULE_NEVERALLOW) {
 			if (bif->preserved_tunable) {
-				cil_tree_log(node, CIL_ERR, "Neverallow found in tunableif block (treated as a booleanif due to preserve-tunables)");
+				cil_tree_log(
+					node, CIL_ERR,
+					"Neverallow found in tunableif block (treated as a booleanif due to preserve-tunables)");
 			} else {
-				cil_tree_log(node, CIL_ERR, "Neverallow found in booleanif block");
+				cil_tree_log(
+					node, CIL_ERR,
+					"Neverallow found in booleanif block");
 			}
 			rc = SEPOL_ERR;
 			goto exit;
@@ -1118,9 +1255,13 @@ static int __cil_verify_booleanif_helper(struct cil_tree_node *node, __attribute
 	}
 	case CIL_DENY_RULE:
 		if (bif->preserved_tunable) {
-			cil_tree_log(node, CIL_ERR, "Not allowed to have a deny rule in a tunableif block (treated as a booleanif due to preserve-tunables)");
+			cil_tree_log(
+				node, CIL_ERR,
+				"Not allowed to have a deny rule in a tunableif block (treated as a booleanif due to preserve-tunables)");
 		} else {
-			cil_tree_log(node, CIL_ERR, "Not allowed to have deny rule in a booleanif block");
+			cil_tree_log(
+				node, CIL_ERR,
+				"Not allowed to have deny rule in a booleanif block");
 		}
 		rc = SEPOL_ERR;
 		goto exit;
@@ -1180,11 +1321,16 @@ static int __cil_verify_booleanif_helper(struct cil_tree_node *node, __attribute
 		//Fall through
 		break;
 	default: {
-		const char * flavor = cil_node_to_string(node);
+		const char *flavor = cil_node_to_string(node);
 		if (bif->preserved_tunable) {
-			cil_tree_log(node, CIL_ERR, "Invalid %s statement in tunableif (treated as a booleanif due to preserve-tunables)", flavor);
+			cil_tree_log(
+				node, CIL_ERR,
+				"Invalid %s statement in tunableif (treated as a booleanif due to preserve-tunables)",
+				flavor);
 		} else {
-			cil_tree_log(node, CIL_ERR, "Invalid %s statement in booleanif", flavor);
+			cil_tree_log(node, CIL_ERR,
+				     "Invalid %s statement in booleanif",
+				     flavor);
 		}
 		goto exit;
 	}
@@ -1195,14 +1341,16 @@ exit:
 	return rc;
 }
 
-static int __cil_verify_booleanif(struct cil_tree_node *node, struct cil_complex_symtab *symtab)
+static int __cil_verify_booleanif(struct cil_tree_node *node,
+				  struct cil_complex_symtab *symtab)
 {
 	int rc = SEPOL_ERR;
-	struct cil_booleanif *bif = (struct cil_booleanif*)node->data;
+	struct cil_booleanif *bif = (struct cil_booleanif *)node->data;
 	struct cil_tree_node *cond_block = node->cl_head;
 
 	while (cond_block != NULL) {
-		rc = cil_tree_walk(cond_block, __cil_verify_booleanif_helper, NULL, NULL, symtab);
+		rc = cil_tree_walk(cond_block, __cil_verify_booleanif_helper,
+				   NULL, NULL, symtab);
 		if (rc != SEPOL_OK) {
 			goto exit;
 		}
@@ -1212,7 +1360,9 @@ static int __cil_verify_booleanif(struct cil_tree_node *node, struct cil_complex
 	return SEPOL_OK;
 exit:
 	if (bif->preserved_tunable) {
-		cil_tree_log(node, CIL_ERR, "Invalid tunableif (treated as a booleanif due to preserve-tunables)");
+		cil_tree_log(
+			node, CIL_ERR,
+			"Invalid tunableif (treated as a booleanif due to preserve-tunables)");
 	} else {
 		cil_tree_log(node, CIL_ERR, "Invalid booleanif");
 	}
@@ -1254,7 +1404,8 @@ exit:
 	return rc;
 }
 
-static int __cil_verify_ibendportcon(struct cil_db *db, struct cil_tree_node *node)
+static int __cil_verify_ibendportcon(struct cil_db *db,
+				     struct cil_tree_node *node)
 {
 	int rc = SEPOL_ERR;
 	struct cil_ibendportcon *ib_end_port = node->data;
@@ -1446,7 +1597,8 @@ exit:
 	return rc;
 }
 
-static int __cil_verify_pcidevicecon(struct cil_db *db, struct cil_tree_node *node)
+static int __cil_verify_pcidevicecon(struct cil_db *db,
+				     struct cil_tree_node *node)
 {
 	int rc = SEPOL_ERR;
 	struct cil_pcidevicecon *pcidev = node->data;
@@ -1467,7 +1619,8 @@ exit:
 	return rc;
 }
 
-static int __cil_verify_devicetreecon(struct cil_db *db, struct cil_tree_node *node)
+static int __cil_verify_devicetreecon(struct cil_db *db,
+				      struct cil_tree_node *node)
 {
 	int rc = SEPOL_ERR;
 	struct cil_devicetreecon *dt = node->data;
@@ -1509,7 +1662,8 @@ exit:
 	return rc;
 }
 
-static int __cil_verify_permissionx(struct cil_permissionx *permx, struct cil_tree_node *node)
+static int __cil_verify_permissionx(struct cil_permissionx *permx,
+				    struct cil_tree_node *node)
 {
 	int rc;
 	struct cil_list *classes = NULL;
@@ -1519,16 +1673,17 @@ static int __cil_verify_permissionx(struct cil_permissionx *permx, struct cil_tr
 	char *kind_str;
 
 	switch (permx->kind) {
-		case CIL_PERMX_KIND_IOCTL:
-			kind_str = CIL_KEY_IOCTL;
-			break;
-		case CIL_PERMX_KIND_NLMSG:
-			kind_str = CIL_KEY_NLMSG;
-			break;
-		default:
-			cil_tree_log(node, CIL_ERR, "Invalid permissionx kind (%d)", permx->kind);
-			rc = SEPOL_ERR;
-			goto exit;
+	case CIL_PERMX_KIND_IOCTL:
+		kind_str = CIL_KEY_IOCTL;
+		break;
+	case CIL_PERMX_KIND_NLMSG:
+		kind_str = CIL_KEY_NLMSG;
+		break;
+	default:
+		cil_tree_log(node, CIL_ERR, "Invalid permissionx kind (%d)",
+			     permx->kind);
+		rc = SEPOL_ERR;
+		goto exit;
 	}
 
 	classes = cil_expand_class(permx->obj);
@@ -1538,11 +1693,16 @@ static int __cil_verify_permissionx(struct cil_permissionx *permx, struct cil_tr
 		rc = cil_symtab_get_datum(&class->perms, kind_str, &perm_datum);
 		if (rc == SEPOL_ENOENT) {
 			if (class->common != NULL) {
-				rc = cil_symtab_get_datum(&class->common->perms, kind_str, &perm_datum);
+				rc = cil_symtab_get_datum(&class->common->perms,
+							  kind_str,
+							  &perm_datum);
 			}
 
 			if (rc == SEPOL_ENOENT) {
-				cil_tree_log(node, CIL_ERR, "Invalid permissionx: %s is not a permission of class %s", kind_str, class->datum.name);
+				cil_tree_log(
+					node, CIL_ERR,
+					"Invalid permissionx: %s is not a permission of class %s",
+					kind_str, class->datum.name);
 				rc = SEPOL_ERR;
 				goto exit;
 			}
@@ -1572,22 +1732,27 @@ static int __cil_verify_class(struct cil_tree_node *node)
 
 	if (class->common != NULL) {
 		struct cil_class *common = class->common;
-		struct cil_tree_node *common_node = common->datum.nodes->head->data;
+		struct cil_tree_node *common_node =
+			common->datum.nodes->head->data;
 		struct cil_tree_node *curr_com_perm = NULL;
 
 		for (curr_com_perm = common_node->cl_head;
-			curr_com_perm != NULL;
-			curr_com_perm = curr_com_perm->next) {
+		     curr_com_perm != NULL;
+		     curr_com_perm = curr_com_perm->next) {
 			struct cil_perm *com_perm = curr_com_perm->data;
 			struct cil_tree_node *curr_class_perm = NULL;
 
 			for (curr_class_perm = node->cl_head;
-				curr_class_perm != NULL;
-				curr_class_perm = curr_class_perm->next) {
-				struct cil_perm *class_perm = curr_class_perm->data;
+			     curr_class_perm != NULL;
+			     curr_class_perm = curr_class_perm->next) {
+				struct cil_perm *class_perm =
+					curr_class_perm->data;
 
-				if (com_perm->datum.name == class_perm->datum.name) {
-					cil_log(CIL_ERR, "Duplicate permissions between %s common and class declarations\n", class_perm->datum.name);
+				if (com_perm->datum.name ==
+				    class_perm->datum.name) {
+					cil_log(CIL_ERR,
+						"Duplicate permissions between %s common and class declarations\n",
+						class_perm->datum.name);
 					goto exit;
 				}
 			}
@@ -1606,7 +1771,7 @@ static int __cil_verify_policycap(struct cil_tree_node *node)
 	int rc;
 	struct cil_policycap *polcap = node->data;
 
-	rc = sepol_polcap_getnum((const char*)polcap->datum.name);
+	rc = sepol_polcap_getnum((const char *)polcap->datum.name);
 	if (rc == SEPOL_ERR) {
 		goto exit;
 	}
@@ -1614,11 +1779,13 @@ static int __cil_verify_policycap(struct cil_tree_node *node)
 	return SEPOL_OK;
 
 exit:
-	cil_tree_log(node, CIL_ERR, "Invalid policycap (%s)", (const char*)polcap->datum.name);
+	cil_tree_log(node, CIL_ERR, "Invalid policycap (%s)",
+		     (const char *)polcap->datum.name);
 	return rc;
 }
 
-int __cil_verify_helper(struct cil_tree_node *node, uint32_t *finished, void *extra_args)
+int __cil_verify_helper(struct cil_tree_node *node, uint32_t *finished,
+			void *extra_args)
 {
 	int rc = SEPOL_ERR;
 	int *handleunknown;
@@ -1671,19 +1838,23 @@ int __cil_verify_helper(struct cil_tree_node *node, uint32_t *finished, void *ex
 			break;
 		case CIL_HANDLEUNKNOWN:
 			if (*handleunknown != -1) {
-				cil_log(CIL_ERR, "Policy can not have more than one handleunknown\n");
+				cil_log(CIL_ERR,
+					"Policy can not have more than one handleunknown\n");
 				rc = SEPOL_ERR;
 			} else {
-				*handleunknown = ((struct cil_handleunknown*)node->data)->handle_unknown;
+				*handleunknown =
+					((struct cil_handleunknown *)node->data)
+						->handle_unknown;
 				rc = SEPOL_OK;
 			}
 			break;
 		case CIL_MLS:
 			if (*mls != -1) {
-				cil_log(CIL_ERR, "Policy can not have more than one mls\n");
+				cil_log(CIL_ERR,
+					"Policy can not have more than one mls\n");
 				rc = SEPOL_ERR;
 			} else {
-				*mls = ((struct cil_mls*)node->data)->value;
+				*mls = ((struct cil_mls *)node->data)->value;
 				rc = SEPOL_OK;
 			}
 			break;
@@ -1714,7 +1885,7 @@ int __cil_verify_helper(struct cil_tree_node *node, uint32_t *finished, void *ex
 		}
 		break;
 	}
-	case 1:	{
+	case 1: {
 		switch (node->flavor) {
 		case CIL_CONTEXT:
 			rc = __cil_verify_named_context(db, node);
@@ -1781,7 +1952,8 @@ exit:
 	return rc;
 }
 
-static int __add_perm_to_list(__attribute__((unused)) hashtab_key_t k, hashtab_datum_t d, void *args)
+static int __add_perm_to_list(__attribute__((unused)) hashtab_key_t k,
+			      hashtab_datum_t d, void *args)
 {
 	struct cil_list *perm_list = (struct cil_list *)args;
 
@@ -1790,20 +1962,32 @@ static int __add_perm_to_list(__attribute__((unused)) hashtab_key_t k, hashtab_d
 	return SEPOL_OK;
 }
 
-static int __cil_verify_classperms(struct cil_list *classperms, struct cil_symtab_datum *orig, struct cil_symtab_datum *cur, unsigned steps, unsigned limit);
+static int __cil_verify_classperms(struct cil_list *classperms,
+				   struct cil_symtab_datum *orig,
+				   struct cil_symtab_datum *cur, unsigned steps,
+				   unsigned limit);
 
-static int __cil_verify_map_perm(struct cil_class *class, struct cil_perm *perm, struct cil_symtab_datum *orig, unsigned steps, unsigned limit)
+static int __cil_verify_map_perm(struct cil_class *class, struct cil_perm *perm,
+				 struct cil_symtab_datum *orig, unsigned steps,
+				 unsigned limit)
 {
 	int rc;
 
 	if (!perm->classperms) {
-		cil_tree_log(NODE(class), CIL_ERR, "No class permissions for map class %s, permission %s", DATUM(class)->name, DATUM(perm)->name);
+		cil_tree_log(
+			NODE(class), CIL_ERR,
+			"No class permissions for map class %s, permission %s",
+			DATUM(class)->name, DATUM(perm)->name);
 		goto exit;
 	}
 
-	rc = __cil_verify_classperms(perm->classperms, orig, &perm->datum, steps, limit);
+	rc = __cil_verify_classperms(perm->classperms, orig, &perm->datum,
+				     steps, limit);
 	if (rc != SEPOL_OK) {
-		cil_tree_log(NODE(class), CIL_ERR, "There was an error verifying class permissions for map class %s, permission %s", DATUM(class)->name, DATUM(perm)->name);
+		cil_tree_log(
+			NODE(class), CIL_ERR,
+			"There was an error verifying class permissions for map class %s, permission %s",
+			DATUM(class)->name, DATUM(perm)->name);
 		goto exit;
 	}
 
@@ -1813,69 +1997,91 @@ exit:
 	return SEPOL_ERR;
 }
 
-
-static int __cil_verify_perms(struct cil_class *class, struct cil_list *perms, struct cil_symtab_datum *orig, unsigned steps, unsigned limit)
+static int __cil_verify_perms(struct cil_class *class, struct cil_list *perms,
+			      struct cil_symtab_datum *orig, unsigned steps,
+			      unsigned limit)
 {
 	int rc = SEPOL_ERR;
 	int count = 0;
 	struct cil_list_item *i = NULL;
 
 	if (!perms) {
-		cil_tree_log(NODE(class), CIL_ERR, "No permissions for class %s in class permissions", DATUM(class)->name);
+		cil_tree_log(NODE(class), CIL_ERR,
+			     "No permissions for class %s in class permissions",
+			     DATUM(class)->name);
 		goto exit;
 	}
 
 	cil_list_for_each(i, perms) {
 		count++;
 		if (i->flavor == CIL_LIST) {
-			rc = __cil_verify_perms(class, i->data, orig, steps, limit);
+			rc = __cil_verify_perms(class, i->data, orig, steps,
+						limit);
 			if (rc != SEPOL_OK) {
 				goto exit;
 			}
 		} else if (i->flavor == CIL_DATUM) {
 			struct cil_perm *perm = i->data;
 			if (FLAVOR(perm) == CIL_MAP_PERM) {
-				rc = __cil_verify_map_perm(class, perm, orig, steps, limit);
+				rc = __cil_verify_map_perm(class, perm, orig,
+							   steps, limit);
 				if (rc != SEPOL_OK) {
 					goto exit;
 				}
 			}
 		} else if (i->flavor == CIL_OP) {
-			enum cil_flavor op = (enum cil_flavor)(uintptr_t)i->data;
+			enum cil_flavor op =
+				(enum cil_flavor)(uintptr_t)i->data;
 			if (op == CIL_ALL) {
 				struct cil_list *perm_list;
 				struct cil_list_item *j = NULL;
 				int count2 = 0;
 				cil_list_init(&perm_list, CIL_MAP_PERM);
-				cil_symtab_map(&class->perms, __add_perm_to_list, perm_list);
+				cil_symtab_map(&class->perms,
+					       __add_perm_to_list, perm_list);
 				if (class->common != NULL) {
-					cil_symtab_map(&class->common->perms, __add_perm_to_list, perm_list);
+					cil_symtab_map(&class->common->perms,
+						       __add_perm_to_list,
+						       perm_list);
 				}
 				cil_list_for_each(j, perm_list) {
 					count2++;
 					struct cil_perm *perm = j->data;
 					if (FLAVOR(perm) == CIL_MAP_PERM) {
-						rc = __cil_verify_map_perm(class, perm, orig, steps, limit);
+						rc = __cil_verify_map_perm(
+							class, perm, orig,
+							steps, limit);
 						if (rc != SEPOL_OK) {
-							cil_list_destroy(&perm_list, CIL_FALSE);
+							cil_list_destroy(
+								&perm_list,
+								CIL_FALSE);
 							goto exit;
 						}
 					}
 				}
 				cil_list_destroy(&perm_list, CIL_FALSE);
 				if (count2 == 0) {
-					cil_tree_log(NODE(class), CIL_ERR, "Operator \"all\" used for %s which has no permissions associated with it", DATUM(class)->name);
+					cil_tree_log(
+						NODE(class), CIL_ERR,
+						"Operator \"all\" used for %s which has no permissions associated with it",
+						DATUM(class)->name);
 					goto exit;
 				}
 			}
 		} else {
-			cil_tree_log(NODE(class), CIL_ERR, "Permission list for %s has an unexpected flavor: %d", DATUM(class)->name, i->flavor);
+			cil_tree_log(
+				NODE(class), CIL_ERR,
+				"Permission list for %s has an unexpected flavor: %d",
+				DATUM(class)->name, i->flavor);
 			goto exit;
 		}
 	}
 
 	if (count == 0) {
-		cil_tree_log(NODE(class), CIL_ERR, "Empty permissions list for class %s in class permissions", DATUM(class)->name);
+		cil_tree_log(
+			NODE(class), CIL_ERR,
+			"Empty permissions list for class %s in class permissions",
+			DATUM(class)->name);
 		goto exit;
 	}
 
@@ -1885,7 +2091,10 @@ exit:
 	return SEPOL_ERR;
 }
 
-static int __cil_verify_classperms(struct cil_list *classperms, struct cil_symtab_datum *orig, struct cil_symtab_datum *cur, unsigned steps, unsigned limit)
+static int __cil_verify_classperms(struct cil_list *classperms,
+				   struct cil_symtab_datum *orig,
+				   struct cil_symtab_datum *cur, unsigned steps,
+				   unsigned limit)
 {
 	int rc;
 	struct cil_list_item *i;
@@ -1895,7 +2104,9 @@ static int __cil_verify_classperms(struct cil_list *classperms, struct cil_symta
 	}
 
 	if (steps > 0 && orig == cur) {
-		cil_tree_log(NODE(cur), CIL_ERR, "Found circular class permissions involving %s", cur->name);
+		cil_tree_log(NODE(cur), CIL_ERR,
+			     "Found circular class permissions involving %s",
+			     cur->name);
 		goto exit;
 	} else {
 		steps++;
@@ -1909,7 +2120,8 @@ static int __cil_verify_classperms(struct cil_list *classperms, struct cil_symta
 	cil_list_for_each(i, classperms) {
 		if (i->flavor == CIL_CLASSPERMS) {
 			struct cil_classperms *cp = i->data;
-			rc = __cil_verify_perms(cp->class, cp->perms, orig, steps, limit);
+			rc = __cil_verify_perms(cp->class, cp->perms, orig,
+						steps, limit);
 			if (rc != SEPOL_OK) {
 				goto exit;
 			}
@@ -1917,9 +2129,13 @@ static int __cil_verify_classperms(struct cil_list *classperms, struct cil_symta
 			struct cil_classperms_set *cp_set = i->data;
 			struct cil_classpermission *cp = cp_set->set;
 			if (!cp->classperms) {
-				cil_tree_log(NODE(cur), CIL_ERR, "Classpermission %s does not have a classpermissionset", DATUM(cp)->name);
+				cil_tree_log(
+					NODE(cur), CIL_ERR,
+					"Classpermission %s does not have a classpermissionset",
+					DATUM(cp)->name);
 			}
-			rc = __cil_verify_classperms(cp->classperms, orig, &cp->datum, steps, limit);
+			rc = __cil_verify_classperms(cp->classperms, orig,
+						     &cp->datum, steps, limit);
 			if (rc != SEPOL_OK) {
 				goto exit;
 			}
@@ -1937,9 +2153,13 @@ static int __cil_verify_classpermission(struct cil_tree_node *node)
 	int rc;
 	struct cil_classpermission *cp = node->data;
 
-	rc = __cil_verify_classperms(cp->classperms, &cp->datum, &cp->datum, 0, 2);
+	rc = __cil_verify_classperms(cp->classperms, &cp->datum, &cp->datum, 0,
+				     2);
 	if (rc != SEPOL_OK) {
-		cil_tree_log(node, CIL_ERR, "Error verifying class permissions for classpermission %s", DATUM(cp)->name);
+		cil_tree_log(
+			node, CIL_ERR,
+			"Error verifying class permissions for classpermission %s",
+			DATUM(cp)->name);
 	}
 
 	return rc;
@@ -1951,15 +2171,20 @@ struct cil_verify_map_args {
 	int rc;
 };
 
-static int __verify_map_perm_classperms(__attribute__((unused)) hashtab_key_t k, hashtab_datum_t d, void *args)
+static int __verify_map_perm_classperms(__attribute__((unused)) hashtab_key_t k,
+					hashtab_datum_t d, void *args)
 {
 	struct cil_verify_map_args *map_args = args;
 	struct cil_perm *cmp = (struct cil_perm *)d;
 	int rc;
 
-	rc = __cil_verify_classperms(cmp->classperms, &cmp->datum, &cmp->datum, 0, 2);
+	rc = __cil_verify_classperms(cmp->classperms, &cmp->datum, &cmp->datum,
+				     0, 2);
 	if (rc != SEPOL_OK) {
-		cil_tree_log(NODE(cmp), CIL_ERR, "Error verifying class permissions for map class %s, permission %s", DATUM(map_args->class)->name, DATUM(cmp)->name);
+		cil_tree_log(
+			NODE(cmp), CIL_ERR,
+			"Error verifying class permissions for map class %s, permission %s",
+			DATUM(map_args->class)->name, DATUM(cmp)->name);
 		map_args->rc = rc;
 	}
 
@@ -1984,7 +2209,8 @@ static int __cil_verify_map_class(struct cil_tree_node *node)
 	return SEPOL_OK;
 }
 
-int __cil_pre_verify_helper(struct cil_tree_node *node, uint32_t *finished, __attribute__((unused)) void *extra_args)
+int __cil_pre_verify_helper(struct cil_tree_node *node, uint32_t *finished,
+			    __attribute__((unused)) void *extra_args)
 {
 	int rc = SEPOL_OK;
 
@@ -2015,7 +2241,8 @@ int __cil_pre_verify_helper(struct cil_tree_node *node, uint32_t *finished, __at
 	case CIL_CATSET: {
 		struct cil_stack *stack;
 		cil_stack_init(&stack);
-		rc = cil_verify_no_self_reference(node->flavor, node->data, stack);
+		rc = cil_verify_no_self_reference(node->flavor, node->data,
+						  stack);
 		cil_stack_destroy(&stack);
 		break;
 	}

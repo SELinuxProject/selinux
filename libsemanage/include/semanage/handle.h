@@ -47,58 +47,67 @@ extern void semanage_handle_destroy(semanage_handle_t *);
 /* This is the type of connection to the store, for now only
  * direct is supported */
 enum semanage_connect_type {
-	SEMANAGE_CON_INVALID = 0, SEMANAGE_CON_DIRECT,
-	SEMANAGE_CON_POLSERV_LOCAL, SEMANAGE_CON_POLSERV_REMOTE
+	SEMANAGE_CON_INVALID = 0,
+	SEMANAGE_CON_DIRECT,
+	SEMANAGE_CON_POLSERV_LOCAL,
+	SEMANAGE_CON_POLSERV_REMOTE
 };
 
 /* This function allows you to specify the store to  connect to.
  * It must be called after semanage_handle_create but before
  * semanage_connect. The argument should be the full path to the store.
  */
-extern void semanage_select_store(semanage_handle_t * handle, const char *path,
+extern void semanage_select_store(semanage_handle_t *handle, const char *path,
 				  enum semanage_connect_type storetype);
 
 /* Just reload the policy */
-extern int semanage_reload_policy(semanage_handle_t * handle);
+extern int semanage_reload_policy(semanage_handle_t *handle);
 
 /* set whether to reload the policy or not after a commit,
  * 1 for yes (default), 0 for no */
-extern void semanage_set_reload(semanage_handle_t * handle, int do_reload);
+extern void semanage_set_reload(semanage_handle_t *handle, int do_reload);
 
 /* set whether to rebuild the policy on commit, even if no
  * changes were performed.
  * 1 for yes, 0 for no (default) */
-extern void semanage_set_rebuild(semanage_handle_t * handle, int do_rebuild);
+extern void semanage_set_rebuild(semanage_handle_t *handle, int do_rebuild);
 
 /* set whether to rebuild the policy on commit when potential changes
  * to store files since last rebuild are detected,
  * 1 for yes (default), 0 for no */
-extern void semanage_set_check_ext_changes(semanage_handle_t * handle, int do_check);
+extern void semanage_set_check_ext_changes(semanage_handle_t *handle,
+					   int do_check);
 
 /* Fills *compiler_path with the location of the hll compiler sh->conf->compiler_directory_path
  * corresponding to lang_ext.
  * Upon success returns 0, -1 on error. */
-extern int semanage_get_hll_compiler_path(semanage_handle_t *sh, const char *lang_ext, char **compiler_path);
+extern int semanage_get_hll_compiler_path(semanage_handle_t *sh,
+					  const char *lang_ext,
+					  char **compiler_path);
 
 /* create the store if it does not exist, this only has an effect on
  * direct connections and must be called before semanage_connect
  * 1 for yes, 0 for no (default) */
-extern void semanage_set_create_store(semanage_handle_t * handle, int create_store);
+extern void semanage_set_create_store(semanage_handle_t *handle,
+				      int create_store);
 
 /*Get whether or not dontaudits will be disabled upon commit */
-extern int semanage_get_disable_dontaudit(semanage_handle_t * handle);
+extern int semanage_get_disable_dontaudit(semanage_handle_t *handle);
 
 /* Set whether or not to disable dontaudits upon commit */
-extern void semanage_set_disable_dontaudit(semanage_handle_t * handle, int disable_dontaudit);
+extern void semanage_set_disable_dontaudit(semanage_handle_t *handle,
+					   int disable_dontaudit);
 
 /* Set whether or not to execute setfiles to check file contexts upon commit */
-extern void semanage_set_check_contexts(semanage_handle_t * sh, int do_check_contexts);
+extern void semanage_set_check_contexts(semanage_handle_t *sh,
+					int do_check_contexts);
 
 /* Get the default priority. */
 extern uint16_t semanage_get_default_priority(semanage_handle_t *sh);
 
 /* Set the default priority. */
-extern int semanage_set_default_priority(semanage_handle_t *sh, uint16_t priority);
+extern int semanage_set_default_priority(semanage_handle_t *sh,
+					 uint16_t priority);
 
 /* Check whether policy is managed via libsemanage on this system.
  * Must be called prior to trying to connect.
@@ -140,10 +149,10 @@ extern int semanage_commit(semanage_handle_t *);
 #define SEMANAGE_CAN_WRITE 2
 /* returns SEMANAGE_CAN_READ or SEMANAGE_CAN_WRITE if the store is readable
  * or writable, respectively. <0 if an error occurred */
-extern int semanage_access_check(semanage_handle_t * sh);
+extern int semanage_access_check(semanage_handle_t *sh);
 
 /* returns 0 if not connected, 1 if connected */
-extern int semanage_is_connected(semanage_handle_t * sh);
+extern int semanage_is_connected(semanage_handle_t *sh);
 
 /* returns 1 if policy is MLS, 0 otherwise. */
 extern int semanage_mls_enabled(semanage_handle_t *sh);
@@ -152,22 +161,25 @@ extern int semanage_mls_enabled(semanage_handle_t *sh);
 extern int semanage_set_root(const char *path);
 
 /* Get the current semanage root path */
-extern const char * semanage_root(void);
+extern const char *semanage_root(void);
 
 /* Get whether or not needless unused branch of tunables would be preserved */
-extern int semanage_get_preserve_tunables(semanage_handle_t * handle);
+extern int semanage_get_preserve_tunables(semanage_handle_t *handle);
 
 /* Set whether or not to preserve the needless unused branch of tunables */
-extern void semanage_set_preserve_tunables(semanage_handle_t * handle, int preserve_tunables);
+extern void semanage_set_preserve_tunables(semanage_handle_t *handle,
+					   int preserve_tunables);
 
 /* Get the flag value for whether or not caching is ignored for compiled CIL modules from HLL files */
 extern int semanage_get_ignore_module_cache(semanage_handle_t *handle);
 
 /* Set semanage_handle flag for whether or not to ignore caching of compiled CIL modules from HLL files */
-extern void semanage_set_ignore_module_cache(semanage_handle_t *handle, int ignore_module_cache);
+extern void semanage_set_ignore_module_cache(semanage_handle_t *handle,
+					     int ignore_module_cache);
 
 /* set the store root path for semanage output files */
-extern void semanage_set_store_root(semanage_handle_t *sh, const char *store_root);
+extern void semanage_set_store_root(semanage_handle_t *sh,
+				    const char *store_root);
 
 /* META NOTES
  *

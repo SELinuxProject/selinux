@@ -38,7 +38,8 @@ static int ibpkey_parse_subnet_prefix(sepol_handle_t *handle,
 	struct in6_addr in_addr;
 
 	if (inet_pton(AF_INET6, subnet_prefix_str, &in_addr) <= 0) {
-		ERR(handle, "could not parse IPv6 address for ibpkey subnet prefix %s: %m",
+		ERR(handle,
+		    "could not parse IPv6 address for ibpkey subnet prefix %s: %m",
 		    subnet_prefix_str);
 		return STATUS_ERR;
 	}
@@ -61,10 +62,9 @@ static int ibpkey_expand_subnet_prefix(sepol_handle_t *handle,
 	memset(&addr, 0, sizeof(struct in6_addr));
 	memcpy(&addr.s6_addr[0], &subnet_prefix, sizeof(subnet_prefix));
 
-	if (inet_ntop(AF_INET6, &addr, subnet_prefix_str,
-		      INET6_ADDRSTRLEN) == NULL) {
-		ERR(handle,
-		    "could not expand IPv6 address to string: %m");
+	if (inet_ntop(AF_INET6, &addr, subnet_prefix_str, INET6_ADDRSTRLEN) ==
+	    NULL) {
+		ERR(handle, "could not expand IPv6 address to string: %m");
 		return STATUS_ERR;
 	}
 
@@ -95,20 +95,19 @@ omem:
 }
 
 /* Key */
-int sepol_ibpkey_key_create(sepol_handle_t *handle,
-			    const char *subnet_prefix,
-			    int low, int high,
-			    sepol_ibpkey_key_t **key_ptr)
+int sepol_ibpkey_key_create(sepol_handle_t *handle, const char *subnet_prefix,
+			    int low, int high, sepol_ibpkey_key_t **key_ptr)
 {
 	sepol_ibpkey_key_t *tmp_key =
-	    (sepol_ibpkey_key_t *)malloc(sizeof(sepol_ibpkey_key_t));
+		(sepol_ibpkey_key_t *)malloc(sizeof(sepol_ibpkey_key_t));
 
 	if (!tmp_key) {
 		ERR(handle, "out of memory, could not create ibpkey key");
 		goto omem;
 	}
 
-	if (ibpkey_parse_subnet_prefix(handle, subnet_prefix, &tmp_key->subnet_prefix) < 0)
+	if (ibpkey_parse_subnet_prefix(handle, subnet_prefix,
+				       &tmp_key->subnet_prefix) < 0)
 		goto err;
 
 	tmp_key->low = low;
@@ -122,11 +121,11 @@ omem:
 
 err:
 	sepol_ibpkey_key_free(tmp_key);
-	ERR(handle, "could not create ibpkey key for subnet prefix%s, range %u, %u",
+	ERR(handle,
+	    "could not create ibpkey key for subnet prefix%s, range %u, %u",
 	    subnet_prefix, low, high);
 	return STATUS_ERR;
 }
-
 
 void sepol_ibpkey_key_unpack(const sepol_ibpkey_key_t *key,
 			     uint64_t *subnet_prefix, int *low, int *high)
@@ -136,20 +135,19 @@ void sepol_ibpkey_key_unpack(const sepol_ibpkey_key_t *key,
 	*high = key->high;
 }
 
-
 int sepol_ibpkey_key_extract(sepol_handle_t *handle,
 			     const sepol_ibpkey_t *ibpkey,
 			     sepol_ibpkey_key_t **key_ptr)
 {
 	char subnet_prefix_str[INET6_ADDRSTRLEN];
 
-	ibpkey_expand_subnet_prefix(handle, ibpkey->subnet_prefix, subnet_prefix_str);
+	ibpkey_expand_subnet_prefix(handle, ibpkey->subnet_prefix,
+				    subnet_prefix_str);
 
-	if (sepol_ibpkey_key_create
-	    (handle, subnet_prefix_str, ibpkey->low, ibpkey->high, key_ptr) < 0) {
+	if (sepol_ibpkey_key_create(handle, subnet_prefix_str, ibpkey->low,
+				    ibpkey->high, key_ptr) < 0) {
 		ERR(handle, "could not extract key from ibpkey %s %d:%d",
-		    subnet_prefix_str,
-		    ibpkey->low, ibpkey->high);
+		    subnet_prefix_str, ibpkey->low, ibpkey->high);
 
 		return STATUS_ERR;
 	}
@@ -164,7 +162,8 @@ void sepol_ibpkey_key_free(sepol_ibpkey_key_t *key)
 	free(key);
 }
 
-int sepol_ibpkey_compare(const sepol_ibpkey_t *ibpkey, const sepol_ibpkey_key_t *key)
+int sepol_ibpkey_compare(const sepol_ibpkey_t *ibpkey,
+			 const sepol_ibpkey_key_t *key)
 {
 	if (ibpkey->subnet_prefix < key->subnet_prefix)
 		return -1;
@@ -184,7 +183,8 @@ int sepol_ibpkey_compare(const sepol_ibpkey_t *ibpkey, const sepol_ibpkey_key_t 
 	return 0;
 }
 
-int sepol_ibpkey_compare2(const sepol_ibpkey_t *ibpkey, const sepol_ibpkey_t *ibpkey2)
+int sepol_ibpkey_compare2(const sepol_ibpkey_t *ibpkey,
+			  const sepol_ibpkey_t *ibpkey2)
 {
 	if (ibpkey->subnet_prefix < ibpkey2->subnet_prefix)
 		return -1;
@@ -210,12 +210,10 @@ int sepol_ibpkey_get_low(const sepol_ibpkey_t *ibpkey)
 	return ibpkey->low;
 }
 
-
 int sepol_ibpkey_get_high(const sepol_ibpkey_t *ibpkey)
 {
 	return ibpkey->high;
 }
-
 
 void sepol_ibpkey_set_pkey(sepol_ibpkey_t *ibpkey, int pkey_num)
 {
@@ -229,7 +227,6 @@ void sepol_ibpkey_set_range(sepol_ibpkey_t *ibpkey, int low, int high)
 	ibpkey->high = high;
 }
 
-
 int sepol_ibpkey_get_subnet_prefix(sepol_handle_t *handle,
 				   const sepol_ibpkey_t *ibpkey,
 				   char **subnet_prefix)
@@ -239,7 +236,8 @@ int sepol_ibpkey_get_subnet_prefix(sepol_handle_t *handle,
 	if (ibpkey_alloc_subnet_prefix_string(handle, &tmp_subnet_prefix) < 0)
 		goto err;
 
-	if (ibpkey_expand_subnet_prefix(handle, ibpkey->subnet_prefix, tmp_subnet_prefix) < 0)
+	if (ibpkey_expand_subnet_prefix(handle, ibpkey->subnet_prefix,
+					tmp_subnet_prefix) < 0)
 		goto err;
 
 	*subnet_prefix = tmp_subnet_prefix;
@@ -251,13 +249,11 @@ err:
 	return STATUS_ERR;
 }
 
-
 /* Subnet prefix */
 uint64_t sepol_ibpkey_get_subnet_prefix_bytes(const sepol_ibpkey_t *ibpkey)
 {
 	return ibpkey->subnet_prefix;
 }
-
 
 int sepol_ibpkey_set_subnet_prefix(sepol_handle_t *handle,
 				   sepol_ibpkey_t *ibpkey,
@@ -272,10 +268,10 @@ int sepol_ibpkey_set_subnet_prefix(sepol_handle_t *handle,
 	return STATUS_SUCCESS;
 
 err:
-	ERR(handle, "could not set ibpkey subnet prefix to %s", subnet_prefix_str);
+	ERR(handle, "could not set ibpkey subnet prefix to %s",
+	    subnet_prefix_str);
 	return STATUS_ERR;
 }
-
 
 void sepol_ibpkey_set_subnet_prefix_bytes(sepol_ibpkey_t *ibpkey,
 					  uint64_t subnet_prefix)
@@ -283,11 +279,11 @@ void sepol_ibpkey_set_subnet_prefix_bytes(sepol_ibpkey_t *ibpkey,
 	ibpkey->subnet_prefix = subnet_prefix;
 }
 
-
 /* Create */
 int sepol_ibpkey_create(sepol_handle_t *handle, sepol_ibpkey_t **ibpkey)
 {
-	sepol_ibpkey_t *tmp_ibpkey = (sepol_ibpkey_t *)malloc(sizeof(sepol_ibpkey_t));
+	sepol_ibpkey_t *tmp_ibpkey =
+		(sepol_ibpkey_t *)malloc(sizeof(sepol_ibpkey_t));
 
 	if (!tmp_ibpkey) {
 		ERR(handle, "out of memory, could not create ibpkey record");
@@ -303,10 +299,9 @@ int sepol_ibpkey_create(sepol_handle_t *handle, sepol_ibpkey_t **ibpkey)
 	return STATUS_SUCCESS;
 }
 
-
 /* Deep copy clone */
-int sepol_ibpkey_clone(sepol_handle_t *handle,
-		       const sepol_ibpkey_t *ibpkey, sepol_ibpkey_t **ibpkey_ptr)
+int sepol_ibpkey_clone(sepol_handle_t *handle, const sepol_ibpkey_t *ibpkey,
+		       sepol_ibpkey_t **ibpkey_ptr)
 {
 	sepol_ibpkey_t *new_ibpkey = NULL;
 
@@ -340,16 +335,14 @@ void sepol_ibpkey_free(sepol_ibpkey_t *ibpkey)
 	free(ibpkey);
 }
 
-
 /* Context */
 sepol_context_t *sepol_ibpkey_get_con(const sepol_ibpkey_t *ibpkey)
 {
 	return ibpkey->con;
 }
 
-
-int sepol_ibpkey_set_con(sepol_handle_t *handle,
-			 sepol_ibpkey_t *ibpkey, sepol_context_t *con)
+int sepol_ibpkey_set_con(sepol_handle_t *handle, sepol_ibpkey_t *ibpkey,
+			 sepol_context_t *con)
 {
 	sepol_context_t *newcon;
 
@@ -362,4 +355,3 @@ int sepol_ibpkey_set_con(sepol_handle_t *handle,
 	ibpkey->con = newcon;
 	return STATUS_SUCCESS;
 }
-

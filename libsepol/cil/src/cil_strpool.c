@@ -56,7 +56,9 @@ static unsigned int cil_strpool_hash(hashtab_t h, const_hashtab_key_t key)
 	return hash & (h->size - 1);
 }
 
-static int cil_strpool_compare(hashtab_t h __attribute__ ((unused)), const_hashtab_key_t key1, const_hashtab_key_t key2)
+static int cil_strpool_compare(hashtab_t h __attribute__((unused)),
+			       const_hashtab_key_t key1,
+			       const_hashtab_key_t key2)
 {
 	return strcmp(key1, key2);
 }
@@ -72,7 +74,8 @@ char *cil_strpool_add(const char *str)
 		int rc;
 		strpool_ref = cil_malloc(sizeof(*strpool_ref));
 		strpool_ref->str = cil_strdup(str);
-		rc = hashtab_insert(cil_strpool_tab, strpool_ref->str, strpool_ref);
+		rc = hashtab_insert(cil_strpool_tab, strpool_ref->str,
+				    strpool_ref);
 		if (rc != SEPOL_OK) {
 			pthread_mutex_unlock(&cil_strpool_mutex);
 			cil_log(CIL_ERR, "Failed to allocate memory\n");
@@ -84,9 +87,11 @@ char *cil_strpool_add(const char *str)
 	return strpool_ref->str;
 }
 
-static int cil_strpool_entry_destroy(hashtab_key_t k __attribute__ ((unused)), hashtab_datum_t d, void *args __attribute__ ((unused)))
+static int cil_strpool_entry_destroy(hashtab_key_t k __attribute__((unused)),
+				     hashtab_datum_t d,
+				     void *args __attribute__((unused)))
 {
-	struct cil_strpool_entry *strpool_ref = (struct cil_strpool_entry*)d;
+	struct cil_strpool_entry *strpool_ref = (struct cil_strpool_entry *)d;
 	free(strpool_ref->str);
 	free(strpool_ref);
 	return SEPOL_OK;
@@ -96,7 +101,9 @@ void cil_strpool_init(void)
 {
 	pthread_mutex_lock(&cil_strpool_mutex);
 	if (cil_strpool_tab == NULL) {
-		cil_strpool_tab = hashtab_create(cil_strpool_hash, cil_strpool_compare, CIL_STRPOOL_TABLE_SIZE);
+		cil_strpool_tab = hashtab_create(cil_strpool_hash,
+						 cil_strpool_compare,
+						 CIL_STRPOOL_TABLE_SIZE);
 		if (cil_strpool_tab == NULL) {
 			pthread_mutex_unlock(&cil_strpool_mutex);
 			cil_log(CIL_ERR, "Failed to allocate memory\n");

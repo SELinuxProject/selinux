@@ -23,8 +23,8 @@ extern int semanage_ibpkey_compare2(const semanage_ibpkey_t *ibpkey,
 				    const semanage_ibpkey_t *ibpkey2);
 
 extern int semanage_ibpkey_key_create(semanage_handle_t *handle,
-				      const char *subnet_prefix,
-				      int low, int high,
+				      const char *subnet_prefix, int low,
+				      int high,
 				      semanage_ibpkey_key_t **key_ptr);
 
 extern int semanage_ibpkey_key_extract(semanage_handle_t *handle,
@@ -37,7 +37,8 @@ extern int semanage_ibpkey_get_subnet_prefix(semanage_handle_t *handle,
 					     const semanage_ibpkey_t *ibpkey,
 					     char **subnet_prefix_ptr);
 
-extern uint64_t semanage_ibpkey_get_subnet_prefix_bytes(const semanage_ibpkey_t *ibpkey);
+extern uint64_t
+semanage_ibpkey_get_subnet_prefix_bytes(const semanage_ibpkey_t *ibpkey);
 
 extern int semanage_ibpkey_set_subnet_prefix(semanage_handle_t *handle,
 					     semanage_ibpkey_t *ibpkey,
@@ -52,9 +53,11 @@ extern int semanage_ibpkey_get_high(const semanage_ibpkey_t *ibpkey);
 
 extern void semanage_ibpkey_set_pkey(semanage_ibpkey_t *ibpkey, int pkey_num);
 
-extern void semanage_ibpkey_set_range(semanage_ibpkey_t *ibpkey, int low, int high);
+extern void semanage_ibpkey_set_range(semanage_ibpkey_t *ibpkey, int low,
+				      int high);
 
-extern semanage_context_t *semanage_ibpkey_get_con(const semanage_ibpkey_t *ibpkey);
+extern semanage_context_t *
+semanage_ibpkey_get_con(const semanage_ibpkey_t *ibpkey);
 
 extern int semanage_ibpkey_set_con(semanage_handle_t *handle,
 				   semanage_ibpkey_t *ibpkey,

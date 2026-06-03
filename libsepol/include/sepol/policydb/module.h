@@ -47,7 +47,7 @@ struct sepol_module_package {
 	size_t netfilter_contexts_len;
 };
 
-extern int sepol_module_package_init(sepol_module_package_t * p);
+extern int sepol_module_package_init(sepol_module_package_t *p);
 
 #ifdef __cplusplus
 }

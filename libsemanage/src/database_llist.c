@@ -13,9 +13,8 @@ typedef struct dbase_llist dbase_t;
 #include "handle.h"
 #include "database_llist.h"
 
-int dbase_llist_needs_resync(semanage_handle_t * handle, dbase_llist_t * dbase)
+int dbase_llist_needs_resync(semanage_handle_t *handle, dbase_llist_t *dbase)
 {
-
 	int cache_serial;
 
 	if (dbase->cache_serial < 0)
@@ -34,12 +33,11 @@ int dbase_llist_needs_resync(semanage_handle_t * handle, dbase_llist_t * dbase)
 }
 
 /* Helper for adding records to the cache */
-int dbase_llist_cache_prepend(semanage_handle_t * handle,
-			      dbase_llist_t * dbase, const record_t * data)
+int dbase_llist_cache_prepend(semanage_handle_t *handle, dbase_llist_t *dbase,
+			      const record_t *data)
 {
-
 	/* Initialize */
-	cache_entry_t *entry = (cache_entry_t *) malloc(sizeof(cache_entry_t));
+	cache_entry_t *entry = (cache_entry_t *)malloc(sizeof(cache_entry_t));
 	if (entry == NULL)
 		goto omem;
 
@@ -58,18 +56,17 @@ int dbase_llist_cache_prepend(semanage_handle_t * handle,
 	dbase->cache_sz++;
 	return STATUS_SUCCESS;
 
-      omem:
+omem:
 	ERR(handle, "out of memory");
 
-      err:
+err:
 	ERR(handle, "could not cache record");
 	free(entry);
 	return STATUS_ERR;
 }
 
-void dbase_llist_drop_cache(dbase_llist_t * dbase)
+void dbase_llist_drop_cache(dbase_llist_t *dbase)
 {
-
 	if (dbase->cache_serial < 0)
 		return;
 
@@ -85,9 +82,8 @@ void dbase_llist_drop_cache(dbase_llist_t * dbase)
 	dbase->modified = 0;
 }
 
-int dbase_llist_set_serial(semanage_handle_t * handle, dbase_llist_t * dbase)
+int dbase_llist_set_serial(semanage_handle_t *handle, dbase_llist_t *dbase)
 {
-
 	int cache_serial = handle->funcs->get_serial(handle);
 	if (cache_serial < 0) {
 		ERR(handle, "could not update cache serial");
@@ -99,12 +95,11 @@ int dbase_llist_set_serial(semanage_handle_t * handle, dbase_llist_t * dbase)
 }
 
 /* Helper for finding records in the cache */
-static int dbase_llist_cache_locate(semanage_handle_t * handle,
-				    dbase_llist_t * dbase,
-				    const record_key_t * key,
-				    cache_entry_t ** entry)
+static int dbase_llist_cache_locate(semanage_handle_t *handle,
+				    dbase_llist_t *dbase,
+				    const record_key_t *key,
+				    cache_entry_t **entry)
 {
-
 	cache_entry_t *ptr;
 
 	/* Implemented in parent */
@@ -120,16 +115,14 @@ static int dbase_llist_cache_locate(semanage_handle_t * handle,
 
 	return STATUS_NODATA;
 
-      err:
+err:
 	ERR(handle, "could not complete cache lookup");
 	return STATUS_ERR;
 }
 
-int dbase_llist_exists(semanage_handle_t * handle,
-		       dbase_llist_t * dbase,
-		       const record_key_t * key, int *response)
+int dbase_llist_exists(semanage_handle_t *handle, dbase_llist_t *dbase,
+		       const record_key_t *key, int *response)
 {
-
 	cache_entry_t *entry;
 	int status;
 
@@ -140,33 +133,29 @@ int dbase_llist_exists(semanage_handle_t * handle,
 	*response = (status != STATUS_NODATA);
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not check if record exists");
 	return STATUS_ERR;
 }
 
-int dbase_llist_add(semanage_handle_t * handle,
-		    dbase_llist_t * dbase,
-		    const record_key_t * key __attribute__ ((unused)),
-			 const record_t * data)
+int dbase_llist_add(semanage_handle_t *handle, dbase_llist_t *dbase,
+		    const record_key_t *key __attribute__((unused)),
+		    const record_t *data)
 {
-
 	if (dbase_llist_cache_prepend(handle, dbase, data) < 0)
 		goto err;
 
 	dbase->modified = 1;
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not add record to the database");
 	return STATUS_ERR;
 }
 
-int dbase_llist_set(semanage_handle_t * handle,
-		    dbase_llist_t * dbase,
-		    const record_key_t * key, const record_t * data)
+int dbase_llist_set(semanage_handle_t *handle, dbase_llist_t *dbase,
+		    const record_key_t *key, const record_t *data)
 {
-
 	cache_entry_t *entry;
 	int status;
 
@@ -185,16 +174,14 @@ int dbase_llist_set(semanage_handle_t * handle,
 	dbase->modified = 1;
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not set record value");
 	return STATUS_ERR;
 }
 
-int dbase_llist_modify(semanage_handle_t * handle,
-		       dbase_llist_t * dbase,
-		       const record_key_t * key, const record_t * data)
+int dbase_llist_modify(semanage_handle_t *handle, dbase_llist_t *dbase,
+		       const record_key_t *key, const record_t *data)
 {
-
 	cache_entry_t *entry;
 	int status;
 
@@ -213,24 +200,21 @@ int dbase_llist_modify(semanage_handle_t * handle,
 	dbase->modified = 1;
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not modify record value");
 	return STATUS_ERR;
 }
 
- int dbase_llist_count(semanage_handle_t * handle __attribute__ ((unused)),
-			     dbase_llist_t * dbase, unsigned int *response)
+int dbase_llist_count(semanage_handle_t *handle __attribute__((unused)),
+		      dbase_llist_t *dbase, unsigned int *response)
 {
-
 	*response = dbase->cache_sz;
 	return STATUS_SUCCESS;
 }
 
-int dbase_llist_query(semanage_handle_t * handle,
-		      dbase_llist_t * dbase,
-		      const record_key_t * key, record_t ** response)
+int dbase_llist_query(semanage_handle_t *handle, dbase_llist_t *dbase,
+		      const record_key_t *key, record_t **response)
 {
-
 	cache_entry_t *entry;
 	int status;
 
@@ -243,22 +227,19 @@ int dbase_llist_query(semanage_handle_t * handle,
 
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not query record value");
 	return STATUS_ERR;
 }
 
-int dbase_llist_iterate(semanage_handle_t * handle,
-			dbase_llist_t * dbase,
-			int (*fn) (const record_t * record,
-				   void *fn_arg), void *arg)
+int dbase_llist_iterate(semanage_handle_t *handle, dbase_llist_t *dbase,
+			int (*fn)(const record_t *record, void *fn_arg),
+			void *arg)
 {
-
 	int rc;
 	cache_entry_t *ptr;
 
 	for (ptr = dbase->cache_tail; ptr != NULL; ptr = ptr->prev) {
-
 		rc = fn(ptr->data, arg);
 		if (rc < 0)
 			goto err;
@@ -269,15 +250,14 @@ int dbase_llist_iterate(semanage_handle_t * handle,
 
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not iterate over records");
 	return STATUS_ERR;
 }
 
-int dbase_llist_del(semanage_handle_t * handle __attribute__ ((unused)),
-		    dbase_llist_t * dbase, const record_key_t * key)
+int dbase_llist_del(semanage_handle_t *handle __attribute__((unused)),
+		    dbase_llist_t *dbase, const record_key_t *key)
 {
-
 	cache_entry_t *ptr, *prev = NULL;
 
 	for (ptr = dbase->cache; ptr != NULL; ptr = ptr->next) {
@@ -304,9 +284,8 @@ int dbase_llist_del(semanage_handle_t * handle __attribute__ ((unused)),
 	return STATUS_SUCCESS;
 }
 
-int dbase_llist_clear(semanage_handle_t * handle, dbase_llist_t * dbase)
+int dbase_llist_clear(semanage_handle_t *handle, dbase_llist_t *dbase)
 {
-
 	int old_serial = dbase->cache_serial;
 
 	if (dbase_llist_set_serial(handle, dbase) < 0) {
@@ -331,11 +310,9 @@ int dbase_llist_clear(semanage_handle_t * handle, dbase_llist_t * dbase)
 	return STATUS_SUCCESS;
 }
 
-int dbase_llist_list(semanage_handle_t * handle,
-		     dbase_llist_t * dbase,
-		     record_t *** records, unsigned int *count)
+int dbase_llist_list(semanage_handle_t *handle, dbase_llist_t *dbase,
+		     record_t ***records, unsigned int *count)
 {
-
 	cache_entry_t *ptr;
 	record_t **tmp_records = NULL;
 	unsigned int tmp_count;
@@ -343,15 +320,14 @@ int dbase_llist_list(semanage_handle_t * handle,
 
 	tmp_count = dbase->cache_sz;
 	if (tmp_count > 0) {
-		tmp_records = (record_t **)
-		    calloc(tmp_count, sizeof(record_t *));
+		tmp_records =
+			(record_t **)calloc(tmp_count, sizeof(record_t *));
 
 		if (tmp_records == NULL)
 			goto omem;
 
 		for (ptr = dbase->cache_tail; ptr != NULL; ptr = ptr->prev) {
-			if (dbase->rtable->clone(handle,
-						 ptr->data,
+			if (dbase->rtable->clone(handle, ptr->data,
 						 &tmp_records[i]) < 0)
 				goto err;
 			i++;
@@ -362,10 +338,10 @@ int dbase_llist_list(semanage_handle_t * handle,
 	*count = tmp_count;
 	return STATUS_SUCCESS;
 
-      omem:
+omem:
 	ERR(handle, "out of memory");
 
-      err:
+err:
 	if (tmp_records) {
 		for (; i >= 0; i--)
 			dbase->rtable->free(tmp_records[i]);

@@ -30,21 +30,21 @@
 #endif
 
 /* callback pointers */
-void *(*avc_func_malloc) (size_t) = NULL;
-void (*avc_func_free) (void *) = NULL;
+void *(*avc_func_malloc)(size_t) = NULL;
+void (*avc_func_free)(void *) = NULL;
 
-void (*avc_func_log) (const char *, ...) = NULL;
-void (*avc_func_audit) (void *, security_class_t, char *, size_t) = NULL;
+void (*avc_func_log)(const char *, ...) = NULL;
+void (*avc_func_audit)(void *, security_class_t, char *, size_t) = NULL;
 
 int avc_using_threads = 0;
 int avc_app_main_loop = 0;
-void *(*avc_func_create_thread) (void (*)(void)) = NULL;
-void (*avc_func_stop_thread) (void *) = NULL;
+void *(*avc_func_create_thread)(void (*)(void)) = NULL;
+void (*avc_func_stop_thread)(void *) = NULL;
 
-void *(*avc_func_alloc_lock) (void) = NULL;
-void (*avc_func_get_lock) (void *) = NULL;
-void (*avc_func_release_lock) (void *) = NULL;
-void (*avc_func_free_lock) (void *) = NULL;
+void *(*avc_func_alloc_lock)(void) = NULL;
+void (*avc_func_get_lock)(void *) = NULL;
+void (*avc_func_release_lock)(void *) = NULL;
+void (*avc_func_free_lock)(void *) = NULL;
 
 /* message prefix string and avc enforcing mode */
 char avc_prefix[AVC_PREFIX_SIZE] = "uavc";
@@ -58,15 +58,15 @@ int avc_process_setenforce(int enforcing)
 	int rc = 0;
 
 	avc_log(SELINUX_SETENFORCE,
-		"%s:  op=setenforce lsm=selinux enforcing=%d res=1",
-		avc_prefix, enforcing);
+		"%s:  op=setenforce lsm=selinux enforcing=%d res=1", avc_prefix,
+		enforcing);
 	if (avc_setenforce)
 		goto out;
 	avc_enforcing = enforcing;
 	if (avc_enforcing && (rc = avc_ss_reset(0)) < 0) {
 		avc_log(SELINUX_ERROR,
-			"%s:  cache reset returned %d (errno %d)\n",
-			avc_prefix, rc, errno);
+			"%s:  cache reset returned %d (errno %d)\n", avc_prefix,
+			rc, errno);
 		return rc;
 	}
 
@@ -80,13 +80,13 @@ int avc_process_policyload(uint32_t seqno)
 	int rc = 0;
 
 	avc_log(SELINUX_POLICYLOAD,
-		"%s:  op=load_policy lsm=selinux seqno=%u res=1",
-		avc_prefix, seqno);
+		"%s:  op=load_policy lsm=selinux seqno=%u res=1", avc_prefix,
+		seqno);
 	rc = avc_ss_reset(seqno);
 	if (rc < 0) {
 		avc_log(SELINUX_ERROR,
-			"%s:  cache reset returned %d (errno %d)\n",
-			avc_prefix, rc, errno);
+			"%s:  cache reset returned %d (errno %d)\n", avc_prefix,
+			rc, errno);
 		return rc;
 	}
 
@@ -108,7 +108,7 @@ int avc_netlink_open(int blocking)
 		rc = fd;
 		goto out;
 	}
-	
+
 	if (!blocking && fcntl(fd, F_SETFL, O_NONBLOCK)) {
 		close(fd);
 		fd = -1;
@@ -128,7 +128,7 @@ int avc_netlink_open(int blocking)
 		rc = -1;
 		goto out;
 	}
-      out:
+out:
 	return rc;
 }
 
@@ -154,8 +154,7 @@ static int avc_netlink_receive(void *buf, unsigned buflen, int blocking)
 	if (rc == 0 && !blocking) {
 		errno = EWOULDBLOCK;
 		return -1;
-	}
-	else if (rc < 1) {
+	} else if (rc < 1) {
 		avc_log(SELINUX_ERROR, "%s:  netlink poll: error %d\n",
 			avc_prefix, errno);
 		return rc;
@@ -204,7 +203,7 @@ static int avc_netlink_process(void *buf)
 	struct nlmsghdr *nlh = (struct nlmsghdr *)buf;
 
 	switch (nlh->nlmsg_type) {
-	case NLMSG_ERROR:{
+	case NLMSG_ERROR: {
 		struct nlmsgerr *err = NLMSG_DATA(nlh);
 
 		/* Netlink ack */
@@ -212,12 +211,12 @@ static int avc_netlink_process(void *buf)
 			break;
 
 		errno = -err->error;
-		avc_log(SELINUX_ERROR,
-			"%s:  netlink error: %d\n", avc_prefix, errno);
+		avc_log(SELINUX_ERROR, "%s:  netlink error: %d\n", avc_prefix,
+			errno);
 		return -1;
 	}
 
-	case SELNL_MSG_SETENFORCE:{
+	case SELNL_MSG_SETENFORCE: {
 		struct selnl_msg_setenforce *msg = NLMSG_DATA(nlh);
 		rc = avc_process_setenforce(!!msg->val);
 		if (rc < 0)
@@ -225,7 +224,7 @@ static int avc_netlink_process(void *buf)
 		break;
 	}
 
-	case SELNL_MSG_POLICYLOAD:{
+	case SELNL_MSG_POLICYLOAD: {
 		struct selnl_msg_policyload *msg = NLMSG_DATA(nlh);
 		rc = avc_process_policyload(msg->seqno);
 		if (rc < 0)
@@ -244,7 +243,7 @@ static int avc_netlink_process(void *buf)
 int avc_netlink_check_nb(void)
 {
 	int rc;
-	char buf[1024] __attribute__ ((aligned));
+	char buf[1024] __attribute__((aligned));
 
 	while (1) {
 		errno = 0;
@@ -270,7 +269,7 @@ int avc_netlink_check_nb(void)
 void avc_netlink_loop(void)
 {
 	int rc;
-	char buf[1024] __attribute__ ((aligned));
+	char buf[1024] __attribute__((aligned));
 
 	while (1) {
 		errno = 0;
@@ -311,12 +310,12 @@ int avc_netlink_acquire_fd(void)
 		}
 	}
 
-    avc_app_main_loop = 1;
+	avc_app_main_loop = 1;
 
-    return fd;
+	return fd;
 }
 
 void avc_netlink_release_fd(void)
 {
-    avc_app_main_loop = 0;
+	avc_app_main_loop = 0;
 }

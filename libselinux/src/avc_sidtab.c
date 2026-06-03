@@ -14,8 +14,7 @@
 #include "avc_sidtab.h"
 #include "avc_internal.h"
 
-ignore_unsigned_overflow_
-static inline unsigned sidtab_hash(const char * key)
+ignore_unsigned_overflow_ static inline unsigned sidtab_hash(const char *key)
 {
 	unsigned int hash = 5381;
 	unsigned char c;
@@ -30,8 +29,8 @@ int sidtab_init(struct sidtab *s)
 {
 	int i, rc = 0;
 
-	s->htable = (struct sidtab_node **)avc_malloc
-	    (sizeof(struct sidtab_node *) * SIDTAB_SIZE);
+	s->htable = (struct sidtab_node **)avc_malloc(
+		sizeof(struct sidtab_node *) * SIDTAB_SIZE);
 
 	if (!s->htable) {
 		rc = -1;
@@ -40,16 +39,15 @@ int sidtab_init(struct sidtab *s)
 	for (i = 0; i < SIDTAB_SIZE; i++)
 		s->htable[i] = NULL;
 	s->nel = 0;
-      out:
+out:
 	return rc;
 }
 
-static struct sidtab_node *
-sidtab_insert(struct sidtab *s, const char * ctx)
+static struct sidtab_node *sidtab_insert(struct sidtab *s, const char *ctx)
 {
 	unsigned hvalue;
 	struct sidtab_node *newnode;
-	char * newctx;
+	char *newctx;
 
 	if (s->nel >= UINT_MAX - 1)
 		return NULL;
@@ -71,8 +69,8 @@ sidtab_insert(struct sidtab *s, const char * ctx)
 	return newnode;
 }
 
-const struct security_id *
-sidtab_context_lookup(const struct sidtab *s, const char *ctx)
+const struct security_id *sidtab_context_lookup(const struct sidtab *s,
+						const char *ctx)
 {
 	unsigned hvalue;
 	const struct sidtab_node *cur;
@@ -89,9 +87,7 @@ sidtab_context_lookup(const struct sidtab *s, const char *ctx)
 	return &cur->sid_s;
 }
 
-int
-sidtab_context_to_sid(struct sidtab *s,
-		      const char * ctx, security_id_t * sid)
+int sidtab_context_to_sid(struct sidtab *s, const char *ctx, security_id_t *sid)
 {
 	struct sidtab_node *new;
 	const struct security_id *lookup_sid = sidtab_context_lookup(s, ctx);
@@ -136,8 +132,8 @@ void sidtab_sid_stats(const struct sidtab *s, char *buf, size_t buflen)
 
 	snprintf(buf, buflen,
 		 "%s:  %u SID entries and %zu/%d buckets used, longest "
-		 "chain length %zu\n", avc_prefix, s->nel, slots_used,
-		 SIDTAB_SIZE, max_chain_len);
+		 "chain length %zu\n",
+		 avc_prefix, s->nel, slots_used, SIDTAB_SIZE, max_chain_len);
 }
 
 void sidtab_destroy(struct sidtab *s)

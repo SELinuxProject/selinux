@@ -53,11 +53,12 @@
 #include "cil_write_ast.h"
 
 const int cil_sym_sizes[CIL_SYM_ARRAY_NUM][CIL_SYM_NUM] = {
-	{64, 64, 64, 1 << 13, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64},
-	{8, 8, 8, 32, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+	{ 64, 64, 64, 1 << 13, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+	  64, 64, 64 },
+	{ 8, 8, 8, 32, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+	{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+	{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+	{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
 };
 
 char *CIL_KEY_CONS_T1;
@@ -521,7 +522,7 @@ void cil_db_destroy(struct cil_db **db)
 	free((*db)->val_to_user);
 
 	free(*db);
-	*db = NULL;	
+	*db = NULL;
 }
 
 void cil_root_init(struct cil_root **root)
@@ -603,7 +604,7 @@ int cil_compile(struct cil_db *db)
 
 	cil_log(CIL_INFO, "Compile post process\n");
 	rc = cil_post_process(db);
-	if (rc != SEPOL_OK ) {
+	if (rc != SEPOL_OK) {
 		cil_log(CIL_ERR, "Post process failed\n");
 		goto exit;
 	}
@@ -738,7 +739,7 @@ int cil_write_post_ast(FILE *out, cil_db_t *db)
 
 	cil_log(CIL_INFO, "Compile post process\n");
 	rc = cil_post_process(db);
-	if (rc != SEPOL_OK ) {
+	if (rc != SEPOL_OK) {
 		cil_log(CIL_ERR, "Post process failed\n");
 		goto exit;
 	}
@@ -781,7 +782,7 @@ void cil_destroy_data(void **data, enum cil_flavor flavor)
 		return;
 	}
 
-	switch(flavor) {
+	switch (flavor) {
 	case CIL_NONE:
 		break;
 	case CIL_ROOT:
@@ -1102,13 +1103,14 @@ void cil_destroy_data(void **data, enum cil_flavor flavor)
 	*data = NULL;
 }
 
-int cil_flavor_to_symtab_index(enum cil_flavor flavor, enum cil_sym_index *sym_index)
+int cil_flavor_to_symtab_index(enum cil_flavor flavor,
+			       enum cil_sym_index *sym_index)
 {
 	if (flavor < CIL_MIN_DECLARATIVE) {
 		return SEPOL_ERR;
 	}
 
-	switch(flavor) {
+	switch (flavor) {
 	case CIL_BLOCK:
 		*sym_index = CIL_SYM_BLOCKS;
 		break;
@@ -1194,7 +1196,7 @@ int cil_flavor_to_symtab_index(enum cil_flavor flavor, enum cil_sym_index *sym_i
 	return SEPOL_OK;
 }
 
-const char * cil_node_to_string(struct cil_tree_node *node)
+const char *cil_node_to_string(struct cil_tree_node *node)
 {
 	switch (node->flavor) {
 	case CIL_NONE:
@@ -1238,7 +1240,7 @@ const char * cil_node_to_string(struct cil_tree_node *node)
 	case CIL_TUNABLEIF:
 		return CIL_KEY_TUNABLEIF;
 	case CIL_CONDBLOCK:
-		switch (((struct cil_condblock*)node->data)->flavor) {
+		switch (((struct cil_condblock *)node->data)->flavor) {
 		case CIL_CONDTRUE:
 			return CIL_KEY_CONDTRUE;
 		case CIL_CONDFALSE:
@@ -1530,7 +1532,9 @@ int cil_userprefixes_to_string(struct cil_db *db, char **out, size_t *size)
 	cil_list_for_each(curr, db->userprefixes) {
 		userprefix = curr->data;
 		user = userprefix->user;
-		str_len += strlen("user ") + strlen(user->datum.fqn) + strlen(" prefix ") + strlen(userprefix->prefix_str) + 2;
+		str_len += strlen("user ") + strlen(user->datum.fqn) +
+			   strlen(" prefix ") + strlen(userprefix->prefix_str) +
+			   2;
 	}
 
 	*size = str_len * sizeof(char);
@@ -1542,8 +1546,8 @@ int cil_userprefixes_to_string(struct cil_db *db, char **out, size_t *size)
 		userprefix = curr->data;
 		user = userprefix->user;
 
-		buf_pos = snprintf(str_tmp, str_len, "user %s prefix %s;\n", user->datum.fqn,
-									userprefix->prefix_str);
+		buf_pos = snprintf(str_tmp, str_len, "user %s prefix %s;\n",
+				   user->datum.fqn, userprefix->prefix_str);
 		if (buf_pos < 0) {
 			free(str_tmp);
 			*size = 0;
@@ -1557,15 +1561,15 @@ int cil_userprefixes_to_string(struct cil_db *db, char **out, size_t *size)
 	rc = SEPOL_OK;
 exit:
 	return rc;
-
 }
 
-static int cil_cats_to_ebitmap(struct cil_cats *cats, struct ebitmap* cats_ebitmap)
+static int cil_cats_to_ebitmap(struct cil_cats *cats,
+			       struct ebitmap *cats_ebitmap)
 {
 	int rc = SEPOL_ERR;
 	struct cil_list_item *i;
 	struct cil_list_item *j;
-	struct cil_cat* cat;
+	struct cil_cat *cat;
 	struct cil_catset *cs;
 	struct cil_tree_node *node;
 
@@ -1577,16 +1581,17 @@ static int cil_cats_to_ebitmap(struct cil_cats *cats, struct ebitmap* cats_ebitm
 	cil_list_for_each(i, cats->datum_expr) {
 		node = NODE(i->data);
 		if (node->flavor == CIL_CATSET) {
-			cs = (struct cil_catset*)i->data;
+			cs = (struct cil_catset *)i->data;
 			cil_list_for_each(j, cs->cats->datum_expr) {
-				cat = (struct cil_cat*)j->data;
-				rc = ebitmap_set_bit(cats_ebitmap, cat->value, 1);
+				cat = (struct cil_cat *)j->data;
+				rc = ebitmap_set_bit(cats_ebitmap, cat->value,
+						     1);
 				if (rc != SEPOL_OK) {
 					goto exit;
 				}
 			}
 		} else {
-			cat = (struct cil_cat*)i->data;
+			cat = (struct cil_cat *)i->data;
 			rc = ebitmap_set_bit(cats_ebitmap, cat->value, 1);
 			if (rc != SEPOL_OK) {
 				goto exit;
@@ -1657,11 +1662,14 @@ static int __cil_level_strlen(struct cil_level *lvl)
 				str2 = cat->datum.fqn;
 			} else {
 				if (first == last) {
-					str_len += strlen(str1) + strlen(cat->datum.fqn) + 1;
+					str_len += strlen(str1) +
+						   strlen(cat->datum.fqn) + 1;
 				} else if (last == first + 1) {
-					str_len += strlen(str1) + strlen(str2) + strlen(cat->datum.fqn) + 2;
+					str_len += strlen(str1) + strlen(str2) +
+						   strlen(cat->datum.fqn) + 2;
 				} else {
-					str_len += strlen(str1) + strlen(str2) + strlen(cat->datum.fqn) + 2;
+					str_len += strlen(str1) + strlen(str2) +
+						   strlen(cat->datum.fqn) + 2;
 				}
 				first = -1;
 				last = -1;
@@ -1713,13 +1721,18 @@ static int __cil_level_to_string(struct cil_level *lvl, char *out)
 				str2 = cat->datum.fqn;
 			} else {
 				if (first == last) {
-					buf_pos = sprintf(str_tmp, "%s,%s", str1, cat->datum.fqn);
+					buf_pos = sprintf(str_tmp, "%s,%s",
+							  str1, cat->datum.fqn);
 					str_tmp += buf_pos;
 				} else if (last == first + 1) {
-					buf_pos = sprintf(str_tmp, "%s,%s,%s", str1, str2, cat->datum.fqn);
+					buf_pos = sprintf(str_tmp, "%s,%s,%s",
+							  str1, str2,
+							  cat->datum.fqn);
 					str_tmp += buf_pos;
 				} else {
-					buf_pos = sprintf(str_tmp, "%s.%s,%s",str1, str2, cat->datum.fqn);
+					buf_pos = sprintf(str_tmp, "%s.%s,%s",
+							  str1, str2,
+							  cat->datum.fqn);
 					str_tmp += buf_pos;
 				}
 				first = -1;
@@ -1738,7 +1751,7 @@ static int __cil_level_to_string(struct cil_level *lvl, char *out)
 				buf_pos = sprintf(str_tmp, "%s,%s", str1, str2);
 				str_tmp += buf_pos;
 			} else {
-				buf_pos = sprintf(str_tmp, "%s.%s",str1, str2);
+				buf_pos = sprintf(str_tmp, "%s.%s", str1, str2);
 				str_tmp += buf_pos;
 			}
 		}
@@ -1764,25 +1777,28 @@ int cil_selinuxusers_to_string(struct cil_db *db, char **out, size_t *size)
 		struct cil_selinuxuser *selinuxuser = curr->data;
 		struct cil_user *user = selinuxuser->user;
 
-		str_len += strlen(selinuxuser->name_str) + strlen(user->datum.fqn) + 1;
+		str_len += strlen(selinuxuser->name_str) +
+			   strlen(user->datum.fqn) + 1;
 
 		if (db->mls == CIL_TRUE) {
 			struct cil_levelrange *range = selinuxuser->range;
-			str_len += __cil_level_strlen(range->low) + __cil_level_strlen(range->high) + 2;
+			str_len += __cil_level_strlen(range->low) +
+				   __cil_level_strlen(range->high) + 2;
 		}
 
 		str_len++;
 	}
 
 	*size = str_len * sizeof(char);
-	str_tmp = cil_malloc(*size+1);
+	str_tmp = cil_malloc(*size + 1);
 	*out = str_tmp;
 
-	for(curr = db->selinuxusers->head; curr != NULL; curr = curr->next) {
+	for (curr = db->selinuxusers->head; curr != NULL; curr = curr->next) {
 		struct cil_selinuxuser *selinuxuser = curr->data;
 		struct cil_user *user = selinuxuser->user;
 
-		buf_pos = sprintf(str_tmp, "%s:%s", selinuxuser->name_str, user->datum.fqn);
+		buf_pos = sprintf(str_tmp, "%s:%s", selinuxuser->name_str,
+				  user->datum.fqn);
 		str_tmp += buf_pos;
 
 		if (db->mls == CIL_TRUE) {
@@ -1815,7 +1831,8 @@ int cil_filecons_to_string(struct cil_db *db, char **out, size_t *size)
 	for (i = 0; i < filecons->count; i++) {
 		struct cil_filecon *filecon = filecons->array[i];
 		struct cil_context *ctx = filecon->context;
-		char *path_str = filecon->path ? DATUM(filecon->path)->fqn : filecon->path_str;
+		char *path_str = filecon->path ? DATUM(filecon->path)->fqn :
+						 filecon->path_str;
 		str_len += strlen(path_str);
 
 		if (filecon->type != CIL_FILECON_ANY) {
@@ -1829,14 +1846,22 @@ int cil_filecons_to_string(struct cil_db *db, char **out, size_t *size)
 			struct cil_role *role = ctx->role;
 			struct cil_type *type = ctx->type;
 
-			str_len += (strlen(user->datum.fqn) + strlen(role->datum.fqn) + strlen(type->datum.fqn) + 3);
+			str_len += (strlen(user->datum.fqn) +
+				    strlen(role->datum.fqn) +
+				    strlen(type->datum.fqn) + 3);
 
 			if (db->mls == CIL_TRUE) {
 				struct cil_levelrange *range = ctx->range;
 				if (cil_level_equals(range->low, range->high)) {
-					str_len += __cil_level_strlen(range->low) + 1;
+					str_len +=
+						__cil_level_strlen(range->low) +
+						1;
 				} else {
-					str_len += __cil_level_strlen(range->low) + __cil_level_strlen(range->high) + 2;
+					str_len +=
+						__cil_level_strlen(range->low) +
+						__cil_level_strlen(
+							range->high) +
+						2;
 				}
 			}
 		} else {
@@ -1847,18 +1872,19 @@ int cil_filecons_to_string(struct cil_db *db, char **out, size_t *size)
 	}
 
 	*size = str_len * sizeof(char);
-	str_tmp = cil_malloc(*size+1);
+	str_tmp = cil_malloc(*size + 1);
 	*out = str_tmp;
 
 	for (i = 0; i < filecons->count; i++) {
 		struct cil_filecon *filecon = filecons->array[i];
 		struct cil_context *ctx = filecon->context;
 		const char *str_type = NULL;
-		char *path_str = filecon->path ? DATUM(filecon->path)->fqn : filecon->path_str;
+		char *path_str = filecon->path ? DATUM(filecon->path)->fqn :
+						 filecon->path_str;
 		buf_pos = sprintf(str_tmp, "%s", path_str);
 		str_tmp += buf_pos;
 
-		switch(filecon->type) {
+		switch (filecon->type) {
 		case CIL_FILECON_ANY:
 			str_type = "";
 			break;
@@ -1895,21 +1921,25 @@ int cil_filecons_to_string(struct cil_db *db, char **out, size_t *size)
 			struct cil_role *role = ctx->role;
 			struct cil_type *type = ctx->type;
 
-			buf_pos = sprintf(str_tmp, "\t%s:%s:%s", user->datum.fqn, role->datum.fqn,
-							  type->datum.fqn);
+			buf_pos = sprintf(str_tmp, "\t%s:%s:%s",
+					  user->datum.fqn, role->datum.fqn,
+					  type->datum.fqn);
 			str_tmp += buf_pos;
 
 			if (db->mls == CIL_TRUE) {
 				struct cil_levelrange *range = ctx->range;
 				buf_pos = sprintf(str_tmp, ":");
 				str_tmp += buf_pos;
-				buf_pos = __cil_level_to_string(range->low, str_tmp);
+				buf_pos = __cil_level_to_string(range->low,
+								str_tmp);
 				str_tmp += buf_pos;
 
-				if (!cil_level_equals(range->low, range->high)) {
+				if (!cil_level_equals(range->low,
+						      range->high)) {
 					buf_pos = sprintf(str_tmp, "-");
 					str_tmp += buf_pos;
-					buf_pos = __cil_level_to_string(range->high, str_tmp);
+					buf_pos = __cil_level_to_string(
+						range->high, str_tmp);
 					str_tmp += buf_pos;
 				}
 			}
@@ -1935,7 +1965,8 @@ void cil_set_disable_neverallow(struct cil_db *db, int disable_neverallow)
 	db->disable_neverallow = disable_neverallow;
 }
 
-void cil_set_attrs_expand_generated(struct cil_db *db, int attrs_expand_generated)
+void cil_set_attrs_expand_generated(struct cil_db *db,
+				    int attrs_expand_generated)
 {
 	db->attrs_expand_generated = attrs_expand_generated;
 }
@@ -1955,14 +1986,15 @@ int cil_set_handle_unknown(struct cil_db *db, int handle_unknown)
 	int rc = 0;
 
 	switch (handle_unknown) {
-		case SEPOL_DENY_UNKNOWN:
-		case SEPOL_REJECT_UNKNOWN:
-		case SEPOL_ALLOW_UNKNOWN:
-			db->handle_unknown = handle_unknown;
-			break;
-		default:
-			cil_log(CIL_ERR, "Unknown value for handle-unknown: %i\n", handle_unknown);
-			rc = -1;
+	case SEPOL_DENY_UNKNOWN:
+	case SEPOL_REJECT_UNKNOWN:
+	case SEPOL_ALLOW_UNKNOWN:
+		db->handle_unknown = handle_unknown;
+		break;
+	default:
+		cil_log(CIL_ERR, "Unknown value for handle-unknown: %i\n",
+			handle_unknown);
+		rc = -1;
 	}
 
 	return rc;
@@ -1993,7 +2025,8 @@ void cil_set_policy_version(struct cil_db *db, int policy_version)
 	db->policy_version = policy_version;
 }
 
-void cil_symtab_array_init(symtab_t symtab[], const int symtab_sizes[CIL_SYM_NUM])
+void cil_symtab_array_init(symtab_t symtab[],
+			   const int symtab_sizes[CIL_SYM_NUM])
 {
 	uint32_t i = 0;
 	for (i = 0; i < CIL_SYM_NUM; i++) {
@@ -2014,21 +2047,26 @@ void cil_destroy_ast_symtabs(struct cil_tree_node *current)
 	while (current) {
 		switch (current->flavor) {
 		case CIL_BLOCK:
-			cil_symtab_array_destroy(((struct cil_block*)current->data)->symtab);
+			cil_symtab_array_destroy(
+				((struct cil_block *)current->data)->symtab);
 			break;
 		case CIL_IN:
-			cil_symtab_array_destroy(((struct cil_in*)current->data)->symtab);
+			cil_symtab_array_destroy(
+				((struct cil_in *)current->data)->symtab);
 			break;
 		case CIL_CLASS:
 		case CIL_COMMON:
 		case CIL_MAP_CLASS:
-			cil_symtab_destroy(&((struct cil_class*)current->data)->perms);
+			cil_symtab_destroy(
+				&((struct cil_class *)current->data)->perms);
 			break;
 		case CIL_MACRO:
-			cil_symtab_array_destroy(((struct cil_macro*)current->data)->symtab);
+			cil_symtab_array_destroy(
+				((struct cil_macro *)current->data)->symtab);
 			break;
 		case CIL_CONDBLOCK:
-			cil_symtab_array_destroy(((struct cil_condblock*)current->data)->symtab);
+			cil_symtab_array_destroy(
+				((struct cil_condblock *)current->data)->symtab);
 			break;
 		default:
 			break;
@@ -2042,16 +2080,18 @@ void cil_destroy_ast_symtabs(struct cil_tree_node *current)
 	}
 }
 
-int cil_get_symtab(struct cil_tree_node *ast_node, symtab_t **symtab, enum cil_sym_index sym_index)
+int cil_get_symtab(struct cil_tree_node *ast_node, symtab_t **symtab,
+		   enum cil_sym_index sym_index)
 {
 	struct cil_tree_node *node = ast_node;
 	*symtab = NULL;
-	
+
 	if (sym_index == CIL_SYM_PERMS) {
 		/* Class statements are not blocks, so the passed node should be the class */
-		if (node->flavor == CIL_CLASS || node->flavor == CIL_MAP_CLASS ||
-			node->flavor == CIL_COMMON) {
-			*symtab = &((struct cil_class*)node->data)->perms;
+		if (node->flavor == CIL_CLASS ||
+		    node->flavor == CIL_MAP_CLASS ||
+		    node->flavor == CIL_COMMON) {
+			*symtab = &((struct cil_class *)node->data)->perms;
 			return SEPOL_OK;
 		}
 		goto exit;
@@ -2065,22 +2105,27 @@ int cil_get_symtab(struct cil_tree_node *ast_node, symtab_t **symtab, enum cil_s
 	while (node != NULL && *symtab == NULL) {
 		switch (node->flavor) {
 		case CIL_ROOT:
-			*symtab = &((struct cil_root *)node->data)->symtab[sym_index];
+			*symtab = &((struct cil_root *)node->data)
+					   ->symtab[sym_index];
 			break;
 		case CIL_BLOCK:
-			*symtab = &((struct cil_block*)node->data)->symtab[sym_index];
+			*symtab = &((struct cil_block *)node->data)
+					   ->symtab[sym_index];
 			break;
 		case CIL_MACRO:
-			*symtab = &((struct cil_macro*)node->data)->symtab[sym_index];
+			*symtab = &((struct cil_macro *)node->data)
+					   ->symtab[sym_index];
 			break;
 		case CIL_IN:
 			/* In blocks only exist before resolving the AST */
-			*symtab = &((struct cil_in*)node->data)->symtab[sym_index];
+			*symtab = &((struct cil_in *)node->data)
+					   ->symtab[sym_index];
 			break;
 		case CIL_CONDBLOCK: {
 			if (node->parent->flavor == CIL_TUNABLEIF) {
 				/* Cond blocks only exist before resolving the AST */
-				*symtab = &((struct cil_condblock*)node->data)->symtab[sym_index];
+				*symtab = &((struct cil_condblock *)node->data)
+						   ->symtab[sym_index];
 			} else if (node->parent->flavor == CIL_BOOLEANIF) {
 				node = node->parent->parent;
 			}
@@ -2099,7 +2144,7 @@ int cil_get_symtab(struct cil_tree_node *ast_node, symtab_t **symtab, enum cil_s
 
 exit:
 	cil_tree_log(ast_node, CIL_ERR, "Failed to get symtab from node");
-	return SEPOL_ERR;	
+	return SEPOL_ERR;
 }
 
 int cil_string_to_uint32(const char *string, uint32_t *value, int base)
@@ -2108,7 +2153,7 @@ int cil_string_to_uint32(const char *string, uint32_t *value, int base)
 	char *end = NULL;
 	int rc = SEPOL_ERR;
 
-	if (string == NULL || value  == NULL) {
+	if (string == NULL || value == NULL) {
 		goto exit;
 	}
 
@@ -2141,7 +2186,7 @@ int cil_string_to_uint64(const char *string, uint64_t *value, int base)
 	char *end = NULL;
 	int rc = SEPOL_ERR;
 
-	if (string == NULL || value  == NULL) {
+	if (string == NULL || value == NULL) {
 		goto exit;
 	}
 
@@ -2266,7 +2311,8 @@ void cil_block_init(struct cil_block **block)
 
 	cil_symtab_datum_init(&(*block)->datum);
 
-	cil_symtab_array_init((*block)->symtab, cil_sym_sizes[CIL_SYM_ARRAY_BLOCK]);
+	cil_symtab_array_init((*block)->symtab,
+			      cil_sym_sizes[CIL_SYM_ARRAY_BLOCK]);
 
 	(*block)->is_abstract = CIL_FALSE;
 
@@ -2484,7 +2530,7 @@ void cil_nametypetransition_init(struct cil_nametypetransition **nametypetrans)
 
 void cil_rangetransition_init(struct cil_rangetransition **rangetrans)
 {
-        *rangetrans = cil_malloc(sizeof(**rangetrans));
+	*rangetrans = cil_malloc(sizeof(**rangetrans));
 
 	(*rangetrans)->src_str = NULL;
 	(*rangetrans)->src = NULL;
@@ -2517,7 +2563,8 @@ void cil_condblock_init(struct cil_condblock **cb)
 	*cb = cil_malloc(sizeof(**cb));
 
 	(*cb)->flavor = CIL_NONE;
-	cil_symtab_array_init((*cb)->symtab, cil_sym_sizes[CIL_SYM_ARRAY_CONDBLOCK]);
+	cil_symtab_array_init((*cb)->symtab,
+			      cil_sym_sizes[CIL_SYM_ARRAY_CONDBLOCK]);
 }
 
 void cil_boolif_init(struct cil_booleanif **bif)
@@ -2694,7 +2741,7 @@ void cil_genfscon_init(struct cil_genfscon **genfscon)
 void cil_pirqcon_init(struct cil_pirqcon **pirqcon)
 {
 	*pirqcon = cil_malloc(sizeof(**pirqcon));
-	
+
 	(*pirqcon)->pirq = 0;
 	(*pirqcon)->context_str = NULL;
 	(*pirqcon)->context = NULL;
@@ -2945,7 +2992,8 @@ void cil_macro_init(struct cil_macro **macro)
 	*macro = cil_malloc(sizeof(**macro));
 
 	cil_symtab_datum_init(&(*macro)->datum);
-	cil_symtab_array_init((*macro)->symtab, cil_sym_sizes[CIL_SYM_ARRAY_MACRO]);
+	cil_symtab_array_init((*macro)->symtab,
+			      cil_sym_sizes[CIL_SYM_ARRAY_MACRO]);
 	(*macro)->params = NULL;
 }
 

@@ -26,12 +26,12 @@
 static unsigned char has_setrans;
 
 // Simple cache
-static __thread char * prev_t2r_trans = NULL;
-static __thread char * prev_t2r_raw = NULL;
-static __thread char * prev_r2t_trans = NULL;
-static __thread char * prev_r2t_raw = NULL;
+static __thread char *prev_t2r_trans = NULL;
+static __thread char *prev_t2r_raw = NULL;
+static __thread char *prev_r2t_trans = NULL;
+static __thread char *prev_r2t_raw = NULL;
 static __thread char *prev_r2c_trans = NULL;
-static __thread char * prev_r2c_raw = NULL;
+static __thread char *prev_r2c_raw = NULL;
 
 static pthread_once_t once = PTHREAD_ONCE_INIT;
 static pthread_key_t destructor_key;
@@ -50,7 +50,7 @@ static int setransd_open(void)
 	struct sockaddr_un addr;
 	int fd;
 #ifdef SOCK_CLOEXEC
-	fd = socket(PF_UNIX, SOCK_STREAM|SOCK_CLOEXEC, 0);
+	fd = socket(PF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0);
 	if (fd < 0 && errno == EINVAL)
 #endif
 	{
@@ -67,7 +67,8 @@ static int setransd_open(void)
 	memset(&addr, 0, sizeof(addr));
 	addr.sun_family = AF_UNIX;
 
-	if (strlcpy(addr.sun_path, SETRANS_UNIX_SOCKET, sizeof(addr.sun_path)) >= sizeof(addr.sun_path)) {
+	if (strlcpy(addr.sun_path, SETRANS_UNIX_SOCKET,
+		    sizeof(addr.sun_path)) >= sizeof(addr.sun_path)) {
 		close(fd);
 		errno = EOVERFLOW;
 		return -1;
@@ -82,8 +83,8 @@ static int setransd_open(void)
 }
 
 /* Returns: 0 on success, <0 on failure */
-static int
-send_request(int fd, uint32_t function, const char *data1, const char *data2)
+static int send_request(int fd, uint32_t function, const char *data1,
+			const char *data2)
 {
 	struct msghdr msgh;
 	struct iovec iov[5];
@@ -123,8 +124,9 @@ send_request(int fd, uint32_t function, const char *data1, const char *data2)
 	for (i = 0; i < sizeof(iov) / sizeof(iov[0]); i++)
 		expected += iov[i].iov_len;
 
-	while (((count = sendmsg(fd, &msgh, MSG_NOSIGNAL)) < 0)
-	       && (errno == EINTR)) ;
+	while (((count = sendmsg(fd, &msgh, MSG_NOSIGNAL)) < 0) &&
+	       (errno == EINTR))
+		;
 	if (count < 0)
 		return -1;
 	if (count != expected) {
@@ -136,8 +138,8 @@ send_request(int fd, uint32_t function, const char *data1, const char *data2)
 }
 
 /* Returns: 0 on success, <0 on failure */
-static int
-receive_response(int fd, uint32_t function, char **outdata, int32_t * ret_val)
+static int receive_response(int fd, uint32_t function, char **outdata,
+			    int32_t *ret_val)
 {
 	struct iovec resp_hdr[3];
 	uint32_t func;
@@ -158,7 +160,8 @@ receive_response(int fd, uint32_t function, char **outdata, int32_t * ret_val)
 	resp_hdr[2].iov_base = ret_val;
 	resp_hdr[2].iov_len = sizeof(*ret_val);
 
-	while (((count = readv(fd, resp_hdr, 3)) < 0) && (errno == EINTR)) ;
+	while (((count = readv(fd, resp_hdr, 3)) < 0) && (errno == EINTR))
+		;
 	if (count < 0) {
 		return -1;
 	}
@@ -181,8 +184,9 @@ receive_response(int fd, uint32_t function, char **outdata, int32_t * ret_val)
 	resp_data.iov_base = data;
 	resp_data.iov_len = data_size;
 
-	while (((count = readv(fd, &resp_data, 1))) < 0 && (errno == EINTR)) ;
-	if (count < 0 || (uint32_t) count != data_size ||
+	while (((count = readv(fd, &resp_data, 1))) < 0 && (errno == EINTR))
+		;
+	if (count < 0 || (uint32_t)count != data_size ||
 	    data[data_size - 1] != '\0') {
 		free(data);
 		if (count >= 0)
@@ -214,7 +218,7 @@ static int raw_to_trans_context(const char *raw, char **transp)
 		goto out;
 
 	ret = ret_val;
-      out:
+out:
 	close(fd);
 	return ret;
 }
@@ -239,7 +243,7 @@ static int trans_to_raw_context(const char *trans, char **rawp)
 		goto out;
 
 	ret = ret_val;
-      out:
+out:
 	close(fd);
 	return ret;
 }
@@ -268,7 +272,7 @@ out:
 	return ret;
 }
 
-static void setrans_thread_destructor(void __attribute__((unused)) *unused)
+static void setrans_thread_destructor(void __attribute__((unused)) * unused)
 {
 	free(prev_t2r_trans);
 	free(prev_t2r_raw);
@@ -280,7 +284,7 @@ static void setrans_thread_destructor(void __attribute__((unused)) *unused)
 
 void __attribute__((destructor)) setrans_lib_destructor(void);
 
-void  __attribute__((destructor)) setrans_lib_destructor(void)
+void __attribute__((destructor)) setrans_lib_destructor(void)
 {
 	if (!has_setrans)
 		return;
@@ -293,7 +297,9 @@ static inline void init_thread_destructor(void)
 	if (!has_setrans)
 		return;
 	if (destructor_initialized == 0) {
-		__selinux_setspecific(destructor_key, /* some valid address to please GCC */ &selinux_page_size);
+		__selinux_setspecific(
+			destructor_key,
+			/* some valid address to please GCC */ &selinux_page_size);
 		destructor_initialized = 1;
 	}
 }
@@ -303,12 +309,12 @@ static void init_context_translations(void)
 	has_setrans = (access(SETRANS_UNIX_SOCKET, F_OK) == 0);
 	if (!has_setrans)
 		return;
-	if (__selinux_key_create(&destructor_key, setrans_thread_destructor) == 0)
+	if (__selinux_key_create(&destructor_key, setrans_thread_destructor) ==
+	    0)
 		destructor_key_initialized = 1;
 }
 
-int selinux_trans_to_raw_context(const char * trans,
-				 char ** rawp)
+int selinux_trans_to_raw_context(const char *trans, char **rawp)
 {
 	if (!trans) {
 		*rawp = NULL;
@@ -343,13 +349,11 @@ int selinux_trans_to_raw_context(const char * trans,
 			}
 		}
 	}
-      out:
+out:
 	return *rawp ? 0 : -1;
 }
 
-
-int selinux_raw_to_trans_context(const char * raw,
-				 char ** transp)
+int selinux_raw_to_trans_context(const char *raw, char **transp)
 {
 	if (!raw) {
 		*transp = NULL;
@@ -359,7 +363,7 @@ int selinux_raw_to_trans_context(const char * raw,
 	__selinux_once(once, init_context_translations);
 	init_thread_destructor();
 
-	if (!has_setrans)  {
+	if (!has_setrans) {
 		*transp = strdup(raw);
 		goto out;
 	}
@@ -384,12 +388,11 @@ int selinux_raw_to_trans_context(const char * raw,
 			}
 		}
 	}
-      out:
+out:
 	return *transp ? 0 : -1;
 }
 
-
-int selinux_raw_context_to_color(const char * raw, char **transp)
+int selinux_raw_context_to_color(const char *raw, char **transp)
 {
 	if (!raw) {
 		*transp = NULL;
@@ -424,14 +427,13 @@ int selinux_raw_context_to_color(const char * raw, char **transp)
 			}
 		}
 	}
-      out:
+out:
 	return *transp ? 0 : -1;
 }
 
 #else /*DISABLE_SETRANS*/
 
-int selinux_trans_to_raw_context(const char * trans,
-				 char ** rawp)
+int selinux_trans_to_raw_context(const char *trans, char **rawp)
 {
 	if (!trans) {
 		*rawp = NULL;
@@ -439,20 +441,18 @@ int selinux_trans_to_raw_context(const char * trans,
 	}
 
 	*rawp = strdup(trans);
-	
+
 	return *rawp ? 0 : -1;
 }
 
-
-int selinux_raw_to_trans_context(const char * raw,
-				 char ** transp)
+int selinux_raw_to_trans_context(const char *raw, char **transp)
 {
 	if (!raw) {
 		*transp = NULL;
 		return 0;
 	}
 	*transp = strdup(raw);
-	
+
 	return *transp ? 0 : -1;
 }
 

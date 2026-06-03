@@ -41,11 +41,12 @@ struct cil_stack_item {
 	void *data;
 };
 
-#define cil_stack_for_each_starting_at(stack, start, pos, item) \
-	for (pos = start, item = cil_stack_peek_at(stack, pos); item != NULL; pos++, item = cil_stack_peek_at(stack, pos))
+#define cil_stack_for_each_starting_at(stack, start, pos, item)               \
+	for (pos = start, item = cil_stack_peek_at(stack, pos); item != NULL; \
+	     pos++, item = cil_stack_peek_at(stack, pos))
 
-#define cil_stack_for_each(stack, pos, item) cil_stack_for_each_starting_at(stack, 0, pos, item)
-
+#define cil_stack_for_each(stack, pos, item) \
+	cil_stack_for_each_starting_at(stack, 0, pos, item)
 
 void cil_stack_init(struct cil_stack **stack);
 void cil_stack_destroy(struct cil_stack **stack);
@@ -54,10 +55,10 @@ void cil_stack_empty(struct cil_stack *stack);
 int cil_stack_is_empty(struct cil_stack *stack);
 int cil_stack_number_of_items(struct cil_stack *stack);
 
-void cil_stack_push(struct cil_stack *stack, enum cil_flavor flavor, void *data);
+void cil_stack_push(struct cil_stack *stack, enum cil_flavor flavor,
+		    void *data);
 struct cil_stack_item *cil_stack_pop(struct cil_stack *stack);
 struct cil_stack_item *cil_stack_peek(struct cil_stack *stack);
 struct cil_stack_item *cil_stack_peek_at(struct cil_stack *stack, int pos);
-
 
 #endif

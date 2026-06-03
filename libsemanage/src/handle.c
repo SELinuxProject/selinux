@@ -50,8 +50,7 @@ int semanage_set_root(const char *root)
 	return 0;
 }
 
-
-const char * semanage_root(void)
+const char *semanage_root(void)
 {
 	if (private_semanage_root == NULL) {
 		return "";
@@ -103,7 +102,7 @@ semanage_handle_t *semanage_handle_create_with_path(const char *conf_name)
 
 	return sh;
 
-      err:
+err:
 	semanage_handle_destroy(sh);
 	return NULL;
 }
@@ -123,35 +122,34 @@ semanage_handle_t *semanage_handle_create(void)
 
 	return sh;
 
-      err:
+err:
 	free(conf_name);
 	return NULL;
 }
 
-void semanage_set_rebuild(semanage_handle_t * sh, int do_rebuild)
+void semanage_set_rebuild(semanage_handle_t *sh, int do_rebuild)
 {
 	assert(sh != NULL);
 
 	sh->do_rebuild = do_rebuild;
 }
 
-void semanage_set_reload(semanage_handle_t * sh, int do_reload)
+void semanage_set_reload(semanage_handle_t *sh, int do_reload)
 {
 	assert(sh != NULL);
 
 	sh->do_reload = do_reload;
 }
 
-void semanage_set_check_ext_changes(semanage_handle_t * sh, int do_check)
+void semanage_set_check_ext_changes(semanage_handle_t *sh, int do_check)
 {
 	assert(sh != NULL);
 
 	sh->check_ext_changes = do_check;
 }
 
-int semanage_get_hll_compiler_path(semanage_handle_t *sh,
-				const char *lang_ext,
-				char **compiler_path)
+int semanage_get_hll_compiler_path(semanage_handle_t *sh, const char *lang_ext,
+				   char **compiler_path)
 {
 	size_t i;
 	int status = 0;
@@ -172,7 +170,8 @@ int semanage_get_hll_compiler_path(semanage_handle_t *sh,
 		lower_lang_ext[i] = tolower(lower_lang_ext[i]);
 	}
 
-	if (asprintf(&compiler, "%s/%s", sh->conf->compiler_directory_path, lower_lang_ext) < 0) {
+	if (asprintf(&compiler, "%s/%s", sh->conf->compiler_directory_path,
+		     lower_lang_ext) < 0) {
 		ERR(sh, "Error creating compiler path.");
 		status = -1;
 		goto cleanup;
@@ -186,35 +185,35 @@ cleanup:
 	return status;
 }
 
-void semanage_set_create_store(semanage_handle_t * sh, int create_store)
+void semanage_set_create_store(semanage_handle_t *sh, int create_store)
 {
-
 	assert(sh != NULL);
 
 	sh->create_store = create_store;
 }
 
-int semanage_get_disable_dontaudit(semanage_handle_t * sh)
+int semanage_get_disable_dontaudit(semanage_handle_t *sh)
 {
 	assert(sh != NULL);
 
 	return sepol_get_disable_dontaudit(sh->sepolh);
 }
 
-void semanage_set_disable_dontaudit(semanage_handle_t * sh, int disable_dontaudit)
+void semanage_set_disable_dontaudit(semanage_handle_t *sh,
+				    int disable_dontaudit)
 {
 	assert(sh != NULL);
 
 	sepol_set_disable_dontaudit(sh->sepolh, disable_dontaudit);
 }
 
-int semanage_get_preserve_tunables(semanage_handle_t * sh)
+int semanage_get_preserve_tunables(semanage_handle_t *sh)
 {
 	assert(sh != NULL);
 	return sepol_get_preserve_tunables(sh->sepolh);
 }
 
-void semanage_set_preserve_tunables(semanage_handle_t * sh,
+void semanage_set_preserve_tunables(semanage_handle_t *sh,
 				    int preserve_tunables)
 {
 	assert(sh != NULL);
@@ -228,15 +227,14 @@ int semanage_get_ignore_module_cache(semanage_handle_t *sh)
 }
 
 void semanage_set_ignore_module_cache(semanage_handle_t *sh,
-				    int ignore_module_cache)
+				      int ignore_module_cache)
 {
 	assert(sh != NULL);
 	sh->conf->ignore_module_cache = !!ignore_module_cache;
 }
 
-void semanage_set_check_contexts(semanage_handle_t * sh, int do_check_contexts)
+void semanage_set_check_contexts(semanage_handle_t *sh, int do_check_contexts)
 {
-
 	assert(sh != NULL);
 
 	sh->do_check_contexts = do_check_contexts;
@@ -262,16 +260,15 @@ int semanage_set_default_priority(semanage_handle_t *sh, uint16_t priority)
 	return 0;
 }
 
-int semanage_is_connected(semanage_handle_t * sh)
+int semanage_is_connected(semanage_handle_t *sh)
 {
 	assert(sh != NULL);
 	return sh->is_connected;
 }
 
-void semanage_select_store(semanage_handle_t * sh, const char *storename,
+void semanage_select_store(semanage_handle_t *sh, const char *storename,
 			   enum semanage_connect_type storetype)
 {
-
 	assert(sh != NULL);
 
 	/* This just sets the storename to what the user requests, no
@@ -291,7 +288,7 @@ void semanage_set_store_root(semanage_handle_t *sh, const char *store_root)
 	assert(sh->conf->store_root_path); /* no way to return failure */
 }
 
-int semanage_is_managed(semanage_handle_t * sh)
+int semanage_is_managed(semanage_handle_t *sh)
 {
 	assert(sh != NULL);
 	if (sh->is_connected) {
@@ -309,7 +306,7 @@ int semanage_is_managed(semanage_handle_t * sh)
 	return -1;
 }
 
-int semanage_mls_enabled(semanage_handle_t * sh)
+int semanage_mls_enabled(semanage_handle_t *sh)
 {
 	assert(sh != NULL);
 	switch (sh->conf->store_type) {
@@ -323,27 +320,27 @@ int semanage_mls_enabled(semanage_handle_t * sh)
 	return -1;
 }
 
-int semanage_connect(semanage_handle_t * sh)
+int semanage_connect(semanage_handle_t *sh)
 {
 	assert(sh != NULL);
 	switch (sh->conf->store_type) {
-	case SEMANAGE_CON_DIRECT:{
-			if (semanage_direct_connect(sh) < 0) {
-				return -1;
-			}
-			break;
-		}
-	default:{
-			ERR(sh,
-			    "The connection type specified within your semanage.conf file has not been implemented yet.");
+	case SEMANAGE_CON_DIRECT: {
+		if (semanage_direct_connect(sh) < 0) {
 			return -1;
 		}
+		break;
+	}
+	default: {
+		ERR(sh,
+		    "The connection type specified within your semanage.conf file has not been implemented yet.");
+		return -1;
+	}
 	}
 	sh->is_connected = 1;
 	return 0;
 }
 
-int semanage_access_check(semanage_handle_t * sh)
+int semanage_access_check(semanage_handle_t *sh)
 {
 	assert(sh != NULL);
 	switch (sh->conf->store_type) {
@@ -354,8 +351,7 @@ int semanage_access_check(semanage_handle_t * sh)
 	}
 }
 
-
-int semanage_disconnect(semanage_handle_t * sh)
+int semanage_disconnect(semanage_handle_t *sh)
 {
 	assert(sh != NULL);
 	if (!sh->is_connected) {
@@ -370,7 +366,7 @@ int semanage_disconnect(semanage_handle_t * sh)
 	return 0;
 }
 
-void semanage_handle_destroy(semanage_handle_t * sh)
+void semanage_handle_destroy(semanage_handle_t *sh)
 {
 	if (sh == NULL)
 		return;
@@ -382,12 +378,11 @@ void semanage_handle_destroy(semanage_handle_t * sh)
 	free(sh);
 }
 
-
 /********************* public transaction functions *********************/
-int semanage_begin_transaction(semanage_handle_t * sh)
+int semanage_begin_transaction(semanage_handle_t *sh)
 {
-	assert(sh != NULL && sh->funcs != NULL
-	       && sh->funcs->begin_trans != NULL);
+	assert(sh != NULL && sh->funcs != NULL &&
+	       sh->funcs->begin_trans != NULL);
 	if (!sh->is_connected) {
 		ERR(sh, "Not connected.");
 		return -1;
@@ -403,8 +398,7 @@ int semanage_begin_transaction(semanage_handle_t * sh)
 	return 0;
 }
 
-
-int semanage_commit(semanage_handle_t * sh)
+int semanage_commit(semanage_handle_t *sh)
 {
 	int retval;
 	assert(sh != NULL && sh->funcs != NULL && sh->funcs->commit != NULL);

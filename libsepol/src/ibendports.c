@@ -25,16 +25,15 @@ static int ibendport_from_record(sepol_handle_t *handle,
 	if (!tmp_ibendport)
 		goto omem;
 
-	if (sepol_ibendport_alloc_ibdev_name(handle,
-					     &tmp_ibendport->u.ibendport.dev_name) < 0)
+	if (sepol_ibendport_alloc_ibdev_name(
+		    handle, &tmp_ibendport->u.ibendport.dev_name) < 0)
 		goto omem;
 
-	if (sepol_ibendport_get_ibdev_name(handle,
-					   data,
-					   &ibdev_name) < 0)
+	if (sepol_ibendport_get_ibdev_name(handle, data, &ibdev_name) < 0)
 		goto err;
 
-	strncpy(tmp_ibendport->u.ibendport.dev_name, ibdev_name, IB_DEVICE_NAME_MAX - 1);
+	strncpy(tmp_ibendport->u.ibendport.dev_name, ibdev_name,
+		IB_DEVICE_NAME_MAX - 1);
 
 	free(ibdev_name);
 	ibdev_name = NULL;
@@ -106,8 +105,9 @@ err:
 }
 
 /* Return the number of ibendports */
-extern int sepol_ibendport_count(sepol_handle_t *handle __attribute__ ((unused)),
-				 const sepol_policydb_t *p, unsigned int *response)
+extern int sepol_ibendport_count(sepol_handle_t *handle __attribute__((unused)),
+				 const sepol_policydb_t *p,
+				 unsigned int *response)
 {
 	unsigned int count = 0;
 	ocontext_t *c, *head;
@@ -123,7 +123,7 @@ extern int sepol_ibendport_count(sepol_handle_t *handle __attribute__ ((unused))
 }
 
 /* Check if a ibendport exists */
-int sepol_ibendport_exists(sepol_handle_t *handle __attribute__ ((unused)),
+int sepol_ibendport_exists(sepol_handle_t *handle __attribute__((unused)),
 			   const sepol_policydb_t *p,
 			   const sepol_ibendport_key_t *key, int *response)
 {
@@ -139,8 +139,7 @@ int sepol_ibendport_exists(sepol_handle_t *handle __attribute__ ((unused)),
 		const char *ibdev_name2 = c->u.ibendport.dev_name;
 		int port2 = c->u.ibendport.port;
 
-		if (port2 == port &&
-		    (!strcmp(ibdev_name, ibdev_name2))) {
+		if (port2 == port && (!strcmp(ibdev_name, ibdev_name2))) {
 			*response = 1;
 			return STATUS_SUCCESS;
 		}
@@ -150,8 +149,7 @@ int sepol_ibendport_exists(sepol_handle_t *handle __attribute__ ((unused)),
 	return STATUS_SUCCESS;
 }
 
-int sepol_ibendport_query(sepol_handle_t *handle,
-			  const sepol_policydb_t *p,
+int sepol_ibendport_query(sepol_handle_t *handle, const sepol_policydb_t *p,
 			  const sepol_ibendport_key_t *key,
 			  sepol_ibendport_t **response)
 {
@@ -167,9 +165,9 @@ int sepol_ibendport_query(sepol_handle_t *handle,
 		const char *ibdev_name2 = c->u.ibendport.dev_name;
 		int port2 = c->u.ibendport.port;
 
-		if (port2 == port &&
-		    (!strcmp(ibdev_name, ibdev_name2))) {
-			if (ibendport_to_record(handle, policydb, c, response) < 0)
+		if (port2 == port && (!strcmp(ibdev_name, ibdev_name2))) {
+			if (ibendport_to_record(handle, policydb, c, response) <
+			    0)
 				goto err;
 			return STATUS_SUCCESS;
 		}
@@ -185,8 +183,7 @@ err:
 }
 
 /* Load a ibendport into policy */
-int sepol_ibendport_modify(sepol_handle_t *handle,
-			   sepol_policydb_t *p,
+int sepol_ibendport_modify(sepol_handle_t *handle, sepol_policydb_t *p,
 			   const sepol_ibendport_key_t *key,
 			   const sepol_ibendport_t *data)
 {
@@ -207,8 +204,7 @@ int sepol_ibendport_modify(sepol_handle_t *handle,
 	return STATUS_SUCCESS;
 
 err:
-	ERR(handle, "could not load ibendport %s/%d",
-	    ibdev_name, port);
+	ERR(handle, "could not load ibendport %s/%d", ibdev_name, port);
 	if (ibendport) {
 		context_destroy(&ibendport->context[0]);
 		free(ibendport);
@@ -216,10 +212,10 @@ err:
 	return STATUS_ERR;
 }
 
-int sepol_ibendport_iterate(sepol_handle_t *handle,
-			    const sepol_policydb_t *p,
+int sepol_ibendport_iterate(sepol_handle_t *handle, const sepol_policydb_t *p,
 			    int (*fn)(const sepol_ibendport_t *ibendport,
-				      void *fn_arg), void *arg)
+				      void *fn_arg),
+			    void *arg)
 {
 	const policydb_t *policydb = &p->p;
 	ocontext_t *c, *head;

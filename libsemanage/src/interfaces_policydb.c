@@ -38,32 +38,30 @@ typedef struct dbase_policydb dbase_t;
 /* INTERFACE RECRORD (SEPOL): POLICYDB extension: method table */
 static const record_policydb_table_t SEMANAGE_IFACE_POLICYDB_RTABLE = {
 	.add = NULL,
-	.modify = (record_policydb_table_modify_t) sepol_iface_modify,
+	.modify = (record_policydb_table_modify_t)sepol_iface_modify,
 	.set = NULL,
-	.query = (record_policydb_table_query_t) sepol_iface_query,
-	.count = (record_policydb_table_count_t) sepol_iface_count,
-	.exists = (record_policydb_table_exists_t) sepol_iface_exists,
-	.iterate = (record_policydb_table_iterate_t) sepol_iface_iterate,
+	.query = (record_policydb_table_query_t)sepol_iface_query,
+	.count = (record_policydb_table_count_t)sepol_iface_count,
+	.exists = (record_policydb_table_exists_t)sepol_iface_exists,
+	.iterate = (record_policydb_table_iterate_t)sepol_iface_iterate,
 };
 
-int iface_policydb_dbase_init(semanage_handle_t * handle,
-			      dbase_config_t * dconfig)
+int iface_policydb_dbase_init(semanage_handle_t *handle,
+			      dbase_config_t *dconfig)
 {
-
-	if (dbase_policydb_init(handle,
-				semanage_path(SEMANAGE_ACTIVE, SEMANAGE_STORE_KERNEL),
-				semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_KERNEL),
-				&SEMANAGE_IFACE_RTABLE,
-				&SEMANAGE_IFACE_POLICYDB_RTABLE,
-				&dconfig->dbase) < 0)
+	if (dbase_policydb_init(
+		    handle,
+		    semanage_path(SEMANAGE_ACTIVE, SEMANAGE_STORE_KERNEL),
+		    semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_KERNEL),
+		    &SEMANAGE_IFACE_RTABLE, &SEMANAGE_IFACE_POLICYDB_RTABLE,
+		    &dconfig->dbase) < 0)
 		return STATUS_ERR;
 
 	dconfig->dtable = &SEMANAGE_POLICYDB_DTABLE;
 	return STATUS_SUCCESS;
 }
 
-void iface_policydb_dbase_release(dbase_config_t * dconfig)
+void iface_policydb_dbase_release(dbase_config_t *dconfig)
 {
-
 	dbase_policydb_release(dconfig->dbase);
 }

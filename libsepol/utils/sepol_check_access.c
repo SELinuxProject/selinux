@@ -6,7 +6,6 @@
 #include <sepol/policydb/services.h>
 #include <sepol/sepol.h>
 
-
 int main(int argc, char *argv[])
 {
 	FILE *fp;
@@ -20,17 +19,20 @@ int main(int argc, char *argv[])
 	int i;
 
 	if (argc != 6) {
-		printf("usage:  %s policy source_context target_context class permission[,permission2[,...]]\n", argv[0]);
+		printf("usage:  %s policy source_context target_context class permission[,permission2[,...]]\n",
+		       argv[0]);
 		return 1;
 	}
 
 	fp = fopen(argv[1], "r");
 	if (!fp) {
-		fprintf(stderr, "Can't open policy %s:  %s\n", argv[1], strerror(errno));
+		fprintf(stderr, "Can't open policy %s:  %s\n", argv[1],
+			strerror(errno));
 		return 1;
 	}
 	if (sepol_set_policydb_from_file(fp) < 0) {
-		fprintf(stderr, "Error while processing policy %s:  %s\n", argv[1], strerror(errno));
+		fprintf(stderr, "Error while processing policy %s:  %s\n",
+			argv[1], strerror(errno));
 		fclose(fp);
 		return 1;
 	}
@@ -60,7 +62,9 @@ int main(int argc, char *argv[])
 		if (delim) {
 			tmp = strndup(permlist, delim - permlist);
 			if (!tmp) {
-				fprintf(stderr, "Failed to allocate memory:  %s\n", strerror(errno));
+				fprintf(stderr,
+					"Failed to allocate memory:  %s\n",
+					strerror(errno));
 				return 1;
 			}
 		}
@@ -68,7 +72,9 @@ int main(int argc, char *argv[])
 		perm = tmp ? tmp : permlist;
 
 		if (sepol_string_to_av_perm(tclass, perm, &av) < 0) {
-			fprintf(stderr, "Invalid permission %s for security class %s:  %s\n", perm, argv[4], strerror(errno));
+			fprintf(stderr,
+				"Invalid permission %s for security class %s:  %s\n",
+				perm, argv[4], strerror(errno));
 			free(tmp);
 			return 1;
 		}
@@ -79,12 +85,15 @@ int main(int argc, char *argv[])
 	} while (permlist++);
 
 	if (av == 0) {
-		fprintf(stderr, "Empty permission set computed from %s\n", argv[5]);
+		fprintf(stderr, "Empty permission set computed from %s\n",
+			argv[5]);
 		return 1;
 	}
 
-	if (sepol_compute_av_reason_buffer(ssid, tsid, tclass, av, &avd, &reason, &reason_buf, 0) < 0) {
-		fprintf(stderr, "Failed to compute av decision:  %s\n", strerror(errno));
+	if (sepol_compute_av_reason_buffer(ssid, tsid, tclass, av, &avd,
+					   &reason, &reason_buf, 0) < 0) {
+		fprintf(stderr, "Failed to compute av decision:  %s\n",
+			strerror(errno));
 		return 1;
 	}
 

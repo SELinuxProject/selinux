@@ -6,13 +6,13 @@
 #include <selinux/selinux.h>
 #include <selinux/label.h>
 
-static __attribute__ ((__noreturn__)) void usage(const char *progname)
+static __attribute__((__noreturn__)) void usage(const char *progname)
 {
 	fprintf(stderr,
 		"usage: %s -b backend [-v] [-r] -k key [-t type] [-f file]\n\n"
 		"Where:\n\t"
 		"-b  The backend - \"file\", \"media\", \"x\", \"db\" or "
-			"\"prop\"\n\t"
+		"\"prop\"\n\t"
 		"-v  Validate entries against loaded policy.\n\t"
 		"-r  Use \"raw\" function.\n\t"
 		"-k  Lookup key - Depends on backend.\n\t"
@@ -38,8 +38,7 @@ int main(int argc, char **argv)
 
 	struct selabel_handle *hnd;
 	struct selinux_opt selabel_option[] = {
-		{ SELABEL_OPT_PATH, file },
-		{ SELABEL_OPT_VALIDATE, validate }
+		{ SELABEL_OPT_PATH, file }, { SELABEL_OPT_VALIDATE, validate }
 	};
 
 	if (argc < 3)
@@ -62,7 +61,7 @@ int main(int argc, char **argv)
 				backend = SELABEL_CTX_ANDROID_SERVICE;
 			} else {
 				fprintf(stderr, "Unknown backend: %s\n",
-								    optarg);
+					optarg);
 				usage(argv[0]);
 			}
 			break;
@@ -91,9 +90,10 @@ int main(int argc, char **argv)
 
 	hnd = selabel_open(backend, selabel_option, 2);
 	if (!hnd) {
-		fprintf(stderr, "ERROR: selabel_open - Could not obtain "
-							     "handle:  %s\n",
-							     strerror(errno));
+		fprintf(stderr,
+			"ERROR: selabel_open - Could not obtain "
+			"handle:  %s\n",
+			strerror(errno));
 		return -1;
 	}
 
@@ -110,16 +110,16 @@ int main(int argc, char **argv)
 		switch (errno) {
 		case ENOENT:
 			fprintf(stderr, "ERROR: selabel_lookup failed to "
-					    "find a valid context.\n");
+					"find a valid context.\n");
 			break;
 		case EINVAL:
 			fprintf(stderr, "ERROR: selabel_lookup failed to "
-				    "validate context, or key / type are "
-				    "invalid.\n");
+					"validate context, or key / type are "
+					"invalid.\n");
 			break;
 		default:
 			fprintf(stderr, "selabel_lookup ERROR: %s\n",
-						    strerror(errno));
+				strerror(errno));
 		}
 	} else {
 		printf("Default context: %s\n", context);

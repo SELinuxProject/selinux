@@ -27,7 +27,8 @@ static void usage(const char *program_name)
 	       program_name);
 }
 
-static sepol_module_package_t *load_module(const char *filename, const char *progname)
+static sepol_module_package_t *load_module(const char *filename,
+					   const char *progname)
 {
 	int ret;
 	FILE *fp = NULL;
@@ -44,8 +45,8 @@ static sepol_module_package_t *load_module(const char *filename, const char *pro
 	}
 	fp = fopen(filename, "re");
 	if (!fp) {
-		fprintf(stderr, "%s:  Could not open package %s:  %s\n", progname,
-			filename, strerror(errno));
+		fprintf(stderr, "%s:  Could not open package %s:  %s\n",
+			progname, filename, strerror(errno));
 		goto bad;
 	}
 	sepol_policy_file_set_fp(pf, fp);
@@ -61,7 +62,7 @@ static sepol_module_package_t *load_module(const char *filename, const char *pro
 	fclose(fp);
 	sepol_policy_file_free(pf);
 	return p;
-      bad:
+bad:
 	sepol_module_package_free(p);
 	sepol_policy_file_free(pf);
 	if (fp)
@@ -144,7 +145,8 @@ int main(int argc, char **argv)
 	if (outname) {
 		FILE *outfile = fopen(outname, "we");
 		if (!outfile) {
-			fprintf(stderr, "%s:  Could not open output file %s:  %s\n",
+			fprintf(stderr,
+				"%s:  Could not open output file %s:  %s\n",
 				argv[0], outname, strerror(errno));
 			goto failure;
 		}
@@ -165,7 +167,8 @@ int main(int argc, char **argv)
 		sepol_policy_file_free(pf);
 
 		if (fclose(outfile)) {
-			fprintf(stderr, "%s:  Error closing linked package:  %s\n",
+			fprintf(stderr,
+				"%s:  Error closing linked package:  %s\n",
 				argv[0], strerror(errno));
 			goto failure;
 		}

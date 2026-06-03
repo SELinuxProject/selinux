@@ -35,16 +35,38 @@
 #include "../../src/cil_fqn.h"
 #include "../../src/cil_build_ast.h"
 
-void test_cil_qualify_name(CuTest *tc) {
-	char *line[] = {"(", "category", "c0", ")",
-			"(", "categoryorder", "(", "c0", ")", ")",
-			"(", "sensitivity", "s0", ")",
-			"(", "sensitivitycategory", "s0", "(", "c0", ")", ")",
-			"(", "type", "blah_t", ")",
-			"(", "role", "blah_r", ")",
-			"(", "user", "blah_u", ")",
-			"(", "context", "con", "(", "blah_u", "blah_r", "blah_t", "(", "s0", "(", "c0", ")", ")", "(", "s0", "(", "c0", ")", ")", ")", ")",
-			"(", "sid", "test", "con", NULL};
+void test_cil_qualify_name(CuTest *tc)
+{
+	char *line[] = { "(",	    "category",
+			 "c0",	    ")",
+			 "(",	    "categoryorder",
+			 "(",	    "c0",
+			 ")",	    ")",
+			 "(",	    "sensitivity",
+			 "s0",	    ")",
+			 "(",	    "sensitivitycategory",
+			 "s0",	    "(",
+			 "c0",	    ")",
+			 ")",	    "(",
+			 "type",    "blah_t",
+			 ")",	    "(",
+			 "role",    "blah_r",
+			 ")",	    "(",
+			 "user",    "blah_u",
+			 ")",	    "(",
+			 "context", "con",
+			 "(",	    "blah_u",
+			 "blah_r",  "blah_t",
+			 "(",	    "s0",
+			 "(",	    "c0",
+			 ")",	    ")",
+			 "(",	    "s0",
+			 "(",	    "c0",
+			 ")",	    ")",
+			 ")",	    ")",
+			 "(",	    "sid",
+			 "test",    "con",
+			 NULL };
 
 	struct cil_tree *tree;
 	gen_test_tree(&tree, line);
@@ -58,9 +80,10 @@ void test_cil_qualify_name(CuTest *tc) {
 	CuAssertIntEquals(tc, SEPOL_OK, rc);
 }
 
-void test_cil_qualify_name_cil_flavor(CuTest *tc) {
-	char *line[] = {"(", "class",  "file", "inherits", "file",
-			"(", "open", ")", ")", NULL};
+void test_cil_qualify_name_cil_flavor(CuTest *tc)
+{
+	char *line[] = { "(", "class", "file", "inherits", "file",
+			 "(", "open",  ")",    ")",	   NULL };
 
 	struct cil_tree *tree;
 	gen_test_tree(&tree, line);

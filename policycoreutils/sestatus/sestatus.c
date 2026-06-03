@@ -37,7 +37,6 @@ extern char *selinux_mnt;
 
 static int cmp_cmdline(const char *command, int pid)
 {
-
 	char buf[BUFSIZE];
 	char filename[BUFSIZE];
 
@@ -61,7 +60,7 @@ static int cmp_cmdline(const char *command, int pid)
 
 static int pidof(const char *command)
 {
-/* inspired by killall5.c from psmisc */
+	/* inspired by killall5.c from psmisc */
 	char stackpath[PATH_MAX + 1], *p;
 	DIR *dir;
 	struct dirent *de;
@@ -94,7 +93,6 @@ static int pidof(const char *command)
 
 static void load_checks(char *pc[], int *npc, char *fc[], int *nfc)
 {
-
 	FILE *fp = fopen(CONF, "r");
 	char buf[255], *bufp;
 	int buf_len, section = -1;
@@ -137,9 +135,8 @@ static void load_checks(char *pc[], int *npc, char *fc[], int *nfc)
 				case 0:
 					if (*npc >= MAX_CHECK)
 						break;
-					pc[*npc] =
-					    (char *)malloc((buf_len) *
-							   sizeof(char));
+					pc[*npc] = (char *)malloc((buf_len) *
+								  sizeof(char));
 					if (!pc[*npc])
 						break;
 					memcpy(pc[*npc], bufp, buf_len);
@@ -149,9 +146,8 @@ static void load_checks(char *pc[], int *npc, char *fc[], int *nfc)
 				case 1:
 					if (*nfc >= MAX_CHECK)
 						break;
-					fc[*nfc] =
-					    (char *)malloc((buf_len) *
-							   sizeof(char));
+					fc[*nfc] = (char *)malloc((buf_len) *
+								  sizeof(char));
 					if (!fc[*nfc])
 						break;
 					memcpy(fc[*nfc], bufp, buf_len);
@@ -167,7 +163,7 @@ static void load_checks(char *pc[], int *npc, char *fc[], int *nfc)
 			}
 		}
 	}
-      out:
+out:
 	fclose(fp);
 	return;
 }
@@ -175,7 +171,6 @@ static void load_checks(char *pc[], int *npc, char *fc[], int *nfc)
 static void printf_tab(const char *outp)
 {
 	printf("%-*s", COL, outp);
-
 }
 
 int main(int argc, char **argv)
@@ -204,7 +199,6 @@ int main(int argc, char **argv)
 	/* policy */
 	const char *pol_name, *root_dir;
 	char *pol_path;
-
 
 	while (1) {
 		opt = getopt(argc, argv, "vb");
@@ -314,43 +308,43 @@ int main(int argc, char **argv)
 	printf_tab("Policy MLS status:");
 	rc = is_selinux_mls_enabled();
 	switch (rc) {
-		case 0:
-			printf("disabled\n");
-			break;
-		case 1:
-			printf("enabled\n");
-			break;
-		default:
-			printf("error (%s)\n", strerror(errno));
-			break;
+	case 0:
+		printf("disabled\n");
+		break;
+	case 1:
+		printf("enabled\n");
+		break;
+	default:
+		printf("error (%s)\n", strerror(errno));
+		break;
 	}
 
 	printf_tab("Policy deny_unknown status:");
 	rc = security_deny_unknown();
 	switch (rc) {
-		case 0:
-			printf("allowed\n");
-			break;
-		case 1:
-			printf("denied\n");
-			break;
-		default:
-			printf("error (%s)\n", strerror(errno));
-			break;
+	case 0:
+		printf("allowed\n");
+		break;
+	case 1:
+		printf("denied\n");
+		break;
+	default:
+		printf("error (%s)\n", strerror(errno));
+		break;
 	}
 
 	printf_tab("Memory protection checking:");
 	rc = security_get_checkreqprot();
 	switch (rc) {
-		case 0:
-			printf("actual (secure)\n");
-			break;
-		case 1:
-			printf("requested (insecure)\n");
-			break;
-		default:
-			printf("error (%s)\n", strerror(errno));
-			break;
+	case 0:
+		printf("actual (secure)\n");
+		break;
+	case 1:
+		printf("requested (insecure)\n");
+		break;
+	default:
+		printf("error (%s)\n", strerror(errno));
+		break;
 	}
 
 	rc = security_policyvers();
@@ -359,7 +353,6 @@ int main(int argc, char **argv)
 		printf("unknown (%s)\n", strerror(errno));
 	else
 		printf("%d\n", rc);
-
 
 	if (show_bools) {
 		/* show booleans */
@@ -459,9 +452,8 @@ int main(int argc, char **argv)
 
 			/* check if this is a symlink */
 			if (lstat(fc[i], &m)) {
-				printf
-				    ("%s (could not check link status (%s)!)\n",
-				     context, strerror(errno));
+				printf("%s (could not check link status (%s)!)\n",
+				       context, strerror(errno));
 				freecon(context);
 				free(fc[i]);
 				continue;

@@ -4,13 +4,13 @@
 #include <stdlib.h>
 #include <errno.h>
 
-#define COMP_USER  0
-#define COMP_ROLE  1
-#define COMP_TYPE  2
+#define COMP_USER 0
+#define COMP_ROLE 1
+#define COMP_TYPE 2
 #define COMP_RANGE 3
 
 typedef struct {
-	char *current_str;	/* This is made up-to-date only when needed */
+	char *current_str; /* This is made up-to-date only when needed */
 	char *(component[4]);
 } context_private_t;
 
@@ -24,8 +24,8 @@ context_t context_new(const char *str)
 	int i, count;
 	errno = 0;
 	context_private_t *n =
-	    (context_private_t *) malloc(sizeof(context_private_t));
-	context_t result = (context_t) malloc(sizeof(context_s_t));
+		(context_private_t *)malloc(sizeof(context_private_t));
+	context_t result = (context_t)malloc(sizeof(context_s_t));
 	const char *p, *tok;
 
 	if (result)
@@ -36,7 +36,7 @@ context_t context_new(const char *str)
 		goto err;
 	}
 	n->current_str = n->component[0] = n->component[1] = n->component[2] =
-	    n->component[3] = 0;
+		n->component[3] = 0;
 	for (count = 0, p = str; *p; p++) {
 		switch (*p) {
 		case ':':
@@ -45,27 +45,28 @@ context_t context_new(const char *str)
 		case '\n':
 		case '\t':
 		case '\r':
-			goto err;	/* sanity check */
+			goto err; /* sanity check */
 		case ' ':
 			if (count < 3)
-				goto err;	/* sanity check */
+				goto err; /* sanity check */
 		}
 	}
 	/*
 	 * Could be anywhere from 2 - 5
 	 * e.g user:role:type to user:role:type:sens1:cata-sens2:catb
 	 */
-	if (count < 2 || count > 5) {	/* might not have a range */
+	if (count < 2 || count > 5) { /* might not have a range */
 		goto err;
 	}
 
 	n->component[3] = 0;
 	for (i = 0, tok = str; *tok; i++) {
 		if (i < 3)
-			for (p = tok; *p && *p != ':'; p++) {	/* empty */
-		} else {
+			for (p = tok; *p && *p != ':'; p++) { /* empty */
+			}
+		else {
 			/* MLS range is one component */
-			for (p = tok; *p; p++) {	/* empty */
+			for (p = tok; *p; p++) { /* empty */
 			}
 		}
 		n->component[i] = strndup(tok, p - tok);
@@ -74,12 +75,12 @@ context_t context_new(const char *str)
 		tok = *p ? p + 1 : p;
 	}
 	return result;
-      err:
-	if (errno == 0) errno = EINVAL;
+err:
+	if (errno == 0)
+		errno = EINVAL;
 	context_free(result);
 	return 0;
 }
-
 
 static void conditional_free(char **v)
 {
@@ -110,7 +111,6 @@ void context_free(context_t context)
 	}
 }
 
-
 /*
  * Return a pointer to the string value of the context.
  */
@@ -139,7 +139,6 @@ const char *context_str(context_t context)
 	}
 	return n->current_str;
 }
-
 
 /*
  * Return a new string value of the context.
@@ -170,9 +169,8 @@ char *context_to_str(context_t context)
 	return buf;
 }
 
-
 /* Returns nonzero iff failed */
-static int set_comp(context_private_t * n, int idx, const char *str)
+static int set_comp(context_private_t *n, int idx, const char *str)
 {
 	char *t = NULL;
 	const char *p;
@@ -195,23 +193,19 @@ static int set_comp(context_private_t * n, int idx, const char *str)
 	return 0;
 }
 
-#define def_get(name,tag) \
-const char * context_ ## name ## _get(context_t context) \
-{ \
-        context_private_t *n = context->ptr; \
-        return n->component[tag]; \
-}
+#define def_get(name, tag)                                  \
+	const char *context_##name##_get(context_t context) \
+	{                                                   \
+		context_private_t *n = context->ptr;        \
+		return n->component[tag];                   \
+	}
 
-def_get(type, COMP_TYPE)
-    def_get(user, COMP_USER)
-    def_get(range, COMP_RANGE)
-    def_get(role, COMP_ROLE)
-#define def_set(name,tag) \
-int context_ ## name ## _set(context_t context, const char* str) \
-{ \
-        return set_comp(context->ptr,tag,str);\
-}
-    def_set(type, COMP_TYPE)
-    def_set(role, COMP_ROLE)
-    def_set(user, COMP_USER)
-    def_set(range, COMP_RANGE)
+def_get(type, COMP_TYPE) def_get(user, COMP_USER) def_get(range, COMP_RANGE)
+	def_get(role, COMP_ROLE)
+#define def_set(name, tag)                                           \
+	int context_##name##_set(context_t context, const char *str) \
+	{                                                            \
+		return set_comp(context->ptr, tag, str);             \
+	}
+		def_set(type, COMP_TYPE) def_set(role, COMP_ROLE)
+			def_set(user, COMP_USER) def_set(range, COMP_RANGE)

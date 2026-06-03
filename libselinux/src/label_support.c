@@ -22,7 +22,8 @@
  *            errno will be set.
  *
  */
-static inline int read_spec_entry(char **entry, const char **ptr, size_t *len, const char **errbuf)
+static inline int read_spec_entry(char **entry, const char **ptr, size_t *len,
+				  const char **errbuf)
 {
 	const char *tmp_buf;
 
@@ -70,7 +71,8 @@ static inline int read_spec_entry(char **entry, const char **ptr, size_t *len, c
  * This function calls read_spec_entry() to do the actual string processing.
  * As such, can return anything from that function as well.
  */
-int  read_spec_entries(char *line_buf, size_t nread, const char **errbuf, int num_args, ...)
+int read_spec_entries(char *line_buf, size_t nread, const char **errbuf,
+		      int num_args, ...)
 {
 	char **spec_entry;
 	const char *buf_p;
@@ -108,7 +110,8 @@ int  read_spec_entries(char *line_buf, size_t nread, const char **errbuf, int nu
 	while (items < num_args) {
 		spec_entry = va_arg(ap, char **);
 
-		if (buf_p[0] == '\0' || nread - 1 == (size_t)(buf_p - line_buf)) {
+		if (buf_p[0] == '\0' ||
+		    nread - 1 == (size_t)(buf_p - line_buf)) {
 			va_end(ap);
 			return items;
 		}
@@ -126,7 +129,7 @@ int  read_spec_entries(char *line_buf, size_t nread, const char **errbuf, int nu
 }
 
 /* Once all the specfiles are in the hash_buf, generate the hash. */
-void  digest_gen_hash(struct selabel_digest *digest)
+void digest_gen_hash(struct selabel_digest *digest)
 {
 	Sha1Context context;
 	size_t remaining_size;
@@ -165,9 +168,8 @@ void  digest_gen_hash(struct selabel_digest *digest)
  *
  * Return %0 on success, -%1 with @errno set on failure.
  */
-int  digest_add_specfile(struct selabel_digest *digest, FILE *fp,
-				    const char *from_addr, size_t buf_len,
-				    const char *path)
+int digest_add_specfile(struct selabel_digest *digest, FILE *fp,
+			const char *from_addr, size_t buf_len, const char *path)
 {
 	unsigned char *tmp_buf;
 
@@ -191,14 +193,13 @@ int  digest_add_specfile(struct selabel_digest *digest, FILE *fp,
 		if (fseek(fp, 0L, SEEK_SET) == -1)
 			return -1;
 
-		if (fread(digest->hashbuf + (digest->hashbuf_size - buf_len),
-					    1, buf_len, fp) != buf_len)
+		if (fread(digest->hashbuf + (digest->hashbuf_size - buf_len), 1,
+			  buf_len, fp) != buf_len)
 			return -1;
 
 	} else if (from_addr)
-		memcpy(digest->hashbuf +
-			    (digest->hashbuf_size - buf_len),
-			    from_addr, buf_len);
+		memcpy(digest->hashbuf + (digest->hashbuf_size - buf_len),
+		       from_addr, buf_len);
 
 	/* Now add path to list */
 	if (digest->specfile_cnt >= DIGEST_FILES_MAX) {

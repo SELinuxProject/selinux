@@ -23,7 +23,7 @@
 
 #include <sepol/policydb/policydb.h>
 
-extern void base_role_tests(policydb_t * base);
-extern void module_role_tests(policydb_t * base);
+extern void base_role_tests(policydb_t *base);
+extern void module_role_tests(policydb_t *base);
 
 #endif

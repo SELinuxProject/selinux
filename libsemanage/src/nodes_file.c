@@ -19,10 +19,9 @@ typedef struct dbase_file dbase_t;
 #include "parse_utils.h"
 #include "debug.h"
 
-static int node_print(semanage_handle_t * handle,
-		      const semanage_node_t * node, FILE * str)
+static int node_print(semanage_handle_t *handle, const semanage_node_t *node,
+		      FILE *str)
 {
-
 	char *con_str = NULL;
 	char *addr = NULL;
 	char *mask = NULL;
@@ -40,8 +39,8 @@ static int node_print(semanage_handle_t * handle,
 	if (semanage_context_to_string(handle, con, &con_str) < 0)
 		goto err;
 
-	if (fprintf
-	    (str, "nodecon %s %s %s %s\n", proto_str, addr, mask, con_str) < 0)
+	if (fprintf(str, "nodecon %s %s %s %s\n", proto_str, addr, mask,
+		    con_str) < 0)
 		goto err;
 
 	free(addr);
@@ -49,7 +48,7 @@ static int node_print(semanage_handle_t * handle,
 	free(con_str);
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	free(addr);
 	free(mask);
 	free(con_str);
@@ -57,10 +56,9 @@ static int node_print(semanage_handle_t * handle,
 	return STATUS_ERR;
 }
 
-static int node_parse(semanage_handle_t * handle,
-		      parse_info_t * info, semanage_node_t * node)
+static int node_parse(semanage_handle_t *handle, parse_info_t *info,
+		      semanage_node_t *node)
 {
-
 	int proto;
 	char *str = NULL;
 	semanage_context_t *con = NULL;
@@ -119,14 +117,15 @@ static int node_parse(semanage_handle_t * handle,
 	if (parse_fetch_string(handle, info, &str, ' ', 0) < 0)
 		goto err;
 	if (semanage_context_from_string(handle, str, &con) < 0) {
-		ERR(handle, "invalid security context \"%s\" (%s: %u)\n%s",
-		    str, info->filename, info->lineno, info->orig_line);
+		ERR(handle, "invalid security context \"%s\" (%s: %u)\n%s", str,
+		    info->filename, info->lineno, info->orig_line);
 		goto err;
 	}
 	if (con == NULL) {
-		ERR(handle, "<<none>> context is not valid "
-		    "for nodes (%s: %u):\n%s", info->filename,
-		    info->lineno, info->orig_line);
+		ERR(handle,
+		    "<<none>> context is not valid "
+		    "for nodes (%s: %u):\n%s",
+		    info->filename, info->lineno, info->orig_line);
 		goto err;
 	}
 	free(str);
@@ -141,11 +140,11 @@ static int node_parse(semanage_handle_t * handle,
 	semanage_context_free(con);
 	return STATUS_SUCCESS;
 
-      last:
+last:
 	parse_dispose_line(info);
 	return STATUS_NODATA;
 
-      err:
+err:
 	ERR(handle, "could not parse node record");
 	free(str);
 	semanage_context_free(con);
@@ -159,16 +158,10 @@ static const record_file_table_t SEMANAGE_NODE_FILE_RTABLE = {
 	.print = node_print,
 };
 
-int node_file_dbase_init(semanage_handle_t * handle,
-			 const char *path_ro,
-			 const char *path_rw,
-			 dbase_config_t * dconfig)
+int node_file_dbase_init(semanage_handle_t *handle, const char *path_ro,
+			 const char *path_rw, dbase_config_t *dconfig)
 {
-
-	if (dbase_file_init(handle,
-			    path_ro,
-			    path_rw,
-			    &SEMANAGE_NODE_RTABLE,
+	if (dbase_file_init(handle, path_ro, path_rw, &SEMANAGE_NODE_RTABLE,
 			    &SEMANAGE_NODE_FILE_RTABLE, &dconfig->dbase) < 0)
 		return STATUS_ERR;
 
@@ -176,8 +169,7 @@ int node_file_dbase_init(semanage_handle_t * handle,
 	return STATUS_SUCCESS;
 }
 
-void node_file_dbase_release(dbase_config_t * dconfig)
+void node_file_dbase_release(dbase_config_t *dconfig)
 {
-
 	dbase_file_release(dconfig->dbase);
 }

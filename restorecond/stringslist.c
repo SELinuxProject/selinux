@@ -38,9 +38,9 @@ void strings_list_add(struct stringsList **list, const char *string)
 	while (ptr) {
 		int cmp = strcmp(string, ptr->string);
 		if (cmp < 0)
-			break;	/* Not on list break out to add */
+			break; /* Not on list break out to add */
 		if (cmp == 0)
-			return;	/* Already on list */
+			return; /* Already on list */
 		prev = ptr;
 		ptr = ptr->next;
 	}
@@ -62,8 +62,8 @@ int strings_list_find(struct stringsList *ptr, const char *string, int *exact)
 	while (ptr) {
 		*exact = strcmp(ptr->string, string) == 0;
 		int cmp = fnmatch(ptr->string, string, 0);
-		if (cmp == 0) 
-			return 0;	/* Match found */
+		if (cmp == 0)
+			return 0; /* Match found */
 		ptr = ptr->next;
 	}
 	return -1;

@@ -29,73 +29,64 @@ struct semanage_handle;
 
 /* Backend dependent portion */
 struct semanage_policy_table {
-
 	/* Returns the current policy serial/commit number
 	 * A negative number is returned in case of failure */
-	int (*get_serial) (struct semanage_handle *);
+	int (*get_serial)(struct semanage_handle *);
 
 	/* Destroy a connection */
-	void (*destroy) (struct semanage_handle *);
+	void (*destroy)(struct semanage_handle *);
 
 	/* Disconnect from policy */
-	int (*disconnect) (struct semanage_handle *);
+	int (*disconnect)(struct semanage_handle *);
 
 	/* Begin a policy transaction */
-	int (*begin_trans) (struct semanage_handle *);
+	int (*begin_trans)(struct semanage_handle *);
 
 	/* Commit a policy transaction */
-	int (*commit) (struct semanage_handle *);
+	int (*commit)(struct semanage_handle *);
 
 	/* Install a policy module */
-	int (*install) (struct semanage_handle *, char *, size_t, const char *, const char *);
+	int (*install)(struct semanage_handle *, char *, size_t, const char *,
+		       const char *);
 
 	/* Install a policy module */
-	int (*install_file) (struct semanage_handle *, const char *);
+	int (*install_file)(struct semanage_handle *, const char *);
 
 	/* Extract a policy module */
-	int (*extract) (struct semanage_handle *,
-				 semanage_module_key_t *,
-				 int extract_cil,
-				 void **,
-				 size_t *,
-				 semanage_module_info_t **);
+	int (*extract)(struct semanage_handle *, semanage_module_key_t *,
+		       int extract_cil, void **, size_t *,
+		       semanage_module_info_t **);
 
 	/* Remove a policy module */
-	int (*remove) (struct semanage_handle *, char *);
+	int (*remove)(struct semanage_handle *, char *);
 
 	/* List policy modules */
-	int (*list) (struct semanage_handle *, semanage_module_info_t **,
-		     int *);
+	int (*list)(struct semanage_handle *, semanage_module_info_t **, int *);
 
 	/* Get module enabled status */
-	int (*get_enabled) (struct semanage_handle *sh,
-			    const semanage_module_key_t *key,
-			    int *enabled);
+	int (*get_enabled)(struct semanage_handle *sh,
+			   const semanage_module_key_t *key, int *enabled);
 
 	/* Set module enabled status */
-	int (*set_enabled) (struct semanage_handle *sh,
-			    const semanage_module_key_t *key,
-			    int enabled);
+	int (*set_enabled)(struct semanage_handle *sh,
+			   const semanage_module_key_t *key, int enabled);
 
 	/* Get a module info */
-	int (*get_module_info) (struct semanage_handle *,
-				const semanage_module_key_t *,
-				semanage_module_info_t **);
+	int (*get_module_info)(struct semanage_handle *,
+			       const semanage_module_key_t *,
+			       semanage_module_info_t **);
 
 	/* List all policy modules */
-	int (*list_all) (struct semanage_handle *,
-			 semanage_module_info_t **,
-			 int *);
+	int (*list_all)(struct semanage_handle *, semanage_module_info_t **,
+			int *);
 
 	/* Install via module info */
-	int (*install_info) (struct semanage_handle *,
-			     const semanage_module_info_t *,
-			     char *,
-			     size_t);
+	int (*install_info)(struct semanage_handle *,
+			    const semanage_module_info_t *, char *, size_t);
 
 	/* Remove via module key */
-	int (*remove_key) (struct semanage_handle *,
-			   const semanage_module_key_t *);
+	int (*remove_key)(struct semanage_handle *,
+			  const semanage_module_key_t *);
 };
 
 /* Should be backend independent */

@@ -56,7 +56,8 @@ static __attribute__((__noreturn__)) void usage(const char *prog)
 	printf("                                 This will override the (mls boolean) statement\n");
 	printf("                                 if present in the policy\n");
 	printf("  -c, --policyvers=<version>     build a binary policy with a given <version>\n");
-	printf("                                 (default: %i)\n", POLICYDB_VERSION_MAX);
+	printf("                                 (default: %i)\n",
+	       POLICYDB_VERSION_MAX);
 	printf("  -U, --handle-unknown=<action>  how to handle unknown classes or permissions.\n");
 	printf("                                 may be deny, allow, or reject. (default: deny)\n");
 	printf("                                 This will override the (handleunknown action)\n");
@@ -109,131 +110,141 @@ int main(int argc, char *argv[])
 	size_t fc_size;
 	enum cil_log_level log_level = CIL_ERR;
 	static struct option long_opts[] = {
-		{"help", no_argument, 0, 'h'},
-		{"verbose", no_argument, 0, 'v'},
-		{"target", required_argument, 0, 't'},
-		{"mls", required_argument, 0, 'M'},
-		{"policyversion", required_argument, 0, 'c'},
-		{"handle-unknown", required_argument, 0, 'U'},
-		{"disable-dontaudit", no_argument, 0, 'D'},
-		{"multiple-decls", no_argument, 0, 'm'},
-		{"disable-neverallow", no_argument, 0, 'N'},
-		{"preserve-tunables", no_argument, 0, 'P'},
-		{"qualified-names", no_argument, 0, 'Q'},
-		{"output", required_argument, 0, 'o'},
-		{"filecontexts", required_argument, 0, 'f'},
-		{"expand-generated", no_argument, 0, 'G'},
-		{"expand-size", required_argument, 0, 'X'},
-		{"optimize", no_argument, 0, 'O'},
-		{0, 0, 0, 0}
+		{ "help", no_argument, 0, 'h' },
+		{ "verbose", no_argument, 0, 'v' },
+		{ "target", required_argument, 0, 't' },
+		{ "mls", required_argument, 0, 'M' },
+		{ "policyversion", required_argument, 0, 'c' },
+		{ "handle-unknown", required_argument, 0, 'U' },
+		{ "disable-dontaudit", no_argument, 0, 'D' },
+		{ "multiple-decls", no_argument, 0, 'm' },
+		{ "disable-neverallow", no_argument, 0, 'N' },
+		{ "preserve-tunables", no_argument, 0, 'P' },
+		{ "qualified-names", no_argument, 0, 'Q' },
+		{ "output", required_argument, 0, 'o' },
+		{ "filecontexts", required_argument, 0, 'f' },
+		{ "expand-generated", no_argument, 0, 'G' },
+		{ "expand-size", required_argument, 0, 'X' },
+		{ "optimize", no_argument, 0, 'O' },
+		{ 0, 0, 0, 0 }
 	};
 	int i;
 
 	while (1) {
-		opt_char = getopt_long(argc, argv, "o:f:U:hvt:M:PQDmNOc:GX:n", long_opts, &opt_index);
+		opt_char = getopt_long(argc, argv, "o:f:U:hvt:M:PQDmNOc:GX:n",
+				       long_opts, &opt_index);
 		if (opt_char == -1) {
 			break;
 		}
 		switch (opt_char) {
-			case 'v':
-				log_level++;
-				break;
-			case 't':
-				if (!strcmp(optarg, "selinux")) {
-					target = SEPOL_TARGET_SELINUX;
-				} else if (!strcmp(optarg, "xen")) {
-					target = SEPOL_TARGET_XEN;
-				} else {
-					fprintf(stderr, "Unknown target: %s\n", optarg);
-					usage(argv[0]);
-				}
-				break;
-			case 'M':
-				if (!strcasecmp(optarg, "true") || !strcasecmp(optarg, "1")) {
-					mls = 1;
-				} else if (!strcasecmp(optarg, "false") || !strcasecmp(optarg, "0")) {
-					mls = 0;
-				} else {
-					usage(argv[0]);
-				}
-				break;
-			case 'c': {
-				char *endptr = NULL;
-				errno = 0;
-				policyvers = strtol(optarg, &endptr, 10);
-				if (errno != 0 || endptr == optarg || *endptr != '\0') {
-					fprintf(stderr, "Bad policy version: %s\n", optarg);
-					usage(argv[0]);
-				}
-				if (policyvers > POLICYDB_VERSION_MAX || policyvers < POLICYDB_VERSION_MIN) {
-					fprintf(stderr, "Policy version must be between %d and %d\n",
-					       POLICYDB_VERSION_MIN, POLICYDB_VERSION_MAX);
-					usage(argv[0]);
-				}
-				break;
+		case 'v':
+			log_level++;
+			break;
+		case 't':
+			if (!strcmp(optarg, "selinux")) {
+				target = SEPOL_TARGET_SELINUX;
+			} else if (!strcmp(optarg, "xen")) {
+				target = SEPOL_TARGET_XEN;
+			} else {
+				fprintf(stderr, "Unknown target: %s\n", optarg);
+				usage(argv[0]);
 			}
-			case 'U':
-				if (!strcasecmp(optarg, "deny")) {
-					handle_unknown = SEPOL_DENY_UNKNOWN;
-				} else if (!strcasecmp(optarg, "allow")) {
-					handle_unknown = SEPOL_ALLOW_UNKNOWN;
-				} else if (!strcasecmp(optarg, "reject")) {
-					handle_unknown = SEPOL_REJECT_UNKNOWN;
-				} else {
-					usage(argv[0]);
-				}
-				break;
-			case 'D':
-				disable_dontaudit = 1;
-				break;
-			case 'm':
-				multiple_decls = 1;
-				break;
-			case 'N':
-				disable_neverallow = 1;
-				break;
-			case 'P':
-				preserve_tunables = 1;
-				break;
-			case 'Q':
-				qualified_names = 1;
-				break;
-			case 'o':
-				free(output);
-				output = strdup(optarg);
-				break;
-			case 'f':
-				free(filecontexts);
-				filecontexts = strdup(optarg);
-				break;
-			case 'G':
-				attrs_expand_generated = 1;
-				break;
-			case 'X': {
-				char *endptr = NULL;
-				errno = 0;
-				attrs_expand_size = strtol(optarg, &endptr, 10);
-				if (errno != 0 || endptr == optarg || *endptr != '\0') {
-					fprintf(stderr, "Bad attribute expand size: %s\n", optarg);
-					usage(argv[0]);
-				}
+			break;
+		case 'M':
+			if (!strcasecmp(optarg, "true") ||
+			    !strcasecmp(optarg, "1")) {
+				mls = 1;
+			} else if (!strcasecmp(optarg, "false") ||
+				   !strcasecmp(optarg, "0")) {
+				mls = 0;
+			} else {
+				usage(argv[0]);
+			}
+			break;
+		case 'c': {
+			char *endptr = NULL;
+			errno = 0;
+			policyvers = strtol(optarg, &endptr, 10);
+			if (errno != 0 || endptr == optarg || *endptr != '\0') {
+				fprintf(stderr, "Bad policy version: %s\n",
+					optarg);
+				usage(argv[0]);
+			}
+			if (policyvers > POLICYDB_VERSION_MAX ||
+			    policyvers < POLICYDB_VERSION_MIN) {
+				fprintf(stderr,
+					"Policy version must be between %d and %d\n",
+					POLICYDB_VERSION_MIN,
+					POLICYDB_VERSION_MAX);
+				usage(argv[0]);
+			}
+			break;
+		}
+		case 'U':
+			if (!strcasecmp(optarg, "deny")) {
+				handle_unknown = SEPOL_DENY_UNKNOWN;
+			} else if (!strcasecmp(optarg, "allow")) {
+				handle_unknown = SEPOL_ALLOW_UNKNOWN;
+			} else if (!strcasecmp(optarg, "reject")) {
+				handle_unknown = SEPOL_REJECT_UNKNOWN;
+			} else {
+				usage(argv[0]);
+			}
+			break;
+		case 'D':
+			disable_dontaudit = 1;
+			break;
+		case 'm':
+			multiple_decls = 1;
+			break;
+		case 'N':
+			disable_neverallow = 1;
+			break;
+		case 'P':
+			preserve_tunables = 1;
+			break;
+		case 'Q':
+			qualified_names = 1;
+			break;
+		case 'o':
+			free(output);
+			output = strdup(optarg);
+			break;
+		case 'f':
+			free(filecontexts);
+			filecontexts = strdup(optarg);
+			break;
+		case 'G':
+			attrs_expand_generated = 1;
+			break;
+		case 'X': {
+			char *endptr = NULL;
+			errno = 0;
+			attrs_expand_size = strtol(optarg, &endptr, 10);
+			if (errno != 0 || endptr == optarg || *endptr != '\0') {
+				fprintf(stderr,
+					"Bad attribute expand size: %s\n",
+					optarg);
+				usage(argv[0]);
+			}
 
-				if (attrs_expand_size < 0) {
-					fprintf(stderr, "Attribute expand size must be > 0\n");
-					usage(argv[0]);
-				}
-				break;
+			if (attrs_expand_size < 0) {
+				fprintf(stderr,
+					"Attribute expand size must be > 0\n");
+				usage(argv[0]);
 			}
-			case 'O':
-				optimize = 1;
-				break;
-			case 'h':
-				usage(argv[0]);
-			case '?':
-				break;
-			default:
-					fprintf(stderr, "Unsupported option: %s\n", optarg);
-				usage(argv[0]);
+			break;
+		}
+		case 'O':
+			optimize = 1;
+			break;
+		case 'h':
+			usage(argv[0]);
+		case '?':
+			break;
+		default:
+			fprintf(stderr, "Unsupported option: %s\n", optarg);
+			usage(argv[0]);
 		}
 	}
 	if (optind >= argc) {
@@ -339,7 +350,8 @@ int main(int argc, char *argv[])
 			rc = SEPOL_ERR;
 			goto exit;
 		}
-		if (snprintf(output, size + 1, "policy.%d", policyvers) != size) {
+		if (snprintf(output, size + 1, "policy.%d", policyvers) !=
+		    size) {
 			fprintf(stderr, "Failed to create output filename\n");
 			rc = SEPOL_ERR;
 			goto exit;

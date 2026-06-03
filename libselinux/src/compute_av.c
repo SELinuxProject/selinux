@@ -10,8 +10,7 @@
 #include "policy.h"
 #include "mapping.h"
 
-int security_compute_av_flags_raw(const char * scon,
-				  const char * tcon,
+int security_compute_av_flags_raw(const char *scon, const char *tcon,
 				  security_class_t tclass,
 				  access_vector_t requested,
 				  struct av_decision *avd)
@@ -41,8 +40,8 @@ int security_compute_av_flags_raw(const char * scon,
 
 	kclass = unmap_class(tclass);
 
-	ret = snprintf(buf, len, "%s %s %hu %x", scon, tcon,
-		 kclass, unmap_perm(tclass, requested));
+	ret = snprintf(buf, len, "%s %s %hu %x", scon, tcon, kclass,
+		       unmap_perm(tclass, requested));
 	if (ret < 0 || (size_t)ret >= len) {
 		errno = EOVERFLOW;
 		ret = -1;
@@ -58,10 +57,9 @@ int security_compute_av_flags_raw(const char * scon,
 	if (ret < 0)
 		goto out;
 
-	ret = sscanf(buf, "%x %x %x %x %u %x",
-		     &avd->allowed, &avd->decided,
-		     &avd->auditallow, &avd->auditdeny,
-		     &avd->seqno, &avd->flags);
+	ret = sscanf(buf, "%x %x %x %x %u %x", &avd->allowed, &avd->decided,
+		     &avd->auditallow, &avd->auditdeny, &avd->seqno,
+		     &avd->flags);
 	if (ret < 5) {
 		ret = -1;
 		goto out;
@@ -79,24 +77,21 @@ int security_compute_av_flags_raw(const char * scon,
 		map_decision(tclass, avd);
 
 	ret = 0;
-      out:
+out:
 	free(buf);
 	close(fd);
 	return ret;
 }
 
-
-int security_compute_av_raw(const char * scon,
-			    const char * tcon,
-			    security_class_t tclass,
-			    access_vector_t requested,
+int security_compute_av_raw(const char *scon, const char *tcon,
+			    security_class_t tclass, access_vector_t requested,
 			    struct av_decision *avd)
 {
 	struct av_decision lavd;
 	int ret;
 
-	ret = security_compute_av_flags_raw(scon, tcon, tclass,
-					    requested, &lavd);
+	ret = security_compute_av_flags_raw(scon, tcon, tclass, requested,
+					    &lavd);
 	if (ret == 0) {
 		avd->allowed = lavd.allowed;
 		avd->decided = lavd.decided;
@@ -111,15 +106,13 @@ int security_compute_av_raw(const char * scon,
 	return ret;
 }
 
-
-int security_compute_av_flags(const char * scon,
-			      const char * tcon,
+int security_compute_av_flags(const char *scon, const char *tcon,
 			      security_class_t tclass,
 			      access_vector_t requested,
 			      struct av_decision *avd)
 {
-	char * rscon;
-	char * rtcon;
+	char *rscon;
+	char *rtcon;
 	int ret;
 
 	if (selinux_trans_to_raw_context(scon, &rscon))
@@ -128,8 +121,8 @@ int security_compute_av_flags(const char * scon,
 		freecon(rscon);
 		return -1;
 	}
-	ret = security_compute_av_flags_raw(rscon, rtcon, tclass,
-					    requested, avd);
+	ret = security_compute_av_flags_raw(rscon, rtcon, tclass, requested,
+					    avd);
 
 	freecon(rscon);
 	freecon(rtcon);
@@ -137,19 +130,15 @@ int security_compute_av_flags(const char * scon,
 	return ret;
 }
 
-
-int security_compute_av(const char * scon,
-			const char * tcon,
-			security_class_t tclass,
-			access_vector_t requested, struct av_decision *avd)
+int security_compute_av(const char *scon, const char *tcon,
+			security_class_t tclass, access_vector_t requested,
+			struct av_decision *avd)
 {
 	struct av_decision lavd;
 	int ret;
 
-	ret = security_compute_av_flags(scon, tcon, tclass,
-					requested, &lavd);
-	if (ret == 0)
-	{
+	ret = security_compute_av_flags(scon, tcon, tclass, requested, &lavd);
+	if (ret == 0) {
 		avd->allowed = lavd.allowed;
 		avd->decided = lavd.decided;
 		avd->auditallow = lavd.auditallow;
@@ -163,4 +152,3 @@ int security_compute_av(const char * scon,
 
 	return ret;
 }
-

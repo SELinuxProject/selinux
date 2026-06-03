@@ -29,13 +29,12 @@ void restore_init(struct restore_opts *opts)
 	}
 
 	opts->restorecon_flags = 0;
-	opts->restorecon_flags = opts->nochange | opts->verbose |
-			   opts->progress | opts->set_specctx  |
-			   opts->add_assoc | opts->ignore_digest |
-			   opts->recurse | opts->userealpath |
-			   opts->xdev | opts->abort_on_error |
-			   opts->syslog_changes | opts->log_matches |
-			   opts->ignore_noent | opts->ignore_mounts;
+	opts->restorecon_flags =
+		opts->nochange | opts->verbose | opts->progress |
+		opts->set_specctx | opts->add_assoc | opts->ignore_digest |
+		opts->recurse | opts->userealpath | opts->xdev |
+		opts->abort_on_error | opts->syslog_changes |
+		opts->log_matches | opts->ignore_noent | opts->ignore_mounts;
 
 	/* Use setfiles, restorecon and restorecond own handles */
 	selinux_restorecon_set_sehandle(opts->hnd);
@@ -51,8 +50,8 @@ void restore_init(struct restore_opts *opts)
 	}
 
 	if (exclude_list)
-		selinux_restorecon_set_exclude_list
-						 ((const char **)exclude_list);
+		selinux_restorecon_set_exclude_list(
+			(const char **)exclude_list);
 }
 
 void restore_finish(void)
@@ -74,8 +73,9 @@ int process_glob(char *name, struct restore_opts *opts)
 
 	memset(&globbuf, 0, sizeof(globbuf));
 
-	errors = glob(name, GLOB_TILDE | GLOB_PERIOD |
-			  GLOB_NOCHECK | GLOB_BRACE, NULL, &globbuf);
+	errors = glob(name,
+		      GLOB_TILDE | GLOB_PERIOD | GLOB_NOCHECK | GLOB_BRACE,
+		      NULL, &globbuf);
 	if (errors)
 		return errors;
 
@@ -102,7 +102,7 @@ void add_exclude(const char *directory)
 
 	if (directory == NULL || directory[0] != '/') {
 		fprintf(stderr, "Full path required for exclude: %s.\n",
-			    directory);
+			directory);
 		exit(-1);
 	}
 
@@ -112,7 +112,7 @@ void add_exclude(const char *directory)
 	tmp_list = realloc(exclude_list, sizeof(char *) * (exclude_count + 2));
 	if (!tmp_list) {
 		fprintf(stderr, "realloc failed while excluding %s.\n",
-			    directory);
+			directory);
 		exit(-1);
 	}
 	exclude_list = tmp_list;
@@ -120,7 +120,7 @@ void add_exclude(const char *directory)
 	exclude_list[exclude_count] = strdup(directory);
 	if (!exclude_list[exclude_count]) {
 		fprintf(stderr, "strdup failed while excluding %s.\n",
-			    directory);
+			directory);
 		exit(-1);
 	}
 	exclude_count++;

@@ -34,24 +34,26 @@
 
 #include "../../src/cil_tree.h"
 
-void test_cil_tree_node_init(CuTest *tc) {
-   struct cil_tree_node *test_node;
+void test_cil_tree_node_init(CuTest *tc)
+{
+	struct cil_tree_node *test_node;
 
-   cil_tree_node_init(&test_node);
+	cil_tree_node_init(&test_node);
 
-   CuAssertPtrNotNull(tc, test_node);
-   CuAssertPtrEquals(tc, NULL, test_node->cl_head);
-   CuAssertPtrEquals(tc, NULL, test_node->cl_tail);
-   CuAssertPtrEquals(tc, NULL, test_node->parent);
-   CuAssertPtrEquals(tc, NULL, test_node->data);
-   CuAssertPtrEquals(tc, NULL, test_node->next);
-   CuAssertIntEquals(tc, 0, test_node->flavor);
-   CuAssertIntEquals(tc, 0, test_node->line);
+	CuAssertPtrNotNull(tc, test_node);
+	CuAssertPtrEquals(tc, NULL, test_node->cl_head);
+	CuAssertPtrEquals(tc, NULL, test_node->cl_tail);
+	CuAssertPtrEquals(tc, NULL, test_node->parent);
+	CuAssertPtrEquals(tc, NULL, test_node->data);
+	CuAssertPtrEquals(tc, NULL, test_node->next);
+	CuAssertIntEquals(tc, 0, test_node->flavor);
+	CuAssertIntEquals(tc, 0, test_node->line);
 
-   free(test_node);
+	free(test_node);
 }
 
-void test_cil_tree_init(CuTest *tc) {
+void test_cil_tree_init(CuTest *tc)
+{
 	struct cil_tree *test_tree;
 
 	int rc = cil_tree_init(&test_tree);
@@ -68,4 +70,3 @@ void test_cil_tree_init(CuTest *tc) {
 
 	free(test_tree);
 }
-

@@ -11,25 +11,24 @@ typedef struct dbase_activedb dbase_activedb_t;
 
 /* ACTIVEDB extension to RECORD interface - method table */
 typedef struct record_activedb_table {
-
 	/* Read a list of records */
-	int (*read_list) (semanage_handle_t * handle,
-			  record_t *** records, unsigned int *count);
+	int (*read_list)(semanage_handle_t *handle, record_t ***records,
+			 unsigned int *count);
 
 	/* Commit a list of records */
-	int (*commit_list) (semanage_handle_t * handle,
-			    record_t ** records, unsigned int count);
+	int (*commit_list)(semanage_handle_t *handle, record_t **records,
+			   unsigned int count);
 
 } record_activedb_table_t;
 
 /* ACTIVEDB - initialization */
-extern int dbase_activedb_init(semanage_handle_t * handle,
-			       const record_table_t * rtable,
-			       const record_activedb_table_t * ratable,
-			       dbase_activedb_t ** dbase);
+extern int dbase_activedb_init(semanage_handle_t *handle,
+			       const record_table_t *rtable,
+			       const record_activedb_table_t *ratable,
+			       dbase_activedb_t **dbase);
 
 /* ACTIVEDB - release */
-extern void dbase_activedb_release(dbase_activedb_t * dbase);
+extern void dbase_activedb_release(dbase_activedb_t *dbase);
 
 /* ACTIVEDB - method table implementation */
 extern const dbase_table_t SEMANAGE_ACTIVEDB_DTABLE;

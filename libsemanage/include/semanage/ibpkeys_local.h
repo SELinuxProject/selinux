@@ -24,10 +24,10 @@ extern int semanage_ibpkey_exists_local(semanage_handle_t *handle,
 extern int semanage_ibpkey_count_local(semanage_handle_t *handle,
 				       unsigned int *response);
 
-extern int semanage_ibpkey_iterate_local(semanage_handle_t *handle,
-					 int (*handler)(const semanage_ibpkey_t *
-							record, void *varg),
-					 void *handler_arg);
+extern int semanage_ibpkey_iterate_local(
+	semanage_handle_t *handle,
+	int (*handler)(const semanage_ibpkey_t *record, void *varg),
+	void *handler_arg);
 
 extern int semanage_ibpkey_list_local(semanage_handle_t *handle,
 				      semanage_ibpkey_t ***records,

@@ -46,7 +46,6 @@
 #include "cil_list.h"
 #include "cil_symtab.h"
 
-
 enum cil_statement_list {
 	CIL_LIST_COMMON = 1,
 	CIL_LIST_DEFAULT_USER,
@@ -72,7 +71,8 @@ enum cil_statement_list {
 	CIL_LIST_NUM_LISTS
 };
 
-static int __cil_gather_statements_helper(struct cil_tree_node *node, uint32_t *finished, void *extra_args)
+static int __cil_gather_statements_helper(struct cil_tree_node *node,
+					  uint32_t *finished, void *extra_args)
 {
 	struct cil_list **lists;
 	int kind = 0;
@@ -179,12 +179,14 @@ static int __cil_gather_statements_helper(struct cil_tree_node *node, uint32_t *
 	return SEPOL_OK;
 }
 
-static void cil_gather_statements(struct cil_tree_node *start, struct cil_list *lists[])
+static void cil_gather_statements(struct cil_tree_node *start,
+				  struct cil_list *lists[])
 {
 	cil_tree_walk(start, __cil_gather_statements_helper, NULL, NULL, lists);
 }
 
-static void cil_simple_rules_to_policy(FILE *out, struct cil_list *rules, const char *kind)
+static void cil_simple_rules_to_policy(FILE *out, struct cil_list *rules,
+				       const char *kind)
 {
 	struct cil_list_item *i1;
 
@@ -248,7 +250,8 @@ static void cil_level_to_policy(FILE *out, struct cil_level *level)
 	}
 }
 
-static int cil_levels_simple_and_equal(struct cil_level *l1, struct cil_level *l2)
+static int cil_levels_simple_and_equal(struct cil_level *l1,
+				       struct cil_level *l2)
 {
 	/* Mostly just want to detect s0 - s0 ranges */
 	if (l1 == l2)
@@ -263,13 +266,15 @@ static int cil_levels_simple_and_equal(struct cil_level *l1, struct cil_level *l
 static void cil_levelrange_to_policy(FILE *out, struct cil_levelrange *lvlrange)
 {
 	cil_level_to_policy(out, lvlrange->low);
-	if (cil_levels_simple_and_equal(lvlrange->low, lvlrange->high) == CIL_FALSE) {
+	if (cil_levels_simple_and_equal(lvlrange->low, lvlrange->high) ==
+	    CIL_FALSE) {
 		fprintf(out, " - ");
 		cil_level_to_policy(out, lvlrange->high);
 	}
 }
 
-static void cil_context_to_policy(FILE *out, struct cil_context *context, int mls)
+static void cil_context_to_policy(FILE *out, struct cil_context *context,
+				  int mls)
 {
 	fprintf(out, "%s:", DATUM(context->user)->fqn);
 	fprintf(out, "%s:", DATUM(context->role)->fqn);
@@ -295,27 +300,32 @@ static void cil_cond_expr_to_policy(FILE *out, struct cil_list *expr, int first)
 		case CIL_OR:
 			cil_cond_expr_to_policy(out, i1->next->data, CIL_FALSE);
 			fprintf(out, " || ");
-			cil_cond_expr_to_policy(out, i1->next->next->data, CIL_FALSE);
+			cil_cond_expr_to_policy(out, i1->next->next->data,
+						CIL_FALSE);
 			break;
 		case CIL_AND:
 			cil_cond_expr_to_policy(out, i1->next->data, CIL_FALSE);
 			fprintf(out, " && ");
-			cil_cond_expr_to_policy(out, i1->next->next->data, CIL_FALSE);
+			cil_cond_expr_to_policy(out, i1->next->next->data,
+						CIL_FALSE);
 			break;
 		case CIL_XOR:
 			cil_cond_expr_to_policy(out, i1->next->data, CIL_FALSE);
 			fprintf(out, " ^ ");
-			cil_cond_expr_to_policy(out, i1->next->next->data, CIL_FALSE);
+			cil_cond_expr_to_policy(out, i1->next->next->data,
+						CIL_FALSE);
 			break;
 		case CIL_EQ:
 			cil_cond_expr_to_policy(out, i1->next->data, CIL_FALSE);
 			fprintf(out, " == ");
-			cil_cond_expr_to_policy(out, i1->next->next->data, CIL_FALSE);
+			cil_cond_expr_to_policy(out, i1->next->next->data,
+						CIL_FALSE);
 			break;
 		case CIL_NEQ:
 			cil_cond_expr_to_policy(out, i1->next->data, CIL_FALSE);
 			fprintf(out, " != ");
-			cil_cond_expr_to_policy(out, i1->next->next->data, CIL_FALSE);
+			cil_cond_expr_to_policy(out, i1->next->next->data,
+						CIL_FALSE);
 			break;
 		default:
 			fprintf(out, "???");
@@ -337,7 +347,8 @@ static void cil_cond_expr_to_policy(FILE *out, struct cil_list *expr, int first)
 	}
 }
 
-static size_t __cil_userattribute_len(struct cil_db *db, struct cil_userattribute *attr)
+static size_t __cil_userattribute_len(struct cil_db *db,
+				      struct cil_userattribute *attr)
 {
 	ebitmap_node_t *unode;
 	unsigned int i;
@@ -351,7 +362,8 @@ static size_t __cil_userattribute_len(struct cil_db *db, struct cil_userattribut
 	return len;
 }
 
-static size_t __cil_cons_leaf_operand_len(struct cil_db *db, struct cil_list_item *operand)
+static size_t __cil_cons_leaf_operand_len(struct cil_db *db,
+					  struct cil_list_item *operand)
 {
 	struct cil_list_item *i1;
 	enum cil_flavor flavor = operand->flavor;
@@ -372,7 +384,8 @@ static size_t __cil_cons_leaf_operand_len(struct cil_db *db, struct cil_list_ite
 		cil_list_for_each(i1, (struct cil_list *)operand->data) {
 			struct cil_tree_node *node = NODE(operand->data);
 			if (node->flavor == CIL_USERATTRIBUTE) {
-				len = __cil_userattribute_len(db, operand->data);
+				len = __cil_userattribute_len(db,
+							      operand->data);
 			} else {
 				len += strlen(DATUM(operand->data)->fqn);
 				len++; /* " " or "}" */
@@ -446,7 +459,9 @@ static size_t cil_cons_expr_len(struct cil_db *db, struct cil_list *cons_expr)
 	return len;
 }
 
-static char *__cil_userattribute_to_string(struct cil_db *db, struct cil_userattribute *attr, char *new)
+static char *__cil_userattribute_to_string(struct cil_db *db,
+					   struct cil_userattribute *attr,
+					   char *new)
 {
 	ebitmap_node_t *unode;
 	unsigned int i;
@@ -464,7 +479,9 @@ static char *__cil_userattribute_to_string(struct cil_db *db, struct cil_useratt
 	return new;
 }
 
-static char *__cil_cons_leaf_operand_to_string(struct cil_db *db, struct cil_list_item *operand, char *new)
+static char *__cil_cons_leaf_operand_to_string(struct cil_db *db,
+					       struct cil_list_item *operand,
+					       char *new)
 {
 	struct cil_list_item *i1;
 	enum cil_flavor flavor = operand->flavor;
@@ -472,7 +489,8 @@ static char *__cil_cons_leaf_operand_to_string(struct cil_db *db, struct cil_lis
 	size_t o_len;
 
 	if (flavor == CIL_CONS_OPERAND) {
-		enum cil_flavor o_flavor = (enum cil_flavor)(uintptr_t)operand->data;
+		enum cil_flavor o_flavor =
+			(enum cil_flavor)(uintptr_t)operand->data;
 		switch (o_flavor) {
 		case CIL_CONS_U1:
 			o_str = "u1";
@@ -523,7 +541,8 @@ static char *__cil_cons_leaf_operand_to_string(struct cil_db *db, struct cil_lis
 		struct cil_tree_node *node = NODE(operand->data);
 		if (node->flavor == CIL_USERATTRIBUTE) {
 			*new++ = '{';
-			new = __cil_userattribute_to_string(db, operand->data, new);
+			new = __cil_userattribute_to_string(db, operand->data,
+							    new);
 			new--;
 			*new++ = '}';
 		} else {
@@ -537,7 +556,8 @@ static char *__cil_cons_leaf_operand_to_string(struct cil_db *db, struct cil_lis
 		cil_list_for_each(i1, (struct cil_list *)operand->data) {
 			struct cil_tree_node *node = NODE(operand->data);
 			if (node->flavor == CIL_USERATTRIBUTE) {
-				new = __cil_userattribute_to_string(db, operand->data, new);
+				new = __cil_userattribute_to_string(
+					db, operand->data, new);
 			} else {
 				o_str = DATUM(operand->data)->fqn;
 				o_len = strlen(o_str);
@@ -592,7 +612,8 @@ static char *__cil_cons_leaf_op_to_string(struct cil_list_item *op, char *new)
 	return new;
 }
 
-static char *__cil_cons_expr_to_string(struct cil_db *db, struct cil_list *cons_expr, char *new)
+static char *__cil_cons_expr_to_string(struct cil_db *db,
+				       struct cil_list *cons_expr, char *new)
 {
 	struct cil_list_item *i1;
 	enum cil_flavor op;
@@ -628,26 +649,29 @@ static char *__cil_cons_expr_to_string(struct cil_db *db, struct cil_list *cons_
 		*new++ = '(';
 		new = __cil_cons_leaf_operand_to_string(db, i1->next, new);
 		new = __cil_cons_leaf_op_to_string(i1, new);
-		new = __cil_cons_leaf_operand_to_string(db, i1->next->next, new);
+		new = __cil_cons_leaf_operand_to_string(db, i1->next->next,
+							new);
 		*new++ = ')';
 	}
 
 	return new;
 }
 
-static char *cil_cons_expr_to_string(struct cil_db *db, struct cil_list *cons_expr)
+static char *cil_cons_expr_to_string(struct cil_db *db,
+				     struct cil_list *cons_expr)
 {
 	char *new, *tail;
 	size_t len = cil_cons_expr_len(db, cons_expr);
 
-	new = cil_malloc(len+1);
+	new = cil_malloc(len + 1);
 	tail = __cil_cons_expr_to_string(db, cons_expr, new);
 	*tail = '\0';
 
 	return new;
 }
 
-static void cil_classperms_to_string(struct cil_classperms *classperms, struct cil_list *classperms_strs)
+static void cil_classperms_to_string(struct cil_classperms *classperms,
+				     struct cil_list *classperms_strs)
 {
 	struct cil_list_item *i1;
 	size_t len = 0;
@@ -668,7 +692,7 @@ static void cil_classperms_to_string(struct cil_classperms *classperms, struct c
 	new = cil_malloc(len);
 	curr = new;
 
-	curr[len-1] = '\0';
+	curr[len - 1] = '\0';
 
 	len = strlen(DATUM(classperms->class)->fqn);
 	memcpy(curr, DATUM(classperms->class)->fqn, len);
@@ -688,7 +712,8 @@ static void cil_classperms_to_string(struct cil_classperms *classperms, struct c
 	cil_list_append(classperms_strs, CIL_STRING, new);
 }
 
-static void cil_classperms_to_strings(struct cil_list *classperms, struct cil_list *classperms_strs)
+static void cil_classperms_to_strings(struct cil_list *classperms,
+				      struct cil_list *classperms_strs)
 {
 	struct cil_list_item *i1;
 
@@ -701,13 +726,16 @@ static void cil_classperms_to_strings(struct cil_list *classperms, struct cil_li
 				struct cil_list_item *i2 = NULL;
 				cil_list_for_each(i2, cp->perms) {
 					struct cil_perm *cmp = i2->data;
-					cil_classperms_to_strings(cmp->classperms, classperms_strs);
+					cil_classperms_to_strings(
+						cmp->classperms,
+						classperms_strs);
 				}
 			}
 		} else { /* SET */
 			struct cil_classperms_set *cp_set = i1->data;
 			struct cil_classpermission *cp = cp_set->set;
-			cil_classperms_to_strings(cp->classperms, classperms_strs);
+			cil_classperms_to_strings(cp->classperms,
+						  classperms_strs);
 		}
 	}
 }
@@ -733,7 +761,7 @@ static void cil_sid_decls_to_policy(FILE *out, struct cil_list *sidorder)
 static void cil_commons_to_policy(FILE *out, struct cil_list *commons)
 {
 	struct cil_list_item *i1;
-	struct cil_class* common;
+	struct cil_class *common;
 	struct cil_tree_node *node;
 	struct cil_tree_node *perm;
 
@@ -778,7 +806,8 @@ static void cil_classes_to_policy(FILE *out, struct cil_list *classorder)
 	}
 }
 
-static void cil_defaults_to_policy(FILE *out, struct cil_list *defaults, const char *kind)
+static void cil_defaults_to_policy(FILE *out, struct cil_list *defaults,
+				   const char *kind)
 {
 	struct cil_list_item *i1, *i2, *i3;
 	struct cil_default *def;
@@ -786,7 +815,7 @@ static void cil_defaults_to_policy(FILE *out, struct cil_list *defaults, const c
 
 	cil_list_for_each(i1, defaults) {
 		def = i1->data;
-		fprintf(out, "%s {",kind);
+		fprintf(out, "%s {", kind);
 		cil_list_for_each(i2, def->class_datums) {
 			class_list = cil_expand_class(i2->data);
 			cil_list_for_each(i3, class_list) {
@@ -796,11 +825,11 @@ static void cil_defaults_to_policy(FILE *out, struct cil_list *defaults, const c
 		}
 		fprintf(out, " }");
 		if (def->object == CIL_DEFAULT_SOURCE) {
-			fprintf(out," %s",CIL_KEY_SOURCE);
+			fprintf(out, " %s", CIL_KEY_SOURCE);
 		} else if (def->object == CIL_DEFAULT_TARGET) {
-			fprintf(out," %s",CIL_KEY_TARGET);
+			fprintf(out, " %s", CIL_KEY_TARGET);
 		}
-		fprintf(out,";\n");
+		fprintf(out, ";\n");
 	}
 }
 
@@ -824,34 +853,37 @@ static void cil_default_ranges_to_policy(FILE *out, struct cil_list *defaults)
 
 		switch (def->object_range) {
 		case CIL_DEFAULT_SOURCE_LOW:
-			fprintf(out," %s %s", CIL_KEY_SOURCE, CIL_KEY_LOW);
+			fprintf(out, " %s %s", CIL_KEY_SOURCE, CIL_KEY_LOW);
 			break;
 		case CIL_DEFAULT_SOURCE_HIGH:
-			fprintf(out," %s %s", CIL_KEY_SOURCE, CIL_KEY_HIGH);
+			fprintf(out, " %s %s", CIL_KEY_SOURCE, CIL_KEY_HIGH);
 			break;
 		case CIL_DEFAULT_SOURCE_LOW_HIGH:
-			fprintf(out," %s %s", CIL_KEY_SOURCE, CIL_KEY_LOW_HIGH);
+			fprintf(out, " %s %s", CIL_KEY_SOURCE,
+				CIL_KEY_LOW_HIGH);
 			break;
 		case CIL_DEFAULT_TARGET_LOW:
-			fprintf(out," %s %s", CIL_KEY_TARGET, CIL_KEY_LOW);
+			fprintf(out, " %s %s", CIL_KEY_TARGET, CIL_KEY_LOW);
 			break;
 		case CIL_DEFAULT_TARGET_HIGH:
-			fprintf(out," %s %s", CIL_KEY_TARGET, CIL_KEY_HIGH);
+			fprintf(out, " %s %s", CIL_KEY_TARGET, CIL_KEY_HIGH);
 			break;
 		case CIL_DEFAULT_TARGET_LOW_HIGH:
-			fprintf(out," %s %s", CIL_KEY_TARGET, CIL_KEY_LOW_HIGH);
+			fprintf(out, " %s %s", CIL_KEY_TARGET,
+				CIL_KEY_LOW_HIGH);
 			break;
 		case CIL_DEFAULT_GLBLUB:
-			fprintf(out," %s", CIL_KEY_GLBLUB);
+			fprintf(out, " %s", CIL_KEY_GLBLUB);
 			break;
 		default:
 			break;
 		}
-		fprintf(out,";\n");
+		fprintf(out, ";\n");
 	}
 }
 
-static void cil_sensitivities_to_policy(FILE *out, struct cil_list *sensorder, struct cil_list *all_aliases)
+static void cil_sensitivities_to_policy(FILE *out, struct cil_list *sensorder,
+					struct cil_list *all_aliases)
 {
 	struct cil_list_item *i1, *i2;
 	struct cil_sens *sens;
@@ -906,7 +938,8 @@ static void cil_dominance_to_policy(FILE *out, struct cil_list *sensorder)
 	fprintf(out, " }\n");
 }
 
-static void cil_categories_to_policy(FILE *out, struct cil_list *catorder, struct cil_list *all_aliases)
+static void cil_categories_to_policy(FILE *out, struct cil_list *catorder,
+				     struct cil_list *all_aliases)
 {
 	struct cil_list_item *i1, *i2;
 	struct cil_sens *cat;
@@ -929,7 +962,7 @@ static void cil_categories_to_policy(FILE *out, struct cil_list *catorder, struc
 				num_aliases++;
 			}
 		}
-		fprintf(out, "category %s",cat->datum.fqn);
+		fprintf(out, "category %s", cat->datum.fqn);
 		if (num_aliases > 0) {
 			fprintf(out, " alias");
 			if (num_aliases > 1) {
@@ -957,17 +990,18 @@ static void cil_levels_to_policy(FILE *out, struct cil_list *sensorder)
 		sens = i1->data;
 		if (sens->cats_list) {
 			cil_list_for_each(i2, sens->cats_list) {
-				fprintf(out, "level %s:",sens->datum.fqn);
+				fprintf(out, "level %s:", sens->datum.fqn);
 				cil_cats_to_policy(out, i2->data);
-				fprintf(out,";\n");
+				fprintf(out, ";\n");
 			}
 		} else {
-			fprintf(out, "level %s;\n",sens->datum.fqn);
+			fprintf(out, "level %s;\n", sens->datum.fqn);
 		}
 	}
 }
 
-static void cil_mlsconstrains_to_policy(FILE *out, struct cil_db *db, struct cil_list *mlsconstrains)
+static void cil_mlsconstrains_to_policy(FILE *out, struct cil_db *db,
+					struct cil_list *mlsconstrains)
 {
 	struct cil_list_item *i1, *i2;
 	struct cil_constrain *cons;
@@ -990,7 +1024,9 @@ static void cil_mlsconstrains_to_policy(FILE *out, struct cil_db *db, struct cil
 	}
 }
 
-static void cil_validatetrans_to_policy(FILE *out, struct cil_db *db, struct cil_list *validatetrans, char *kind)
+static void cil_validatetrans_to_policy(FILE *out, struct cil_db *db,
+					struct cil_list *validatetrans,
+					char *kind)
 {
 	struct cil_list_item *i1, *i2;
 	struct cil_validatetrans *trans;
@@ -1004,7 +1040,8 @@ static void cil_validatetrans_to_policy(FILE *out, struct cil_db *db, struct cil
 		expr_str = cil_cons_expr_to_string(db, trans->datum_expr);
 		cil_list_for_each(i2, class_list) {
 			class = i2->data;
-			fprintf(out, "%s %s %s;\n", kind, class->datum.fqn, expr_str);
+			fprintf(out, "%s %s %s;\n", kind, class->datum.fqn,
+				expr_str);
 		}
 		free(expr_str);
 		cil_list_destroy(&class_list, CIL_FALSE);
@@ -1024,7 +1061,8 @@ static void cil_bools_to_policy(FILE *out, struct cil_list *bools)
 	}
 }
 
-static void cil_typealiases_to_policy(FILE *out, struct cil_list *types, struct cil_list *all_aliases)
+static void cil_typealiases_to_policy(FILE *out, struct cil_list *types,
+				      struct cil_list *all_aliases)
 {
 	struct cil_list_item *i1, *i2;
 	struct cil_type *type;
@@ -1075,12 +1113,14 @@ static void cil_typebounds_to_policy(FILE *out, struct cil_list *types)
 		child = i1->data;
 		if (child->bounds != NULL) {
 			parent = child->bounds;
-			fprintf(out, "typebounds %s %s;\n", parent->datum.fqn, child->datum.fqn);
+			fprintf(out, "typebounds %s %s;\n", parent->datum.fqn,
+				child->datum.fqn);
 		}
 	}
 }
 
-static void cil_typeattributes_to_policy(FILE *out, struct cil_list *types, struct cil_list *attributes)
+static void cil_typeattributes_to_policy(FILE *out, struct cil_list *types,
+					 struct cil_list *attributes)
 {
 	struct cil_list_item *i1, *i2;
 	struct cil_type *type;
@@ -1095,10 +1135,13 @@ static void cil_typeattributes_to_policy(FILE *out, struct cil_list *types, stru
 				continue;
 			if (ebitmap_get_bit(attribute->types, type->value)) {
 				if (first) {
-					fprintf(out, "typeattribute %s %s", type->datum.fqn, attribute->datum.fqn);
+					fprintf(out, "typeattribute %s %s",
+						type->datum.fqn,
+						attribute->datum.fqn);
 					first = CIL_FALSE;
 				} else {
-					fprintf(out, ", %s", attribute->datum.fqn);
+					fprintf(out, ", %s",
+						attribute->datum.fqn);
 				}
 			}
 		}
@@ -1131,17 +1174,17 @@ static void cil_xperms_to_policy(FILE *out, struct cil_permissionx *permx)
 			first = i;
 			need_first = CIL_FALSE;
 		} else if (need_last == CIL_TRUE) {
-			if (i == first+1) {
+			if (i == first + 1) {
 				last = i;
 				need_last = CIL_FALSE;
 			} else {
 				fprintf(out, " 0x%x", first);
 				first = i;
 			}
-		} else if (i == last+1) {
+		} else if (i == last + 1) {
 			last = i;
 		} else {
-			if (last > first+1) {
+			if (last > first + 1) {
 				fprintf(out, " 0x%x-0x%x", first, last);
 			} else {
 				fprintf(out, " 0x%x 0x%x", first, last);
@@ -1157,7 +1200,7 @@ static void cil_xperms_to_policy(FILE *out, struct cil_permissionx *permx)
 			fprintf(out, " 0x%x", first);
 		}
 	}
-	fprintf(out," }");
+	fprintf(out, " }");
 }
 
 static void cil_av_rulex_to_policy(FILE *out, struct cil_avrule *rule)
@@ -1223,7 +1266,8 @@ static void cil_av_rule_to_policy(FILE *out, struct cil_avrule *rule)
 	cil_classperms_to_strings(rule->perms.classperms, classperms_strs);
 	cil_list_for_each(i1, classperms_strs) {
 		char *cp_str = i1->data;
-		fprintf(out, "%s %s %s : %s;\n", kind, src->fqn, tgt->fqn, cp_str);
+		fprintf(out, "%s %s %s : %s;\n", kind, src->fqn, tgt->fqn,
+			cp_str);
 		free(cp_str);
 	}
 	cil_list_destroy(&classperms_strs, CIL_FALSE);
@@ -1257,12 +1301,15 @@ static void cil_type_rule_to_policy(FILE *out, struct cil_type_rule *rule)
 
 	class_list = cil_expand_class(rule->obj);
 	cil_list_for_each(i1, class_list) {
-		fprintf(out, "%s %s %s : %s %s;\n", kind, src->fqn, tgt->fqn, DATUM(i1->data)->fqn, res->fqn);
+		fprintf(out, "%s %s %s : %s %s;\n", kind, src->fqn, tgt->fqn,
+			DATUM(i1->data)->fqn, res->fqn);
 	}
 	cil_list_destroy(&class_list, CIL_FALSE);
 }
 
-static void cil_nametypetransition_to_policy(FILE *out, struct cil_nametypetransition *trans)
+static void
+cil_nametypetransition_to_policy(FILE *out,
+				 struct cil_nametypetransition *trans)
 {
 	struct cil_symtab_datum *src, *tgt, *name, *res;
 	struct cil_list *class_list;
@@ -1275,12 +1322,15 @@ static void cil_nametypetransition_to_policy(FILE *out, struct cil_nametypetrans
 
 	class_list = cil_expand_class(trans->obj);
 	cil_list_for_each(i1, class_list) {
-		fprintf(out, "type_transition %s %s : %s %s \"%s\";\n", src->fqn, tgt->fqn, DATUM(i1->data)->fqn, res->fqn, name->fqn);
+		fprintf(out, "type_transition %s %s : %s %s \"%s\";\n",
+			src->fqn, tgt->fqn, DATUM(i1->data)->fqn, res->fqn,
+			name->fqn);
 	}
 	cil_list_destroy(&class_list, CIL_FALSE);
 }
 
-static void cil_rangetransition_to_policy(FILE *out, struct cil_rangetransition *trans)
+static void cil_rangetransition_to_policy(FILE *out,
+					  struct cil_rangetransition *trans)
 {
 	struct cil_symtab_datum *src, *exec;
 	struct cil_list *class_list;
@@ -1291,19 +1341,22 @@ static void cil_rangetransition_to_policy(FILE *out, struct cil_rangetransition 
 
 	class_list = cil_expand_class(trans->obj);
 	cil_list_for_each(i1, class_list) {
-		fprintf(out, "range_transition %s %s : %s ", src->fqn, exec->fqn, DATUM(i1->data)->fqn);
+		fprintf(out, "range_transition %s %s : %s ", src->fqn,
+			exec->fqn, DATUM(i1->data)->fqn);
 		cil_levelrange_to_policy(out, trans->range);
 		fprintf(out, ";\n");
 	}
 	cil_list_destroy(&class_list, CIL_FALSE);
 }
 
-static void cil_typepermissive_to_policy(FILE *out, struct cil_typepermissive *rule)
+static void cil_typepermissive_to_policy(FILE *out,
+					 struct cil_typepermissive *rule)
 {
 	fprintf(out, "permissive %s;\n", DATUM(rule->type)->fqn);
 }
 
-static void cil_typeneveraudit_to_policy(FILE *out, struct cil_typeneveraudit *rule)
+static void cil_typeneveraudit_to_policy(FILE *out,
+					 struct cil_typeneveraudit *rule)
 {
 	fprintf(out, "neveraudit %s;\n", DATUM(rule->type)->fqn);
 }
@@ -1314,7 +1367,9 @@ struct block_te_rules_extra {
 	uint32_t rule_kind;
 };
 
-static int __cil_block_te_rules_to_policy_helper(struct cil_tree_node *node, uint32_t *finished, void *extra_args)
+static int __cil_block_te_rules_to_policy_helper(struct cil_tree_node *node,
+						 uint32_t *finished,
+						 void *extra_args)
 {
 	struct block_te_rules_extra *args = extra_args;
 
@@ -1382,7 +1437,8 @@ static int __cil_block_te_rules_to_policy_helper(struct cil_tree_node *node, uin
 	return SEPOL_OK;
 }
 
-static void cil_block_te_rules_to_policy(FILE *out, struct cil_tree_node *start, int mls)
+static void cil_block_te_rules_to_policy(FILE *out, struct cil_tree_node *start,
+					 int mls)
 {
 	struct block_te_rules_extra args;
 
@@ -1390,50 +1446,66 @@ static void cil_block_te_rules_to_policy(FILE *out, struct cil_tree_node *start,
 
 	args.flavor = CIL_TYPEPERMISSIVE;
 	args.rule_kind = 0;
-	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL, &args);
+	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL,
+		      &args);
 
 	args.flavor = CIL_TYPENEVERAUDIT;
 	args.rule_kind = 0;
-	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL, &args);
+	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL,
+		      &args);
 
 	args.flavor = CIL_AVRULE;
 	args.rule_kind = CIL_AVRULE_ALLOWED;
-	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL, &args);
+	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL,
+		      &args);
 	args.rule_kind = CIL_AVRULE_AUDITALLOW;
-	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL, &args);
+	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL,
+		      &args);
 	args.rule_kind = CIL_AVRULE_DONTAUDIT;
-	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL, &args);
+	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL,
+		      &args);
 	args.rule_kind = CIL_AVRULE_NEVERALLOW;
-	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL, &args);
+	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL,
+		      &args);
 
 	args.flavor = CIL_AVRULEX;
 	args.rule_kind = CIL_AVRULE_ALLOWED;
-	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL, &args);
+	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL,
+		      &args);
 	args.rule_kind = CIL_AVRULE_AUDITALLOW;
-	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL, &args);
+	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL,
+		      &args);
 	args.rule_kind = CIL_AVRULE_DONTAUDIT;
-	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL, &args);
+	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL,
+		      &args);
 	args.rule_kind = CIL_AVRULE_NEVERALLOW;
-	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL, &args);
+	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL,
+		      &args);
 
 	args.flavor = CIL_TYPE_RULE;
 	args.rule_kind = CIL_TYPE_TRANSITION;
-	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL, &args);
+	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL,
+		      &args);
 	args.rule_kind = CIL_TYPE_MEMBER;
-	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL, &args);
+	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL,
+		      &args);
 	args.rule_kind = CIL_TYPE_CHANGE;
-	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL, &args);
+	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL,
+		      &args);
 	args.rule_kind = CIL_AVRULE_TYPE;
-	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL, &args);
+	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL,
+		      &args);
 
 	args.flavor = CIL_NAMETYPETRANSITION;
 	args.rule_kind = 0;
-	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL, &args);
+	cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL,
+		      &args);
 
 	if (mls == CIL_TRUE) {
 		args.flavor = CIL_RANGETRANSITION;
 		args.rule_kind = 0;
-		cil_tree_walk(start, __cil_block_te_rules_to_policy_helper, NULL, NULL, &args);
+		cil_tree_walk(start, __cil_block_te_rules_to_policy_helper,
+			      NULL, NULL, &args);
 	}
 }
 
@@ -1442,7 +1514,8 @@ struct te_rules_extra {
 	int mls;
 };
 
-static int __cil_te_rules_to_policy_helper(struct cil_tree_node *node, uint32_t *finished, void *extra_args)
+static int __cil_te_rules_to_policy_helper(struct cil_tree_node *node,
+					   uint32_t *finished, void *extra_args)
 {
 	struct te_rules_extra *args = extra_args;
 
@@ -1463,8 +1536,9 @@ static int __cil_te_rules_to_policy_helper(struct cil_tree_node *node, uint32_t 
 		struct cil_condblock *cb;
 
 		fprintf(args->out, "if ");
-		cil_cond_expr_to_policy(args->out, boolean->datum_expr, CIL_TRUE);
-		fprintf(args->out," {\n");
+		cil_cond_expr_to_policy(args->out, boolean->datum_expr,
+					CIL_TRUE);
+		fprintf(args->out, " {\n");
 		n = node->cl_head;
 		cb = n != NULL ? n->data : NULL;
 		if (cb && cb->flavor == CIL_CONDTRUE) {
@@ -1473,10 +1547,10 @@ static int __cil_te_rules_to_policy_helper(struct cil_tree_node *node, uint32_t 
 			cb = n != NULL ? n->data : NULL;
 		}
 		if (cb && cb->flavor == CIL_CONDFALSE) {
-			fprintf(args->out,"} else {\n");
+			fprintf(args->out, "} else {\n");
 			cil_block_te_rules_to_policy(args->out, n, args->mls);
 		}
-		fprintf(args->out,"}\n");
+		fprintf(args->out, "}\n");
 		*finished = CIL_TREE_SKIP_HEAD;
 		break;
 	}
@@ -1487,7 +1561,8 @@ static int __cil_te_rules_to_policy_helper(struct cil_tree_node *node, uint32_t 
 	return SEPOL_OK;
 }
 
-static void cil_te_rules_to_policy(FILE *out, struct cil_tree_node *head, int mls)
+static void cil_te_rules_to_policy(FILE *out, struct cil_tree_node *head,
+				   int mls)
 {
 	struct te_rules_extra args;
 
@@ -1505,13 +1580,14 @@ static void cil_roles_to_policy(FILE *out, struct cil_list *rules)
 
 	cil_list_for_each(i1, rules) {
 		role = i1->data;
-		if (strcmp(role->datum.fqn,"object_r") == 0)
+		if (strcmp(role->datum.fqn, "object_r") == 0)
 			continue;
 		fprintf(out, "role %s;\n", role->datum.fqn);
 	}
 }
 
-static void cil_role_types_to_policy(FILE *out, struct cil_list *roles, struct cil_list *types)
+static void cil_role_types_to_policy(FILE *out, struct cil_list *roles,
+				     struct cil_list *types)
 {
 	struct cil_list_item *i1, *i2;
 	struct cil_role *role;
@@ -1520,17 +1596,21 @@ static void cil_role_types_to_policy(FILE *out, struct cil_list *roles, struct c
 
 	cil_list_for_each(i1, roles) {
 		role = i1->data;
-		if (strcmp(role->datum.fqn,"object_r") == 0)
+		if (strcmp(role->datum.fqn, "object_r") == 0)
 			continue;
 		if (role->types) {
 			cil_list_for_each(i2, types) {
 				type = i2->data;
 				if (ebitmap_get_bit(role->types, type->value)) {
 					if (first) {
-						fprintf(out, "role %s types { %s", role->datum.fqn, type->datum.fqn);
+						fprintf(out,
+							"role %s types { %s",
+							role->datum.fqn,
+							type->datum.fqn);
 						first = CIL_FALSE;
 					} else {
-						fprintf(out, " %s", type->datum.fqn);
+						fprintf(out, " %s",
+							type->datum.fqn);
 					}
 				}
 			}
@@ -1543,7 +1623,8 @@ static void cil_role_types_to_policy(FILE *out, struct cil_list *roles, struct c
 	}
 }
 
-static void cil_roleattributes_to_policy(FILE *out, struct cil_list *roles, struct cil_list *attributes)
+static void cil_roleattributes_to_policy(FILE *out, struct cil_list *roles,
+					 struct cil_list *attributes)
 {
 	struct cil_list_item *i1, *i2;
 	struct cil_role *role;
@@ -1552,16 +1633,19 @@ static void cil_roleattributes_to_policy(FILE *out, struct cil_list *roles, stru
 
 	cil_list_for_each(i1, roles) {
 		role = i1->data;
-		if (strcmp(role->datum.fqn,"object_r") == 0)
+		if (strcmp(role->datum.fqn, "object_r") == 0)
 			continue;
 		cil_list_for_each(i2, attributes) {
 			attribute = i2->data;
 			if (ebitmap_get_bit(attribute->roles, role->value)) {
 				if (first) {
-					fprintf(out, "roleattribute %s %s", role->datum.fqn, attribute->datum.fqn);
+					fprintf(out, "roleattribute %s %s",
+						role->datum.fqn,
+						attribute->datum.fqn);
 					first = CIL_FALSE;
 				} else {
-					fprintf(out, ", %s", attribute->datum.fqn);
+					fprintf(out, ", %s",
+						attribute->datum.fqn);
 				}
 			}
 		}
@@ -1579,28 +1663,33 @@ static void cil_roleallows_to_policy(FILE *out, struct cil_list *roleallows)
 
 	cil_list_for_each(i1, roleallows) {
 		allow = i1->data;
-		fprintf(out, "allow %s %s;\n", DATUM(allow->src)->fqn, DATUM(allow->tgt)->fqn);
+		fprintf(out, "allow %s %s;\n", DATUM(allow->src)->fqn,
+			DATUM(allow->tgt)->fqn);
 	}
 }
 
-static void cil_roletransitions_to_policy(FILE *out, struct cil_list *roletransitions)
+static void cil_roletransitions_to_policy(FILE *out,
+					  struct cil_list *roletransitions)
 {
 	struct cil_list_item *i1, *i2;
 	struct cil_list *class_list;
 	struct cil_roletransition *trans;
 
-
 	cil_list_for_each(i1, roletransitions) {
 		trans = i1->data;
 		class_list = cil_expand_class(trans->obj);
 		cil_list_for_each(i2, class_list) {
-			fprintf(out, "role_transition %s %s : %s %s;\n", DATUM(trans->src)->fqn, DATUM(trans->tgt)->fqn, DATUM(i2->data)->fqn, DATUM(trans->result)->fqn);
+			fprintf(out, "role_transition %s %s : %s %s;\n",
+				DATUM(trans->src)->fqn, DATUM(trans->tgt)->fqn,
+				DATUM(i2->data)->fqn,
+				DATUM(trans->result)->fqn);
 		}
 		cil_list_destroy(&class_list, CIL_FALSE);
 	}
 }
 
-static void cil_users_to_policy(FILE *out, int mls, struct cil_list *users, struct cil_list *all_roles)
+static void cil_users_to_policy(FILE *out, int mls, struct cil_list *users,
+				struct cil_list *all_roles)
 {
 	struct cil_list_item *i1, *i2;
 	struct cil_user *user;
@@ -1611,7 +1700,7 @@ static void cil_users_to_policy(FILE *out, int mls, struct cil_list *users, stru
 	cil_list_for_each(i1, users) {
 		user = i1->data;
 		num_roles = 0;
-		fprintf(out, "user %s",user->datum.fqn);
+		fprintf(out, "user %s", user->datum.fqn);
 		cil_list_for_each(i2, all_roles) {
 			role = i2->data;
 			if (ebitmap_get_bit(user->roles, role->value)) {
@@ -1647,11 +1736,12 @@ static void cil_users_to_policy(FILE *out, int mls, struct cil_list *users, stru
 			cil_levelrange_to_policy(out, user->range);
 		}
 
-		fprintf(out,";\n");
+		fprintf(out, ";\n");
 	}
 }
 
-static void cil_constrains_to_policy(FILE *out, struct cil_db *db, struct cil_list *constrains)
+static void cil_constrains_to_policy(FILE *out, struct cil_db *db,
+				     struct cil_list *constrains)
 {
 	struct cil_list_item *i1, *i2;
 	struct cil_constrain *cons;
@@ -1666,7 +1756,7 @@ static void cil_constrains_to_policy(FILE *out, struct cil_db *db, struct cil_li
 		expr_str = cil_cons_expr_to_string(db, cons->datum_expr);
 		cil_list_for_each(i2, classperms_strs) {
 			cp_str = i2->data;
-			fprintf(out, "constrain %s %s;\n",cp_str, expr_str);
+			fprintf(out, "constrain %s %s;\n", cp_str, expr_str);
 			free(cp_str);
 		}
 		free(expr_str);
@@ -1674,7 +1764,8 @@ static void cil_constrains_to_policy(FILE *out, struct cil_db *db, struct cil_li
 	}
 }
 
-static void cil_sid_contexts_to_policy(FILE *out, struct cil_list *sids, int mls)
+static void cil_sid_contexts_to_policy(FILE *out, struct cil_list *sids,
+				       int mls)
 {
 	struct cil_list_item *i1;
 	struct cil_sid *sid;
@@ -1684,7 +1775,7 @@ static void cil_sid_contexts_to_policy(FILE *out, struct cil_list *sids, int mls
 		if (sid->context) {
 			fprintf(out, "sid %s ", sid->datum.fqn);
 			cil_context_to_policy(out, sid->context, mls);
-			fprintf(out,"\n");
+			fprintf(out, "\n");
 		}
 	}
 }
@@ -1694,53 +1785,57 @@ static void cil_fsuses_to_policy(FILE *out, struct cil_sort *fsuses, int mls)
 	unsigned i;
 	struct cil_fsuse *fsuse;
 
-	for (i=0; i<fsuses->count; i++) {
+	for (i = 0; i < fsuses->count; i++) {
 		fsuse = fsuses->array[i];
 		if (fsuse->type == CIL_FSUSE_XATTR) {
 			fprintf(out, "fs_use_xattr %s ", fsuse->fs_str);
 			cil_context_to_policy(out, fsuse->context, mls);
-			fprintf(out,";\n");
+			fprintf(out, ";\n");
 		}
 	}
 
-	for (i=0; i<fsuses->count; i++) {
+	for (i = 0; i < fsuses->count; i++) {
 		fsuse = fsuses->array[i];
 		if (fsuse->type == CIL_FSUSE_TASK) {
 			fprintf(out, "fs_use_task %s ", fsuse->fs_str);
 			cil_context_to_policy(out, fsuse->context, mls);
-			fprintf(out,";\n");
+			fprintf(out, ";\n");
 		}
 	}
 
-	for (i=0; i<fsuses->count; i++) {
+	for (i = 0; i < fsuses->count; i++) {
 		fsuse = fsuses->array[i];
 		if (fsuse->type == CIL_FSUSE_TRANS) {
 			fprintf(out, "fs_use_trans %s ", fsuse->fs_str);
 			cil_context_to_policy(out, fsuse->context, mls);
-			fprintf(out,";\n");
+			fprintf(out, ";\n");
 		}
 	}
 }
 
-static void cil_genfscons_to_policy(FILE *out, struct cil_sort *genfscons, int mls)
+static void cil_genfscons_to_policy(FILE *out, struct cil_sort *genfscons,
+				    int mls)
 {
 	unsigned i;
 	struct cil_genfscon *genfscon;
 
-	for (i=0; i<genfscons->count; i++) {
+	for (i = 0; i < genfscons->count; i++) {
 		genfscon = genfscons->array[i];
-		fprintf(out, "genfscon %s %s ", genfscon->fs_str, genfscon->path_str);
+		fprintf(out, "genfscon %s %s ", genfscon->fs_str,
+			genfscon->path_str);
 		cil_context_to_policy(out, genfscon->context, mls);
 		fprintf(out, "\n");
 	}
 }
 
-static void cil_ibpkeycons_to_policy(FILE *out, struct cil_sort *ibpkeycons, int mls)
+static void cil_ibpkeycons_to_policy(FILE *out, struct cil_sort *ibpkeycons,
+				     int mls)
 {
 	uint32_t i = 0;
 
 	for (i = 0; i < ibpkeycons->count; i++) {
-		struct cil_ibpkeycon *ibpkeycon = (struct cil_ibpkeycon *)ibpkeycons->array[i];
+		struct cil_ibpkeycon *ibpkeycon =
+			(struct cil_ibpkeycon *)ibpkeycons->array[i];
 
 		fprintf(out, "ibpkeycon %s ", ibpkeycon->subnet_prefix_str);
 		fprintf(out, "%d ", ibpkeycon->pkey_low);
@@ -1750,12 +1845,14 @@ static void cil_ibpkeycons_to_policy(FILE *out, struct cil_sort *ibpkeycons, int
 	}
 }
 
-static void cil_ibendportcons_to_policy(FILE *out, struct cil_sort *ibendportcons, int mls)
+static void cil_ibendportcons_to_policy(FILE *out,
+					struct cil_sort *ibendportcons, int mls)
 {
 	uint32_t i;
 
 	for (i = 0; i < ibendportcons->count; i++) {
-		struct cil_ibendportcon *ibendportcon = (struct cil_ibendportcon *)ibendportcons->array[i];
+		struct cil_ibendportcon *ibendportcon =
+			(struct cil_ibendportcon *)ibendportcons->array[i];
 
 		fprintf(out, "ibendportcon %s ", ibendportcon->dev_name_str);
 		fprintf(out, "%u ", ibendportcon->port);
@@ -1764,12 +1861,13 @@ static void cil_ibendportcons_to_policy(FILE *out, struct cil_sort *ibendportcon
 	}
 }
 
-static void cil_portcons_to_policy(FILE *out, struct cil_sort *portcons, int mls)
+static void cil_portcons_to_policy(FILE *out, struct cil_sort *portcons,
+				   int mls)
 {
 	unsigned i;
 	struct cil_portcon *portcon;
 
-	for (i=0; i<portcons->count; i++) {
+	for (i = 0; i < portcons->count; i++) {
 		portcon = portcons->array[i];
 		fprintf(out, "portcon ");
 		if (portcon->proto == CIL_PROTOCOL_UDP) {
@@ -1784,19 +1882,21 @@ static void cil_portcons_to_policy(FILE *out, struct cil_sort *portcons, int mls
 		if (portcon->port_low == portcon->port_high) {
 			fprintf(out, "%d ", portcon->port_low);
 		} else {
-			fprintf(out, "%d-%d ", portcon->port_low, portcon->port_high);
+			fprintf(out, "%d-%d ", portcon->port_low,
+				portcon->port_high);
 		}
 		cil_context_to_policy(out, portcon->context, mls);
 		fprintf(out, "\n");
 	}
 }
 
-static void cil_netifcons_to_policy(FILE *out, struct cil_sort *netifcons, int mls)
+static void cil_netifcons_to_policy(FILE *out, struct cil_sort *netifcons,
+				    int mls)
 {
 	unsigned i;
 	struct cil_netifcon *netifcon;
 
-	for (i=0; i<netifcons->count; i++) {
+	for (i = 0; i < netifcons->count; i++) {
 		netifcon = netifcons->array[i];
 		fprintf(out, "netifcon %s ", netifcon->interface_str);
 		cil_context_to_policy(out, netifcon->if_context, mls);
@@ -1806,22 +1906,24 @@ static void cil_netifcons_to_policy(FILE *out, struct cil_sort *netifcons, int m
 	}
 }
 
-static void cil_nodecons_to_policy(FILE *out, struct cil_sort *nodecons, int mls)
+static void cil_nodecons_to_policy(FILE *out, struct cil_sort *nodecons,
+				   int mls)
 {
 	unsigned i;
 	struct cil_nodecon *nodecon;
 	char *addr, *mask;
 
-	for (i=0; i<nodecons->count; i++) {
+	for (i = 0; i < nodecons->count; i++) {
 		nodecon = nodecons->array[i];
 		fprintf(out, "nodecon ");
 
 		if (nodecon->addr->family == AF_INET) {
 			errno = 0;
 			addr = cil_malloc(INET_ADDRSTRLEN);
-			inet_ntop(nodecon->addr->family, &nodecon->addr->ip.v4, addr, INET_ADDRSTRLEN);
+			inet_ntop(nodecon->addr->family, &nodecon->addr->ip.v4,
+				  addr, INET_ADDRSTRLEN);
 			if (errno == 0) {
-				fprintf(out, "%s ",addr);
+				fprintf(out, "%s ", addr);
 			} else {
 				fprintf(out, "[INVALID] ");
 			}
@@ -1829,9 +1931,10 @@ static void cil_nodecons_to_policy(FILE *out, struct cil_sort *nodecons, int mls
 
 			errno = 0;
 			mask = cil_malloc(INET_ADDRSTRLEN);
-			inet_ntop(nodecon->mask->family, &nodecon->mask->ip.v4, mask, INET_ADDRSTRLEN);
+			inet_ntop(nodecon->mask->family, &nodecon->mask->ip.v4,
+				  mask, INET_ADDRSTRLEN);
 			if (errno == 0) {
-				fprintf(out, "%s ",mask);
+				fprintf(out, "%s ", mask);
 			} else {
 				fprintf(out, "[INVALID] ");
 			}
@@ -1839,9 +1942,10 @@ static void cil_nodecons_to_policy(FILE *out, struct cil_sort *nodecons, int mls
 		} else {
 			errno = 0;
 			addr = cil_malloc(INET6_ADDRSTRLEN);
-			inet_ntop(nodecon->addr->family, &nodecon->addr->ip.v6, addr, INET6_ADDRSTRLEN);
+			inet_ntop(nodecon->addr->family, &nodecon->addr->ip.v6,
+				  addr, INET6_ADDRSTRLEN);
 			if (errno == 0) {
-				fprintf(out, "%s ",addr);
+				fprintf(out, "%s ", addr);
 			} else {
 				fprintf(out, "[INVALID] ");
 			}
@@ -1849,9 +1953,10 @@ static void cil_nodecons_to_policy(FILE *out, struct cil_sort *nodecons, int mls
 
 			errno = 0;
 			mask = cil_malloc(INET6_ADDRSTRLEN);
-			inet_ntop(nodecon->mask->family, &nodecon->mask->ip.v6, mask, INET6_ADDRSTRLEN);
+			inet_ntop(nodecon->mask->family, &nodecon->mask->ip.v6,
+				  mask, INET6_ADDRSTRLEN);
 			if (errno == 0) {
-				fprintf(out, "%s ",mask);
+				fprintf(out, "%s ", mask);
 			} else {
 				fprintf(out, "[INVALID] ");
 			}
@@ -1863,12 +1968,13 @@ static void cil_nodecons_to_policy(FILE *out, struct cil_sort *nodecons, int mls
 	}
 }
 
-static void cil_pirqcons_to_policy(FILE *out, struct cil_sort *pirqcons, int mls)
+static void cil_pirqcons_to_policy(FILE *out, struct cil_sort *pirqcons,
+				   int mls)
 {
 	unsigned i;
 	struct cil_pirqcon *pirqcon;
 
-	for (i = 0; i<pirqcons->count; i++) {
+	for (i = 0; i < pirqcons->count; i++) {
 		pirqcon = pirqcons->array[i];
 		fprintf(out, "pirqcon %d ", pirqcon->pirq);
 		cil_context_to_policy(out, pirqcon->context, mls);
@@ -1876,37 +1982,43 @@ static void cil_pirqcons_to_policy(FILE *out, struct cil_sort *pirqcons, int mls
 	}
 }
 
-static void cil_iomemcons_to_policy(FILE *out, struct cil_sort *iomemcons, int mls)
+static void cil_iomemcons_to_policy(FILE *out, struct cil_sort *iomemcons,
+				    int mls)
 {
 	unsigned i;
 	struct cil_iomemcon *iomemcon;
 
-	for (i = 0; i<iomemcons->count; i++) {
+	for (i = 0; i < iomemcons->count; i++) {
 		iomemcon = iomemcons->array[i];
 		if (iomemcon->iomem_low == iomemcon->iomem_high) {
-			fprintf(out, "iomemcon %"PRIx64" ", iomemcon->iomem_low);
+			fprintf(out, "iomemcon %" PRIx64 " ",
+				iomemcon->iomem_low);
 		} else {
-			fprintf(out, "iomemcon %"PRIx64"-%"PRIx64" ", iomemcon->iomem_low, iomemcon->iomem_high);
+			fprintf(out, "iomemcon %" PRIx64 "-%" PRIx64 " ",
+				iomemcon->iomem_low, iomemcon->iomem_high);
 		}
 		cil_context_to_policy(out, iomemcon->context, mls);
 		fprintf(out, ";\n");
 	}
 }
 
-static void cil_ioportcons_to_policy(FILE *out, struct cil_sort *ioportcons, int mls)
+static void cil_ioportcons_to_policy(FILE *out, struct cil_sort *ioportcons,
+				     int mls)
 {
 	unsigned i;
 	struct cil_ioportcon *ioportcon;
 
 	for (i = 0; i < ioportcons->count; i++) {
 		ioportcon = ioportcons->array[i];
-		fprintf(out, "ioportcon 0x%x-0x%x ", ioportcon->ioport_low, ioportcon->ioport_high);
+		fprintf(out, "ioportcon 0x%x-0x%x ", ioportcon->ioport_low,
+			ioportcon->ioport_high);
 		cil_context_to_policy(out, ioportcon->context, mls);
 		fprintf(out, ";\n");
 	}
 }
 
-static void cil_pcidevicecons_to_policy(FILE *out, struct cil_sort *pcidevicecons, int mls)
+static void cil_pcidevicecons_to_policy(FILE *out,
+					struct cil_sort *pcidevicecons, int mls)
 {
 	unsigned i;
 	struct cil_pcidevicecon *pcidevicecon;
@@ -1919,7 +2031,9 @@ static void cil_pcidevicecons_to_policy(FILE *out, struct cil_sort *pcidevicecon
 	}
 }
 
-static void cil_devicetreecons_to_policy(FILE *out, struct cil_sort *devicetreecons, int mls)
+static void cil_devicetreecons_to_policy(FILE *out,
+					 struct cil_sort *devicetreecons,
+					 int mls)
 {
 	unsigned i;
 	struct cil_devicetreecon *devicetreecon;
@@ -1938,7 +2052,7 @@ void cil_gen_policy(FILE *out, struct cil_db *db)
 	struct cil_tree_node *head = db->ast->root;
 	struct cil_list *lists[CIL_LIST_NUM_LISTS];
 
-	for (i=0; i<CIL_LIST_NUM_LISTS; i++) {
+	for (i = 0; i < CIL_LIST_NUM_LISTS; i++) {
 		cil_list_init(&lists[i], CIL_LIST);
 	}
 
@@ -1951,43 +2065,61 @@ void cil_gen_policy(FILE *out, struct cil_db *db)
 	cil_commons_to_policy(out, lists[CIL_LIST_COMMON]);
 	cil_classes_to_policy(out, db->classorder);
 
-	cil_defaults_to_policy(out, lists[CIL_LIST_DEFAULT_USER], "default_user");
-	cil_defaults_to_policy(out, lists[CIL_LIST_DEFAULT_ROLE], "default_role");
-	cil_defaults_to_policy(out, lists[CIL_LIST_DEFAULT_TYPE], "default_type");
+	cil_defaults_to_policy(out, lists[CIL_LIST_DEFAULT_USER],
+			       "default_user");
+	cil_defaults_to_policy(out, lists[CIL_LIST_DEFAULT_ROLE],
+			       "default_role");
+	cil_defaults_to_policy(out, lists[CIL_LIST_DEFAULT_TYPE],
+			       "default_type");
 
 	if (db->mls == CIL_TRUE) {
-		cil_default_ranges_to_policy(out, lists[CIL_LIST_DEFAULT_RANGE]);
-		cil_sensitivities_to_policy(out, db->sensitivityorder, lists[CIL_LIST_SENSALIAS]);
+		cil_default_ranges_to_policy(out,
+					     lists[CIL_LIST_DEFAULT_RANGE]);
+		cil_sensitivities_to_policy(out, db->sensitivityorder,
+					    lists[CIL_LIST_SENSALIAS]);
 		cil_dominance_to_policy(out, db->sensitivityorder);
-		cil_categories_to_policy(out, db->catorder, lists[CIL_LIST_CATALIAS]);
+		cil_categories_to_policy(out, db->catorder,
+					 lists[CIL_LIST_CATALIAS]);
 		cil_levels_to_policy(out, db->sensitivityorder);
-		cil_mlsconstrains_to_policy(out, db, lists[CIL_LIST_MLSCONSTRAIN]);
-		cil_validatetrans_to_policy(out, db, lists[CIL_LIST_MLSVALIDATETRANS], CIL_KEY_MLSVALIDATETRANS);
+		cil_mlsconstrains_to_policy(out, db,
+					    lists[CIL_LIST_MLSCONSTRAIN]);
+		cil_validatetrans_to_policy(out, db,
+					    lists[CIL_LIST_MLSVALIDATETRANS],
+					    CIL_KEY_MLSVALIDATETRANS);
 	}
 
-	cil_simple_rules_to_policy(out, lists[CIL_LIST_POLICYCAP], CIL_KEY_POLICYCAP);
+	cil_simple_rules_to_policy(out, lists[CIL_LIST_POLICYCAP],
+				   CIL_KEY_POLICYCAP);
 
-	cil_simple_rules_to_policy(out, lists[CIL_LIST_TYPEATTRIBUTE], "attribute");
-	cil_simple_rules_to_policy(out, lists[CIL_LIST_ROLEATTRIBUTE], "attribute_role");
+	cil_simple_rules_to_policy(out, lists[CIL_LIST_TYPEATTRIBUTE],
+				   "attribute");
+	cil_simple_rules_to_policy(out, lists[CIL_LIST_ROLEATTRIBUTE],
+				   "attribute_role");
 
 	cil_bools_to_policy(out, lists[CIL_LIST_BOOL]);
 
 	cil_simple_rules_to_policy(out, lists[CIL_LIST_TYPE], "type");
-	cil_typealiases_to_policy(out, lists[CIL_LIST_TYPE], lists[CIL_LIST_TYPEALIAS]);
+	cil_typealiases_to_policy(out, lists[CIL_LIST_TYPE],
+				  lists[CIL_LIST_TYPEALIAS]);
 	cil_typebounds_to_policy(out, lists[CIL_LIST_TYPE]);
-	cil_typeattributes_to_policy(out, lists[CIL_LIST_TYPE], lists[CIL_LIST_TYPEATTRIBUTE]);
+	cil_typeattributes_to_policy(out, lists[CIL_LIST_TYPE],
+				     lists[CIL_LIST_TYPEATTRIBUTE]);
 	cil_te_rules_to_policy(out, head, db->mls);
 
 	cil_roles_to_policy(out, lists[CIL_LIST_ROLE]);
-	cil_role_types_to_policy(out, lists[CIL_LIST_ROLE], lists[CIL_LIST_TYPE]);
-	cil_roleattributes_to_policy(out, lists[CIL_LIST_ROLE], lists[CIL_LIST_ROLEATTRIBUTE]);
+	cil_role_types_to_policy(out, lists[CIL_LIST_ROLE],
+				 lists[CIL_LIST_TYPE]);
+	cil_roleattributes_to_policy(out, lists[CIL_LIST_ROLE],
+				     lists[CIL_LIST_ROLEATTRIBUTE]);
 	cil_roleallows_to_policy(out, lists[CIL_LIST_ROLEALLOW]);
 	cil_roletransitions_to_policy(out, lists[CIL_LIST_ROLETRANSITION]);
 
-	cil_users_to_policy(out, db->mls, lists[CIL_LIST_USER], lists[CIL_LIST_ROLE]);
+	cil_users_to_policy(out, db->mls, lists[CIL_LIST_USER],
+			    lists[CIL_LIST_ROLE]);
 
 	cil_constrains_to_policy(out, db, lists[CIL_LIST_CONSTRAINT]);
-	cil_validatetrans_to_policy(out, db, lists[CIL_LIST_VALIDATETRANS], CIL_KEY_VALIDATETRANS);
+	cil_validatetrans_to_policy(out, db, lists[CIL_LIST_VALIDATETRANS],
+				    CIL_KEY_VALIDATETRANS);
 
 	cil_sid_contexts_to_policy(out, db->sidorder, db->mls);
 	cil_fsuses_to_policy(out, db->fsuse, db->mls);
@@ -2003,8 +2135,7 @@ void cil_gen_policy(FILE *out, struct cil_db *db)
 	cil_pcidevicecons_to_policy(out, db->pcidevicecon, db->mls);
 	cil_devicetreecons_to_policy(out, db->devicetreecon, db->mls);
 
-	for (i=0; i<CIL_LIST_NUM_LISTS; i++) {
+	for (i = 0; i < CIL_LIST_NUM_LISTS; i++) {
 		cil_list_destroy(&lists[i], CIL_FALSE);
 	}
-
 }

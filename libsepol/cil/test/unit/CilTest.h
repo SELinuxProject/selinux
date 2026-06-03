@@ -40,5 +40,5 @@ struct cil_file_data {
 
 void set_cil_file_data(struct cil_file_data **);
 void gen_test_tree(struct cil_tree **, char **);
- 
+
 #endif

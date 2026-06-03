@@ -8,8 +8,8 @@
 
 #define RANDOM_ROUNDS 10
 
-
-static int ebitmap_init_random(ebitmap_t *e, unsigned int length, int set_chance)
+static int ebitmap_init_random(ebitmap_t *e, unsigned int length,
+			       int set_chance)
 {
 	unsigned int i;
 	int rc;
@@ -192,22 +192,17 @@ static void test_ebitmap_set_and_get(void)
 		/* iterate all allocated bits */
 		count = 0;
 		ebitmap_for_each_bit(&e, n, bit) {
-			CU_ASSERT(                bit <   64  ||
-			          (64   <= bit && bit <  128) ||
-			          (960  <= bit && bit < 1024) ||
-			          (1024 <= bit && bit < 1088));
+			CU_ASSERT(bit < 64 || (64 <= bit && bit < 128) ||
+				  (960 <= bit && bit < 1024) ||
+				  (1024 <= bit && bit < 1088));
 			count++;
 		}
 		CU_ASSERT_EQUAL(count, 4 * 64);
 
 		count = 0;
 		ebitmap_for_each_positive_bit(&e, n, bit) {
-			CU_ASSERT(bit == 10 ||
-			          bit == 50 ||
-			          bit == 100 ||
-			          bit == 1023 ||
-			          bit == 1024 ||
-			          bit == 1050);
+			CU_ASSERT(bit == 10 || bit == 50 || bit == 100 ||
+				  bit == 1023 || bit == 1024 || bit == 1050);
 			CU_ASSERT_EQUAL(ebitmap_get_bit(&e, bit), 1);
 			count++;
 		}
@@ -827,7 +822,8 @@ static void test_ebitmap_andnot(void)
 		{
 			ebitmap_t dst;
 
-			CU_ASSERT_EQUAL(ebitmap_andnot(&dst, &e1, &e1, 1024), 0);
+			CU_ASSERT_EQUAL(ebitmap_andnot(&dst, &e1, &e1, 1024),
+					0);
 			CU_ASSERT(ebitmap_cmp(&dst, &e4));
 
 			ebitmap_destroy(&dst);
@@ -836,7 +832,8 @@ static void test_ebitmap_andnot(void)
 		{
 			ebitmap_t dst;
 
-			CU_ASSERT_EQUAL(ebitmap_andnot(&dst, &e2, &e2, 1024), 0);
+			CU_ASSERT_EQUAL(ebitmap_andnot(&dst, &e2, &e2, 1024),
+					0);
 			CU_ASSERT(ebitmap_cmp(&dst, &e4));
 
 			ebitmap_destroy(&dst);
@@ -845,7 +842,8 @@ static void test_ebitmap_andnot(void)
 		{
 			ebitmap_t dst;
 
-			CU_ASSERT_EQUAL(ebitmap_andnot(&dst, &e1, &e2, 1024), 0);
+			CU_ASSERT_EQUAL(ebitmap_andnot(&dst, &e1, &e2, 1024),
+					0);
 			CU_ASSERT(ebitmap_cmp(&dst, &e12));
 
 			ebitmap_destroy(&dst);
@@ -854,7 +852,8 @@ static void test_ebitmap_andnot(void)
 		{
 			ebitmap_t dst;
 
-			CU_ASSERT_EQUAL(ebitmap_andnot(&dst, &e3, &e3, 1024), 0);
+			CU_ASSERT_EQUAL(ebitmap_andnot(&dst, &e3, &e3, 1024),
+					0);
 			CU_ASSERT(ebitmap_cmp(&dst, &e4));
 
 			ebitmap_destroy(&dst);
@@ -863,7 +862,8 @@ static void test_ebitmap_andnot(void)
 		{
 			ebitmap_t dst;
 
-			CU_ASSERT_EQUAL(ebitmap_andnot(&dst, &e1, &e3, 1024), 0);
+			CU_ASSERT_EQUAL(ebitmap_andnot(&dst, &e1, &e3, 1024),
+					0);
 			CU_ASSERT(ebitmap_cmp(&dst, &e4));
 
 			ebitmap_destroy(&dst);
@@ -872,7 +872,8 @@ static void test_ebitmap_andnot(void)
 		{
 			ebitmap_t dst;
 
-			CU_ASSERT_EQUAL(ebitmap_andnot(&dst, &e2, &e12, 1024), 0);
+			CU_ASSERT_EQUAL(ebitmap_andnot(&dst, &e2, &e12, 1024),
+					0);
 			CU_ASSERT(ebitmap_cmp(&dst, &e2));
 
 			ebitmap_destroy(&dst);
@@ -881,7 +882,8 @@ static void test_ebitmap_andnot(void)
 		{
 			ebitmap_t dst;
 
-			CU_ASSERT_EQUAL(ebitmap_andnot(&dst, &e4, &e4, 1024), 0);
+			CU_ASSERT_EQUAL(ebitmap_andnot(&dst, &e4, &e4, 1024),
+					0);
 			CU_ASSERT(ebitmap_cmp(&dst, &e4));
 
 			ebitmap_destroy(&dst);
@@ -890,7 +892,8 @@ static void test_ebitmap_andnot(void)
 		{
 			ebitmap_t dst;
 
-			CU_ASSERT_EQUAL(ebitmap_andnot(&dst, &e3, &e4, 1024), 0);
+			CU_ASSERT_EQUAL(ebitmap_andnot(&dst, &e3, &e4, 1024),
+					0);
 			CU_ASSERT(ebitmap_cmp(&dst, &e3));
 
 			ebitmap_destroy(&dst);
@@ -973,7 +976,8 @@ static void test_ebitmap_andnot(void)
 
 static void test_ebitmap__random_impl(unsigned int length, int set_chance)
 {
-	ebitmap_t e1, e2, dst_cpy, dst_or, dst_and, dst_xor1, dst_xor2, dst_not1, dst_not2, dst_andnot;
+	ebitmap_t e1, e2, dst_cpy, dst_or, dst_and, dst_xor1, dst_xor2,
+		dst_not1, dst_not2, dst_andnot;
 	unsigned int i;
 
 	CU_ASSERT_EQUAL(ebitmap_init_random(&e1, length, set_chance), 0);
@@ -984,27 +988,36 @@ static void test_ebitmap__random_impl(unsigned int length, int set_chance)
 
 	CU_ASSERT_EQUAL(ebitmap_or(&dst_or, &e1, &e2), 0);
 	for (i = 0; i < length; i++)
-		CU_ASSERT_EQUAL(ebitmap_get_bit(&dst_or, i), ebitmap_get_bit(&e1, i) | ebitmap_get_bit(&e2, i));
+		CU_ASSERT_EQUAL(ebitmap_get_bit(&dst_or, i),
+				ebitmap_get_bit(&e1, i) |
+					ebitmap_get_bit(&e2, i));
 
 	CU_ASSERT_EQUAL(ebitmap_and(&dst_and, &e1, &e2), 0);
 	for (i = 0; i < length; i++)
-		CU_ASSERT_EQUAL(ebitmap_get_bit(&dst_and, i), ebitmap_get_bit(&e1, i) & ebitmap_get_bit(&e2, i));
+		CU_ASSERT_EQUAL(ebitmap_get_bit(&dst_and, i),
+				ebitmap_get_bit(&e1, i) &
+					ebitmap_get_bit(&e2, i));
 
 	CU_ASSERT_EQUAL(ebitmap_xor(&dst_xor1, &e1, &e2), 0);
 	for (i = 0; i < length; i++)
-		CU_ASSERT_EQUAL(ebitmap_get_bit(&dst_xor1, i), ebitmap_get_bit(&e1, i) ^ ebitmap_get_bit(&e2, i));
+		CU_ASSERT_EQUAL(ebitmap_get_bit(&dst_xor1, i),
+				ebitmap_get_bit(&e1, i) ^
+					ebitmap_get_bit(&e2, i));
 	CU_ASSERT_EQUAL(ebitmap_xor(&dst_xor2, &dst_xor1, &e2), 0);
 	CU_ASSERT(ebitmap_cmp(&dst_xor2, &e1));
 
 	CU_ASSERT_EQUAL(ebitmap_not(&dst_not1, &e1, length), 0);
 	for (i = 0; i < length; i++)
-		CU_ASSERT_EQUAL(ebitmap_get_bit(&dst_not1, i), !ebitmap_get_bit(&e1, i));
+		CU_ASSERT_EQUAL(ebitmap_get_bit(&dst_not1, i),
+				!ebitmap_get_bit(&e1, i));
 	CU_ASSERT_EQUAL(ebitmap_not(&dst_not2, &dst_not1, length), 0);
 	CU_ASSERT(ebitmap_cmp(&dst_not2, &e1));
 
 	CU_ASSERT_EQUAL(ebitmap_andnot(&dst_andnot, &e1, &e2, length), 0);
 	for (i = 0; i < length; i++)
-		CU_ASSERT_EQUAL(ebitmap_get_bit(&dst_andnot, i), ebitmap_get_bit(&e1, i) & !ebitmap_get_bit(&e2, i));
+		CU_ASSERT_EQUAL(ebitmap_get_bit(&dst_andnot, i),
+				ebitmap_get_bit(&e1, i) &
+					!ebitmap_get_bit(&e2, i));
 
 	ebitmap_destroy(&dst_andnot);
 	ebitmap_destroy(&dst_not2);
@@ -1057,11 +1070,11 @@ int ebitmap_test_cleanup(void)
 	return 0;
 }
 
-#define ADD_TEST(name) \
-	do { \
+#define ADD_TEST(name)                                                \
+	do {                                                          \
 		if (NULL == CU_add_test(suite, #name, test_##name)) { \
-			return CU_get_error(); \
-		} \
+			return CU_get_error();                        \
+		}                                                     \
 	} while (0)
 
 int ebitmap_add_tests(CU_pSuite suite)

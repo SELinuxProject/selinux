@@ -7,7 +7,7 @@
 #include "selinux_internal.h"
 #include "policy.h"
 
-int lgetfilecon_raw(const char *path, char ** context)
+int lgetfilecon_raw(const char *path, char **context)
 {
 	char *buf;
 	ssize_t size;
@@ -35,7 +35,7 @@ int lgetfilecon_raw(const char *path, char ** context)
 		memset(buf, 0, size);
 		ret = lgetxattr(path, XATTR_NAME_SELINUX, buf, size - 1);
 	}
-      out:
+out:
 	if (ret == 0) {
 		/* Re-map empty attribute values to errors. */
 		errno = ENOTSUP;
@@ -48,11 +48,10 @@ int lgetfilecon_raw(const char *path, char ** context)
 	return ret;
 }
 
-
-int lgetfilecon(const char *path, char ** context)
+int lgetfilecon(const char *path, char **context)
 {
 	int ret;
-	char * rcontext = NULL;
+	char *rcontext = NULL;
 
 	*context = NULL;
 

@@ -70,30 +70,29 @@
  */
 typedef struct spec {
 	struct selabel_lookup_rec lr;
-	char	       *key;
-	int		type;
-	int		matches;
+	char *key;
+	int type;
+	int matches;
 } spec_t;
 
 /*
  * catalog_t : An array of spec_t
  */
 typedef struct catalog {
-	unsigned int	nspec;	/* number of specs in use */
-	unsigned int	limit;	/* physical limitation of specs[] */
-	spec_t		specs[0];
+	unsigned int nspec; /* number of specs in use */
+	unsigned int limit; /* physical limitation of specs[] */
+	spec_t specs[0];
 } catalog_t;
 
 /*
  * Helper function to parse a line read from the specfile
  */
-static int
-process_line(const char *path, char *line_buf, unsigned int line_num,
-	     catalog_t *catalog)
+static int process_line(const char *path, char *line_buf, unsigned int line_num,
+			catalog_t *catalog)
 {
-	spec_t	       *spec = &catalog->specs[catalog->nspec];
-	char	       *type, *key, *context, *temp;
-	int		items;
+	spec_t *spec = &catalog->specs[catalog->nspec];
+	char *type, *key, *context, *temp;
+	int items;
 
 	/* Cut off comments */
 	temp = strchr(line_buf, '#');
@@ -105,8 +104,8 @@ process_line(const char *path, char *line_buf, unsigned int line_num,
 	 *   <object class> <object name> <security context>
 	 */
 	type = key = context = temp = NULL;
-	items = sscanf(line_buf, "%ms %ms %ms %ms",
-		       &type, &key, &context, &temp);
+	items = sscanf(line_buf, "%ms %ms %ms %ms", &type, &key, &context,
+		       &temp);
 	if (items != 3) {
 		if (items > 0)
 			selinux_log(SELINUX_WARNING,
@@ -146,8 +145,8 @@ process_line(const char *path, char *line_buf, unsigned int line_num,
 		spec->type = SELABEL_DB_DATATYPE;
 	else {
 		selinux_log(SELINUX_WARNING,
-			    "%s:  line %u has invalid object type %s\n",
-			    path, line_num, type);
+			    "%s:  line %u has invalid object type %s\n", path,
+			    line_num, type);
 		goto skip;
 	}
 
@@ -171,12 +170,11 @@ skip:
 /*
  * selabel_close() handler
  */
-static void
-db_close(struct selabel_handle *rec)
+static void db_close(struct selabel_handle *rec)
 {
-	catalog_t      *catalog = (catalog_t *)rec->data;
-	spec_t	       *spec;
-	unsigned int	i;
+	catalog_t *catalog = (catalog_t *)rec->data;
+	spec_t *spec;
+	unsigned int i;
 
 	if (!catalog)
 		return;
@@ -194,12 +192,12 @@ db_close(struct selabel_handle *rec)
 /*
  * selabel_lookup() handler
  */
-static struct selabel_lookup_rec *
-db_lookup(struct selabel_handle *rec, const char *key, int type)
+static struct selabel_lookup_rec *db_lookup(struct selabel_handle *rec,
+					    const char *key, int type)
 {
-	catalog_t      *catalog = (catalog_t *)rec->data;
-	spec_t	       *spec;
-	unsigned int	i;
+	catalog_t *catalog = (catalog_t *)rec->data;
+	spec_t *spec;
+	unsigned int i;
 
 	for (i = 0; i < catalog->nspec; i++) {
 		spec = &catalog->specs[i];
@@ -221,11 +219,10 @@ db_lookup(struct selabel_handle *rec, const char *key, int type)
 /*
  * selabel_stats() handler
  */
-static void
-db_stats(struct selabel_handle *rec)
+static void db_stats(struct selabel_handle *rec)
 {
-	catalog_t      *catalog = (catalog_t *)rec->data;
-	unsigned int	i, total = 0;
+	catalog_t *catalog = (catalog_t *)rec->data;
+	unsigned int i, total = 0;
 
 	for (i = 0; i < catalog->nspec; i++)
 		total += catalog->specs[i].matches;
@@ -237,17 +234,16 @@ db_stats(struct selabel_handle *rec)
 /*
  * selabel_open() handler
  */
-static catalog_t *
-db_init(const struct selinux_opt *opts, unsigned nopts,
-			    struct selabel_handle *rec)
+static catalog_t *db_init(const struct selinux_opt *opts, unsigned nopts,
+			  struct selabel_handle *rec)
 {
-	catalog_t      *catalog;
-	FILE	       *filp;
-	const char     *path = NULL;
-	char	       *line_buf = NULL;
-	size_t		line_len = 0;
-	unsigned int	line_num = 0;
-	unsigned int	i;
+	catalog_t *catalog;
+	FILE *filp;
+	const char *path = NULL;
+	char *line_buf = NULL;
+	size_t line_len = 0;
+	unsigned int line_num = 0;
+	unsigned int i;
 	struct stat sb;
 
 	/*
@@ -307,9 +303,9 @@ db_init(const struct selinux_opt *opts, unsigned nopts,
 	}
 	rec->spec_file = strdup(path);
 	if (!rec->spec_file) {
-                free(catalog);
-                fclose(filp);
-                return NULL;
+		free(catalog);
+		fclose(filp);
+		return NULL;
 	}
 
 	/*
@@ -320,12 +316,11 @@ db_init(const struct selinux_opt *opts, unsigned nopts,
 		 * Expand catalog array, if necessary
 		 */
 		if (catalog->limit == catalog->nspec) {
-			size_t		length;
-			unsigned int	new_limit = 2 * catalog->limit;
-			catalog_t      *new_catalog;
+			size_t length;
+			unsigned int new_limit = 2 * catalog->limit;
+			catalog_t *new_catalog;
 
-			length = sizeof(catalog_t)
-				+ new_limit * sizeof(spec_t);
+			length = sizeof(catalog_t) + new_limit * sizeof(spec_t);
 			new_catalog = realloc(catalog, length);
 			if (!new_catalog)
 				goto out_error;
@@ -354,7 +349,7 @@ db_init(const struct selinux_opt *opts, unsigned nopts,
 out_error:
 	free(line_buf);
 	for (i = 0; i < catalog->nspec; i++) {
-		spec_t	       *spec = &catalog->specs[i];
+		spec_t *spec = &catalog->specs[i];
 
 		free(spec->key);
 		free(spec->lr.ctx_raw);
@@ -370,8 +365,8 @@ out_error:
 /*
  * Initialize selabel_handle and load the entries of specfile
  */
-int selabel_db_init(struct selabel_handle *rec,
-		    const struct selinux_opt *opts, unsigned nopts)
+int selabel_db_init(struct selabel_handle *rec, const struct selinux_opt *opts,
+		    unsigned nopts)
 {
 	rec->func_close = &db_close;
 	rec->func_lookup = &db_lookup;

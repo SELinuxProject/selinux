@@ -28,41 +28,37 @@
 #include <sepol/policydb/policydb.h>
 #include "handle.h"
 
-extern int mls_from_string(sepol_handle_t * handle,
-			   const policydb_t * policydb,
-			   const char *str, context_struct_t * mls);
+extern int mls_from_string(sepol_handle_t *handle, const policydb_t *policydb,
+			   const char *str, context_struct_t *mls);
 
-extern int mls_to_string(sepol_handle_t * handle,
-			 const policydb_t * policydb,
-			 const context_struct_t * mls, char **str);
+extern int mls_to_string(sepol_handle_t *handle, const policydb_t *policydb,
+			 const context_struct_t *mls, char **str);
 
 /* Deprecated */
-extern int mls_compute_context_len(const policydb_t * policydb,
-				   const context_struct_t * context);
+extern int mls_compute_context_len(const policydb_t *policydb,
+				   const context_struct_t *context);
 
 /* Deprecated */
-extern void mls_sid_to_context(const policydb_t * policydb,
-			       const context_struct_t * context,
+extern void mls_sid_to_context(const policydb_t *policydb,
+			       const context_struct_t *context,
 			       char **scontext);
 
 /* Deprecated */
-extern int mls_context_to_sid(const policydb_t * policydb,
-			      char oldc,
-			      char **scontext, context_struct_t * context);
+extern int mls_context_to_sid(const policydb_t *policydb, char oldc,
+			      char **scontext, context_struct_t *context);
 
-extern int mls_context_isvalid(const policydb_t * p,
-			       const context_struct_t * c);
+extern int mls_context_isvalid(const policydb_t *p, const context_struct_t *c);
 
-extern int mls_convert_context(policydb_t * oldp,
-			       policydb_t * newp, context_struct_t * context);
+extern int mls_convert_context(policydb_t *oldp, policydb_t *newp,
+			       context_struct_t *context);
 
-extern int mls_compute_sid(policydb_t * policydb,
-			   const context_struct_t * scontext,
-			   const context_struct_t * tcontext,
-			   sepol_security_class_t tclass,
-			   uint32_t specified, context_struct_t * newcontext);
+extern int mls_compute_sid(policydb_t *policydb,
+			   const context_struct_t *scontext,
+			   const context_struct_t *tcontext,
+			   sepol_security_class_t tclass, uint32_t specified,
+			   context_struct_t *newcontext);
 
-extern int mls_setup_user_range(context_struct_t * fromcon, user_datum_t * user,
-				context_struct_t * usercon, int mls);
+extern int mls_setup_user_range(context_struct_t *fromcon, user_datum_t *user,
+				context_struct_t *usercon, int mls);
 
 #endif

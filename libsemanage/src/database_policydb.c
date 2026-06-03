@@ -24,9 +24,8 @@ typedef struct dbase_policydb dbase_t;
 
 /* POLICYDB dbase */
 struct dbase_policydb {
-
-        /* Backing path for read-only[0] and transaction[1] */
-        const char *path[2];
+	/* Backing path for read-only[0] and transaction[1] */
+	const char *path[2];
 
 	/* Base record table */
 	const record_table_t *rtable;
@@ -41,9 +40,8 @@ struct dbase_policydb {
 	int attached;
 };
 
-static void dbase_policydb_drop_cache(dbase_policydb_t * dbase)
+static void dbase_policydb_drop_cache(dbase_policydb_t *dbase)
 {
-
 	if (dbase && dbase->cache_serial >= 0) {
 		sepol_policydb_free(dbase->policydb);
 		dbase->cache_serial = -1;
@@ -51,10 +49,9 @@ static void dbase_policydb_drop_cache(dbase_policydb_t * dbase)
 	}
 }
 
-static int dbase_policydb_set_serial(semanage_handle_t * handle,
-				     dbase_policydb_t * dbase)
+static int dbase_policydb_set_serial(semanage_handle_t *handle,
+				     dbase_policydb_t *dbase)
 {
-
 	int cache_serial = handle->funcs->get_serial(handle);
 	if (cache_serial < 0) {
 		ERR(handle, "could not update cache serial");
@@ -65,10 +62,9 @@ static int dbase_policydb_set_serial(semanage_handle_t * handle,
 	return STATUS_SUCCESS;
 }
 
-static int dbase_policydb_needs_resync(semanage_handle_t * handle,
-				       dbase_policydb_t * dbase)
+static int dbase_policydb_needs_resync(semanage_handle_t *handle,
+				       dbase_policydb_t *dbase)
 {
-
 	int cache_serial;
 
 	if (dbase->cache_serial < 0)
@@ -86,10 +82,9 @@ static int dbase_policydb_needs_resync(semanage_handle_t * handle,
 	return 0;
 }
 
-static int dbase_policydb_cache(semanage_handle_t * handle,
-				dbase_policydb_t * dbase)
+static int dbase_policydb_cache(semanage_handle_t *handle,
+				dbase_policydb_t *dbase)
 {
-
 	FILE *fp = NULL;
 	sepol_policydb_t *policydb = NULL;
 	sepol_policy_file_t *pf = NULL;
@@ -113,8 +108,7 @@ static int dbase_policydb_cache(semanage_handle_t * handle,
 	 * ENOENT is not fatal - we just create an empty policydb */
 	fp = fopen(fname, "rbe");
 	if (fp == NULL && errno != ENOENT) {
-		ERR(handle, "could not open %s for reading",
-		    fname);
+		ERR(handle, "could not open %s for reading", fname);
 		goto err;
 	}
 
@@ -145,7 +139,7 @@ static int dbase_policydb_cache(semanage_handle_t * handle,
 	dbase->policydb = policydb;
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not cache policy database");
 	if (fp)
 		fclose(fp);
@@ -154,11 +148,10 @@ static int dbase_policydb_cache(semanage_handle_t * handle,
 	return STATUS_ERR;
 }
 
-static int dbase_policydb_flush(semanage_handle_t * handle
-				__attribute__ ((unused)),
-				dbase_policydb_t * dbase)
+static int dbase_policydb_flush(semanage_handle_t *handle
+				__attribute__((unused)),
+				dbase_policydb_t *dbase)
 {
-
 	if (!dbase->modified)
 		return STATUS_SUCCESS;
 
@@ -169,22 +162,18 @@ static int dbase_policydb_flush(semanage_handle_t * handle
 }
 
 /* Check if modified */
-static int dbase_policydb_is_modified(dbase_policydb_t * dbase)
+static int dbase_policydb_is_modified(dbase_policydb_t *dbase)
 {
-
 	return dbase->modified;
 }
 
-int dbase_policydb_init(semanage_handle_t * handle,
-			const char *path_ro,
-			const char *path_rw,
-			const record_table_t * rtable,
-			const record_policydb_table_t * rptable,
-			dbase_policydb_t ** dbase)
+int dbase_policydb_init(semanage_handle_t *handle, const char *path_ro,
+			const char *path_rw, const record_table_t *rtable,
+			const record_policydb_table_t *rptable,
+			dbase_policydb_t **dbase)
 {
-
 	dbase_policydb_t *tmp_dbase =
-	    (dbase_policydb_t *) malloc(sizeof(dbase_policydb_t));
+		(dbase_policydb_t *)malloc(sizeof(dbase_policydb_t));
 
 	if (!tmp_dbase)
 		goto omem;
@@ -201,7 +190,7 @@ int dbase_policydb_init(semanage_handle_t * handle,
 
 	return STATUS_SUCCESS;
 
-      omem:
+omem:
 	ERR(handle, "out of memory, could not initialize policy database");
 	free(tmp_dbase);
 
@@ -209,9 +198,8 @@ int dbase_policydb_init(semanage_handle_t * handle,
 }
 
 /* Release dbase resources */
-void dbase_policydb_release(dbase_policydb_t * dbase)
+void dbase_policydb_release(dbase_policydb_t *dbase)
 {
-
 	dbase_policydb_drop_cache(dbase);
 	free(dbase);
 }
@@ -220,10 +208,8 @@ void dbase_policydb_release(dbase_policydb_t * dbase)
  * This implies drop_cache(),
  * and prevents flush() and drop_cache()
  * until detached. */
-void dbase_policydb_attach(dbase_policydb_t * dbase,
-			   sepol_policydb_t * policydb)
+void dbase_policydb_attach(dbase_policydb_t *dbase, sepol_policydb_t *policydb)
 {
-
 	dbase->attached = 1;
 	dbase_policydb_drop_cache(dbase);
 	dbase->policydb = policydb;
@@ -231,146 +217,130 @@ void dbase_policydb_attach(dbase_policydb_t * dbase,
 
 /* Detach from a shared policdb.
  * This implies drop_cache. */
-void dbase_policydb_detach(dbase_policydb_t * dbase)
+void dbase_policydb_detach(dbase_policydb_t *dbase)
 {
-
 	dbase->attached = 0;
 	dbase->modified = 0;
 }
 
-static int dbase_policydb_add(semanage_handle_t * handle,
-			      dbase_policydb_t * dbase,
-			      const record_key_t * key, const record_t * data)
+static int dbase_policydb_add(semanage_handle_t *handle,
+			      dbase_policydb_t *dbase, const record_key_t *key,
+			      const record_t *data)
 {
-
 	if (dbase->rptable->add(handle->sepolh, dbase->policydb, key, data) < 0)
 		goto err;
 
 	dbase->modified = 1;
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not add record to the database");
 	return STATUS_ERR;
 }
 
-static int dbase_policydb_set(semanage_handle_t * handle,
-			      dbase_policydb_t * dbase,
-			      const record_key_t * key, const record_t * data)
+static int dbase_policydb_set(semanage_handle_t *handle,
+			      dbase_policydb_t *dbase, const record_key_t *key,
+			      const record_t *data)
 {
-
 	if (dbase->rptable->set(handle->sepolh, dbase->policydb, key, data) < 0)
 		goto err;
 
 	dbase->modified = 1;
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not set record value");
 	return STATUS_ERR;
 }
 
-static int dbase_policydb_modify(semanage_handle_t * handle,
-				 dbase_policydb_t * dbase,
-				 const record_key_t * key,
-				 const record_t * data)
+static int dbase_policydb_modify(semanage_handle_t *handle,
+				 dbase_policydb_t *dbase,
+				 const record_key_t *key, const record_t *data)
 {
-
-	if (dbase->rptable->modify(handle->sepolh,
-				   dbase->policydb, key, data) < 0)
+	if (dbase->rptable->modify(handle->sepolh, dbase->policydb, key, data) <
+	    0)
 		goto err;
 
 	dbase->modified = 1;
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not modify record value");
 	return STATUS_ERR;
 }
 
-static int dbase_policydb_del(semanage_handle_t * handle
-				__attribute__ ((unused)),
-			      dbase_policydb_t * dbase
-				__attribute__ ((unused)),
-			      const record_key_t * key
-				__attribute__ ((unused)))
+static int dbase_policydb_del(semanage_handle_t *handle __attribute__((unused)),
+			      dbase_policydb_t *dbase __attribute__((unused)),
+			      const record_key_t *key __attribute__((unused)))
 {
-
 	/* Stub */
 	return STATUS_ERR;
 }
 
-static int dbase_policydb_clear(semanage_handle_t * handle
-				__attribute__ ((unused)),
-				dbase_policydb_t * dbase
-				__attribute__ ((unused)))
+static int dbase_policydb_clear(semanage_handle_t *handle
+				__attribute__((unused)),
+				dbase_policydb_t *dbase __attribute__((unused)))
 {
-
 	/* Stub */
 	return STATUS_ERR;
 }
 
-static int dbase_policydb_query(semanage_handle_t * handle,
-				dbase_policydb_t * dbase,
-				const record_key_t * key, record_t ** response)
+static int dbase_policydb_query(semanage_handle_t *handle,
+				dbase_policydb_t *dbase,
+				const record_key_t *key, record_t **response)
 {
-
-	if (dbase->rptable->query(handle->sepolh,
-				  dbase->policydb, key, response) < 0)
+	if (dbase->rptable->query(handle->sepolh, dbase->policydb, key,
+				  response) < 0)
 		goto err;
 
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not query record value");
 	return STATUS_ERR;
 }
 
-static int dbase_policydb_exists(semanage_handle_t * handle,
-				 dbase_policydb_t * dbase,
-				 const record_key_t * key, int *response)
+static int dbase_policydb_exists(semanage_handle_t *handle,
+				 dbase_policydb_t *dbase,
+				 const record_key_t *key, int *response)
 {
-
-	if (dbase->rptable->exists(handle->sepolh,
-				   dbase->policydb, key, response) < 0)
+	if (dbase->rptable->exists(handle->sepolh, dbase->policydb, key,
+				   response) < 0)
 		goto err;
 
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not check if record exists");
 	return STATUS_ERR;
 }
 
-static int dbase_policydb_count(semanage_handle_t * handle,
-				dbase_policydb_t * dbase,
-				unsigned int *response)
+static int dbase_policydb_count(semanage_handle_t *handle,
+				dbase_policydb_t *dbase, unsigned int *response)
 {
-
-	if (dbase->rptable->count(handle->sepolh,
-				  dbase->policydb, response) < 0)
+	if (dbase->rptable->count(handle->sepolh, dbase->policydb, response) <
+	    0)
 		goto err;
 
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not count the database records");
 	return STATUS_ERR;
 }
 
-static int dbase_policydb_iterate(semanage_handle_t * handle,
-				  dbase_policydb_t * dbase,
-				  int (*fn) (const record_t * record,
-					     void *fn_arg), void *arg)
+static int
+dbase_policydb_iterate(semanage_handle_t *handle, dbase_policydb_t *dbase,
+		       int (*fn)(const record_t *record, void *fn_arg),
+		       void *arg)
 {
-
-	if (dbase->rptable->iterate(handle->sepolh,
-				    dbase->policydb, fn, arg) < 0)
+	if (dbase->rptable->iterate(handle->sepolh, dbase->policydb, fn, arg) <
+	    0)
 		goto err;
 
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not iterate over records");
 	return STATUS_ERR;
 }
@@ -382,9 +352,8 @@ struct list_handler_arg {
 	int pos;
 };
 
-static int list_handler(const record_t * record, void *varg)
+static int list_handler(const record_t *record, void *varg)
 {
-
 	struct list_handler_arg *arg = (struct list_handler_arg *)varg;
 
 	if (arg->rtable->clone(arg->handle, record, &arg->records[arg->pos]) <
@@ -394,11 +363,9 @@ static int list_handler(const record_t * record, void *varg)
 	return 0;
 }
 
-static int dbase_policydb_list(semanage_handle_t * handle,
-			       dbase_t * dbase,
-			       record_t *** records, unsigned int *count)
+static int dbase_policydb_list(semanage_handle_t *handle, dbase_t *dbase,
+			       record_t ***records, unsigned int *count)
 {
-
 	record_t **tmp_records = NULL;
 	unsigned int tmp_count;
 	struct list_handler_arg list_arg;
@@ -406,22 +373,21 @@ static int dbase_policydb_list(semanage_handle_t * handle,
 	list_arg.rtable = dbase->rtable;
 	list_arg.handle = handle;
 
-	if (dbase->rptable->count(handle->sepolh,
-				  dbase->policydb, &tmp_count) < 0)
+	if (dbase->rptable->count(handle->sepolh, dbase->policydb, &tmp_count) <
+	    0)
 		goto err;
 
 	if (tmp_count > 0) {
-		tmp_records = (record_t **)
-		    calloc(tmp_count, sizeof(record_t *));
+		tmp_records =
+			(record_t **)calloc(tmp_count, sizeof(record_t *));
 
 		if (tmp_records == NULL)
 			goto omem;
 
 		list_arg.records = tmp_records;
 
-		if (dbase->rptable->iterate(handle->sepolh,
-					    dbase->policydb, list_handler,
-					    &list_arg) < 0) {
+		if (dbase->rptable->iterate(handle->sepolh, dbase->policydb,
+					    list_handler, &list_arg) < 0) {
 			ERR(handle, "list handler could not extract record");
 			goto err;
 		}
@@ -431,10 +397,10 @@ static int dbase_policydb_list(semanage_handle_t * handle,
 	*count = tmp_count;
 	return STATUS_SUCCESS;
 
-      omem:
+omem:
 	ERR(handle, "out of memory");
 
-      err:
+err:
 	if (tmp_records) {
 		for (; list_arg.pos >= 0; list_arg.pos--)
 			dbase->rtable->free(tmp_records[list_arg.pos]);
@@ -444,9 +410,8 @@ static int dbase_policydb_list(semanage_handle_t * handle,
 	return STATUS_ERR;
 }
 
-static const record_table_t *dbase_policydb_get_rtable(dbase_policydb_t * dbase)
+static const record_table_t *dbase_policydb_get_rtable(dbase_policydb_t *dbase)
 {
-
 	return dbase->rtable;
 }
 

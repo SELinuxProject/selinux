@@ -12,11 +12,9 @@
 #include "user_internal.h"
 #include "mls.h"
 
-static int user_to_record(sepol_handle_t * handle,
-			  const policydb_t * policydb,
-			  int user_idx, sepol_user_t ** record)
+static int user_to_record(sepol_handle_t *handle, const policydb_t *policydb,
+			  int user_idx, sepol_user_t **record)
 {
-
 	const char *name = policydb->p_user_val_to_name[user_idx];
 	user_datum_t *usrdatum = policydb->user_val_to_struct[user_idx];
 	ebitmap_t *roles;
@@ -95,17 +93,15 @@ static int user_to_record(sepol_handle_t * handle,
 	*record = tmp_record;
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	/* FIXME: handle error */
 	sepol_user_free(tmp_record);
 	return STATUS_ERR;
 }
 
-int sepol_user_modify(sepol_handle_t * handle,
-		      sepol_policydb_t * p,
-		      const sepol_user_key_t * key, const sepol_user_t * user)
+int sepol_user_modify(sepol_handle_t *handle, sepol_policydb_t *p,
+		      const sepol_user_key_t *key, const sepol_user_t *user)
 {
-
 	policydb_t *policydb = &p->p;
 
 	/* For user data */
@@ -141,7 +137,6 @@ int sepol_user_modify(sepol_handle_t * handle,
 
 	/* If it does, we will modify it */
 	if (usrdatum) {
-
 		int value_cp = usrdatum->s.value;
 		user_datum_destroy(usrdatum);
 		user_datum_init(usrdatum);
@@ -149,7 +144,7 @@ int sepol_user_modify(sepol_handle_t * handle,
 
 		/* Otherwise, create a new one */
 	} else {
-		usrdatum = (user_datum_t *) malloc(sizeof(user_datum_t));
+		usrdatum = (user_datum_t *)malloc(sizeof(user_datum_t));
 		if (!usrdatum)
 			goto omem;
 		user_datum_init(usrdatum);
@@ -158,17 +153,17 @@ int sepol_user_modify(sepol_handle_t * handle,
 
 	/* For every role */
 	for (i = 0; i < num_roles; i++) {
-
 		/* Search for the role */
 		roldatum = hashtab_search(policydb->p_roles.table, roles[i]);
 		if (!roldatum) {
-			ERR(handle, "undefined role %s for user %s",
-			    roles[i], cname);
+			ERR(handle, "undefined role %s for user %s", roles[i],
+			    cname);
 			goto err;
 		}
 
 		/* Set the role and every role it dominates */
-		ebitmap_for_each_positive_bit(&roldatum->dominates, rnode, bit) {
+		ebitmap_for_each_positive_bit(&roldatum->dominates, rnode,
+					      bit) {
 			if (ebitmap_set_bit(&(usrdatum->roles.roles), bit, 1))
 				goto omem;
 		}
@@ -176,16 +171,18 @@ int sepol_user_modify(sepol_handle_t * handle,
 
 	/* For MLS systems */
 	if (policydb->mls) {
-
 		/* MLS level */
 		if (cmls_level == NULL) {
-			ERR(handle, "MLS is enabled, but no MLS "
-			    "default level was defined for user %s", cname);
+			ERR(handle,
+			    "MLS is enabled, but no MLS "
+			    "default level was defined for user %s",
+			    cname);
 			goto err;
 		}
 
 		context_init(&context);
-		if (mls_from_string(handle, policydb, cmls_level, &context) < 0) {
+		if (mls_from_string(handle, policydb, cmls_level, &context) <
+		    0) {
 			context_destroy(&context);
 			goto err;
 		}
@@ -199,13 +196,16 @@ int sepol_user_modify(sepol_handle_t * handle,
 
 		/* MLS range */
 		if (cmls_range == NULL) {
-			ERR(handle, "MLS is enabled, but no MLS"
-			    "range was defined for user %s", cname);
+			ERR(handle,
+			    "MLS is enabled, but no MLS"
+			    "range was defined for user %s",
+			    cname);
 			goto err;
 		}
 
 		context_init(&context);
-		if (mls_from_string(handle, policydb, cmls_range, &context) < 0) {
+		if (mls_from_string(handle, policydb, cmls_range, &context) <
+		    0) {
 			context_destroy(&context);
 			goto err;
 		}
@@ -216,8 +216,10 @@ int sepol_user_modify(sepol_handle_t * handle,
 		}
 		context_destroy(&context);
 	} else if (cmls_level != NULL || cmls_range != NULL) {
-		ERR(handle, "MLS is disabled, but MLS level/range "
-		    "was found for user %s", cname);
+		ERR(handle,
+		    "MLS is disabled, but MLS level/range "
+		    "was found for user %s",
+		    cname);
 		goto err;
 	}
 
@@ -227,16 +229,16 @@ int sepol_user_modify(sepol_handle_t * handle,
 
 		/* Ensure reverse lookup array has enough space */
 		tmp_ptr = reallocarray(policydb->user_val_to_struct,
-				  policydb->p_users.nprim + 1,
-				  sizeof(user_datum_t *));
+				       policydb->p_users.nprim + 1,
+				       sizeof(user_datum_t *));
 		if (!tmp_ptr)
 			goto omem;
 		policydb->user_val_to_struct = tmp_ptr;
 		policydb->user_val_to_struct[policydb->p_users.nprim] = NULL;
 
 		tmp_ptr = reallocarray(policydb->sym_val_to_name[SYM_USERS],
-				  policydb->p_users.nprim + 1,
-				  sizeof(char *));
+				       policydb->p_users.nprim + 1,
+				       sizeof(char *));
 		if (!tmp_ptr)
 			goto omem;
 		policydb->sym_val_to_name[SYM_USERS] = tmp_ptr;
@@ -250,7 +252,7 @@ int sepol_user_modify(sepol_handle_t * handle,
 		/* Store user */
 		usrdatum->s.value = ++policydb->p_users.nprim;
 		if (hashtab_insert(policydb->p_users.table, name,
-				   (hashtab_datum_t) usrdatum) < 0)
+				   (hashtab_datum_t)usrdatum) < 0)
 			goto omem;
 
 		/* Set up reverse entry */
@@ -269,10 +271,10 @@ int sepol_user_modify(sepol_handle_t * handle,
 	free(roles);
 	return STATUS_SUCCESS;
 
-      omem:
+omem:
 	ERR(handle, "out of memory");
 
-      err:
+err:
 	ERR(handle, "could not load %s into policy", name);
 
 	free(name);
@@ -284,11 +286,10 @@ int sepol_user_modify(sepol_handle_t * handle,
 	return STATUS_ERR;
 }
 
-int sepol_user_exists(sepol_handle_t * handle __attribute__ ((unused)),
-		      const sepol_policydb_t * p,
-		      const sepol_user_key_t * key, int *response)
+int sepol_user_exists(sepol_handle_t *handle __attribute__((unused)),
+		      const sepol_policydb_t *p, const sepol_user_key_t *key,
+		      int *response)
 {
-
 	const policydb_t *policydb = &p->p;
 
 	const char *cname;
@@ -299,21 +300,18 @@ int sepol_user_exists(sepol_handle_t * handle __attribute__ ((unused)),
 	return STATUS_SUCCESS;
 }
 
-int sepol_user_count(sepol_handle_t * handle __attribute__ ((unused)),
-		     const sepol_policydb_t * p, unsigned int *response)
+int sepol_user_count(sepol_handle_t *handle __attribute__((unused)),
+		     const sepol_policydb_t *p, unsigned int *response)
 {
-
 	const policydb_t *policydb = &p->p;
 	*response = policydb->p_users.nprim;
 
 	return STATUS_SUCCESS;
 }
 
-int sepol_user_query(sepol_handle_t * handle,
-		     const sepol_policydb_t * p,
-		     const sepol_user_key_t * key, sepol_user_t ** response)
+int sepol_user_query(sepol_handle_t *handle, const sepol_policydb_t *p,
+		     const sepol_user_key_t *key, sepol_user_t **response)
 {
-
 	const policydb_t *policydb = &p->p;
 	user_datum_t *usrdatum = NULL;
 
@@ -333,17 +331,15 @@ int sepol_user_query(sepol_handle_t * handle,
 
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not query user %s", cname);
 	return STATUS_ERR;
 }
 
-int sepol_user_iterate(sepol_handle_t * handle,
-		       const sepol_policydb_t * p,
-		       int (*fn) (const sepol_user_t * user,
-				  void *fn_arg), void *arg)
+int sepol_user_iterate(sepol_handle_t *handle, const sepol_policydb_t *p,
+		       int (*fn)(const sepol_user_t *user, void *fn_arg),
+		       void *arg)
 {
-
 	const policydb_t *policydb = &p->p;
 	unsigned int nusers = policydb->p_users.nprim;
 	sepol_user_t *user = NULL;
@@ -351,7 +347,6 @@ int sepol_user_iterate(sepol_handle_t * handle,
 
 	/* For each user */
 	for (i = 0; i < nusers; i++) {
-
 		int status;
 
 		if (user_to_record(handle, policydb, i, &user) < 0)
@@ -372,7 +367,7 @@ int sepol_user_iterate(sepol_handle_t * handle,
 
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not iterate over users");
 	sepol_user_free(user);
 	return STATUS_ERR;

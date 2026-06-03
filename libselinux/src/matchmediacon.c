@@ -11,7 +11,7 @@
 #include <regex.h>
 #include <stdarg.h>
 
-int matchmediacon(const char *media, char ** con)
+int matchmediacon(const char *media, char **con)
 {
 	const char *path = selinux_media_context_path();
 	FILE *infile;
@@ -21,7 +21,8 @@ int matchmediacon(const char *media, char ** con)
 	if ((infile = fopen(path, "re")) == NULL)
 		return -1;
 	while (!feof_unlocked(infile)) {
-		if (!fgets_unlocked(current_line, sizeof(current_line), infile)) {
+		if (!fgets_unlocked(current_line, sizeof(current_line),
+				    infile)) {
 			fclose(infile);
 			return -1;
 		}

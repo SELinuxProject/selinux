@@ -28,36 +28,32 @@
 #include "handle.h"
 #include "debug.h"
 
-int semanage_msg_get_level(semanage_handle_t * handle)
+int semanage_msg_get_level(semanage_handle_t *handle)
 {
 	return handle->msg_level;
 }
 
-
-const char *semanage_msg_get_channel(semanage_handle_t * handle)
+const char *semanage_msg_get_channel(semanage_handle_t *handle)
 {
 	return handle->msg_channel;
 }
 
-
-const char *semanage_msg_get_fname(semanage_handle_t * handle)
+const char *semanage_msg_get_fname(semanage_handle_t *handle)
 {
 	return handle->msg_fname;
 }
 
 #ifdef __GNUC__
-    __attribute__ ((format(printf, 3, 4)))
+__attribute__((format(printf, 3, 4)))
 #endif
-void semanage_msg_default_handler(void *varg __attribute__ ((unused)),
-					 semanage_handle_t * handle,
-					 const char *fmt, ...)
+void semanage_msg_default_handler(void *varg __attribute__((unused)),
+				  semanage_handle_t *handle, const char *fmt,
+				  ...)
 {
-
 	FILE *stream = NULL;
 	int errsv = 0;
 
 	switch (semanage_msg_get_level(handle)) {
-
 	case SEMANAGE_MSG_ERR:
 		stream = stderr;
 		errsv = errno;
@@ -70,8 +66,7 @@ void semanage_msg_default_handler(void *varg __attribute__ ((unused)),
 		break;
 	}
 
-	fprintf(stream, "%s.%s: ",
-		semanage_msg_get_channel(handle),
+	fprintf(stream, "%s.%s: ", semanage_msg_get_channel(handle),
 		semanage_msg_get_fname(handle));
 
 	va_list ap;
@@ -88,11 +83,10 @@ void semanage_msg_default_handler(void *varg __attribute__ ((unused)),
 }
 
 #ifdef __GNUC__
-__attribute__ ((format(printf, 3, 4)))
+__attribute__((format(printf, 3, 4)))
 #endif
-void semanage_msg_relay_handler(void *varg,
-				       sepol_handle_t * sepolh,
-				       const char *fmt, ...)
+void semanage_msg_relay_handler(void *varg, sepol_handle_t *sepolh,
+				const char *fmt, ...)
 {
 	va_list ap;
 	semanage_handle_t *sh = varg;
@@ -107,22 +101,19 @@ void semanage_msg_relay_handler(void *varg,
 
 	sh->msg_fname = sepol_msg_get_fname(sepolh);
 	sh->msg_channel = sepol_msg_get_channel(sepolh);
-	sh->msg_level = sepol_msg_get_level(sepolh);	/* XXX should map values */
+	sh->msg_level = sepol_msg_get_level(sepolh); /* XXX should map values */
 	sh->msg_callback(sh->msg_callback_arg, sh, "%s", buffer);
 }
 
-extern void semanage_msg_set_callback(semanage_handle_t * handle,
+extern void semanage_msg_set_callback(
+	semanage_handle_t *handle,
 #ifdef __GNUC__
-				      __attribute__ ((format(printf, 3, 4)))
+	__attribute__((format(printf, 3, 4)))
 #endif
-				      void (*msg_callback) (void *varg,
-							    semanage_handle_t *
-							    handle,
-							    const char *fmt,
-							    ...),
-				      void *msg_callback_arg)
+	void (*msg_callback)(void *varg, semanage_handle_t *handle,
+			     const char *fmt, ...),
+	void *msg_callback_arg)
 {
-
 	handle->msg_callback = msg_callback;
 	handle->msg_callback_arg = msg_callback_arg;
 }

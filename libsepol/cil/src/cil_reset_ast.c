@@ -10,14 +10,14 @@ static inline void cil_reset_level(struct cil_level *level);
 static inline void cil_reset_levelrange(struct cil_levelrange *levelrange);
 static inline void cil_reset_context(struct cil_context *context);
 
-
 static void cil_reset_ordered(struct cil_ordered *ordered)
 {
 	ordered->merged = CIL_FALSE;
 	cil_list_destroy(&ordered->datums, CIL_FALSE);
 }
 
-static int __class_reset_perm_values(__attribute__((unused)) hashtab_key_t k, hashtab_datum_t d, void *args)
+static int __class_reset_perm_values(__attribute__((unused)) hashtab_key_t k,
+				     hashtab_datum_t d, void *args)
 {
 	struct cil_perm *perm = (struct cil_perm *)d;
 
@@ -31,11 +31,13 @@ static void cil_reset_class(struct cil_class *class)
 	if (class->common != NULL) {
 		/* Must assume that the common has been destroyed */
 		int num_common_perms = class->num_perms - class->perms.nprim;
-		cil_symtab_map(&class->perms, __class_reset_perm_values, &num_common_perms);
+		cil_symtab_map(&class->perms, __class_reset_perm_values,
+			       &num_common_perms);
 		/* during a re-resolve, we need to reset the common, so a classcommon
 		 * statement isn't seen as a duplicate */
 		class->num_perms = class->perms.nprim;
-		class->common = NULL; /* Must make this NULL or there will be an error when re-resolving */
+		class->common =
+			NULL; /* Must make this NULL or there will be an error when re-resolving */
 	}
 	class->ordered = CIL_FALSE;
 }
@@ -214,7 +216,8 @@ static void cil_reset_typeattributeset(struct cil_typeattributeset *tas)
 	cil_list_destroy(&tas->datum_expr, CIL_FALSE);
 }
 
-static void cil_reset_expandtypeattribute(struct cil_expandtypeattribute *expandattr)
+static void
+cil_reset_expandtypeattribute(struct cil_expandtypeattribute *expandattr)
 {
 	cil_list_destroy(&expandattr->attr_datums, CIL_FALSE);
 }
@@ -258,7 +261,6 @@ static inline void cil_reset_cats(struct cil_cats *cats)
 		cil_list_destroy(&cats->datum_expr, CIL_FALSE);
 	}
 }
-
 
 static void cil_reset_senscat(struct cil_senscat *senscat)
 {
@@ -486,7 +488,9 @@ static void cil_reset_booleanif(struct cil_booleanif *bif)
 	cil_list_destroy(&bif->datum_expr, CIL_FALSE);
 }
 
-static int __cil_reset_node(struct cil_tree_node *node,  __attribute__((unused)) uint32_t *finished, __attribute__((unused)) void *extra_args)
+static int __cil_reset_node(struct cil_tree_node *node,
+			    __attribute__((unused)) uint32_t *finished,
+			    __attribute__((unused)) void *extra_args)
 {
 	switch (node->flavor) {
 	case CIL_CLASS:

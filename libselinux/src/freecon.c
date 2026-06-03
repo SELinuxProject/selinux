@@ -3,8 +3,7 @@
 #include <stdlib.h>
 #include <errno.h>
 
-void freecon(char * con)
+void freecon(char *con)
 {
 	free(con);
 }
-

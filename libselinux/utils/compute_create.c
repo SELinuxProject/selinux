@@ -14,18 +14,21 @@ int main(int argc, char **argv)
 	int ret;
 
 	if (argc != 4 && argc != 5) {
-		fprintf(stderr, "usage:  %s scontext tcontext tclass [objname]\n",
+		fprintf(stderr,
+			"usage:  %s scontext tcontext tclass [objname]\n",
 			argv[0]);
 		exit(1);
 	}
 
 	if (security_check_context(argv[1])) {
-		fprintf(stderr, "%s:  invalid source context '%s'\n", argv[0], argv[1]);
+		fprintf(stderr, "%s:  invalid source context '%s'\n", argv[0],
+			argv[1]);
 		exit(4);
 	}
 
 	if (security_check_context(argv[2])) {
-		fprintf(stderr, "%s:  invalid target context '%s'\n", argv[0], argv[2]);
+		fprintf(stderr, "%s:  invalid target context '%s'\n", argv[0],
+			argv[2]);
 		exit(5);
 	}
 
@@ -37,7 +40,8 @@ int main(int argc, char **argv)
 
 	objname = (argc == 5) ? argv[4] : NULL;
 
-	ret = security_compute_create_name(argv[1], argv[2], tclass, objname, &buf);
+	ret = security_compute_create_name(argv[1], argv[2], tclass, objname,
+					   &buf);
 	if (ret < 0) {
 		fprintf(stderr, "%s:  security_compute_create failed:  %s\n",
 			argv[0], strerror(errno));

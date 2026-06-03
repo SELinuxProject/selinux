@@ -31,46 +31,48 @@
 #include "CuTest.h"
 #include "../../src/cil_log.h"
 
-CuSuite* CilTreeGetSuite(void);
-CuSuite* CilTreeGetResolveSuite(void);
-CuSuite* CilTreeGetBuildSuite(void);
-CuSuite* CilTestFullCil(void);
+CuSuite *CilTreeGetSuite(void);
+CuSuite *CilTreeGetResolveSuite(void);
+CuSuite *CilTreeGetBuildSuite(void);
+CuSuite *CilTestFullCil(void);
 
-void RunAllTests(void) {
-    /* disable cil log output */
-    cil_set_log_level(0);
+void RunAllTests(void)
+{
+	/* disable cil log output */
+	cil_set_log_level(0);
 
-    CuString *output  = CuStringNew();
-    CuSuite* suite = CuSuiteNew();
-    CuSuite* suiteResolve = CuSuiteNew();
-    CuSuite* suiteBuild = CuSuiteNew(); 
-    CuSuite* suiteIntegration = CuSuiteNew();
+	CuString *output = CuStringNew();
+	CuSuite *suite = CuSuiteNew();
+	CuSuite *suiteResolve = CuSuiteNew();
+	CuSuite *suiteBuild = CuSuiteNew();
+	CuSuite *suiteIntegration = CuSuiteNew();
 
-    CuSuiteAddSuite(suite, CilTreeGetSuite());
-    CuSuiteAddSuite(suiteResolve, CilTreeGetResolveSuite());
-    CuSuiteAddSuite(suiteBuild, CilTreeGetBuildSuite());
-    CuSuiteAddSuite(suiteIntegration, CilTestFullCil());
+	CuSuiteAddSuite(suite, CilTreeGetSuite());
+	CuSuiteAddSuite(suiteResolve, CilTreeGetResolveSuite());
+	CuSuiteAddSuite(suiteBuild, CilTreeGetBuildSuite());
+	CuSuiteAddSuite(suiteIntegration, CilTestFullCil());
 
-    CuSuiteRun(suite);
-    CuSuiteDetails(suite, output);
-    CuSuiteSummary(suite, output);
+	CuSuiteRun(suite);
+	CuSuiteDetails(suite, output);
+	CuSuiteSummary(suite, output);
 
-    CuSuiteRun(suiteResolve);
-    CuSuiteDetails(suiteResolve, output);
-    CuSuiteSummary(suiteResolve, output);
+	CuSuiteRun(suiteResolve);
+	CuSuiteDetails(suiteResolve, output);
+	CuSuiteSummary(suiteResolve, output);
 
-    CuSuiteRun(suiteBuild);
-    CuSuiteDetails(suiteBuild, output);
-    CuSuiteSummary(suiteBuild, output);
+	CuSuiteRun(suiteBuild);
+	CuSuiteDetails(suiteBuild, output);
+	CuSuiteSummary(suiteBuild, output);
 
-    CuSuiteRun(suiteIntegration);
-    CuSuiteDetails(suiteIntegration, output);
-    CuSuiteSummary(suiteIntegration, output);
-    printf("\n%s\n", output->buffer);
+	CuSuiteRun(suiteIntegration);
+	CuSuiteDetails(suiteIntegration, output);
+	CuSuiteSummary(suiteIntegration, output);
+	printf("\n%s\n", output->buffer);
 }
 
-int main(__attribute__((unused)) int argc, __attribute__((unused)) char *argv[]) {
-    RunAllTests();
+int main(__attribute__((unused)) int argc, __attribute__((unused)) char *argv[])
+{
+	RunAllTests();
 
-    return 0;
+	return 0;
 }

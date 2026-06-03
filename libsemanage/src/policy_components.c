@@ -8,16 +8,14 @@
 #include "debug.h"
 
 /* Powers of two only */
-#define MODE_SET    1
+#define MODE_SET 1
 #define MODE_MODIFY 2
-#define MODE_SORT   4
+#define MODE_SORT 4
 
-static int clear_obsolete(semanage_handle_t * handle,
-			  record_t ** records,
-			  unsigned int nrecords,
-			  dbase_config_t * src, dbase_config_t * dst)
+static int clear_obsolete(semanage_handle_t *handle, record_t **records,
+			  unsigned int nrecords, dbase_config_t *src,
+			  dbase_config_t *dst)
 {
-
 	record_key_t *key = NULL;
 	unsigned int i;
 
@@ -50,17 +48,15 @@ static int clear_obsolete(semanage_handle_t * handle,
 
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	/* FIXME: handle error */
 	rtable->key_free(key);
 	return STATUS_ERR;
 }
 
-static int load_records(semanage_handle_t * handle,
-			dbase_config_t * dst,
-			record_t ** records, unsigned int nrecords, int mode)
+static int load_records(semanage_handle_t *handle, dbase_config_t *dst,
+			record_t **records, unsigned int nrecords, int mode)
 {
-
 	unsigned int i;
 	record_key_t *rkey = NULL;
 
@@ -69,7 +65,6 @@ static int load_records(semanage_handle_t * handle,
 	const record_table_t *rtable = dtable->get_rtable(dbase);
 
 	for (i = 0; i < nrecords; i++) {
-
 		/* Possibly obsoleted */
 		if (!records[i])
 			continue;
@@ -90,7 +85,7 @@ static int load_records(semanage_handle_t * handle,
 
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	/* FIXME: handle error */
 	rtable->key_free(rkey);
 	return STATUS_ERR;
@@ -106,9 +101,8 @@ typedef struct load_table {
  * Modules could be represented as a database, in which case
  * they should be loaded at the beginning of this function */
 
-int semanage_base_merge_components(semanage_handle_t * handle)
+int semanage_base_merge_components(semanage_handle_t *handle)
 {
-
 	unsigned int i, j;
 	int rc = STATUS_SUCCESS;
 
@@ -117,32 +111,32 @@ int semanage_base_merge_components(semanage_handle_t * handle)
 	 * mutual dependencies are ran after everything is merged */
 	const load_table_t components[] = {
 
-		{semanage_user_base_dbase_local(handle),
-		 semanage_user_base_dbase_policy(handle), MODE_MODIFY},
+		{ semanage_user_base_dbase_local(handle),
+		  semanage_user_base_dbase_policy(handle), MODE_MODIFY },
 
-		{semanage_user_extra_dbase_local(handle),
-		 semanage_user_extra_dbase_policy(handle), MODE_MODIFY},
+		{ semanage_user_extra_dbase_local(handle),
+		  semanage_user_extra_dbase_policy(handle), MODE_MODIFY },
 
-		{semanage_port_dbase_local(handle),
-		 semanage_port_dbase_policy(handle), MODE_MODIFY},
+		{ semanage_port_dbase_local(handle),
+		  semanage_port_dbase_policy(handle), MODE_MODIFY },
 
-		{semanage_iface_dbase_local(handle),
-		 semanage_iface_dbase_policy(handle), MODE_MODIFY},
+		{ semanage_iface_dbase_local(handle),
+		  semanage_iface_dbase_policy(handle), MODE_MODIFY },
 
-		{semanage_bool_dbase_local(handle),
-		 semanage_bool_dbase_policy(handle), MODE_SET},
+		{ semanage_bool_dbase_local(handle),
+		  semanage_bool_dbase_policy(handle), MODE_SET },
 
-		{semanage_seuser_dbase_local(handle),
-		 semanage_seuser_dbase_policy(handle), MODE_MODIFY},
+		{ semanage_seuser_dbase_local(handle),
+		  semanage_seuser_dbase_policy(handle), MODE_MODIFY },
 
-		{semanage_node_dbase_local(handle),
-		 semanage_node_dbase_policy(handle), MODE_MODIFY | MODE_SORT},
+		{ semanage_node_dbase_local(handle),
+		  semanage_node_dbase_policy(handle), MODE_MODIFY | MODE_SORT },
 
-		{semanage_ibpkey_dbase_local(handle),
-		 semanage_ibpkey_dbase_policy(handle), MODE_MODIFY},
+		{ semanage_ibpkey_dbase_local(handle),
+		  semanage_ibpkey_dbase_policy(handle), MODE_MODIFY },
 
-		{semanage_ibendport_dbase_local(handle),
-		 semanage_ibendport_dbase_policy(handle), MODE_MODIFY},
+		{ semanage_ibendport_dbase_local(handle),
+		  semanage_ibendport_dbase_policy(handle), MODE_MODIFY },
 	};
 	const unsigned int CCOUNT = sizeof(components) / sizeof(components[0]);
 
@@ -154,7 +148,8 @@ int semanage_base_merge_components(semanage_handle_t * handle)
 		dbase_config_t *src = components[i].src;
 		dbase_config_t *dst = components[i].dst;
 		int mode = components[i].mode;
-		const record_table_t *rtable = src->dtable->get_rtable(src->dbase);
+		const record_table_t *rtable =
+			src->dtable->get_rtable(src->dbase);
 
 		/* Must invoke cache function first */
 		if (src->dtable->cache(handle, src->dbase) < 0)
@@ -163,13 +158,14 @@ int semanage_base_merge_components(semanage_handle_t * handle)
 			goto err;
 
 		/* List all records */
-		if (src->dtable->list(handle, src->dbase,
-				      &records, &nrecords) < 0)
+		if (src->dtable->list(handle, src->dbase, &records, &nrecords) <
+		    0)
 			goto err;
 
 		/* Sort records on MODE_SORT */
 		if ((mode & MODE_SORT) && nrecords > 1) {
-			qsort(records, nrecords, sizeof(record_t *), rtable->compare2_qsort);
+			qsort(records, nrecords, sizeof(record_t *),
+			      rtable->compare2_qsort);
 		}
 
 		/* Clear obsolete ones for MODE_SET */
@@ -181,13 +177,12 @@ int semanage_base_merge_components(semanage_handle_t * handle)
 
 		/* Load records */
 		if (load_records(handle, dst, records, nrecords, mode) < 0) {
-
 			rc = STATUS_ERR;
 			goto dbase_exit;
 		}
 
 		/* Cleanup */
-	      dbase_exit:
+dbase_exit:
 		for (j = 0; j < nrecords; j++)
 			rtable->free(records[j]);
 		free(records);
@@ -199,14 +194,13 @@ int semanage_base_merge_components(semanage_handle_t * handle)
 
 	return rc;
 
-      err:
+err:
 	ERR(handle, "could not merge local modifications into policy");
 	return STATUS_ERR;
 }
 
-int semanage_commit_components(semanage_handle_t * handle)
+int semanage_commit_components(semanage_handle_t *handle)
 {
-
 	int i;
 	const dbase_config_t *components[] = {
 		semanage_iface_dbase_local(handle),
@@ -235,7 +229,7 @@ int semanage_commit_components(semanage_handle_t * handle)
 
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not commit local/active modifications");
 
 	for (i = 0; i < CCOUNT; i++)

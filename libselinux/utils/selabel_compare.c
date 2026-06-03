@@ -5,7 +5,6 @@
 
 #include <selinux/label.h>
 
-
 static void usage(const char *progname)
 {
 	fprintf(stderr,
@@ -17,28 +16,31 @@ static void usage(const char *progname)
 		progname);
 }
 
-static int compare(const char *file1, const char *file2, const char *validate, unsigned int backend)
+static int compare(const char *file1, const char *file2, const char *validate,
+		   unsigned int backend)
 {
 	struct selabel_handle *hnd1, *hnd2;
 	const struct selinux_opt selabel_option1[] = {
-		{ SELABEL_OPT_PATH, file1 },
-		{ SELABEL_OPT_VALIDATE, validate }
+		{ SELABEL_OPT_PATH, file1 }, { SELABEL_OPT_VALIDATE, validate }
 	};
 	const struct selinux_opt selabel_option2[] = {
-		{ SELABEL_OPT_PATH, file2 },
-		{ SELABEL_OPT_VALIDATE, validate }
+		{ SELABEL_OPT_PATH, file2 }, { SELABEL_OPT_VALIDATE, validate }
 	};
 	enum selabel_cmp_result result;
 
 	hnd1 = selabel_open(backend, selabel_option1, 2);
 	if (!hnd1) {
-		fprintf(stderr, "ERROR: selabel_open - Could not obtain handle for %s:  %m\n", file1);
+		fprintf(stderr,
+			"ERROR: selabel_open - Could not obtain handle for %s:  %m\n",
+			file1);
 		return EXIT_FAILURE;
 	}
 
 	hnd2 = selabel_open(backend, selabel_option2, 2);
 	if (!hnd2) {
-		fprintf(stderr, "ERROR: selabel_open - Could not obtain handle for %s:  %m\n", file2);
+		fprintf(stderr,
+			"ERROR: selabel_open - Could not obtain handle for %s:  %m\n",
+			file2);
 		selabel_close(hnd1);
 		return EXIT_FAILURE;
 	}
@@ -62,7 +64,8 @@ static int compare(const char *file1, const char *file2, const char *validate, u
 		printf("spec %s is uncomparable to spec %s\n", file1, file2);
 		break;
 	default:
-		fprintf(stderr, "ERROR: selabel_cmp - Unexpected result %d\n", result);
+		fprintf(stderr, "ERROR: selabel_cmp - Unexpected result %d\n",
+			result);
 		return EXIT_FAILURE;
 	}
 
@@ -96,7 +99,8 @@ int main(int argc, char *argv[])
 			} else if (!strcmp(optarg, "service")) {
 				backend = SELABEL_CTX_ANDROID_SERVICE;
 			} else {
-				fprintf(stderr, "Unknown backend: %s\n", optarg);
+				fprintf(stderr, "Unknown backend: %s\n",
+					optarg);
 				usage(argv[0]);
 				return EXIT_FAILURE;
 			}

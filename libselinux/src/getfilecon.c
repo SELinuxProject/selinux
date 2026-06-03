@@ -7,7 +7,7 @@
 #include <sys/xattr.h>
 #include "policy.h"
 
-int getfilecon_raw(const char *path, char ** context)
+int getfilecon_raw(const char *path, char **context)
 {
 	char *buf;
 	ssize_t size;
@@ -35,7 +35,7 @@ int getfilecon_raw(const char *path, char ** context)
 		memset(buf, 0, size);
 		ret = getxattr(path, XATTR_NAME_SELINUX, buf, size - 1);
 	}
-      out:
+out:
 	if (ret == 0) {
 		/* Re-map empty attribute values to errors. */
 		errno = ENOTSUP;
@@ -48,11 +48,10 @@ int getfilecon_raw(const char *path, char ** context)
 	return ret;
 }
 
-
-int getfilecon(const char *path, char ** context)
+int getfilecon(const char *path, char **context)
 {
 	int ret;
-	char * rcontext = NULL;
+	char *rcontext = NULL;
 
 	*context = NULL;
 
@@ -67,4 +66,3 @@ int getfilecon(const char *path, char ** context)
 
 	return ret;
 }
-

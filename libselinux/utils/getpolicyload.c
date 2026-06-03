@@ -3,9 +3,8 @@
 
 #include <selinux/avc.h>
 
-
-int main(int argc __attribute__ ((unused)),
-         char* argv[] __attribute__ ((unused))) {
+int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
+{
 	int rc;
 
 	/*
@@ -14,13 +13,16 @@ int main(int argc __attribute__ ((unused)),
 	*/
 	rc = selinux_status_open(/*fallback=*/0);
 	if (rc < 0) {
-		fprintf(stderr, "%s:  failed to open SELinux status map:  %m\n", argv[0]);
+		fprintf(stderr, "%s:  failed to open SELinux status map:  %m\n",
+			argv[0]);
 		return EXIT_FAILURE;
 	}
 
 	rc = selinux_status_policyload();
 	if (rc < 0)
-		fprintf(stderr, "%s:  failed to read policyload from SELinux status page:  %m\n", argv[0]);
+		fprintf(stderr,
+			"%s:  failed to read policyload from SELinux status page:  %m\n",
+			argv[0]);
 	else
 		printf("%d\n", rc);
 

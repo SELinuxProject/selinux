@@ -19,10 +19,9 @@ typedef struct dbase_activedb dbase_t;
 #include "parse_utils.h"
 #include "debug.h"
 
-static int bool_read_list(semanage_handle_t * handle,
-			  semanage_bool_t *** booleans, unsigned int *count)
+static int bool_read_list(semanage_handle_t *handle,
+			  semanage_bool_t ***booleans, unsigned int *count)
 {
-
 	semanage_bool_t **tmp_booleans = NULL;
 	unsigned int tmp_count = 0;
 	int i;
@@ -43,21 +42,22 @@ static int bool_read_list(semanage_handle_t * handle,
 
 	/* Create records one by one */
 	for (i = 0; i < len; i++) {
-
 		int value;
 
 		if (semanage_bool_create(handle, &tmp_booleans[i]) < 0)
 			goto err;
 		tmp_count++;
 
-		if (semanage_bool_set_name(handle,
-					   tmp_booleans[i], names[i]) < 0)
+		if (semanage_bool_set_name(handle, tmp_booleans[i], names[i]) <
+		    0)
 			goto err;
 
 		value = security_get_boolean_active(names[i]);
 		if (value < 0) {
-			ERR(handle, "could not get the value "
-			    "for boolean %s", names[i]);
+			ERR(handle,
+			    "could not get the value "
+			    "for boolean %s",
+			    names[i]);
 			goto err;
 		}
 
@@ -73,10 +73,10 @@ static int bool_read_list(semanage_handle_t * handle,
 	return STATUS_SUCCESS;
 
 	/* Failure */
-      omem:
+omem:
 	ERR(handle, "out of memory");
 
-      err:
+err:
 	ERR(handle, "could not read boolean list");
 	for (i = 0; i < len; i++)
 		free(names[i]);
@@ -87,10 +87,9 @@ static int bool_read_list(semanage_handle_t * handle,
 	return STATUS_ERR;
 }
 
-static int bool_commit_list(semanage_handle_t * handle,
-			    semanage_bool_t ** booleans, unsigned int count)
+static int bool_commit_list(semanage_handle_t *handle,
+			    semanage_bool_t **booleans, unsigned int count)
 {
-
 	SELboolean *blist = NULL;
 	const char *name;
 	unsigned int bcount = 0;
@@ -129,10 +128,10 @@ static int bool_commit_list(semanage_handle_t * handle,
 	free(blist);
 	return STATUS_SUCCESS;
 
-      omem:
+omem:
 	ERR(handle, "out of memory");
 
-      err:
+err:
 	ERR(handle, "could not commit boolean list");
 	for (i = 0; i < bcount; i++)
 		free(blist[i].name);
@@ -146,12 +145,9 @@ static const record_activedb_table_t SEMANAGE_BOOL_ACTIVEDB_RTABLE = {
 	.commit_list = bool_commit_list,
 };
 
-int bool_activedb_dbase_init(semanage_handle_t * handle,
-			     dbase_config_t * dconfig)
+int bool_activedb_dbase_init(semanage_handle_t *handle, dbase_config_t *dconfig)
 {
-
-	if (dbase_activedb_init(handle,
-				&SEMANAGE_BOOL_RTABLE,
+	if (dbase_activedb_init(handle, &SEMANAGE_BOOL_RTABLE,
 				&SEMANAGE_BOOL_ACTIVEDB_RTABLE,
 				&dconfig->dbase) < 0)
 		return STATUS_ERR;
@@ -160,8 +156,7 @@ int bool_activedb_dbase_init(semanage_handle_t * handle,
 	return STATUS_SUCCESS;
 }
 
-void bool_activedb_dbase_release(dbase_config_t * dconfig)
+void bool_activedb_dbase_release(dbase_config_t *dconfig)
 {
-
 	dbase_activedb_release(dconfig->dbase);
 }

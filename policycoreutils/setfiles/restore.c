@@ -29,21 +29,20 @@ void restore_init(struct restore_opts *opts)
 
 	opts->hnd = selabel_open(SELABEL_CTX_FILE, selinux_opts, 3);
 	if (!opts->hnd) {
-		perror(opts->selabel_opt_path ? opts->selabel_opt_path : selinux_file_context_path());
+		perror(opts->selabel_opt_path ? opts->selabel_opt_path :
+						selinux_file_context_path());
 		exit(1);
 	}
 
 	opts->restorecon_flags = 0;
-	opts->restorecon_flags = opts->nochange | opts->verbose |
-			   opts->progress | opts->set_specctx  |
-			   opts->set_user_role |
-			   opts->add_assoc | opts->ignore_digest |
-			   opts->recurse | opts->userealpath |
-			   opts->xdev | opts->abort_on_error |
-			   opts->syslog_changes | opts->log_matches |
-			   opts->ignore_noent | opts->ignore_mounts |
-			   opts->mass_relabel | opts->conflict_error |
-			   opts->count_errors | opts->count_relabeled;
+	opts->restorecon_flags =
+		opts->nochange | opts->verbose | opts->progress |
+		opts->set_specctx | opts->set_user_role | opts->add_assoc |
+		opts->ignore_digest | opts->recurse | opts->userealpath |
+		opts->xdev | opts->abort_on_error | opts->syslog_changes |
+		opts->log_matches | opts->ignore_noent | opts->ignore_mounts |
+		opts->mass_relabel | opts->conflict_error | opts->count_errors |
+		opts->count_relabeled;
 
 	/* Use setfiles, restorecon and restorecond own handles */
 	selinux_restorecon_set_sehandle(opts->hnd);
@@ -59,8 +58,8 @@ void restore_init(struct restore_opts *opts)
 	}
 
 	if (exclude_list)
-		selinux_restorecon_set_exclude_list
-						 ((const char **)exclude_list);
+		selinux_restorecon_set_exclude_list(
+			(const char **)exclude_list);
 }
 
 void restore_finish(void)
@@ -83,8 +82,9 @@ int process_glob(char *name, struct restore_opts *opts, size_t nthreads,
 
 	memset(&globbuf, 0, sizeof(globbuf));
 
-	errors = glob(name, GLOB_TILDE | GLOB_PERIOD |
-			  GLOB_NOCHECK | GLOB_BRACE, NULL, &globbuf);
+	errors = glob(name,
+		      GLOB_TILDE | GLOB_PERIOD | GLOB_NOCHECK | GLOB_BRACE,
+		      NULL, &globbuf);
 	if (errors)
 		return errors;
 
@@ -92,18 +92,22 @@ int process_glob(char *name, struct restore_opts *opts, size_t nthreads,
 		len = strlen(globbuf.gl_pathv[i]);
 		if (len > 2 && strcmp(&globbuf.gl_pathv[i][len - 2], "/.") == 0)
 			continue;
-		if (len > 3 && strcmp(&globbuf.gl_pathv[i][len - 3], "/..") == 0)
+		if (len > 3 &&
+		    strcmp(&globbuf.gl_pathv[i][len - 3], "/..") == 0)
 			continue;
-		rc = selinux_restorecon_parallel(globbuf.gl_pathv[i],
-						 opts->restorecon_flags,
-						 nthreads);
+		rc = selinux_restorecon_parallel(
+			globbuf.gl_pathv[i], opts->restorecon_flags, nthreads);
 		if (rc < 0)
 			errors = rc;
 		else {
-			if (opts->restorecon_flags & SELINUX_RESTORECON_COUNT_ERRORS)
-				*skipped_errors += selinux_restorecon_get_skipped_errors();
-			if (opts->restorecon_flags & SELINUX_RESTORECON_COUNT_RELABELED)
-				*relabeled_files += selinux_restorecon_get_relabeled_files();
+			if (opts->restorecon_flags &
+			    SELINUX_RESTORECON_COUNT_ERRORS)
+				*skipped_errors +=
+					selinux_restorecon_get_skipped_errors();
+			if (opts->restorecon_flags &
+			    SELINUX_RESTORECON_COUNT_RELABELED)
+				*relabeled_files +=
+					selinux_restorecon_get_relabeled_files();
 		}
 	}
 
@@ -118,7 +122,7 @@ void add_exclude(const char *directory)
 
 	if (directory == NULL || directory[0] != '/') {
 		fprintf(stderr, "Full path required for exclude: %s.\n",
-			    directory);
+			directory);
 		exit(-1);
 	}
 
@@ -128,7 +132,7 @@ void add_exclude(const char *directory)
 	tmp_list = realloc(exclude_list, sizeof(char *) * (exclude_count + 2));
 	if (!tmp_list) {
 		fprintf(stderr, "realloc failed while excluding %s.\n",
-			    directory);
+			directory);
 		exit(-1);
 	}
 	exclude_list = tmp_list;
@@ -136,7 +140,7 @@ void add_exclude(const char *directory)
 	exclude_list[exclude_count] = strdup(directory);
 	if (!exclude_list[exclude_count]) {
 		fprintf(stderr, "strdup failed while excluding %s.\n",
-			    directory);
+			directory);
 		exit(-1);
 	}
 	exclude_count++;

@@ -18,10 +18,9 @@ typedef struct dbase_file dbase_t;
 #include "parse_utils.h"
 #include "debug.h"
 
-static int iface_print(semanage_handle_t * handle,
-		       const semanage_iface_t * iface, FILE * str)
+static int iface_print(semanage_handle_t *handle, const semanage_iface_t *iface,
+		       FILE *str)
 {
-
 	char *con_str = NULL;
 
 	const char *name = semanage_iface_get_name(iface);
@@ -47,16 +46,15 @@ static int iface_print(semanage_handle_t * handle,
 
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not print interface %s to stream", name);
 	free(con_str);
 	return STATUS_ERR;
 }
 
-static int iface_parse(semanage_handle_t * handle,
-		       parse_info_t * info, semanage_iface_t * iface)
+static int iface_parse(semanage_handle_t *handle, parse_info_t *info,
+		       semanage_iface_t *iface)
 {
-
 	char *str = NULL;
 	semanage_context_t *con = NULL;
 
@@ -85,14 +83,15 @@ static int iface_parse(semanage_handle_t * handle,
 	if (parse_fetch_string(handle, info, &str, ' ', 0) < 0)
 		goto err;
 	if (semanage_context_from_string(handle, str, &con) < 0) {
-		ERR(handle, "invalid security context \"%s\" (%s: %u)\n%s",
-		    str, info->filename, info->lineno, info->orig_line);
+		ERR(handle, "invalid security context \"%s\" (%s: %u)\n%s", str,
+		    info->filename, info->lineno, info->orig_line);
 		goto err;
 	}
 	if (con == NULL) {
-		ERR(handle, "<<none>> context is not valid for "
-		    "interfaces (%s: %u)\n%s", info->filename,
-		    info->lineno, info->orig_line);
+		ERR(handle,
+		    "<<none>> context is not valid for "
+		    "interfaces (%s: %u)\n%s",
+		    info->filename, info->lineno, info->orig_line);
 		goto err;
 	}
 	free(str);
@@ -109,14 +108,15 @@ static int iface_parse(semanage_handle_t * handle,
 	if (parse_fetch_string(handle, info, &str, ' ', 0) < 0)
 		goto err;
 	if (semanage_context_from_string(handle, str, &con) < 0) {
-		ERR(handle, "invalid security context \"%s\" (%s: %u)\n%s",
-		    str, info->filename, info->lineno, info->orig_line);
+		ERR(handle, "invalid security context \"%s\" (%s: %u)\n%s", str,
+		    info->filename, info->lineno, info->orig_line);
 		goto err;
 	}
 	if (con == NULL) {
-		ERR(handle, "<<none>> context is not valid for "
-		    "interfaces (%s: %u)\n%s", info->filename,
-		    info->lineno, info->orig_line);
+		ERR(handle,
+		    "<<none>> context is not valid for "
+		    "interfaces (%s: %u)\n%s",
+		    info->filename, info->lineno, info->orig_line);
 		goto err;
 	}
 	free(str);
@@ -132,11 +132,11 @@ static int iface_parse(semanage_handle_t * handle,
 
 	return STATUS_SUCCESS;
 
-      last:
+last:
 	parse_dispose_line(info);
 	return STATUS_NODATA;
 
-      err:
+err:
 	ERR(handle, "could not parse interface record");
 	free(str);
 	semanage_context_free(con);
@@ -150,16 +150,10 @@ static const record_file_table_t SEMANAGE_IFACE_FILE_RTABLE = {
 	.print = iface_print,
 };
 
-int iface_file_dbase_init(semanage_handle_t * handle,
-			  const char *path_ro,
-			  const char *path_rw,
-			  dbase_config_t * dconfig)
+int iface_file_dbase_init(semanage_handle_t *handle, const char *path_ro,
+			  const char *path_rw, dbase_config_t *dconfig)
 {
-
-	if (dbase_file_init(handle,
-			    path_ro,
-			    path_rw,
-			    &SEMANAGE_IFACE_RTABLE,
+	if (dbase_file_init(handle, path_ro, path_rw, &SEMANAGE_IFACE_RTABLE,
 			    &SEMANAGE_IFACE_FILE_RTABLE, &dconfig->dbase) < 0)
 		return STATUS_ERR;
 
@@ -167,8 +161,7 @@ int iface_file_dbase_init(semanage_handle_t * handle,
 	return STATUS_SUCCESS;
 }
 
-void iface_file_dbase_release(dbase_config_t * dconfig)
+void iface_file_dbase_release(dbase_config_t *dconfig)
 {
-
 	dbase_file_release(dconfig->dbase);
 }

@@ -6,7 +6,6 @@
 #include <sepol/policydb/services.h>
 #include <sepol/sepol.h>
 
-
 int main(int argc, char *argv[])
 {
 	FILE *fp;
@@ -16,17 +15,20 @@ int main(int argc, char *argv[])
 	int ret;
 
 	if (argc != 6) {
-		printf("usage:  %s policy oldcontext newcontext tclass taskcontext\n", argv[0]);
+		printf("usage:  %s policy oldcontext newcontext tclass taskcontext\n",
+		       argv[0]);
 		return 1;
 	}
 
 	fp = fopen(argv[1], "r");
 	if (!fp) {
-		fprintf(stderr, "Can't open policy %s:  %s\n", argv[1], strerror(errno));
+		fprintf(stderr, "Can't open policy %s:  %s\n", argv[1],
+			strerror(errno));
 		return 1;
 	}
 	if (sepol_set_policydb_from_file(fp) < 0) {
-		fprintf(stderr, "Error while processing policy %s:  %s\n", argv[1], strerror(errno));
+		fprintf(stderr, "Error while processing policy %s:  %s\n",
+			argv[1], strerror(errno));
 		fclose(fp);
 		return 1;
 	}
@@ -52,7 +54,8 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	ret = sepol_validate_transition_reason_buffer(oldsid, newsid, tasksid, tclass, &reason, SHOW_GRANTED);
+	ret = sepol_validate_transition_reason_buffer(
+		oldsid, newsid, tasksid, tclass, &reason, SHOW_GRANTED);
 	switch (ret) {
 	case 0:
 		printf("allowed\n");
@@ -64,7 +67,8 @@ int main(int argc, char *argv[])
 		ret = 7;
 		break;
 	default:
-		printf("sepol_validate_transition_reason_buffer returned %d errno: %s\n", ret, strerror(errno));
+		printf("sepol_validate_transition_reason_buffer returned %d errno: %s\n",
+		       ret, strerror(errno));
 		ret = 1;
 	}
 

@@ -42,7 +42,8 @@
 #include "cil_strpool.h"
 #include "cil_log.h"
 
-__attribute__((noreturn)) __attribute__((format (printf, 1, 2))) static void cil_symtab_error(const char* msg, ...)
+__attribute__((noreturn)) __attribute__((format(printf, 1, 2))) static void
+cil_symtab_error(const char *msg, ...)
 {
 	va_list ap;
 	va_start(ap, msg);
@@ -73,7 +74,8 @@ void cil_symtab_datum_destroy(struct cil_symtab_datum *datum)
 	cil_symtab_remove_datum(datum);
 }
 
-void cil_symtab_datum_remove_node(struct cil_symtab_datum *datum, struct cil_tree_node *node)
+void cil_symtab_datum_remove_node(struct cil_symtab_datum *datum,
+				  struct cil_tree_node *node)
 {
 	if (datum && datum->nodes != NULL) {
 		cil_list_remove(datum->nodes, CIL_NODE, node, 0);
@@ -85,7 +87,9 @@ void cil_symtab_datum_remove_node(struct cil_symtab_datum *datum, struct cil_tre
 
 /* This both initializes the datum and inserts it into the symtab.
    Note that cil_symtab_datum_destroy() is the analog to the initializer portion */
-int cil_symtab_insert(symtab_t *symtab, hashtab_key_t key, struct cil_symtab_datum *datum, struct cil_tree_node *node)
+int cil_symtab_insert(symtab_t *symtab, hashtab_key_t key,
+		      struct cil_symtab_datum *datum,
+		      struct cil_tree_node *node)
 {
 	int rc = hashtab_insert(symtab->table, key, (hashtab_datum_t)datum);
 	if (rc == SEPOL_OK) {
@@ -116,9 +120,11 @@ void cil_symtab_remove_datum(struct cil_symtab_datum *datum)
 	datum->symtab = NULL;
 }
 
-int cil_symtab_get_datum(symtab_t *symtab, char *key, struct cil_symtab_datum **datum)
+int cil_symtab_get_datum(symtab_t *symtab, char *key,
+			 struct cil_symtab_datum **datum)
 {
-	*datum = (struct cil_symtab_datum*)hashtab_search(symtab->table, (hashtab_key_t)key);
+	*datum = (struct cil_symtab_datum *)hashtab_search(symtab->table,
+							   (hashtab_key_t)key);
 	if (*datum == NULL) {
 		return SEPOL_ENOENT;
 	}
@@ -127,13 +133,15 @@ int cil_symtab_get_datum(symtab_t *symtab, char *key, struct cil_symtab_datum **
 }
 
 int cil_symtab_map(symtab_t *symtab,
-				   int (*apply) (hashtab_key_t k, hashtab_datum_t d, void *args),
-				   void *args)
+		   int (*apply)(hashtab_key_t k, hashtab_datum_t d, void *args),
+		   void *args)
 {
 	return hashtab_map(symtab->table, apply, args);
 }
 
-static int __cil_symtab_destroy_helper(__attribute__((unused)) hashtab_key_t k, hashtab_datum_t d, __attribute__((unused)) void *args)
+static int __cil_symtab_destroy_helper(__attribute__((unused)) hashtab_key_t k,
+				       hashtab_datum_t d,
+				       __attribute__((unused)) void *args)
 {
 	struct cil_symtab_datum *datum = d;
 	datum->symtab = NULL;
@@ -142,20 +150,22 @@ static int __cil_symtab_destroy_helper(__attribute__((unused)) hashtab_key_t k, 
 
 void cil_symtab_destroy(symtab_t *symtab)
 {
-	if (symtab->table != NULL){
+	if (symtab->table != NULL) {
 		cil_symtab_map(symtab, __cil_symtab_destroy_helper, NULL);
 		hashtab_destroy(symtab->table);
 		symtab->table = NULL;
 	}
 }
 
-static void cil_complex_symtab_hash(struct cil_complex_symtab_key *ckey, int mask, intptr_t *hash)
+static void cil_complex_symtab_hash(struct cil_complex_symtab_key *ckey,
+				    int mask, intptr_t *hash)
 {
 	intptr_t sum = ckey->key1 + ckey->key2 + ckey->key3 + ckey->key4;
 	*hash = (intptr_t)((sum >> 2) & mask);
 }
 
-void cil_complex_symtab_init(struct cil_complex_symtab *symtab, unsigned int size)
+void cil_complex_symtab_init(struct cil_complex_symtab *symtab,
+			     unsigned int size)
 {
 	symtab->htable = cil_calloc(size, sizeof(struct cil_complex_symtab *));
 
@@ -165,8 +175,8 @@ void cil_complex_symtab_init(struct cil_complex_symtab *symtab, unsigned int siz
 }
 
 int cil_complex_symtab_insert(struct cil_complex_symtab *symtab,
-			struct cil_complex_symtab_key *ckey,
-			struct cil_complex_symtab_datum *datum)
+			      struct cil_complex_symtab_key *ckey,
+			      struct cil_complex_symtab_datum *datum)
 {
 	intptr_t hash;
 	struct cil_complex_symtab_node *node = NULL;
@@ -182,30 +192,30 @@ int cil_complex_symtab_insert(struct cil_complex_symtab *symtab,
 	cil_complex_symtab_hash(ckey, symtab->mask, &hash);
 
 	for (prev = NULL, curr = symtab->htable[hash]; curr != NULL;
-		prev = curr, curr = curr->next) {
+	     prev = curr, curr = curr->next) {
 		if (ckey->key1 == curr->ckey->key1 &&
-			ckey->key2 == curr->ckey->key2 &&
-			ckey->key3 == curr->ckey->key3 &&
-			ckey->key4 == curr->ckey->key4) {
+		    ckey->key2 == curr->ckey->key2 &&
+		    ckey->key3 == curr->ckey->key3 &&
+		    ckey->key4 == curr->ckey->key4) {
 			free(node);
 			return SEPOL_EEXIST;
 		}
 
 		if (ckey->key1 == curr->ckey->key1 &&
-			ckey->key2 < curr->ckey->key2) {
+		    ckey->key2 < curr->ckey->key2) {
 			break;
 		}
 
 		if (ckey->key1 == curr->ckey->key1 &&
-			ckey->key2 == curr->ckey->key2 &&
-			ckey->key3 < curr->ckey->key3) {
+		    ckey->key2 == curr->ckey->key2 &&
+		    ckey->key3 < curr->ckey->key3) {
 			break;
 		}
 
 		if (ckey->key1 == curr->ckey->key1 &&
-			ckey->key2 == curr->ckey->key2 &&
-			ckey->key3 == curr->ckey->key3 &&
-			ckey->key4 < curr->ckey->key4) {
+		    ckey->key2 == curr->ckey->key2 &&
+		    ckey->key3 == curr->ckey->key3 &&
+		    ckey->key4 < curr->ckey->key4) {
 			break;
 		}
 	}
@@ -233,28 +243,28 @@ void cil_complex_symtab_search(struct cil_complex_symtab *symtab,
 	cil_complex_symtab_hash(ckey, symtab->mask, &hash);
 	for (curr = symtab->htable[hash]; curr != NULL; curr = curr->next) {
 		if (ckey->key1 == curr->ckey->key1 &&
-			ckey->key2 == curr->ckey->key2 &&
-			ckey->key3 == curr->ckey->key3 &&
-			ckey->key4 == curr->ckey->key4) {
+		    ckey->key2 == curr->ckey->key2 &&
+		    ckey->key3 == curr->ckey->key3 &&
+		    ckey->key4 == curr->ckey->key4) {
 			*out = curr->datum;
 			return;
 		}
 
 		if (ckey->key1 == curr->ckey->key1 &&
-			ckey->key2 < curr->ckey->key2) {
+		    ckey->key2 < curr->ckey->key2) {
 			break;
 		}
 
 		if (ckey->key1 == curr->ckey->key1 &&
-			ckey->key2 == curr->ckey->key2 &&
-			ckey->key3 < curr->ckey->key3) {
+		    ckey->key2 == curr->ckey->key2 &&
+		    ckey->key3 < curr->ckey->key3) {
 			break;
 		}
 
 		if (ckey->key1 == curr->ckey->key1 &&
-			ckey->key2 == curr->ckey->key2 &&
-			ckey->key3 == curr->ckey->key3 &&
-			ckey->key4 < curr->ckey->key4) {
+		    ckey->key2 == curr->ckey->key2 &&
+		    ckey->key3 == curr->ckey->key3 &&
+		    ckey->key4 < curr->ckey->key4) {
 			break;
 		}
 	}

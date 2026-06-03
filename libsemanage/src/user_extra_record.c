@@ -31,38 +31,34 @@ struct semanage_user_extra {
 	char *prefix;
 };
 
-static int semanage_user_extra_key_extract(semanage_handle_t * handle,
-					   const semanage_user_extra_t *
-					   user_extra,
-					   semanage_user_key_t ** key_ptr)
+static int
+semanage_user_extra_key_extract(semanage_handle_t *handle,
+				const semanage_user_extra_t *user_extra,
+				semanage_user_key_t **key_ptr)
 {
-
 	if (semanage_user_key_create(handle, user_extra->name, key_ptr) < 0)
 		goto err;
 
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not extract key from user extra record");
 	return STATUS_ERR;
 }
 
-static int semanage_user_extra_compare(const semanage_user_extra_t * user_extra,
-				       const semanage_user_key_t * key)
+static int semanage_user_extra_compare(const semanage_user_extra_t *user_extra,
+				       const semanage_user_key_t *key)
 {
-
 	const char *name;
 	semanage_user_key_unpack(key, &name);
 
 	return strcmp(user_extra->name, name);
 }
 
-static int semanage_user_extra_compare2(const semanage_user_extra_t *
-					user_extra,
-					const semanage_user_extra_t *
-					user_extra2)
+static int
+semanage_user_extra_compare2(const semanage_user_extra_t *user_extra,
+			     const semanage_user_extra_t *user_extra2)
 {
-
 	return strcmp(user_extra->name, user_extra2->name);
 }
 
@@ -75,22 +71,22 @@ static int semanage_user_extra_compare2_qsort(const void *p1, const void *p2)
 }
 
 /* Name */
- const char *semanage_user_extra_get_name(const semanage_user_extra_t *
-						user_extra)
+const char *
+semanage_user_extra_get_name(const semanage_user_extra_t *user_extra)
 {
-
 	return user_extra->name;
 }
 
- int semanage_user_extra_set_name(semanage_handle_t * handle,
-					semanage_user_extra_t * user_extra,
-					const char *name)
+int semanage_user_extra_set_name(semanage_handle_t *handle,
+				 semanage_user_extra_t *user_extra,
+				 const char *name)
 {
-
 	char *tmp_name = strdup(name);
 	if (!tmp_name) {
-		ERR(handle, "out of memory, could not set name %s "
-		    "for user extra data", name);
+		ERR(handle,
+		    "out of memory, could not set name %s "
+		    "for user extra data",
+		    name);
 		return STATUS_ERR;
 	}
 	free(user_extra->name);
@@ -99,22 +95,22 @@ static int semanage_user_extra_compare2_qsort(const void *p1, const void *p2)
 }
 
 /* Labeling prefix */
- const char *semanage_user_extra_get_prefix(const semanage_user_extra_t *
-						  user_extra)
+const char *
+semanage_user_extra_get_prefix(const semanage_user_extra_t *user_extra)
 {
-
 	return user_extra->prefix;
 }
 
- int semanage_user_extra_set_prefix(semanage_handle_t * handle,
-					  semanage_user_extra_t * user_extra,
-					  const char *prefix)
+int semanage_user_extra_set_prefix(semanage_handle_t *handle,
+				   semanage_user_extra_t *user_extra,
+				   const char *prefix)
 {
-
 	char *tmp_prefix = strdup(prefix);
 	if (!tmp_prefix) {
-		ERR(handle, "out of memory, could not set prefix %s "
-		    "for user %s", prefix, user_extra->name);
+		ERR(handle,
+		    "out of memory, could not set prefix %s "
+		    "for user %s",
+		    prefix, user_extra->name);
 		return STATUS_ERR;
 	}
 	free(user_extra->prefix);
@@ -123,16 +119,15 @@ static int semanage_user_extra_compare2_qsort(const void *p1, const void *p2)
 }
 
 /* Create */
- int semanage_user_extra_create(semanage_handle_t * handle,
-				      semanage_user_extra_t ** user_extra_ptr)
+int semanage_user_extra_create(semanage_handle_t *handle,
+			       semanage_user_extra_t **user_extra_ptr)
 {
-
 	semanage_user_extra_t *user_extra =
-	    (semanage_user_extra_t *) malloc(sizeof(semanage_user_extra_t));
+		(semanage_user_extra_t *)malloc(sizeof(semanage_user_extra_t));
 
 	if (!user_extra) {
 		ERR(handle, "out of memory, could not "
-		    "create user extra data record");
+			    "create user extra data record");
 		return STATUS_ERR;
 	}
 
@@ -144,9 +139,8 @@ static int semanage_user_extra_compare2_qsort(const void *p1, const void *p2)
 }
 
 /* Destroy */
- void semanage_user_extra_free(semanage_user_extra_t * user_extra)
+void semanage_user_extra_free(semanage_user_extra_t *user_extra)
 {
-
 	if (!user_extra)
 		return;
 
@@ -156,28 +150,27 @@ static int semanage_user_extra_compare2_qsort(const void *p1, const void *p2)
 }
 
 /* Deep copy clone */
- int semanage_user_extra_clone(semanage_handle_t * handle,
-				     const semanage_user_extra_t * user_extra,
-				     semanage_user_extra_t ** user_extra_ptr)
+int semanage_user_extra_clone(semanage_handle_t *handle,
+			      const semanage_user_extra_t *user_extra,
+			      semanage_user_extra_t **user_extra_ptr)
 {
-
 	semanage_user_extra_t *new_user_extra = NULL;
 
 	if (semanage_user_extra_create(handle, &new_user_extra) < 0)
 		goto err;
 
-	if (semanage_user_extra_set_name
-	    (handle, new_user_extra, user_extra->name) < 0)
+	if (semanage_user_extra_set_name(handle, new_user_extra,
+					 user_extra->name) < 0)
 		goto err;
 
-	if (semanage_user_extra_set_prefix
-	    (handle, new_user_extra, user_extra->prefix) < 0)
+	if (semanage_user_extra_set_prefix(handle, new_user_extra,
+					   user_extra->prefix) < 0)
 		goto err;
 
 	*user_extra_ptr = new_user_extra;
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not clone extra data for user %s", user_extra->name);
 	semanage_user_extra_free(new_user_extra);
 	return STATUS_ERR;

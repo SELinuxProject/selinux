@@ -65,8 +65,8 @@
 const char *homedir;
 static int master_fd = -1;
 
-static const char *server_watch_file  = "/etc/selinux/restorecond.conf";
-static const char *user_watch_file  = "/etc/selinux/restorecond_user.conf";
+static const char *server_watch_file = "/etc/selinux/restorecond.conf";
+static const char *user_watch_file = "/etc/selinux/restorecond_user.conf";
 static const char *watch_file;
 struct restore_opts r_opts;
 
@@ -78,7 +78,8 @@ int master_wd = -1;
 int run_as_user = 0;
 int foreground_mode = 0;
 
-static void done(void) {
+static void done(void)
+{
 	watch_list_free(master_fd);
 	close(master_fd);
 	utmpwatcher_free();
@@ -105,7 +106,8 @@ static int write_pid_file(void)
 		return 1;
 	}
 	if (write(pidfd, val, (unsigned int)len) != len) {
-		syslog(LOG_ERR, "Unable to write to pidfile (%s)", strerror(errno));
+		syslog(LOG_ERR, "Unable to write to pidfile (%s)",
+		       strerror(errno));
 		close(pidfd);
 		return 1;
 	}
@@ -116,7 +118,7 @@ static int write_pid_file(void)
 /*
  * SIGTERM handler
  */
-static void term_handler(int s __attribute__ ((unused)))
+static void term_handler(int s __attribute__((unused)))
 {
 	terminate = 1;
 	/* trigger a failure in the watch */
@@ -125,7 +127,8 @@ static void term_handler(int s __attribute__ ((unused)))
 
 static void usage(char *program)
 {
-	printf("%s [-d] [-f restorecond_file ] [-F] [-n] [-u] [-v] \n", program);
+	printf("%s [-d] [-f restorecond_file ] [-F] [-n] [-u] [-v] \n",
+	       program);
 }
 
 void exitApp(const char *msg)
@@ -165,7 +168,7 @@ int main(int argc, char **argv)
 	sigemptyset(&sa.sa_mask);
 	sigaction(SIGTERM, &sa, NULL);
 
-	atexit( done );
+	atexit(done);
 	while ((opt = getopt(argc, argv, "hdf:Fuv")) > 0) {
 		switch (opt) {
 		case 'd':

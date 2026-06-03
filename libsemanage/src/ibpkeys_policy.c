@@ -36,7 +36,8 @@ int semanage_ibpkey_count(semanage_handle_t *handle, unsigned int *response)
 
 int semanage_ibpkey_iterate(semanage_handle_t *handle,
 			    int (*handler)(const semanage_ibpkey_t *record,
-					   void *varg), void *handler_arg)
+					   void *varg),
+			    void *handler_arg)
 {
 	dbase_config_t *dconfig = semanage_ibpkey_dbase_policy(handle);
 

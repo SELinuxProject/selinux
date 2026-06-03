@@ -14,8 +14,8 @@
  * a high level representation
  */
 static int ibpkey_from_record(sepol_handle_t *handle,
-			      const policydb_t *policydb,
-			      ocontext_t **ibpkey, const sepol_ibpkey_t *data)
+			      const policydb_t *policydb, ocontext_t **ibpkey,
+			      const sepol_ibpkey_t *data)
 {
 	ocontext_t *tmp_ibpkey = NULL;
 	context_struct_t *tmp_con = NULL;
@@ -27,14 +27,16 @@ static int ibpkey_from_record(sepol_handle_t *handle,
 	if (!tmp_ibpkey)
 		goto omem;
 
-	tmp_ibpkey->u.ibpkey.subnet_prefix = sepol_ibpkey_get_subnet_prefix_bytes(data);
+	tmp_ibpkey->u.ibpkey.subnet_prefix =
+		sepol_ibpkey_get_subnet_prefix_bytes(data);
 
 	/* Pkey range */
 	tmp_ibpkey->u.ibpkey.low_pkey = low;
 	tmp_ibpkey->u.ibpkey.high_pkey = high;
 	if (tmp_ibpkey->u.ibpkey.low_pkey > tmp_ibpkey->u.ibpkey.high_pkey) {
 		ERR(handle, "low ibpkey %d exceeds high ibpkey %d",
-		    tmp_ibpkey->u.ibpkey.low_pkey, tmp_ibpkey->u.ibpkey.high_pkey);
+		    tmp_ibpkey->u.ibpkey.low_pkey,
+		    tmp_ibpkey->u.ibpkey.high_pkey);
 		goto err;
 	}
 
@@ -65,8 +67,7 @@ err:
 	return STATUS_ERR;
 }
 
-static int ibpkey_to_record(sepol_handle_t *handle,
-			    const policydb_t *policydb,
+static int ibpkey_to_record(sepol_handle_t *handle, const policydb_t *policydb,
 			    ocontext_t *ibpkey, sepol_ibpkey_t **record)
 {
 	context_struct_t *con = &ibpkey->context[0];
@@ -100,7 +101,7 @@ err:
 }
 
 /* Return the number of ibpkeys */
-extern int sepol_ibpkey_count(sepol_handle_t *handle __attribute__ ((unused)),
+extern int sepol_ibpkey_count(sepol_handle_t *handle __attribute__((unused)),
 			      const sepol_policydb_t *p, unsigned int *response)
 {
 	unsigned int count = 0;
@@ -117,7 +118,7 @@ extern int sepol_ibpkey_count(sepol_handle_t *handle __attribute__ ((unused)),
 }
 
 /* Check if a ibpkey exists */
-int sepol_ibpkey_exists(sepol_handle_t *handle __attribute__ ((unused)),
+int sepol_ibpkey_exists(sepol_handle_t *handle __attribute__((unused)),
 			const sepol_policydb_t *p,
 			const sepol_ibpkey_key_t *key, int *response)
 {
@@ -134,8 +135,7 @@ int sepol_ibpkey_exists(sepol_handle_t *handle __attribute__ ((unused)),
 		uint16_t low2 = c->u.ibpkey.low_pkey;
 		uint16_t high2 = c->u.ibpkey.high_pkey;
 
-		if (low2 == low &&
-		    high2 == high &&
+		if (low2 == low && high2 == high &&
 		    subnet_prefix == subnet_prefix2) {
 			*response = 1;
 			return STATUS_SUCCESS;
@@ -147,8 +147,7 @@ int sepol_ibpkey_exists(sepol_handle_t *handle __attribute__ ((unused)),
 }
 
 /* Query a ibpkey */
-int sepol_ibpkey_query(sepol_handle_t *handle,
-		       const sepol_policydb_t *p,
+int sepol_ibpkey_query(sepol_handle_t *handle, const sepol_policydb_t *p,
 		       const sepol_ibpkey_key_t *key, sepol_ibpkey_t **response)
 {
 	const policydb_t *policydb = &p->p;
@@ -164,8 +163,7 @@ int sepol_ibpkey_query(sepol_handle_t *handle,
 		int low2 = c->u.ibpkey.low_pkey;
 		int high2 = c->u.ibpkey.high_pkey;
 
-		if (low2 == low &&
-		    high2 == high &&
+		if (low2 == low && high2 == high &&
 		    subnet_prefix == subnet_prefix2) {
 			if (ibpkey_to_record(handle, policydb, c, response) < 0)
 				goto err;
@@ -177,15 +175,17 @@ int sepol_ibpkey_query(sepol_handle_t *handle,
 	return STATUS_SUCCESS;
 
 err:
-	ERR(handle, "could not query ibpkey subnet prefix: %#" PRIx64 " range %u - %u exists",
+	ERR(handle,
+	    "could not query ibpkey subnet prefix: %#" PRIx64
+	    " range %u - %u exists",
 	    subnet_prefix, low, high);
 	return STATUS_ERR;
 }
 
 /* Load a ibpkey into policy */
-int sepol_ibpkey_modify(sepol_handle_t *handle,
-			sepol_policydb_t *p,
-			const sepol_ibpkey_key_t *key, const sepol_ibpkey_t *data)
+int sepol_ibpkey_modify(sepol_handle_t *handle, sepol_policydb_t *p,
+			const sepol_ibpkey_key_t *key,
+			const sepol_ibpkey_t *data)
 {
 	policydb_t *policydb = &p->p;
 	ocontext_t *ibpkey = NULL;
@@ -204,7 +204,9 @@ int sepol_ibpkey_modify(sepol_handle_t *handle,
 	return STATUS_SUCCESS;
 
 err:
-	ERR(handle, "could not load ibpkey subnet prefix: %#" PRIx64 " range %u - %u exists",
+	ERR(handle,
+	    "could not load ibpkey subnet prefix: %#" PRIx64
+	    " range %u - %u exists",
 	    subnet_prefix, low, high);
 	if (ibpkey) {
 		context_destroy(&ibpkey->context[0]);
@@ -213,10 +215,9 @@ err:
 	return STATUS_ERR;
 }
 
-int sepol_ibpkey_iterate(sepol_handle_t *handle,
-			 const sepol_policydb_t *p,
-			 int (*fn)(const sepol_ibpkey_t *ibpkey,
-				   void *fn_arg), void *arg)
+int sepol_ibpkey_iterate(sepol_handle_t *handle, const sepol_policydb_t *p,
+			 int (*fn)(const sepol_ibpkey_t *ibpkey, void *fn_arg),
+			 void *arg)
 {
 	const policydb_t *policydb = &p->p;
 	ocontext_t *c, *head;

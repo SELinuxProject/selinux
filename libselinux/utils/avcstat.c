@@ -22,9 +22,9 @@
 #include <sys/ioctl.h>
 #include <linux/limits.h>
 
-#define DEF_STAT_FILE	"/avc/cache_stats"
-#define DEF_BUF_SIZE	8192
-#define HEADERS		"lookups hits misses allocations reclaims frees"
+#define DEF_STAT_FILE "/avc/cache_stats"
+#define DEF_BUF_SIZE 8192
+#define HEADERS "lookups hits misses allocations reclaims frees"
 
 struct avc_cache_stats {
 	unsigned long long lookups;
@@ -43,7 +43,8 @@ static char buf[DEF_BUF_SIZE];
 /* selinuxfs mount point */
 extern char *selinux_mnt;
 
-static __attribute__((__format__(printf,1,2),__noreturn__)) void die(const char *msg, ...)
+static __attribute__((__format__(printf, 1, 2), __noreturn__)) void
+die(const char *msg, ...)
 {
 	va_list args;
 
@@ -63,14 +64,10 @@ static __attribute__((__format__(printf,1,2),__noreturn__)) void die(const char 
 static void usage(void)
 {
 	printf("\nUsage: %s [-c] [-f status_file] [interval]\n\n", progname);
-	printf
-	    ("Display SELinux AVC statistics.  If the interval parameter is specified, the\n");
-	printf
-	    ("program will loop, displaying updated statistics every \'interval\' seconds.\n");
-	printf
-	    ("Relative values are displayed by default. Use the -c option to specify the\n");
-	printf
-	    ("display of cumulative values.  The -f option specifies the location of the\n");
+	printf("Display SELinux AVC statistics.  If the interval parameter is specified, the\n");
+	printf("program will loop, displaying updated statistics every \'interval\' seconds.\n");
+	printf("Relative values are displayed by default. Use the -c option to specify the\n");
+	printf("display of cumulative values.  The -f option specifies the location of the\n");
 	printf("AVC statistics file, defaulting to \'%s%s\'.\n\n", selinux_mnt,
 	       DEF_STAT_FILE);
 }
@@ -111,7 +108,7 @@ int main(int argc, char **argv)
 			break;
 		case 'f':
 			strncpy(avcstatfile, optarg, sizeof(avcstatfile) - 1);
-			avcstatfile[sizeof(avcstatfile)-1] = '\0';
+			avcstatfile[sizeof(avcstatfile) - 1] = '\0';
 			break;
 		case 'h':
 		case '-':
@@ -156,7 +153,7 @@ int main(int argc, char **argv)
 		ssize_t ret, parsed = 0;
 
 		memset(buf, 0, DEF_BUF_SIZE);
-		ret = read(fd, buf, DEF_BUF_SIZE-1);
+		ret = read(fd, buf, DEF_BUF_SIZE - 1);
 		if (ret < 0)
 			die("read");
 
@@ -183,11 +180,9 @@ int main(int argc, char **argv)
 			struct avc_cache_stats tmp;
 
 			ret = sscanf(line, "%llu %llu %llu %llu %llu %llu",
-				     &tmp.lookups,
-				     &tmp.hits,
-				     &tmp.misses,
-				     &tmp.allocations,
-				     &tmp.reclaims, &tmp.frees);
+				     &tmp.lookups, &tmp.hits, &tmp.misses,
+				     &tmp.allocations, &tmp.reclaims,
+				     &tmp.frees);
 			if (ret != 6)
 				die("unable to parse \'%s\': scan error",
 				    avcstatfile);

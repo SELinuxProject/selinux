@@ -12,7 +12,7 @@ mls_level_t *mls_level_from_string(char *mls_context)
 		return NULL;
 	}
 
-	l = (mls_level_t *) calloc(1, sizeof(mls_level_t));
+	l = (mls_level_t *)calloc(1, sizeof(mls_level_t));
 	if (!l)
 		return NULL;
 
@@ -58,8 +58,7 @@ mls_level_t *mls_level_from_string(char *mls_context)
 				int ubit = atoi(lptr + 1);
 				int i;
 				for (i = bit + 1; i <= ubit; i++) {
-					if (ebitmap_set_bit
-					    (&l->cat, i, 1))
+					if (ebitmap_set_bit(&l->cat, i, 1))
 						goto err;
 				}
 			}
@@ -71,7 +70,7 @@ mls_level_t *mls_level_from_string(char *mls_context)
 
 	return l;
 
-      err:
+err:
 	free(l);
 	return NULL;
 }
@@ -105,14 +104,15 @@ unsigned int mls_compute_string_len(mls_level_t *l)
 			level++;
 		} else {
 			if (level > 1)
-				len += snprintf(temp, sizeof(temp), ".c%d", i-1);
+				len += snprintf(temp, sizeof(temp), ".c%d",
+						i - 1);
 			level = 0;
 		}
 	}
 
 	/* Handle case where last category is the end of level */
 	if (level > 1)
-		len += snprintf(temp, sizeof(temp), ".c%d", i-1);
+		len += snprintf(temp, sizeof(temp), ".c%d", i - 1);
 	return len;
 }
 
@@ -155,7 +155,7 @@ char *mls_level_to_string(mls_level_t *l)
 				else
 					*p++ = ',';
 
-				p += sprintf(p, "c%d", i-1);
+				p += sprintf(p, "c%d", i - 1);
 			}
 			level = 0;
 		}
@@ -167,7 +167,7 @@ char *mls_level_to_string(mls_level_t *l)
 		else
 			*p++ = ',';
 
-		p += sprintf(p, "c%d", i-1);
+		p += sprintf(p, "c%d", i - 1);
 	}
 
 	*(result + len) = 0;

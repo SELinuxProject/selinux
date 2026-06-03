@@ -39,35 +39,32 @@ typedef struct dbase_policydb dbase_t;
 static const record_policydb_table_t SEMANAGE_BOOL_POLICYDB_RTABLE = {
 	.add = NULL,
 	.modify = NULL,
-/* FIXME: these casts depend on structs in libsepol matching structs
+	/* FIXME: these casts depend on structs in libsepol matching structs
  * in libsemanage. This is incredibly fragile - the casting gets
  * rid of warnings, but is not type safe.
  */
-	.set = (record_policydb_table_set_t) sepol_bool_set,
-	.query = (record_policydb_table_query_t) sepol_bool_query,
-	.count = (record_policydb_table_count_t) sepol_bool_count,
-	.exists = (record_policydb_table_exists_t) sepol_bool_exists,
-	.iterate = (record_policydb_table_iterate_t) sepol_bool_iterate,
+	.set = (record_policydb_table_set_t)sepol_bool_set,
+	.query = (record_policydb_table_query_t)sepol_bool_query,
+	.count = (record_policydb_table_count_t)sepol_bool_count,
+	.exists = (record_policydb_table_exists_t)sepol_bool_exists,
+	.iterate = (record_policydb_table_iterate_t)sepol_bool_iterate,
 };
 
-int bool_policydb_dbase_init(semanage_handle_t * handle,
-			     dbase_config_t * dconfig)
+int bool_policydb_dbase_init(semanage_handle_t *handle, dbase_config_t *dconfig)
 {
-
-	if (dbase_policydb_init(handle,
-				semanage_path(SEMANAGE_ACTIVE, SEMANAGE_STORE_KERNEL),
-				semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_KERNEL),
-				&SEMANAGE_BOOL_RTABLE,
-				&SEMANAGE_BOOL_POLICYDB_RTABLE,
-				&dconfig->dbase) < 0)
+	if (dbase_policydb_init(
+		    handle,
+		    semanage_path(SEMANAGE_ACTIVE, SEMANAGE_STORE_KERNEL),
+		    semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_KERNEL),
+		    &SEMANAGE_BOOL_RTABLE, &SEMANAGE_BOOL_POLICYDB_RTABLE,
+		    &dconfig->dbase) < 0)
 		return STATUS_ERR;
 
 	dconfig->dtable = &SEMANAGE_POLICYDB_DTABLE;
 	return STATUS_SUCCESS;
 }
 
-void bool_policydb_dbase_release(dbase_config_t * dconfig)
+void bool_policydb_dbase_release(dbase_config_t *dconfig)
 {
-
 	dbase_policydb_release(dconfig->dbase);
 }

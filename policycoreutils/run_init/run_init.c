@@ -40,15 +40,15 @@
 #define _GNU_SOURCE
 
 #include <stdio.h>
-#include <stdlib.h>		/* for malloc(), realloc(), free() */
-#include <pwd.h>		/* for getpwuid() */
-#include <sys/types.h>		/* to make getuid() and getpwuid() happy */
-#include <sys/wait.h>		/* for wait() */
-#include <sys/stat.h>		/* for struct stat and friends */
-#include <getopt.h>		/* for getopt_long() form of getopt() */
+#include <stdlib.h> /* for malloc(), realloc(), free() */
+#include <pwd.h> /* for getpwuid() */
+#include <sys/types.h> /* to make getuid() and getpwuid() happy */
+#include <sys/wait.h> /* for wait() */
+#include <sys/stat.h> /* for struct stat and friends */
+#include <getopt.h> /* for getopt_long() form of getopt() */
 #include <selinux/selinux.h>
 #include <selinux/get_default_type.h>
-#include <selinux/context.h>	/* for context-mangling functions */
+#include <selinux/context.h> /* for context-mangling functions */
 #include <fcntl.h>
 #include <ctype.h>
 #include <limits.h>
@@ -58,15 +58,17 @@
 #ifdef USE_NLS
 #include <libintl.h>
 #include <locale.h>
-#define _(msgid) gettext (msgid)
+#define _(msgid) gettext(msgid)
 #else
 #define _(msgid) (msgid)
 #endif
 #ifndef PACKAGE
-#define PACKAGE "policycoreutils"	/* the name of this package lang translation */
+#define PACKAGE \
+	"policycoreutils" /* the name of this package lang translation */
 #endif
 /* USAGE_STRING describes the command-line args of this program. */
-#define USAGE_STRING _("USAGE: run_init <script> <args ...>\n\
+#define USAGE_STRING \
+	_("USAGE: run_init <script> <args ...>\n\
   where: <script> is the name of the init script to run,\n\
          <args ...> are the arguments to that script.")
 
@@ -79,13 +81,13 @@
  *
  ************************************************************************/
 
-#include <unistd.h>		/* for getuid(), exit(), getopt() */
+#include <unistd.h> /* for getuid(), exit(), getopt() */
 
-#include <security/pam_appl.h>	/* for PAM functions */
-#include <security/pam_misc.h>	/* for misc_conv PAM utility function */
+#include <security/pam_appl.h> /* for PAM functions */
+#include <security/pam_misc.h> /* for misc_conv PAM utility function */
 
-#define SERVICE_NAME "run_init"	/* the name of this program for PAM */
-				  /* The file containing the context to run 
+#define SERVICE_NAME "run_init" /* the name of this program for PAM */
+/* The file containing the context to run 
 				   * the scripts under.                     */
 
 /* authenticate_via_pam()
@@ -106,22 +108,18 @@
 
 static int authenticate_via_pam(const struct passwd *p_passwd_line)
 {
-
-	int result = 0;		/* our result, set to 0 (not authenticated) by default */
-	pam_handle_t *pam_handle;	/* opaque handle used by all PAM functions */
+	int result =
+		0; /* our result, set to 0 (not authenticated) by default */
+	pam_handle_t *pam_handle; /* opaque handle used by all PAM functions */
 
 	/* This is a jump table of functions for PAM to use when it wants to *
 	 * communicate with the user.  We'll be using misc_conv(), which is  *
 	 * provided for us via pam_misc.h.                                   */
-	struct pam_conv pam_conversation = {
-		misc_conv,
-		NULL
-	};
+	struct pam_conv pam_conversation = { misc_conv, NULL };
 
 	/* Make `p_pam_handle' a valid PAM handle so we can use it when *
 	 * calling PAM functions.                                       */
-	if (PAM_SUCCESS != pam_start(SERVICE_NAME,
-				     p_passwd_line->pw_name,
+	if (PAM_SUCCESS != pam_start(SERVICE_NAME, p_passwd_line->pw_name,
 				     &pam_conversation, &pam_handle)) {
 		fprintf(stderr, _("failed to initialize PAM\n"));
 		exit(-1);
@@ -129,25 +127,25 @@ static int authenticate_via_pam(const struct passwd *p_passwd_line)
 
 	/* Ask PAM to authenticate the user running this program */
 	if (PAM_SUCCESS == pam_authenticate(pam_handle, 0)) {
-		result = 1;	/* user authenticated OK! */
+		result = 1; /* user authenticated OK! */
 	}
 
 	/* If we were successful, call pam_acct_mgmt() to reset the
          * pam_tally failcount.
          */
-	if (result && (PAM_SUCCESS != pam_acct_mgmt(pam_handle, 0)) ) {
+	if (result && (PAM_SUCCESS != pam_acct_mgmt(pam_handle, 0))) {
 		fprintf(stderr, _("failed to get account information\n"));
 		exit(-1);
-	}	
+	}
 
 	/* We're done with PAM.  Free `pam_handle'. */
 	pam_end(pam_handle, PAM_SUCCESS);
 
 	return (result);
 
-}				/* authenticate_via_pam() */
+} /* authenticate_via_pam() */
 
-#else				/* else !USE_PAM */
+#else /* else !USE_PAM */
 
 /************************************************************************
  *
@@ -155,9 +153,9 @@ static int authenticate_via_pam(const struct passwd *p_passwd_line)
  *
  ************************************************************************/
 
-#include <unistd.h>		/* for getuid(), exit(), crypt() */
-#include <shadow.h>		/* for shadow passwd functions */
-#include <string.h>		/* for strlen(), memset() */
+#include <unistd.h> /* for getuid(), exit(), crypt() */
+#include <shadow.h> /* for shadow passwd functions */
+#include <string.h> /* for strlen(), memset() */
 
 /*
  * crypt() may not be defined in unistd.h; see:
@@ -167,7 +165,7 @@ static int authenticate_via_pam(const struct passwd *p_passwd_line)
 #include <crypt.h>
 #endif
 
-#define PASSWORD_PROMPT _("Password:")	/* prompt for getpass() */
+#define PASSWORD_PROMPT _("Password:") /* prompt for getpass() */
 
 /* authenticate_via_shadow_passwd()
  *
@@ -187,20 +185,19 @@ static int authenticate_via_pam(const struct passwd *p_passwd_line)
 
 static int authenticate_via_shadow_passwd(const struct passwd *p_passwd_line)
 {
-
-	struct spwd *p_shadow_line;	/* struct derived from shadow passwd file line */
-	char *unencrypted_password_s;	/* unencrypted password input by user */
-	char *encrypted_password_s;	/* user's password input after being crypt()ed */
+	struct spwd *
+		p_shadow_line; /* struct derived from shadow passwd file line */
+	char *unencrypted_password_s; /* unencrypted password input by user */
+	char *encrypted_password_s; /* user's password input after being crypt()ed */
 
 	/* Make `p_shadow_line' point to the data from the current user's *
 	 * line in the shadow passwd file.                                */
-	setspent();		/* Begin access to the shadow passwd file. */
+	setspent(); /* Begin access to the shadow passwd file. */
 	p_shadow_line = getspnam(p_passwd_line->pw_name);
-	endspent();		/* End access to the shadow passwd file. */
+	endspent(); /* End access to the shadow passwd file. */
 	if (!(p_shadow_line)) {
 		fprintf(stderr,
-			_
-			("Cannot find your entry in the shadow passwd file.\n"));
+			_("Cannot find your entry in the shadow passwd file.\n"));
 		exit(-1);
 	}
 
@@ -213,8 +210,8 @@ static int authenticate_via_shadow_passwd(const struct passwd *p_passwd_line)
 	/* Use crypt() to encrypt user's input password.  Clear the *
 	 * unencrypted password as soon as we're done, so it is not * 
 	 * visible to memory snoopers.                              */
-	encrypted_password_s = crypt(unencrypted_password_s,
-				     p_shadow_line->sp_pwdp);
+	encrypted_password_s =
+		crypt(unencrypted_password_s, p_shadow_line->sp_pwdp);
 	memset(unencrypted_password_s, 0, strlen(unencrypted_password_s));
 
 	/* Return 1 (authenticated) iff the encrypted version of the user's *
@@ -222,9 +219,9 @@ static int authenticate_via_shadow_passwd(const struct passwd *p_passwd_line)
 	 * shadow password file.                                            */
 	return (!strcmp(encrypted_password_s, p_shadow_line->sp_pwdp));
 
-}				/* authenticate_via_shadow_passwd() */
+} /* authenticate_via_shadow_passwd() */
 
-#endif				/* if/else USE_PAM */
+#endif /* if/else USE_PAM */
 
 /*
  * authenticate_user()
@@ -238,9 +235,8 @@ static int authenticate_via_shadow_passwd(const struct passwd *p_passwd_line)
  */
 static int authenticate_user(void)
 {
-
 #define INITLEN 255
-	struct passwd *p_passwd_line;	/* struct derived from passwd file line */
+	struct passwd *p_passwd_line; /* struct derived from passwd file line */
 	uid_t uid;
 
 	/*
@@ -253,7 +249,7 @@ static int authenticate_user(void)
 	 */
 #ifdef USE_AUDIT
 	uid = audit_getloginuid();
-	if (uid == (uid_t) - 1)
+	if (uid == (uid_t)-1)
 		uid = getuid();
 #else
 	uid = getuid();
@@ -275,9 +271,9 @@ static int authenticate_user(void)
 	 */
 #ifdef USE_PAM
 	if (!authenticate_via_pam(p_passwd_line)) {
-#else				/* !USE_PAM */
+#else /* !USE_PAM */
 	if (!authenticate_via_shadow_passwd(p_passwd_line)) {
-#endif				/* if/else USE_PAM */
+#endif /* if/else USE_PAM */
 		fprintf(stderr, _("run_init: incorrect password for %s\n"),
 			p_passwd_line->pw_name);
 		return (-1);
@@ -290,7 +286,7 @@ static int authenticate_user(void)
 
 	return 0;
 
-}				/* authenticate_user() */
+} /* authenticate_user() */
 
 /*
  * get_init_context()
@@ -303,7 +299,6 @@ static int authenticate_user(void)
  */
 static int get_init_context(char **context)
 {
-
 	FILE *fp;
 	char buf[255], *bufp;
 	int buf_len;
@@ -316,7 +311,7 @@ static int get_init_context(char **context)
 		return -1;
 	}
 
-	while (1) {		/* loop until we find a non-empty line */
+	while (1) { /* loop until we find a non-empty line */
 
 		if (!fgets(buf, sizeof buf, fp))
 			break;
@@ -337,22 +332,21 @@ static int get_init_context(char **context)
 			return 0;
 		}
 	}
-      out:
+out:
 	fclose(fp);
 	fprintf(stderr, _("No context in file %s\n"), context_file);
 	return -1;
 
-}				/* get_init_context() */
+} /* get_init_context() */
 
 /*****************************************************************************
  * main()                                                                    *
  *****************************************************************************/
 int main(int argc, char *argv[])
 {
-
-	extern char *optarg;	/* used by getopt() for arg strings */
-	extern int opterr;	/* controls getopt() error messages */
-	char *new_context;	/* context for the init script context  */
+	extern char *optarg; /* used by getopt() for arg strings */
+	extern int opterr; /* controls getopt() error messages */
+	char *new_context; /* context for the init script context  */
 
 #ifdef USE_NLS
 	setlocale(LC_ALL, "");
@@ -363,8 +357,7 @@ int main(int argc, char *argv[])
 	/* Verify that we are running on a flask-enabled kernel. */
 	if (!is_selinux_enabled()) {
 		fprintf(stderr,
-			_
-			("Sorry, run_init may be used only on a SELinux kernel.\n"));
+			_("Sorry, run_init may be used only on a SELinux kernel.\n"));
 		exit(-1);
 	}
 
@@ -438,4 +431,4 @@ int main(int argc, char *argv[])
 	}
 	return 0;
 
-}				/* main() */
+} /* main() */

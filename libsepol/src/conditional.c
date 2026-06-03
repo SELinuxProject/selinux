@@ -28,7 +28,7 @@
 #include "debug.h"
 
 /* move all type rules to top of t/f lists to help kernel on evaluation */
-static void cond_optimize(cond_av_list_t ** l)
+static void cond_optimize(cond_av_list_t **l)
 {
 	cond_av_list_t *top, *p, *cur;
 
@@ -49,7 +49,7 @@ static void cond_optimize(cond_av_list_t ** l)
 }
 
 /* reorder t/f lists for kernel */
-void cond_optimize_lists(cond_list_t * cl)
+void cond_optimize_lists(cond_list_t *cl)
 {
 	cond_list_t *n;
 
@@ -71,11 +71,11 @@ static int bool_present(unsigned int target, unsigned int bools[],
 	while (i < num_bools && target != bools[i])
 		i++;
 	if (i == num_bools)
-		ret = 0;	/* got to end w/o match */
+		ret = 0; /* got to end w/o match */
 	return ret;
 }
 
-static int same_bools(cond_node_t * a, cond_node_t * b)
+static int same_bools(cond_node_t *a, cond_node_t *b)
 {
 	unsigned int i, x;
 
@@ -95,7 +95,7 @@ static int same_bools(cond_node_t * a, cond_node_t * b)
 /*
  * Determine if two conditional expressions are equal. 
  */
-int cond_expr_equal(cond_node_t * a, cond_node_t * b)
+int cond_expr_equal(cond_node_t *a, cond_node_t *b)
 {
 	cond_expr_t *cur_a, *cur_b;
 
@@ -139,7 +139,7 @@ int cond_expr_equal(cond_node_t * a, cond_node_t * b)
  * If node is NULL then a new node will be created
  * with no conditional expression.
  */
-cond_node_t *cond_node_create(policydb_t * p, cond_node_t * node)
+cond_node_t *cond_node_create(policydb_t *p, cond_node_t *node)
 {
 	cond_node_t *new_node;
 	unsigned int i;
@@ -172,9 +172,8 @@ cond_node_t *cond_node_create(policydb_t * p, cond_node_t * node)
  * pointer to the existing node, setting 'was_created' to 0.
  * Otherwise create a new one and return it, setting 'was_created' to
  * 1. */
-cond_node_t *cond_node_find(policydb_t * p,
-			    cond_node_t * needle, cond_node_t * haystack,
-			    int *was_created)
+cond_node_t *cond_node_find(policydb_t *p, cond_node_t *needle,
+			    cond_node_t *haystack, int *was_created)
 {
 	while (haystack) {
 		if (cond_expr_equal(needle, haystack)) {
@@ -189,8 +188,7 @@ cond_node_t *cond_node_find(policydb_t * p,
 }
 
 /* return either a pre-existing matching node or create a new node */
-cond_node_t *cond_node_search(policydb_t * p, cond_node_t * list,
-			      cond_node_t * cn)
+cond_node_t *cond_node_search(policydb_t *p, cond_node_t *list, cond_node_t *cn)
 {
 	int was_created;
 	cond_node_t *result = cond_node_find(p, cn, list, &was_created);
@@ -208,9 +206,8 @@ cond_node_t *cond_node_search(policydb_t * p, cond_node_t * list,
  * or undefined (-1). Undefined occurs when the expression
  * exceeds the stack depth of COND_EXPR_MAXDEPTH.
  */
-int cond_evaluate_expr(policydb_t * p, cond_expr_t * expr)
+int cond_evaluate_expr(policydb_t *p, cond_expr_t *expr)
 {
-
 	cond_expr_t *cur;
 	int s[COND_EXPR_MAXDEPTH];
 	int sp = -1;
@@ -267,13 +264,13 @@ int cond_evaluate_expr(policydb_t * p, cond_expr_t * expr)
 	return s[0];
 }
 
-cond_expr_t *cond_copy_expr(cond_expr_t * expr)
+cond_expr_t *cond_copy_expr(cond_expr_t *expr)
 {
 	cond_expr_t *cur, *head, *tail, *new_expr;
 	tail = head = NULL;
 	cur = expr;
 	while (cur) {
-		new_expr = (cond_expr_t *) malloc(sizeof(cond_expr_t));
+		new_expr = (cond_expr_t *)malloc(sizeof(cond_expr_t));
 		if (!new_expr)
 			goto free_head;
 		memset(new_expr, 0, sizeof(cond_expr_t));
@@ -290,7 +287,7 @@ cond_expr_t *cond_copy_expr(cond_expr_t * expr)
 	}
 	return head;
 
-      free_head:
+free_head:
 	while (head) {
 		tail = head->next;
 		free(head);
@@ -306,7 +303,7 @@ cond_expr_t *cond_copy_expr(cond_expr_t * expr)
  * list appropriately. If the result of the expression is undefined
  * all of the rules are disabled for safety.
  */
-static int evaluate_cond_node(policydb_t * p, cond_node_t * node)
+static int evaluate_cond_node(policydb_t *p, cond_node_t *node)
 {
 	int new_state;
 	cond_av_list_t *cur;
@@ -315,7 +312,8 @@ static int evaluate_cond_node(policydb_t * p, cond_node_t * node)
 	if (new_state != node->cur_state) {
 		node->cur_state = new_state;
 		if (new_state == -1)
-			WARN(NULL, "expression result was undefined - disabling all rules.");
+			WARN(NULL,
+			     "expression result was undefined - disabling all rules.");
 		/* turn the rules on or off */
 		for (cur = node->true_list; cur != NULL; cur = cur->next) {
 			if (new_state <= 0) {
@@ -341,7 +339,7 @@ static int evaluate_cond_node(policydb_t * p, cond_node_t * node)
  * to expression and switch t and f. precompute expression for expressions with limited
  * number of bools.
  */
-int cond_normalize_expr(policydb_t * p, cond_node_t * cn)
+int cond_normalize_expr(policydb_t *p, cond_node_t *cn)
 {
 	cond_expr_t *ne, *e;
 	cond_av_list_t *tmp;
@@ -367,8 +365,9 @@ int cond_normalize_expr(policydb_t * p, cond_node_t * cn)
 	if (e->expr_type == COND_NOT) {
 		if (ne) {
 			ne->next = NULL;
-		} else {	/* ne should never be NULL */
-			ERR(NULL, "Found expr with no bools and only a ! - this should never happen.");
+		} else { /* ne should never be NULL */
+			ERR(NULL,
+			    "Found expr with no bools and only a ! - this should never happen.");
 			return -1;
 		}
 		/* swap the true and false lists */
@@ -388,7 +387,8 @@ int cond_normalize_expr(policydb_t * p, cond_node_t * cn)
 		switch (e->expr_type) {
 		case COND_BOOL:
 			/* see if we've already seen this bool */
-			if (!bool_present(e->boolean, cn->bool_ids, cn->nbools)) {
+			if (!bool_present(e->boolean, cn->bool_ids,
+					  cn->nbools)) {
 				/* count em all but only record up to COND_MAX_BOOLS */
 				if (cn->nbools < COND_MAX_BOOLS)
 					cn->bool_ids[cn->nbools++] = e->boolean;
@@ -406,7 +406,8 @@ int cond_normalize_expr(policydb_t * p, cond_node_t * cn)
 		/* save the default values for the bools so we can play with them */
 		for (i = 0; i < cn->nbools; i++) {
 			orig_value[i] =
-			    p->bool_val_to_struct[cn->bool_ids[i] - 1]->state;
+				p->bool_val_to_struct[cn->bool_ids[i] - 1]
+					->state;
 		}
 
 		/* loop through all possible combinations of values for bools in expression */
@@ -414,14 +415,15 @@ int cond_normalize_expr(policydb_t * p, cond_node_t * cn)
 			/* temporarily set the value for all the bools in the
 			 * expression using the corr.  bit in test */
 			for (j = 0; j < cn->nbools; j++) {
-				p->bool_val_to_struct[cn->bool_ids[j] -
-						      1]->state =
-				    (test & (UINT32_C(1) << j)) ? 1 : 0;
+				p->bool_val_to_struct[cn->bool_ids[j] - 1]
+					->state =
+					(test & (UINT32_C(1) << j)) ? 1 : 0;
 			}
 			k = cond_evaluate_expr(p, cn->expr);
 			if (k == -1) {
-				ERR(NULL, "While testing expression, expression result "
-				     "was undefined - this should never happen.");
+				ERR(NULL,
+				    "While testing expression, expression result "
+				    "was undefined - this should never happen.");
 				return -1;
 			}
 			/* set the bit if expression evaluates true */
@@ -432,12 +434,12 @@ int cond_normalize_expr(policydb_t * p, cond_node_t * cn)
 		/* restore bool default values */
 		for (i = 0; i < cn->nbools; i++)
 			p->bool_val_to_struct[cn->bool_ids[i] - 1]->state =
-			    orig_value[i];
+				orig_value[i];
 	}
 	return 0;
 }
 
-int evaluate_conds(policydb_t * p)
+int evaluate_conds(policydb_t *p)
 {
 	int ret;
 	cond_node_t *cur;
@@ -450,7 +452,7 @@ int evaluate_conds(policydb_t * p)
 	return 0;
 }
 
-int cond_policydb_init(policydb_t * p)
+int cond_policydb_init(policydb_t *p)
 {
 	p->bool_val_to_struct = NULL;
 	p->cond_list = NULL;
@@ -460,7 +462,7 @@ int cond_policydb_init(policydb_t * p)
 	return 0;
 }
 
-void cond_av_list_destroy(cond_av_list_t * list)
+void cond_av_list_destroy(cond_av_list_t *list)
 {
 	cond_av_list_t *cur, *next;
 	for (cur = list; cur != NULL; cur = next) {
@@ -470,7 +472,7 @@ void cond_av_list_destroy(cond_av_list_t * list)
 	}
 }
 
-void cond_expr_destroy(cond_expr_t * expr)
+void cond_expr_destroy(cond_expr_t *expr)
 {
 	cond_expr_t *cur_expr, *next_expr;
 
@@ -483,7 +485,7 @@ void cond_expr_destroy(cond_expr_t * expr)
 	}
 }
 
-void cond_node_destroy(cond_node_t * node)
+void cond_node_destroy(cond_node_t *node)
 {
 	if (!node)
 		return;
@@ -495,7 +497,7 @@ void cond_node_destroy(cond_node_t * node)
 	cond_av_list_destroy(node->false_list);
 }
 
-void cond_list_destroy(cond_list_t * list)
+void cond_list_destroy(cond_list_t *list)
 {
 	cond_node_t *next, *cur;
 
@@ -509,7 +511,7 @@ void cond_list_destroy(cond_list_t * list)
 	}
 }
 
-void cond_policydb_destroy(policydb_t * p)
+void cond_policydb_destroy(policydb_t *p)
 {
 	if (p->bool_val_to_struct != NULL)
 		free(p->bool_val_to_struct);
@@ -517,19 +519,19 @@ void cond_policydb_destroy(policydb_t * p)
 	cond_list_destroy(p->cond_list);
 }
 
-int cond_init_bool_indexes(policydb_t * p)
+int cond_init_bool_indexes(policydb_t *p)
 {
 	if (p->bool_val_to_struct)
 		free(p->bool_val_to_struct);
-	p->bool_val_to_struct = (cond_bool_datum_t **)
-	    calloc(p->p_bools.nprim, sizeof(cond_bool_datum_t *));
+	p->bool_val_to_struct = (cond_bool_datum_t **)calloc(
+		p->p_bools.nprim, sizeof(cond_bool_datum_t *));
 	if (!p->bool_val_to_struct)
 		return -1;
 	return 0;
 }
 
-int cond_destroy_bool(hashtab_key_t key, hashtab_datum_t datum, void *p
-		      __attribute__ ((unused)))
+int cond_destroy_bool(hashtab_key_t key, hashtab_datum_t datum,
+		      void *p __attribute__((unused)))
 {
 	if (key)
 		free(key);
@@ -557,16 +559,14 @@ int cond_index_bool(hashtab_key_t key, hashtab_datum_t datum, void *datap)
 	return 0;
 }
 
-static int bool_isvalid(cond_bool_datum_t * b)
+static int bool_isvalid(cond_bool_datum_t *b)
 {
 	if (!(b->state == 0 || b->state == 1))
 		return 0;
 	return 1;
 }
 
-int cond_read_bool(policydb_t * p,
-		   hashtab_t h,
-		   struct policy_file *fp)
+int cond_read_bool(policydb_t *p, hashtab_t h, struct policy_file *fp)
 {
 	char *key = 0;
 	cond_bool_datum_t *booldatum;
@@ -604,7 +604,7 @@ int cond_read_bool(policydb_t * p,
 		goto err;
 
 	return 0;
-      err:
+err:
 	cond_destroy_bool(key, booldatum, 0);
 	return -1;
 }
@@ -616,9 +616,8 @@ struct cond_insertf_data {
 	cond_av_list_t *tail;
 };
 
-static int cond_insertf(avtab_t * a
-			__attribute__ ((unused)), avtab_key_t * k,
-			avtab_datum_t * d, void *ptr)
+static int cond_insertf(avtab_t *a __attribute__((unused)), avtab_key_t *k,
+			avtab_datum_t *d, void *ptr)
 {
 	struct cond_insertf_data *data = ptr;
 	struct policydb *p = data->p;
@@ -633,7 +632,8 @@ static int cond_insertf(avtab_t * a
 	 */
 	if (k->specified & AVTAB_TYPE) {
 		if (avtab_search(&p->te_avtab, k)) {
-			WARN(NULL, "security: type rule already exists outside of a conditional.");
+			WARN(NULL,
+			     "security: type rule already exists outside of a conditional.");
 			return -1;
 		}
 		/*
@@ -647,26 +647,30 @@ static int cond_insertf(avtab_t * a
 		if (other) {
 			node_ptr = avtab_search_node(&p->te_cond_avtab, k);
 			if (node_ptr) {
-				if (avtab_search_node_next
-				    (node_ptr, k->specified)) {
-					ERR(NULL, "security: too many conflicting type rules.");
+				if (avtab_search_node_next(node_ptr,
+							   k->specified)) {
+					ERR(NULL,
+					    "security: too many conflicting type rules.");
 					return -1;
 				}
 				found = 0;
-				for (cur = other; cur != NULL; cur = cur->next) {
+				for (cur = other; cur != NULL;
+				     cur = cur->next) {
 					if (cur->node == node_ptr) {
 						found = 1;
 						break;
 					}
 				}
 				if (!found) {
-					ERR(NULL, "security: conflicting type rules.");
+					ERR(NULL,
+					    "security: conflicting type rules.");
 					return -1;
 				}
 			}
 		} else {
 			if (avtab_search(&p->te_cond_avtab, k)) {
-				ERR(NULL, "security: conflicting type rules when adding type rule for true.");
+				ERR(NULL,
+				    "security: conflicting type rules when adding type rule for true.");
 				return -1;
 			}
 		}
@@ -693,8 +697,8 @@ static int cond_insertf(avtab_t * a
 	return 0;
 }
 
-static int cond_read_av_list(policydb_t * p, void *fp,
-			     cond_av_list_t ** ret_list, cond_av_list_t * other)
+static int cond_read_av_list(policydb_t *p, void *fp, cond_av_list_t **ret_list,
+			     cond_av_list_t *other)
 {
 	unsigned int i;
 	int rc;
@@ -723,28 +727,29 @@ static int cond_read_av_list(policydb_t * p, void *fp,
 			cond_av_list_destroy(data.head);
 			return rc;
 		}
-
 	}
 
 	*ret_list = data.head;
 	return 0;
 }
 
-static int expr_isvalid(policydb_t * p, cond_expr_t * expr)
+static int expr_isvalid(policydb_t *p, cond_expr_t *expr)
 {
 	if (expr->expr_type <= 0 || expr->expr_type > COND_LAST) {
-		WARN(NULL, "security: conditional expressions uses unknown operator.");
+		WARN(NULL,
+		     "security: conditional expressions uses unknown operator.");
 		return 0;
 	}
 
 	if (expr->boolean > p->p_bools.nprim) {
-		WARN(NULL, "security: conditional expressions uses unknown bool.");
+		WARN(NULL,
+		     "security: conditional expressions uses unknown bool.");
 		return 0;
 	}
 	return 1;
 }
 
-static int cond_read_node(policydb_t * p, cond_node_t * node, void *fp)
+static int cond_read_node(policydb_t *p, cond_node_t *node, void *fp)
 {
 	uint32_t buf[2], i, len;
 	int rc;
@@ -793,8 +798,8 @@ static int cond_read_node(policydb_t * p, cond_node_t * node, void *fp)
 	if (p->policy_type == POLICY_KERN) {
 		if (cond_read_av_list(p, fp, &node->true_list, NULL) != 0)
 			goto err;
-		if (cond_read_av_list(p, fp, &node->false_list, node->true_list)
-		    != 0)
+		if (cond_read_av_list(p, fp, &node->false_list,
+				      node->true_list) != 0)
 			goto err;
 	} else {
 		if (avrule_read_list(p, &node->avtrue_list, fp))
@@ -812,13 +817,13 @@ static int cond_read_node(policydb_t * p, cond_node_t * node, void *fp)
 	}
 
 	return 0;
-      err:
+err:
 	cond_node_destroy(node);
 	free(node);
 	return -1;
 }
 
-int cond_read_list(policydb_t * p, cond_list_t ** list, void *fp)
+int cond_read_list(policydb_t *p, cond_list_t **list, void *fp)
 {
 	cond_node_t *node, *last = NULL;
 	uint32_t buf[1], i, len;
@@ -851,14 +856,14 @@ int cond_read_list(policydb_t * p, cond_list_t ** list, void *fp)
 		last = node;
 	}
 	return 0;
-      err:
+err:
 	return -1;
 }
 
 /* Determine whether additional permissions are granted by the conditional
  * av table, and if so, add them to the result 
  */
-void cond_compute_av(avtab_t * ctab, avtab_key_t * key,
+void cond_compute_av(avtab_t *ctab, avtab_key_t *key,
 		     struct sepol_av_decision *avd)
 {
 	avtab_ptr_t node;
@@ -868,10 +873,10 @@ void cond_compute_av(avtab_t * ctab, avtab_key_t * key,
 
 	for (node = avtab_search_node(ctab, key); node != NULL;
 	     node = avtab_search_node_next(node, key->specified)) {
-		if ((uint16_t) (AVTAB_ALLOWED | AVTAB_ENABLED) ==
+		if ((uint16_t)(AVTAB_ALLOWED | AVTAB_ENABLED) ==
 		    (node->key.specified & (AVTAB_ALLOWED | AVTAB_ENABLED)))
 			avd->allowed |= node->datum.data;
-		if ((uint16_t) (AVTAB_AUDITDENY | AVTAB_ENABLED) ==
+		if ((uint16_t)(AVTAB_AUDITDENY | AVTAB_ENABLED) ==
 		    (node->key.specified & (AVTAB_AUDITDENY | AVTAB_ENABLED)))
 			/* Since a '0' in an auditdeny mask represents a 
 			 * permission we do NOT want to audit (dontaudit), we use
@@ -879,28 +884,23 @@ void cond_compute_av(avtab_t * ctab, avtab_key_t * key,
 			 * are retained (much unlike the allow and auditallow cases).
 			 */
 			avd->auditdeny &= node->datum.data;
-		if ((uint16_t) (AVTAB_AUDITALLOW | AVTAB_ENABLED) ==
+		if ((uint16_t)(AVTAB_AUDITALLOW | AVTAB_ENABLED) ==
 		    (node->key.specified & (AVTAB_AUDITALLOW | AVTAB_ENABLED)))
 			avd->auditallow |= node->datum.data;
 	}
 	return;
 }
 
-avtab_datum_t *cond_av_list_search(avtab_key_t * key,
-				   cond_av_list_t * cond_list)
+avtab_datum_t *cond_av_list_search(avtab_key_t *key, cond_av_list_t *cond_list)
 {
-
 	cond_av_list_t *cur_av;
 
 	for (cur_av = cond_list; cur_av != NULL; cur_av = cur_av->next) {
-
 		if (cur_av->node->key.source_type == key->source_type &&
 		    cur_av->node->key.target_type == key->target_type &&
 		    cur_av->node->key.target_class == key->target_class)
 
 			return &cur_av->node->datum;
-
 	}
 	return NULL;
-
 }

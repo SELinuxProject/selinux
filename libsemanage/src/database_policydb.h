@@ -29,40 +29,38 @@
 struct dbase_policydb;
 typedef struct dbase_policydb dbase_policydb_t;
 
-typedef int (*record_policydb_table_add_t) (sepol_handle_t * h,
-					    sepol_policydb_t * p,
-					    const record_key_t * rkey,
-					    const record_t * record);
+typedef int (*record_policydb_table_add_t)(sepol_handle_t *h,
+					   sepol_policydb_t *p,
+					   const record_key_t *rkey,
+					   const record_t *record);
 
-typedef int (*record_policydb_table_modify_t) (sepol_handle_t * h,
-					       sepol_policydb_t * p,
-					       const record_key_t * rkey,
-					       const record_t * record);
+typedef int (*record_policydb_table_modify_t)(sepol_handle_t *h,
+					      sepol_policydb_t *p,
+					      const record_key_t *rkey,
+					      const record_t *record);
 
-typedef int (*record_policydb_table_set_t) (sepol_handle_t * h,
-					    sepol_policydb_t * p,
-					    const record_key_t * rkey,
-					    const record_t * record);
+typedef int (*record_policydb_table_set_t)(sepol_handle_t *h,
+					   sepol_policydb_t *p,
+					   const record_key_t *rkey,
+					   const record_t *record);
 
-typedef int (*record_policydb_table_query_t) (sepol_handle_t * h,
-					      const sepol_policydb_t * p,
-					      const record_key_t * rkey,
-					      record_t ** response);
+typedef int (*record_policydb_table_query_t)(sepol_handle_t *h,
+					     const sepol_policydb_t *p,
+					     const record_key_t *rkey,
+					     record_t **response);
 
-typedef int (*record_policydb_table_count_t) (sepol_handle_t * h,
-					      const sepol_policydb_t * p,
-					      unsigned int *response);
+typedef int (*record_policydb_table_count_t)(sepol_handle_t *h,
+					     const sepol_policydb_t *p,
+					     unsigned int *response);
 
-typedef int (*record_policydb_table_exists_t) (sepol_handle_t * h,
-					       const sepol_policydb_t * p,
-					       const record_key_t * rkey,
-					       int *response);
+typedef int (*record_policydb_table_exists_t)(sepol_handle_t *h,
+					      const sepol_policydb_t *p,
+					      const record_key_t *rkey,
+					      int *response);
 
-typedef int (*record_policydb_table_iterate_t) (sepol_handle_t * h,
-						const sepol_policydb_t * p,
-						int (*fn) (const record_t * r,
-							   void *fn_arg),
-						void *arg);
+typedef int (*record_policydb_table_iterate_t)(
+	sepol_handle_t *h, const sepol_policydb_t *p,
+	int (*fn)(const record_t *r, void *fn_arg), void *arg);
 
 /* POLICYDB extension to RECORD interface - method table */
 typedef struct record_policydb_table {
@@ -85,26 +83,25 @@ typedef struct record_policydb_table {
 } record_policydb_table_t;
 
 /* Initialize database */
-extern int dbase_policydb_init(semanage_handle_t * handle,
-			       const char *path_ro,
+extern int dbase_policydb_init(semanage_handle_t *handle, const char *path_ro,
 			       const char *path_rw,
-			       const record_table_t * rtable,
-			       const record_policydb_table_t * rptable,
-			       dbase_policydb_t ** dbase);
+			       const record_table_t *rtable,
+			       const record_policydb_table_t *rptable,
+			       dbase_policydb_t **dbase);
 
 /* Attach to a shared policydb.
  * This implies drop_cache().
  * and prevents flush() and drop_cache()
  * until detached. */
-extern void dbase_policydb_attach(dbase_policydb_t * dbase,
-				  sepol_policydb_t * policydb);
+extern void dbase_policydb_attach(dbase_policydb_t *dbase,
+				  sepol_policydb_t *policydb);
 
 /* Detach from a shared policdb.
  * This implies drop_cache. */
-extern void dbase_policydb_detach(dbase_policydb_t * dbase);
+extern void dbase_policydb_detach(dbase_policydb_t *dbase);
 
 /* Release allocated resources */
-extern void dbase_policydb_release(dbase_policydb_t * dbase);
+extern void dbase_policydb_release(dbase_policydb_t *dbase);
 
 /* POLICYDB database - method table implementation */
 extern const dbase_table_t SEMANAGE_POLICYDB_DTABLE;

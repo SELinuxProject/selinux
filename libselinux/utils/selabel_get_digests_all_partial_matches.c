@@ -8,7 +8,7 @@
 #include <selinux/selinux.h>
 #include <selinux/label.h>
 
-static __attribute__ ((__noreturn__)) void usage(const char *progname)
+static __attribute__((__noreturn__)) void usage(const char *progname)
 {
 	fprintf(stderr,
 		"usage:  %s [-vr] [-f file] path\n\n"
@@ -20,7 +20,8 @@ static __attribute__ ((__noreturn__)) void usage(const char *progname)
 		"This will check the directory selinux.sehash SHA1 digest for "
 		"<path> against\na newly generated digest based on the "
 		"file_context entries for that node\n(using the regx, mode "
-		"and path entries).\n", progname);
+		"and path entries).\n",
+		progname);
 	exit(1);
 }
 
@@ -39,8 +40,7 @@ int main(int argc, char **argv)
 
 	struct selabel_handle *hnd;
 	struct selinux_opt selabel_option[] = {
-		{ SELABEL_OPT_PATH, file },
-		{ SELABEL_OPT_VALIDATE, validate }
+		{ SELABEL_OPT_PATH, file }, { SELABEL_OPT_VALIDATE, validate }
 	};
 
 	if (argc < 2)
@@ -74,17 +74,17 @@ int main(int argc, char **argv)
 
 	hnd = selabel_open(SELABEL_CTX_FILE, selabel_option, 2);
 	if (!hnd) {
-		fprintf(stderr, "ERROR: selabel_open - Could not obtain "
-							     "handle:  %s\n",
-							     strerror(errno));
+		fprintf(stderr,
+			"ERROR: selabel_open - Could not obtain "
+			"handle:  %s\n",
+			strerror(errno));
 		return -1;
 	}
 
 	fts_flags = FTS_PHYSICAL | FTS_NOCHDIR;
 	fts = fts_open(paths, fts_flags, NULL);
 	if (!fts) {
-		printf("fts error on %s: %s\n",
-		       paths[0], strerror(errno));
+		printf("fts error on %s: %s\n", paths[0], strerror(errno));
 		return -1;
 	}
 
@@ -93,21 +93,19 @@ int main(int argc, char **argv)
 		case FTS_DP:
 			continue;
 		case FTS_D: {
-
 			xattr_digest = NULL;
 			calculated_digest = NULL;
 			digest_len = 0;
 
-			status = selabel_get_digests_all_partial_matches(hnd,
-							 ftsent->fts_path,
-							 &calculated_digest,
-							 &xattr_digest,
-							 &digest_len);
+			status = selabel_get_digests_all_partial_matches(
+				hnd, ftsent->fts_path, &calculated_digest,
+				&xattr_digest, &digest_len);
 
 			sha1_buf = calloc(1, digest_len * 2 + 1);
 			if (!sha1_buf) {
-				fprintf(stderr, "Could not calloc buffer ERROR: %s\n",
-					    strerror(errno));
+				fprintf(stderr,
+					"Could not calloc buffer ERROR: %s\n",
+					strerror(errno));
 				return -1;
 			}
 
@@ -149,7 +147,7 @@ int main(int argc, char **argv)
 					printf("%s\n", sha1_buf);
 				}
 			}
-			cleanup:
+cleanup:
 			free(xattr_digest);
 			free(calculated_digest);
 			free(sha1_buf);
@@ -163,7 +161,7 @@ int main(int argc, char **argv)
 			break;
 	}
 
-	(void) fts_close(fts);
+	(void)fts_close(fts);
 	selabel_close(hnd);
 	return 0;
 }

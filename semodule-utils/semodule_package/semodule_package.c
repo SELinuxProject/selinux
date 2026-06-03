@@ -28,13 +28,13 @@ static void usage(const char *prog)
 	printf("  -m --module		Module file (required)\n");
 	printf("  -f --fc		File contexts file\n");
 	printf("  -s --seuser		Seusers file (only valid in base)\n");
-	printf
-	    ("  -u --user_extra	user_extra file (only valid in base)\n");
+	printf("  -u --user_extra	user_extra file (only valid in base)\n");
 	printf("  -n --nc		Netfilter contexts file\n");
 	printf("  -h --help		Show this help message\n");
 }
 
-static int file_to_data(const char *path, char **data, size_t * len, const char *progname)
+static int file_to_data(const char *path, char **data, size_t *len,
+			const char *progname)
 {
 	int fd;
 	struct stat sb;
@@ -64,7 +64,7 @@ static int file_to_data(const char *path, char **data, size_t * len, const char 
 	*len = sb.st_size;
 	close(fd);
 	return 0;
-      err:
+err:
 	close(fd);
 	return -1;
 }
@@ -74,26 +74,27 @@ int main(int argc, char **argv)
 	struct sepol_module_package *pkg = NULL;
 	struct sepol_policy_file *mod = NULL, *out = NULL;
 	FILE *fp = NULL;
-	char *module = NULL, *file_contexts = NULL, *seusers =
-	    NULL, *user_extra = NULL;
-	char *fcdata = NULL, *outfile = NULL, *seusersdata =
-	    NULL, *user_extradata = NULL;
+	char *module = NULL, *file_contexts = NULL, *seusers = NULL,
+	     *user_extra = NULL;
+	char *fcdata = NULL, *outfile = NULL, *seusersdata = NULL,
+	     *user_extradata = NULL;
 	char *netfilter_contexts = NULL, *ncdata = NULL;
 	size_t fclen = 0, seuserslen = 0, user_extralen = 0, nclen = 0;
 	int i, ret;
 
 	const struct option opts[] = {
-		{"module", required_argument, NULL, 'm'},
-		{"fc", required_argument, NULL, 'f'},
-		{"seuser", required_argument, NULL, 's'},
-		{"user_extra", required_argument, NULL, 'u'},
-		{"nc", required_argument, NULL, 'n'},
-		{"outfile", required_argument, NULL, 'o'},
-		{"help", 0, NULL, 'h'},
-		{NULL, 0, NULL, 0}
+		{ "module", required_argument, NULL, 'm' },
+		{ "fc", required_argument, NULL, 'f' },
+		{ "seuser", required_argument, NULL, 's' },
+		{ "user_extra", required_argument, NULL, 'u' },
+		{ "nc", required_argument, NULL, 'n' },
+		{ "outfile", required_argument, NULL, 'o' },
+		{ "help", 0, NULL, 'h' },
+		{ NULL, 0, NULL, 0 }
 	};
 
-	while ((i = getopt_long(argc, argv, "m:f:s:u:o:n:h", opts, NULL)) != -1) {
+	while ((i = getopt_long(argc, argv, "m:f:s:u:o:n:h", opts, NULL)) !=
+	       -1) {
 		switch (i) {
 		case 'h':
 			usage(argv[0]);
@@ -106,7 +107,8 @@ int main(int argc, char **argv)
 			}
 			module = strdup(optarg);
 			if (!module) {
-				fprintf(stderr, "%s:  Out of memory\n", argv[0]);
+				fprintf(stderr, "%s:  Out of memory\n",
+					argv[0]);
 				return EXIT_FAILURE;
 			}
 			break;
@@ -118,7 +120,8 @@ int main(int argc, char **argv)
 			}
 			file_contexts = strdup(optarg);
 			if (!file_contexts) {
-				fprintf(stderr, "%s:  Out of memory\n", argv[0]);
+				fprintf(stderr, "%s:  Out of memory\n",
+					argv[0]);
 				return EXIT_FAILURE;
 			}
 			break;
@@ -130,7 +133,8 @@ int main(int argc, char **argv)
 			}
 			outfile = strdup(optarg);
 			if (!outfile) {
-				fprintf(stderr, "%s:  Out of memory\n", argv[0]);
+				fprintf(stderr, "%s:  Out of memory\n",
+					argv[0]);
 				return EXIT_FAILURE;
 			}
 			break;
@@ -142,7 +146,8 @@ int main(int argc, char **argv)
 			}
 			seusers = strdup(optarg);
 			if (!seusers) {
-				fprintf(stderr, "%s:  Out of memory\n", argv[0]);
+				fprintf(stderr, "%s:  Out of memory\n",
+					argv[0]);
 				return EXIT_FAILURE;
 			}
 			break;
@@ -154,7 +159,8 @@ int main(int argc, char **argv)
 			}
 			user_extra = strdup(optarg);
 			if (!user_extra) {
-				fprintf(stderr, "%s:  Out of memory\n", argv[0]);
+				fprintf(stderr, "%s:  Out of memory\n",
+					argv[0]);
 				return EXIT_FAILURE;
 			}
 			break;
@@ -166,7 +172,8 @@ int main(int argc, char **argv)
 			}
 			netfilter_contexts = strdup(optarg);
 			if (!netfilter_contexts) {
-				fprintf(stderr, "%s:  Out of memory\n", argv[0]);
+				fprintf(stderr, "%s:  Out of memory\n",
+					argv[0]);
 				return EXIT_FAILURE;
 			}
 			break;
@@ -177,9 +184,10 @@ int main(int argc, char **argv)
 	}
 
 	if (optind < argc) {
-		fprintf(stderr, "%s:  Superfluous command line arguments: ", argv[0]);
+		fprintf(stderr,
+			"%s:  Superfluous command line arguments: ", argv[0]);
 		while (optind < argc)
-			 fprintf(stderr, "%s ", argv[optind++]);
+			fprintf(stderr, "%s ", argv[optind++]);
 		fprintf(stderr, "\n");
 		usage(argv[0]);
 		return EXIT_FAILURE;
@@ -190,16 +198,20 @@ int main(int argc, char **argv)
 		return EXIT_FAILURE;
 	}
 
-	if (file_contexts && file_to_data(file_contexts, &fcdata, &fclen, argv[0]))
+	if (file_contexts &&
+	    file_to_data(file_contexts, &fcdata, &fclen, argv[0]))
 		goto failure;
 
-	if (seusers && file_to_data(seusers, &seusersdata, &seuserslen, argv[0]))
+	if (seusers &&
+	    file_to_data(seusers, &seusersdata, &seuserslen, argv[0]))
 		goto failure;
 
-	if (user_extra && file_to_data(user_extra, &user_extradata, &user_extralen, argv[0]))
+	if (user_extra &&
+	    file_to_data(user_extra, &user_extradata, &user_extralen, argv[0]))
 		goto failure;
 
-	if (netfilter_contexts && file_to_data(netfilter_contexts, &ncdata, &nclen, argv[0]))
+	if (netfilter_contexts &&
+	    file_to_data(netfilter_contexts, &ncdata, &nclen, argv[0]))
 		goto failure;
 
 	if (sepol_policy_file_create(&mod)) {
@@ -230,23 +242,30 @@ int main(int argc, char **argv)
 	fclose(fp);
 	fp = NULL;
 
-	if (fclen && sepol_module_package_set_file_contexts(pkg, fcdata, fclen)) {
-		fprintf(stderr, "%s:  Error while setting file contexts\n", argv[0]);
+	if (fclen &&
+	    sepol_module_package_set_file_contexts(pkg, fcdata, fclen)) {
+		fprintf(stderr, "%s:  Error while setting file contexts\n",
+			argv[0]);
 		goto failure;
 	}
 
-	if (seuserslen && sepol_module_package_set_seusers(pkg, seusersdata, seuserslen)) {
+	if (seuserslen &&
+	    sepol_module_package_set_seusers(pkg, seusersdata, seuserslen)) {
 		fprintf(stderr, "%s:  Error while setting seusers\n", argv[0]);
 		goto failure;
 	}
 
-	if (user_extra && sepol_module_package_set_user_extra(pkg, user_extradata, user_extralen)) {
-		fprintf(stderr, "%s:  Error while setting extra users\n", argv[0]);
+	if (user_extra && sepol_module_package_set_user_extra(
+				  pkg, user_extradata, user_extralen)) {
+		fprintf(stderr, "%s:  Error while setting extra users\n",
+			argv[0]);
 		goto failure;
 	}
 
-	if (nclen && sepol_module_package_set_netfilter_contexts(pkg, ncdata, nclen)) {
-		fprintf(stderr, "%s:  Error while setting netfilter contexts\n", argv[0]);
+	if (nclen &&
+	    sepol_module_package_set_netfilter_contexts(pkg, ncdata, nclen)) {
+		fprintf(stderr, "%s:  Error while setting netfilter contexts\n",
+			argv[0]);
 		goto failure;
 	}
 

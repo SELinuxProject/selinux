@@ -19,13 +19,12 @@
 /*
  * copied from the selinux/include/security.h
  */
-struct selinux_status_t
-{
-	uint32_t	version;	/* version number of this structure */
-	uint32_t	sequence;	/* sequence number of seqlock logic */
-	uint32_t	enforcing;	/* current setting of enforcing mode */
-	uint32_t	policyload;	/* times of policy reloaded */
-	uint32_t	deny_unknown;	/* current setting of deny_unknown */
+struct selinux_status_t {
+	uint32_t version; /* version number of this structure */
+	uint32_t sequence; /* sequence number of seqlock logic */
+	uint32_t enforcing; /* current setting of enforcing mode */
+	uint32_t policyload; /* times of policy reloaded */
+	uint32_t deny_unknown; /* current setting of deny_unknown */
 	/* version > 0 support above status */
 } __attribute((packed));
 
@@ -37,14 +36,14 @@ struct selinux_status_t
  * Valid Pointer : opened and mapped correctly
  */
 static struct selinux_status_t *selinux_status = NULL;
-static uint32_t			last_seqno;
-static uint32_t			last_policyload;
+static uint32_t last_seqno;
+static uint32_t last_policyload;
 
-static uint32_t			fallback_sequence;
-static int			fallback_enforcing;
-static int			fallback_policyload;
+static uint32_t fallback_sequence;
+static int fallback_enforcing;
+static int fallback_policyload;
 
-static void			*fallback_netlink_thread = NULL;
+static void *fallback_netlink_thread = NULL;
 
 /*
  * read_sequence
@@ -60,7 +59,7 @@ static void			*fallback_netlink_thread = NULL;
  */
 static inline uint32_t read_sequence(struct selinux_status_t *status)
 {
-	uint32_t	seqno = 0;
+	uint32_t seqno = 0;
 
 	do {
 		/*
@@ -89,10 +88,10 @@ static inline uint32_t read_sequence(struct selinux_status_t *status)
  */
 int selinux_status_updated(void)
 {
-	uint32_t	curr_seqno;
-	uint32_t	tmp_seqno;
-	uint32_t	enforcing;
-	uint32_t	policyload;
+	uint32_t curr_seqno;
+	uint32_t tmp_seqno;
+	uint32_t enforcing;
+	uint32_t policyload;
 
 	if (selinux_status == NULL) {
 		errno = EINVAL;
@@ -129,7 +128,7 @@ int selinux_status_updated(void)
 		curr_seqno = read_sequence(selinux_status);
 	} while (tmp_seqno != curr_seqno);
 
-	if (avc_enforcing != (int) enforcing) {
+	if (avc_enforcing != (int)enforcing) {
 		if (avc_process_setenforce(enforcing) < 0)
 			return -1;
 	}
@@ -151,8 +150,8 @@ int selinux_status_updated(void)
  */
 int selinux_status_getenforce(void)
 {
-	uint32_t	seqno;
-	uint32_t	enforcing;
+	uint32_t seqno;
+	uint32_t enforcing;
 
 	if (selinux_status == NULL) {
 		errno = EINVAL;
@@ -188,8 +187,8 @@ int selinux_status_getenforce(void)
  */
 int selinux_status_policyload(void)
 {
-	uint32_t	seqno;
-	uint32_t	policyload;
+	uint32_t seqno;
+	uint32_t policyload;
 
 	if (selinux_status == NULL) {
 		errno = EINVAL;
@@ -223,8 +222,8 @@ int selinux_status_policyload(void)
  */
 int selinux_status_deny_unknown(void)
 {
-	uint32_t	seqno;
-	uint32_t	deny_unknown;
+	uint32_t seqno;
+	uint32_t deny_unknown;
 
 	if (selinux_status == NULL) {
 		errno = EINVAL;
@@ -277,10 +276,10 @@ static int fallback_cb_policyload(int policyload)
  */
 int selinux_status_open(int fallback)
 {
-	int		fd;
-	char		path[PATH_MAX];
-	long		pagesize;
-	uint32_t	seqno;
+	int fd;
+	char path[PATH_MAX];
+	long pagesize;
+	uint32_t seqno;
 
 	if (selinux_status != NULL) {
 		return (selinux_status == MAP_FAILED) ? 1 : 0;
@@ -328,7 +327,7 @@ error:
 	 * receive event notification.
 	 */
 	if (fallback && avc_netlink_open(0) == 0) {
-		union selinux_callback	cb;
+		union selinux_callback cb;
 
 		/* register my callbacks */
 		cb.func_setenforce = fallback_cb_setenforce;
@@ -340,9 +339,9 @@ error:
 		selinux_status = MAP_FAILED;
 		last_seqno = (uint32_t)(-1);
 
-		if (avc_using_threads)
-		{
-			fallback_netlink_thread = avc_create_thread(&avc_netlink_loop);
+		if (avc_using_threads) {
+			fallback_netlink_thread =
+				avc_create_thread(&avc_netlink_loop);
 		}
 
 		fallback_sequence = 0;
@@ -371,8 +370,7 @@ void selinux_status_close(void)
 		return;
 
 	/* fallback-mode */
-	if (selinux_status == MAP_FAILED)
-	{
+	if (selinux_status == MAP_FAILED) {
 		if (avc_using_threads)
 			avc_stop_thread(fallback_netlink_thread);
 

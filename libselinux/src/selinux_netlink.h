@@ -15,9 +15,9 @@ enum {
 };
 
 /* Multicast groups */
-#define SELNL_GRP_NONE		0x00000000
-#define SELNL_GRP_AVC		0x00000001	/* AVC notifications */
-#define SELNL_GRP_ALL		0xffffffff
+#define SELNL_GRP_NONE 0x00000000
+#define SELNL_GRP_AVC 0x00000001 /* AVC notifications */
+#define SELNL_GRP_ALL 0xffffffff
 
 /* Message structures */
 struct selnl_msg_setenforce {
@@ -28,4 +28,4 @@ struct selnl_msg_policyload {
 	uint32_t seqno;
 };
 
-#endif				/* _LINUX_SELINUX_NETLINK_H */
+#endif /* _LINUX_SELINUX_NETLINK_H */

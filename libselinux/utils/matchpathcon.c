@@ -10,7 +10,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-static __attribute__ ((__noreturn__)) void usage(const char *progname)
+static __attribute__((__noreturn__)) void usage(const char *progname)
 {
 	fprintf(stderr,
 		"usage:  %s [-V] [-N] [-n] [-m type] [-f file_contexts_file] [-p prefix] [-P policy_root_path] filepath...\n",
@@ -18,7 +18,8 @@ static __attribute__ ((__noreturn__)) void usage(const char *progname)
 	exit(1);
 }
 
-static int printmatchpathcon(struct selabel_handle *hnd, const char *path, int header, int mode, int notrans)
+static int printmatchpathcon(struct selabel_handle *hnd, const char *path,
+			     int header, int mode, int notrans)
 {
 	char *buf = NULL;
 	int rc;
@@ -91,7 +92,8 @@ int main(int argc, char **argv)
 		case 'm':
 			force_mode = string_to_mode(optarg);
 			if (force_mode < 0) {
-				fprintf(stderr, "%s: mode %s is invalid\n", argv[0], optarg);
+				fprintf(stderr, "%s: mode %s is invalid\n",
+					argv[0], optarg);
 				exit(1);
 			}
 			break;
@@ -106,7 +108,7 @@ int main(int argc, char **argv)
 			options[SELABEL_OPT_PATH].value = optarg;
 			break;
 		case 'P':
-			if (selinux_set_policy_root(optarg) < 0 ) {
+			if (selinux_set_policy_root(optarg) < 0) {
 				fprintf(stderr,
 					"Error setting policy root  %s:  %s\n",
 					optarg,
@@ -117,7 +119,8 @@ int main(int argc, char **argv)
 		case 'p':
 			// This option has been deprecated since libselinux 2.5 (2016):
 			// https://github.com/SELinuxProject/selinux/commit/26e05da0fc2d0a4bd274320968a88f8acbb3b6a6
-			fprintf(stderr, "Warning: using %s -p is deprecated\n", argv[0]);
+			fprintf(stderr, "Warning: using %s -p is deprecated\n",
+				argv[0]);
 			options[SELABEL_OPT_SUBSET].type = SELABEL_OPT_SUBSET;
 			options[SELABEL_OPT_SUBSET].value = optarg;
 			break;
@@ -140,8 +143,8 @@ int main(int argc, char **argv)
 		struct stat buf;
 		char *path = argv[i];
 		int len = strlen(path);
-		if (len > 1  && path[len - 1 ] == '/')
-			path[len - 1 ] = '\0';
+		if (len > 1 && path[len - 1] == '/')
+			path[len - 1] = '\0';
 
 		if (lstat(path, &buf) == 0)
 			mode = buf.st_mode;
@@ -164,7 +167,7 @@ int main(int argc, char **argv)
 			} else if (rc == 1) {
 				printf("%s verified.\n", path);
 			} else {
-				char * con;
+				char *con;
 				error = 1;
 				if (notrans)
 					rc = lgetfilecon_raw(path, &con);
@@ -174,17 +177,19 @@ int main(int argc, char **argv)
 				if (rc >= 0) {
 					printf("%s has context %s, should be ",
 					       path, con);
-					printmatchpathcon(hnd, path, 0, mode, notrans);
+					printmatchpathcon(hnd, path, 0, mode,
+							  notrans);
 					freecon(con);
 				} else {
-					printf
-					    ("actual context unknown: %s, should be ",
-					     strerror(errno));
-					printmatchpathcon(hnd, path, 0, mode, notrans);
+					printf("actual context unknown: %s, should be ",
+					       strerror(errno));
+					printmatchpathcon(hnd, path, 0, mode,
+							  notrans);
 				}
 			}
 		} else {
-			error |= printmatchpathcon(hnd, path, header, mode, notrans);
+			error |= printmatchpathcon(hnd, path, header, mode,
+						   notrans);
 		}
 	}
 	selabel_close(hnd);

@@ -35,16 +35,15 @@
 
 #include <sysexits.h>
 
-#include <pty.h>		/* for forkpty */
+#include <pty.h> /* for forkpty */
 #include <termios.h>
 #include <fcntl.h>
 
 #include <sys/select.h>
 #include <sys/wait.h>
 
-
-#define MAXRETR 3		/* The max number of IO retries on a fd */
-#define BUFSIZE 2048		/* The ring buffer size */
+#define MAXRETR 3 /* The max number of IO retries on a fd */
+#define BUFSIZE 2048 /* The ring buffer size */
 
 static struct termios saved_termios;
 static int saved_fd = -1;
@@ -78,11 +77,11 @@ static int tty_semi_raw(int fd)
 	/* Output processing off 
 	   buf.c_oflag    &= ~(OPOST); */
 
-	buf.c_cc[VMIN] = 1;	/* one byte at a time, no timer */
+	buf.c_cc[VMIN] = 1; /* one byte at a time, no timer */
 	buf.c_cc[VTIME] = 0;
 	if (tcsetattr(fd, TCSANOW, &buf) < 0) {
 		return -1;
-	}			/* end of if(tcsetattr(fileno(stdin), TCSANOW, &buf) < 0) */
+	} /* end of if(tcsetattr(fileno(stdin), TCSANOW, &buf) < 0) */
 	tty_state = RAW;
 	saved_fd = fd;
 	return 0;
@@ -100,7 +99,6 @@ static void tty_atexit(void)
 	tty_state = RESET;
 	return;
 }
-
 
 /* The simple ring buffer */
 struct ring_buffer {
@@ -181,12 +179,14 @@ static void setfd_nonblock(int fd)
 	int fsflags = fcntl(fd, F_GETFL);
 
 	if (fsflags < 0) {
-		fprintf(stderr, "fcntl(%d, F_GETFL): %s\n", fd, strerror(errno));
+		fprintf(stderr, "fcntl(%d, F_GETFL): %s\n", fd,
+			strerror(errno));
 		exit(EX_IOERR);
 	}
 
 	if (fcntl(fd, F_SETFL, fsflags | O_NONBLOCK) < 0) {
-		fprintf(stderr, "fcntl(%d, F_SETFL, ... | O_NONBLOCK): %s\n", fd, strerror(errno));
+		fprintf(stderr, "fcntl(%d, F_SETFL, ... | O_NONBLOCK): %s\n",
+			fd, strerror(errno));
 		exit(EX_IOERR);
 	}
 }
@@ -196,12 +196,14 @@ static void setfd_block(int fd)
 	int fsflags = fcntl(fd, F_GETFL);
 
 	if (fsflags < 0) {
-		fprintf(stderr, "fcntl(%d, F_GETFL): %s\n", fd, strerror(errno));
+		fprintf(stderr, "fcntl(%d, F_GETFL): %s\n", fd,
+			strerror(errno));
 		exit(EX_IOERR);
 	}
 
 	if (fcntl(fd, F_SETFL, fsflags & ~O_NONBLOCK) < 0) {
-		fprintf(stderr, "fcntl(%d, F_SETFL, ... & ~O_NONBLOCK): %s\n", fd, strerror(errno));
+		fprintf(stderr, "fcntl(%d, F_SETFL, ... & ~O_NONBLOCK): %s\n",
+			fd, strerror(errno));
 		exit(EX_IOERR);
 	}
 }
@@ -213,7 +215,7 @@ static void setfd_atexit(void)
 	return;
 }
 
-static void sigchld_handler(int asig __attribute__ ((unused)))
+static void sigchld_handler(int asig __attribute__((unused)))
 {
 }
 
@@ -344,17 +346,18 @@ int main(int argc, char *argv[])
 
 		if (!do_select) {
 #ifdef DEBUG
-			fprintf(stderr, "No I/O job for us, calling waitpid()...\n");
+			fprintf(stderr,
+				"No I/O job for us, calling waitpid()...\n");
 #endif
-			while (waitpid(child_pid, &child_exit_status, 0) < 0)
-			{
+			while (waitpid(child_pid, &child_exit_status, 0) < 0) {
 				/* nothing */
 			}
 			break;
 		}
 
 		errno = 0;
-		int select_rc = select(pty_master + 1, &readfds, &writefds, NULL, NULL);
+		int select_rc =
+			select(pty_master + 1, &readfds, &writefds, NULL, NULL);
 		if (select_rc < 0 && errno != EINTR) {
 			perror("select()");
 			exit(EX_IOERR);
@@ -372,7 +375,8 @@ int main(int argc, char *argv[])
 				err_n_stdout++;
 #ifdef DEBUG
 			if (n >= 0)
-				fprintf(stderr, "%d bytes written into stdout\n", n);
+				fprintf(stderr,
+					"%d bytes written into stdout\n", n);
 			else
 				perror("write(stdout,...)");
 #endif
@@ -387,7 +391,9 @@ int main(int argc, char *argv[])
 				err_n_wpty++;
 #ifdef DEBUG
 			if (n >= 0)
-				fprintf(stderr, "%d bytes written into pty_master\n", n);
+				fprintf(stderr,
+					"%d bytes written into pty_master\n",
+					n);
 			else
 				perror("write(pty_master,...)");
 #endif
@@ -402,7 +408,8 @@ int main(int argc, char *argv[])
 				err_n_stdin++;
 #ifdef DEBUG
 			if (n >= 0)
-				fprintf(stderr, "%d bytes read from stdin\n", n);
+				fprintf(stderr, "%d bytes read from stdin\n",
+					n);
 			else
 				perror("read(stdin,...)");
 #endif
@@ -417,22 +424,25 @@ int main(int argc, char *argv[])
 				err_n_rpty++;
 #ifdef DEBUG
 			if (n >= 0)
-				fprintf(stderr, "%d bytes read from pty_master\n", n);
+				fprintf(stderr,
+					"%d bytes read from pty_master\n", n);
 			else
 				perror("read(pty_master,...)");
 #endif
 		}
 
-		if (!done && waitpid(child_pid, &child_exit_status, WNOHANG) > 0)
+		if (!done &&
+		    waitpid(child_pid, &child_exit_status, WNOHANG) > 0)
 			done = 1;
 
-	} while (!done
-		|| !(rb_isempty(&inbuf) || err_n_wpty >= MAXRETR)
-		|| !(rb_isempty(&outbuf) || err_n_stdout >= MAXRETR));
+	} while (!done || !(rb_isempty(&inbuf) || err_n_wpty >= MAXRETR) ||
+		 !(rb_isempty(&outbuf) || err_n_stdout >= MAXRETR));
 
 #ifdef DEBUG
-	fprintf(stderr, "inbuf: %u bytes left, outbuf: %u bytes left\n", inbuf.count, outbuf.count);
-	fprintf(stderr, "err_n_rpty=%u, err_n_wpty=%u, err_n_stdin=%u, err_n_stdout=%u\n",
+	fprintf(stderr, "inbuf: %u bytes left, outbuf: %u bytes left\n",
+		inbuf.count, outbuf.count);
+	fprintf(stderr,
+		"err_n_rpty=%u, err_n_wpty=%u, err_n_stdin=%u, err_n_stdout=%u\n",
 		err_n_rpty, err_n_wpty, err_n_stdin, err_n_stdout);
 #endif
 

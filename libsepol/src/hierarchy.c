@@ -52,7 +52,6 @@ static int bounds_insert_helper(sepol_handle_t *handle, avtab_t *avtab,
 	return rc;
 }
 
-
 static int bounds_insert_rule(sepol_handle_t *handle, avtab_t *avtab,
 			      avtab_t *global, avtab_t *other,
 			      avtab_key_t *avtab_key, avtab_datum_t *datum)
@@ -62,7 +61,8 @@ static int bounds_insert_rule(sepol_handle_t *handle, avtab_t *avtab,
 
 	if (!dup) {
 		rc = bounds_insert_helper(handle, avtab, avtab_key, datum);
-		if (rc) goto exit;
+		if (rc)
+			goto exit;
 	} else {
 		dup->data |= datum->data;
 	}
@@ -80,9 +80,10 @@ static int bounds_insert_rule(sepol_handle_t *handle, avtab_t *avtab,
 				if (!dup) {
 					avtab_datum_t d;
 					d.data = data;
-					rc = bounds_insert_helper(handle, global,
-								  avtab_key, &d);
-					if (rc) goto exit;
+					rc = bounds_insert_helper(
+						handle, global, avtab_key, &d);
+					if (rc)
+						goto exit;
 				} else {
 					dup->data |= data;
 				}
@@ -111,11 +112,13 @@ static int bounds_expand_rule(sepol_handle_t *handle, policydb_t *p,
 
 	if (ebitmap_get_bit(&p->attr_type_map[src - 1], parent - 1)) {
 		avtab_key.source_type = parent;
-		ebitmap_for_each_positive_bit(&p->attr_type_map[tgt - 1], tnode, i) {
+		ebitmap_for_each_positive_bit(&p->attr_type_map[tgt - 1], tnode,
+					      i) {
 			avtab_key.target_type = i + 1;
 			rc = bounds_insert_rule(handle, avtab, global, other,
 						&avtab_key, &datum);
-			if (rc) goto exit;
+			if (rc)
+				goto exit;
 		}
 	}
 
@@ -135,7 +138,8 @@ static int bounds_expand_cond_rules(sepol_handle_t *handle, policydb_t *p,
 		rc = bounds_expand_rule(handle, p, avtab, global, other, parent,
 					n->key.source_type, n->key.target_type,
 					n->key.target_class, n->datum.data);
-		if (rc) goto exit;
+		if (rc)
+			goto exit;
 	}
 
 exit:
@@ -193,20 +197,23 @@ static int bounds_expand_parent_rules(sepol_handle_t *handle, policydb_t *p,
 
 	avtab_init(global_avtab);
 	rc = avtab_alloc(global_avtab, BOUNDS_AVTAB_SIZE);
-	if (rc) goto oom;
+	if (rc)
+		goto oom;
 
 	args.handle = handle;
 	args.p = p;
 	args.avtab = global_avtab;
 	args.parent = parent;
 	rc = avtab_map(&p->te_avtab, bounds_expand_rule_callback, &args);
-	if (rc) goto exit;
+	if (rc)
+		goto exit;
 
 	*cond_info = NULL;
 	for (cur = p->cond_list; cur; cur = cur->next) {
 		struct bounds_cond_info *ci;
 		ci = malloc(sizeof(struct bounds_cond_info));
-		if (!ci) goto oom;
+		if (!ci)
+			goto oom;
 		avtab_init(&ci->true_avtab);
 		avtab_init(&ci->false_avtab);
 		ci->cond_list = cur;
@@ -214,20 +221,23 @@ static int bounds_expand_parent_rules(sepol_handle_t *handle, policydb_t *p,
 		*cond_info = ci;
 		if (cur->true_list) {
 			rc = avtab_alloc(&ci->true_avtab, BOUNDS_AVTAB_SIZE);
-			if (rc) goto oom;
+			if (rc)
+				goto oom;
 			rc = bounds_expand_cond_rules(handle, p, cur->true_list,
 						      &ci->true_avtab, NULL,
 						      NULL, parent);
-			if (rc) goto exit;
+			if (rc)
+				goto exit;
 		}
 		if (cur->false_list) {
 			rc = avtab_alloc(&ci->false_avtab, BOUNDS_AVTAB_SIZE);
-			if (rc) goto oom;
-			rc = bounds_expand_cond_rules(handle, p, cur->false_list,
-						      &ci->false_avtab,
-						      global_avtab,
-						      &ci->true_avtab, parent);
-			if (rc) goto exit;
+			if (rc)
+				goto oom;
+			rc = bounds_expand_cond_rules(
+				handle, p, cur->false_list, &ci->false_avtab,
+				global_avtab, &ci->true_avtab, parent);
+			if (rc)
+				goto exit;
 		}
 	}
 
@@ -237,7 +247,7 @@ oom:
 	ERR(handle, "Insufficient memory");
 
 exit:
-	ERR(handle,"Failed to expand parent rules");
+	ERR(handle, "Failed to expand parent rules");
 	avtab_destroy(global_avtab);
 	bounds_destroy_cond_info(*cond_info);
 	*cond_info = NULL;
@@ -296,7 +306,8 @@ static int bounds_check_rule(sepol_handle_t *handle, policydb_t *p,
 
 	if (ebitmap_get_bit(&p->attr_type_map[src - 1], child - 1)) {
 		avtab_key.source_type = parent;
-		ebitmap_for_each_positive_bit(&p->attr_type_map[tgt - 1], tnode, i) {
+		ebitmap_for_each_positive_bit(&p->attr_type_map[tgt - 1], tnode,
+					      i) {
 			td = p->type_val_to_struct[i];
 			if (td && td->bounds) {
 				avtab_key.target_type = td->bounds;
@@ -309,8 +320,10 @@ static int bounds_check_rule(sepol_handle_t *handle, policydb_t *p,
 			}
 			if (d) {
 				(*numbad)++;
-				rc = bounds_add_bad(handle, child, i+1, class, d, bad);
-				if (rc) goto exit;
+				rc = bounds_add_bad(handle, child, i + 1, class,
+						    d, bad);
+				if (rc)
+					goto exit;
 			}
 		}
 	}
@@ -338,7 +351,8 @@ static int bounds_check_cond_rules(sepol_handle_t *handle, policydb_t *p,
 				       child, parent, key->source_type,
 				       key->target_type, key->target_class,
 				       datum->data, bad, numbad);
-		if (rc) goto exit;
+		if (rc)
+			goto exit;
 	}
 
 exit:
@@ -386,21 +400,24 @@ static int bounds_check_child_rules(sepol_handle_t *handle, policydb_t *p,
 	args.bad = NULL;
 	args.numbad = 0;
 	rc = avtab_map(&p->te_avtab, bounds_check_rule_callback, &args);
-	if (rc) goto exit;
+	if (rc)
+		goto exit;
 
 	for (cur = cond_info; cur; cur = cur->next) {
 		cond_list_t *node = cur->cond_list;
 		rc = bounds_check_cond_rules(handle, p, global_avtab,
-					     &cur->true_avtab,
-					     node->true_list, child, parent,
-					     &args.bad, &args.numbad);
-		if (rc) goto exit;
+					     &cur->true_avtab, node->true_list,
+					     child, parent, &args.bad,
+					     &args.numbad);
+		if (rc)
+			goto exit;
 
 		rc = bounds_check_cond_rules(handle, p, global_avtab,
 					     &cur->false_avtab,
 					     node->false_list, child, parent,
 					     &args.bad, &args.numbad);
-		if (rc) goto exit;
+		if (rc)
+			goto exit;
 	}
 
 	*numbad += args.numbad;
@@ -417,8 +434,10 @@ int bounds_check_type(sepol_handle_t *handle, policydb_t *p, uint32_t child,
 	avtab_t global_avtab;
 	struct bounds_cond_info *cond_info = NULL;
 
-	rc = bounds_expand_parent_rules(handle, p, &global_avtab, &cond_info, parent);
-	if (rc) goto exit;
+	rc = bounds_expand_parent_rules(handle, p, &global_avtab, &cond_info,
+					parent);
+	if (rc)
+		goto exit;
 
 	rc = bounds_check_child_rules(handle, p, &global_avtab, cond_info,
 				      child, parent, bad, numbad);
@@ -439,11 +458,13 @@ struct bounds_args {
 static void bounds_report(sepol_handle_t *handle, policydb_t *p, uint32_t child,
 			  uint32_t parent, avtab_ptr_t cur)
 {
-	ERR(handle, "Child type %s exceeds bounds of parent %s in the following rules:",
+	ERR(handle,
+	    "Child type %s exceeds bounds of parent %s in the following rules:",
 	    p->p_type_val_to_name[child - 1],
 	    p->p_type_val_to_name[parent - 1]);
 	for (; cur; cur = cur->next) {
-		char *permstr = sepol_av_to_string(p, cur->key.target_class, cur->datum.data);
+		char *permstr = sepol_av_to_string(p, cur->key.target_class,
+						   cur->datum.data);
 
 		ERR(handle, "    %s %s : %s { %s }",
 		    p->p_type_val_to_name[cur->key.source_type - 1],
@@ -466,7 +487,7 @@ void bounds_destroy_bad(avtab_ptr_t cur)
 	}
 }
 
-static int bounds_check_type_callback(hashtab_key_t k __attribute__ ((unused)),
+static int bounds_check_type_callback(hashtab_key_t k __attribute__((unused)),
 				      hashtab_datum_t d, void *args)
 {
 	int rc = 0;
@@ -497,7 +518,8 @@ int bounds_check_types(sepol_handle_t *handle, policydb_t *p)
 	args.numbad = 0;
 
 	rc = hashtab_map(p->p_types.table, bounds_check_type_callback, &args);
-	if (rc) goto exit;
+	if (rc)
+		goto exit;
 
 	if (args.numbad > 0) {
 		ERR(handle, "%d errors found during type bounds check",
@@ -512,11 +534,11 @@ exit:
 /* The role bounds is defined as: a child role cannot have a type that
  * its parent doesn't have.
  */
-static int bounds_check_role_callback(hashtab_key_t k,
-				      hashtab_datum_t d, void *args)
+static int bounds_check_role_callback(hashtab_key_t k, hashtab_datum_t d,
+				      void *args)
 {
 	struct bounds_args *a = (struct bounds_args *)args;
-	role_datum_t *r = (role_datum_t *) d;
+	role_datum_t *r = (role_datum_t *)d;
 	role_datum_t *rp = NULL;
 
 	if (!r->bounds)
@@ -555,11 +577,11 @@ int bounds_check_roles(sepol_handle_t *handle, policydb_t *p)
 /* The user bounds is defined as: a child user cannot have a role that
  * its parent doesn't have.
  */
-static int bounds_check_user_callback(hashtab_key_t k,
-				      hashtab_datum_t d, void *args)
+static int bounds_check_user_callback(hashtab_key_t k, hashtab_datum_t d,
+				      void *args)
 {
 	struct bounds_args *a = (struct bounds_args *)args;
-	user_datum_t *u = (user_datum_t *) d;
+	user_datum_t *u = (user_datum_t *)d;
 	user_datum_t *up = NULL;
 
 	if (!u->bounds)
@@ -569,7 +591,7 @@ static int bounds_check_user_callback(hashtab_key_t k,
 
 	if (up && !ebitmap_contains(&up->roles.roles, &u->roles.roles)) {
 		ERR(a->handle, "User bounds violation, %s exceeds %s",
-		    (char *) k, a->p->p_user_val_to_name[up->s.value - 1]);
+		    (char *)k, a->p->p_user_val_to_name[up->s.value - 1]);
 		a->numbad++;
 	}
 
@@ -595,53 +617,59 @@ int bounds_check_users(sepol_handle_t *handle, policydb_t *p)
 	return 0;
 }
 
-#define add_hierarchy_callback_template(prefix)				\
-	int hierarchy_add_##prefix##_callback(hashtab_key_t k __attribute__ ((unused)), \
-					    hashtab_datum_t d, void *args) \
-{								\
-	struct bounds_args *a = (struct bounds_args *)args;		\
-	sepol_handle_t *handle = a->handle;				\
-	policydb_t *p = a->p;						\
-	prefix##_datum_t *datum = (prefix##_datum_t *)d;		\
-	prefix##_datum_t *parent;					\
-	char *parent_name, *datum_name, *tmp;				\
-									\
-	if (!datum->bounds) {						\
-		datum_name = p->p_##prefix##_val_to_name[datum->s.value - 1]; \
-									\
-		tmp = strrchr(datum_name, '.');				\
-		/* no '.' means it has no parent */			\
-		if (!tmp) return 0;					\
-									\
-		parent_name = strdup(datum_name);			\
-		if (!parent_name) {					\
-			ERR(handle, "Insufficient memory");		\
-			return SEPOL_ENOMEM;				\
-		}							\
-		parent_name[tmp - datum_name] = '\0';			\
-									\
-		parent = hashtab_search(p->p_##prefix##s.table, parent_name); \
-		if (!parent) {						\
-			/* Orphan type/role/user */			\
-			ERR(handle, "%s doesn't exist, %s is an orphan",\
-			    parent_name,				\
-			    p->p_##prefix##_val_to_name[datum->s.value - 1]); \
-			free(parent_name);				\
-			a->numbad++;					\
-			return 0;					\
-		}							\
-		datum->bounds = parent->s.value;			\
-		free(parent_name);					\
-	}								\
-									\
-	return 0;							\
-}								\
+#define add_hierarchy_callback_template(prefix)                                  \
+	int hierarchy_add_##prefix##_callback(hashtab_key_t k                    \
+					      __attribute__((unused)),           \
+					      hashtab_datum_t d, void *args)     \
+	{                                                                        \
+		struct bounds_args *a = (struct bounds_args *)args;              \
+		sepol_handle_t *handle = a->handle;                              \
+		policydb_t *p = a->p;                                            \
+		prefix##_datum_t *datum = (prefix##_datum_t *)d;                 \
+		prefix##_datum_t *parent;                                        \
+		char *parent_name, *datum_name, *tmp;                            \
+                                                                                 \
+		if (!datum->bounds) {                                            \
+			datum_name =                                             \
+				p->p_##prefix##_val_to_name[datum->s.value -     \
+							    1];                  \
+                                                                                 \
+			tmp = strrchr(datum_name, '.');                          \
+			/* no '.' means it has no parent */                      \
+			if (!tmp)                                                \
+				return 0;                                        \
+                                                                                 \
+			parent_name = strdup(datum_name);                        \
+			if (!parent_name) {                                      \
+				ERR(handle, "Insufficient memory");              \
+				return SEPOL_ENOMEM;                             \
+			}                                                        \
+			parent_name[tmp - datum_name] = '\0';                    \
+                                                                                 \
+			parent = hashtab_search(p->p_##prefix##s.table,          \
+						parent_name);                    \
+			if (!parent) {                                           \
+				/* Orphan type/role/user */                      \
+				ERR(handle,                                      \
+				    "%s doesn't exist, %s is an orphan",         \
+				    parent_name,                                 \
+				    p->p_##prefix##_val_to_name[datum->s.value - \
+								1]);             \
+				free(parent_name);                               \
+				a->numbad++;                                     \
+				return 0;                                        \
+			}                                                        \
+			datum->bounds = parent->s.value;                         \
+			free(parent_name);                                       \
+		}                                                                \
+                                                                                 \
+		return 0;                                                        \
+	}
 
-static add_hierarchy_callback_template(type)
-static add_hierarchy_callback_template(role)
-static add_hierarchy_callback_template(user)
+static add_hierarchy_callback_template(type) static add_hierarchy_callback_template(
+	role) static add_hierarchy_callback_template(user)
 
-int hierarchy_add_bounds(sepol_handle_t *handle, policydb_t *p)
+	int hierarchy_add_bounds(sepol_handle_t *handle, policydb_t *p)
 {
 	int rc = 0;
 	struct bounds_args args;
@@ -651,13 +679,16 @@ int hierarchy_add_bounds(sepol_handle_t *handle, policydb_t *p)
 	args.numbad = 0;
 
 	rc = hashtab_map(p->p_users.table, hierarchy_add_user_callback, &args);
-	if (rc) goto exit;
+	if (rc)
+		goto exit;
 
 	rc = hashtab_map(p->p_roles.table, hierarchy_add_role_callback, &args);
-	if (rc) goto exit;
+	if (rc)
+		goto exit;
 
 	rc = hashtab_map(p->p_types.table, hierarchy_add_type_callback, &args);
-	if (rc) goto exit;
+	if (rc)
+		goto exit;
 
 	if (args.numbad > 0) {
 		ERR(handle, "%d errors found while adding hierarchies",
@@ -669,13 +700,14 @@ exit:
 	return rc;
 }
 
-int hierarchy_check_constraints(sepol_handle_t * handle, policydb_t * p)
+int hierarchy_check_constraints(sepol_handle_t *handle, policydb_t *p)
 {
 	int rc = 0;
 	int violation = 0;
 
 	rc = hierarchy_add_bounds(handle, p);
-	if (rc) goto exit;
+	if (rc)
+		goto exit;
 
 	rc = bounds_check_users(handle, p);
 	if (rc)

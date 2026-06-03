@@ -29,7 +29,6 @@ void test_cil_resolve_name_invalid_type_neg(CuTest *);
 
 void test_cil_resolve_ast_curr_null_neg(CuTest *);
 
-
 /*
 	cil_resolve test cases
 */

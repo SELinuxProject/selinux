@@ -35,7 +35,8 @@
 #include "cil_log.h"
 #include "cil_mem.h"
 
-__attribute__((noreturn)) __attribute__((format (printf, 1, 2))) static void cil_list_error(const char* msg, ...)
+__attribute__((noreturn)) __attribute__((format(printf, 1, 2))) static void
+cil_list_error(const char *msg, ...)
 {
 	va_list ap;
 	va_start(ap, msg);
@@ -62,11 +63,11 @@ void cil_list_destroy(struct cil_list **list, unsigned destroy_data)
 	}
 
 	item = (*list)->head;
-	while (item != NULL)
-	{
+	while (item != NULL) {
 		struct cil_list_item *next = item->next;
 		if (item->flavor == CIL_LIST) {
-			cil_list_destroy((struct cil_list**)&(item->data), destroy_data);
+			cil_list_destroy((struct cil_list **)&(item->data),
+					 destroy_data);
 			free(item);
 		} else {
 			cil_list_item_destroy(&item, destroy_data);
@@ -140,7 +141,9 @@ void cil_list_prepend(struct cil_list *list, enum cil_flavor flavor, void *data)
 	list->head = item;
 }
 
-struct cil_list_item *cil_list_insert(struct cil_list *list, struct cil_list_item *curr, enum cil_flavor flavor, void *data)
+struct cil_list_item *cil_list_insert(struct cil_list *list,
+				      struct cil_list_item *curr,
+				      enum cil_flavor flavor, void *data)
 {
 	struct cil_list_item *item;
 
@@ -193,7 +196,6 @@ void cil_list_append_item(struct cil_list *list, struct cil_list_item *item)
 
 	list->tail->next = item;
 	list->tail = last;
-
 }
 
 void cil_list_prepend_item(struct cil_list *list, struct cil_list_item *item)
@@ -222,7 +224,8 @@ void cil_list_prepend_item(struct cil_list *list, struct cil_list_item *item)
 	list->head = item;
 }
 
-void cil_list_remove(struct cil_list *list, enum cil_flavor flavor, void *data, unsigned destroy_data)
+void cil_list_remove(struct cil_list *list, enum cil_flavor flavor, void *data,
+		     unsigned destroy_data)
 {
 	struct cil_list_item *item;
 	struct cil_list_item *previous = NULL;

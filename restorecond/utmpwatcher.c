@@ -49,7 +49,7 @@ unsigned int utmpwatcher_handle(int inotify_fd, int wd)
 {
 	int changed = 0;
 	struct utmp u;
-	char name[UT_NAMESIZE+1];
+	char name[UT_NAMESIZE + 1];
 	const char *utmp_path = "/run/utmp";
 	struct stringsList *prev_utmp_ptr = utmp_ptr;
 	if (wd != utmp_wd)
@@ -71,9 +71,8 @@ unsigned int utmpwatcher_handle(int inotify_fd, int wd)
 	if (utmp_wd >= 0)
 		inotify_rm_watch(inotify_fd, utmp_wd);
 
-	utmp_wd =
-	    inotify_add_watch(inotify_fd, utmp_path,
-			      IN_MOVED_FROM | IN_MODIFY | IN_DONT_FOLLOW);
+	utmp_wd = inotify_add_watch(inotify_fd, utmp_path,
+				    IN_MOVED_FROM | IN_MODIFY | IN_DONT_FOLLOW);
 	if (utmp_wd == -1)
 		exitApp("Error watching utmp file.");
 

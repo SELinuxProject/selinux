@@ -25,16 +25,15 @@ int setbool(char **list, size_t start, size_t end);
 
 static __attribute__((__noreturn__)) void usage(void)
 {
-	fputs
-	    ("\nUsage:  setsebool [ -NPV ] boolean value | bool1=val1 bool2=val2...\n\n",
-	     stderr);
+	fputs("\nUsage:  setsebool [ -NPV ] boolean value | bool1=val1 bool2=val2...\n\n",
+	      stderr);
 	exit(1);
 }
 
 int main(int argc, char **argv)
 {
 	size_t rc;
-	int clflag;		/* holds codes for command line flags */
+	int clflag; /* holds codes for command line flags */
 	if (argc < 2)
 		usage();
 
@@ -92,14 +91,12 @@ int main(int argc, char **argv)
 }
 
 /* Apply temporal boolean changes to policy via libselinux */
-static int selinux_set_boolean_list(size_t boolcnt,
-				    SELboolean * boollist)
+static int selinux_set_boolean_list(size_t boolcnt, SELboolean *boollist)
 {
-
 	if (security_set_boolean_list(boolcnt, boollist, 0)) {
 		if (errno == ENOENT)
 			fprintf(stderr, "Could not change active booleans: "
-				"Invalid boolean\n");
+					"Invalid boolean\n");
 		else if (errno) {
 			if (getuid() == 0) {
 				perror("Could not change active booleans");
@@ -115,10 +112,8 @@ static int selinux_set_boolean_list(size_t boolcnt,
 }
 
 /* Apply permanent boolean changes to policy via libsemanage */
-static int semanage_set_boolean_list(size_t boolcnt,
-				     SELboolean * boollist)
+static int semanage_set_boolean_list(size_t boolcnt, SELboolean *boollist)
 {
-
 	size_t j;
 	semanage_handle_t *handle = NULL;
 	semanage_bool_t *boolean = NULL;
@@ -161,7 +156,6 @@ static int semanage_set_boolean_list(size_t boolcnt,
 		goto err;
 
 	for (j = 0; j < boolcnt; j++) {
-
 		if (semanage_bool_create(handle, &boolean) < 0)
 			goto err;
 
@@ -178,16 +172,17 @@ static int semanage_set_boolean_list(size_t boolcnt,
 		if (!result) {
 			semanage_bool_exists_local(handle, bool_key, &result);
 			if (!result) {
-				fprintf(stderr, "Boolean %s is not defined\n", boollist[j].name);
+				fprintf(stderr, "Boolean %s is not defined\n",
+					boollist[j].name);
 				goto err;
 			}
 		}
 
-		if (semanage_bool_modify_local(handle, bool_key,
-						  boolean) < 0)
+		if (semanage_bool_modify_local(handle, bool_key, boolean) < 0)
 			goto err;
 
-		if (enabled && semanage_bool_set_active(handle, bool_key, boolean) < 0) {
+		if (enabled &&
+		    semanage_bool_set_active(handle, bool_key, boolean) < 0) {
 			fprintf(stderr, "Failed to change boolean %s: %m\n",
 				boollist[j].name);
 			goto err;
@@ -209,7 +204,7 @@ static int semanage_set_boolean_list(size_t boolcnt,
 	semanage_handle_destroy(handle);
 	return 0;
 
-      err:
+err:
 	semanage_bool_key_free(bool_key);
 	semanage_bool_free(boolean);
 	semanage_handle_destroy(handle);
@@ -249,8 +244,10 @@ int setbool(char **list, size_t start, size_t end)
 			 strcasecmp(value_ptr, "off") == 0)
 			value = 0;
 		else {
-			fprintf(stderr, "setsebool: illegal value "
-				"%s for boolean %s\n", value_ptr, name);
+			fprintf(stderr,
+				"setsebool: illegal value "
+				"%s for boolean %s\n",
+				value_ptr, name);
 			goto err;
 		}
 
@@ -298,10 +295,10 @@ int setbool(char **list, size_t start, size_t end)
 	free(vallist);
 	return 0;
 
-      omem:
+omem:
 	fprintf(stderr, "setsebool: out of memory");
 
-      err:
+err:
 	if (vallist) {
 		for (i = 0; i < boolcnt; i++)
 			free(vallist[i].name);

@@ -11,7 +11,7 @@
 
 #define SELINUX_INITCON_DIR "/initial_contexts/"
 
-int security_get_initial_context_raw(const char * name, char ** con)
+int security_get_initial_context_raw(const char *name, char **con)
 {
 	char path[PATH_MAX];
 	char *buf;
@@ -28,7 +28,8 @@ int security_get_initial_context_raw(const char * name, char ** con)
 		return -1;
 	}
 
-	ret = snprintf(path, sizeof path, "%s%s%s", selinux_mnt, SELINUX_INITCON_DIR, name);
+	ret = snprintf(path, sizeof path, "%s%s%s", selinux_mnt,
+		       SELINUX_INITCON_DIR, name);
 	if (ret < 0 || (size_t)ret >= sizeof path) {
 		errno = EOVERFLOW;
 		return -1;
@@ -54,17 +55,16 @@ int security_get_initial_context_raw(const char * name, char ** con)
 		goto out;
 	}
 	ret = 0;
-      out:
+out:
 	free(buf);
 	close(fd);
 	return ret;
 }
 
-
-int security_get_initial_context(const char * name, char ** con)
+int security_get_initial_context(const char *name, char **con)
 {
 	int ret;
-	char * rcon;
+	char *rcon;
 
 	ret = security_get_initial_context_raw(name, &rcon);
 	if (!ret) {
@@ -74,4 +74,3 @@ int security_get_initial_context(const char * name, char ** con)
 
 	return ret;
 }
-

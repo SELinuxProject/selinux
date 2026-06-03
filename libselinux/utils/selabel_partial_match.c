@@ -7,7 +7,7 @@
 #include <selinux/selinux.h>
 #include <selinux/label.h>
 
-static __attribute__ ((__noreturn__)) void usage(const char *progname)
+static __attribute__((__noreturn__)) void usage(const char *progname)
 {
 	fprintf(stderr,
 		"usage:  %s [-v] -p <path> [-f file]\n\n"
@@ -20,7 +20,8 @@ static __attribute__ ((__noreturn__)) void usage(const char *progname)
 		"%s -p /sys/devices/system/cpu/online\n\t"
 		"   Check if a match or partial match is possible against\n\t"
 		"   the path \"/sys/devices/system/cpu/online\", returning\n\t"
-		"   TRUE or FALSE.\n\n", progname, progname);
+		"   TRUE or FALSE.\n\n",
+		progname, progname);
 	exit(1);
 }
 
@@ -32,8 +33,7 @@ int main(int argc, char **argv)
 
 	struct selabel_handle *hnd;
 	struct selinux_opt selabel_option[] = {
-		{ SELABEL_OPT_PATH, file },
-		{ SELABEL_OPT_VALIDATE, validate }
+		{ SELABEL_OPT_PATH, file }, { SELABEL_OPT_VALIDATE, validate }
 	};
 
 	if (argc < 2)
@@ -63,16 +63,17 @@ int main(int argc, char **argv)
 
 	hnd = selabel_open(SELABEL_CTX_FILE, selabel_option, 2);
 	if (!hnd) {
-		fprintf(stderr, "ERROR: selabel_open - Could not obtain "
-							     "handle:  %s\n",
-							     strerror(errno));
+		fprintf(stderr,
+			"ERROR: selabel_open - Could not obtain "
+			"handle:  %s\n",
+			strerror(errno));
 		return -1;
 	}
 
 	partial_match = selabel_partial_match(hnd, path);
 
 	printf("Match or Partial match: %s\n",
-		    partial_match ? "TRUE" : "FALSE");
+	       partial_match ? "TRUE" : "FALSE");
 
 	selabel_close(hnd);
 	return partial_match;

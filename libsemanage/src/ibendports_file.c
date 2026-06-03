@@ -20,15 +20,15 @@ typedef struct dbase_file dbase_t;
 #include "debug.h"
 
 static int ibendport_print(semanage_handle_t *handle,
-			   const semanage_ibendport_t *ibendport,
-			   FILE *str)
+			   const semanage_ibendport_t *ibendport, FILE *str)
 {
 	const semanage_context_t *con;
 	char *con_str = NULL;
 	char *ibdev_name_str = NULL;
 	int port = semanage_ibendport_get_port(ibendport);
 
-	if (semanage_ibendport_get_ibdev_name(handle, ibendport, &ibdev_name_str) != 0)
+	if (semanage_ibendport_get_ibdev_name(handle, ibendport,
+					      &ibdev_name_str) != 0)
 		goto err;
 
 	con = semanage_ibendport_get_con(ibendport);
@@ -56,8 +56,7 @@ err:
 	return STATUS_ERR;
 }
 
-static int ibendport_parse(semanage_handle_t *handle,
-			   parse_info_t *info,
+static int ibendport_parse(semanage_handle_t *handle, parse_info_t *info,
 			   semanage_ibendport_t *ibendport)
 {
 	int port;
@@ -96,12 +95,13 @@ static int ibendport_parse(semanage_handle_t *handle,
 	if (parse_fetch_string(handle, info, &str, ' ', 0) < 0)
 		goto err;
 	if (semanage_context_from_string(handle, str, &con) < 0) {
-		ERR(handle, "invalid security context \"%s\" (%s: %u)\n%s",
-		    str, info->filename, info->lineno, info->orig_line);
+		ERR(handle, "invalid security context \"%s\" (%s: %u)\n%s", str,
+		    info->filename, info->lineno, info->orig_line);
 		goto err;
 	}
 	if (!con) {
-		ERR(handle, "<<none>> context is not valid for ibendport (%s: %u):\n%s",
+		ERR(handle,
+		    "<<none>> context is not valid for ibendport (%s: %u):\n%s",
 		    info->filename, info->lineno, info->orig_line);
 		goto err;
 	}
@@ -135,16 +135,12 @@ static const record_file_table_t SEMANAGE_IBENDPORT_FILE_RTABLE = {
 	.print = ibendport_print,
 };
 
-int ibendport_file_dbase_init(semanage_handle_t *handle,
-			      const char *path_ro,
-			      const char *path_rw,
-			      dbase_config_t *dconfig)
+int ibendport_file_dbase_init(semanage_handle_t *handle, const char *path_ro,
+			      const char *path_rw, dbase_config_t *dconfig)
 {
-	if (dbase_file_init(handle,
-			    path_ro,
-			    path_rw,
-			    &SEMANAGE_IBENDPORT_RTABLE,
-			    &SEMANAGE_IBENDPORT_FILE_RTABLE, &dconfig->dbase) < 0)
+	if (dbase_file_init(
+		    handle, path_ro, path_rw, &SEMANAGE_IBENDPORT_RTABLE,
+		    &SEMANAGE_IBENDPORT_FILE_RTABLE, &dconfig->dbase) < 0)
 		return STATUS_ERR;
 
 	dconfig->dtable = &SEMANAGE_FILE_DTABLE;

@@ -17,7 +17,8 @@ extern int sepol_ibendport_count(sepol_handle_t *handle,
 /* Check if a ibendport exists */
 extern int sepol_ibendport_exists(sepol_handle_t *handle,
 				  const sepol_policydb_t *policydb,
-				  const sepol_ibendport_key_t *key, int *response);
+				  const sepol_ibendport_key_t *key,
+				  int *response);
 
 /* Query a ibendport - returns the ibendport, or NULL if not found */
 extern int sepol_ibendport_query(sepol_handle_t *handle,
@@ -37,11 +38,9 @@ extern int sepol_ibendport_modify(sepol_handle_t *handle,
  * 1 to signal successful exit
  * 0 to signal continue
  */
-extern int sepol_ibendport_iterate(sepol_handle_t *handle,
-				   const sepol_policydb_t *policydb,
-				   int (*fn)(const sepol_ibendport_t *ibendport,
-					     void *fn_arg), void *arg);
-
+extern int sepol_ibendport_iterate(
+	sepol_handle_t *handle, const sepol_policydb_t *policydb,
+	int (*fn)(const sepol_ibendport_t *ibendport, void *fn_arg), void *arg);
 
 #ifdef __cplusplus
 }

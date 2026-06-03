@@ -12,11 +12,13 @@ static __attribute__((__noreturn__)) void usage(const char *progname)
 	fprintf(stderr, "usage:  %s context\n", progname);
 	exit(1);
 }
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
 	char *scon;
-	if ( argc != 2 ) usage(argv[0]);
-	if (init_translations()==0) {
-		if(untrans_context(argv[1],&scon) == 0) {
+	if (argc != 2)
+		usage(argv[0]);
+	if (init_translations() == 0) {
+		if (untrans_context(argv[1], &scon) == 0) {
 			printf("%s\n", scon);
 			freecon(scon);
 			return 0;
@@ -24,5 +26,3 @@ int main(int argc, char **argv) {
 	}
 	return -1;
 }
-
-

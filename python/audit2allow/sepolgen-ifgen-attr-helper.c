@@ -46,7 +46,7 @@ static int perm_name(hashtab_key_t key, hashtab_datum_t datum, void *data)
 	struct val_to_name *v = data;
 	perm_datum_t *perdatum;
 
-	perdatum = (perm_datum_t *) datum;
+	perdatum = (perm_datum_t *)datum;
 
 	if (v->val == perdatum->s.value) {
 		v->name = key;
@@ -56,8 +56,8 @@ static int perm_name(hashtab_key_t key, hashtab_datum_t datum, void *data)
 	return 0;
 }
 
-static int render_access_mask(uint32_t av, avtab_key_t *key, policydb_t *policydbp,
-		       FILE *fp)
+static int render_access_mask(uint32_t av, avtab_key_t *key,
+			      policydb_t *policydbp, FILE *fp)
 {
 	struct val_to_name v;
 	class_datum_t *cladatum;
@@ -70,12 +70,12 @@ static int render_access_mask(uint32_t av, avtab_key_t *key, policydb_t *policyd
 	for (i = 0; i < cladatum->permissions.nprim; i++) {
 		if (av & (1 << i)) {
 			v.val = i + 1;
-			rc = hashtab_map(cladatum->permissions.table,
-					 perm_name, &v);
+			rc = hashtab_map(cladatum->permissions.table, perm_name,
+					 &v);
 			if (!rc && cladatum->comdatum) {
-				rc = hashtab_map(cladatum->comdatum->
-						 permissions.table, perm_name,
-						 &v);
+				rc = hashtab_map(
+					cladatum->comdatum->permissions.table,
+					perm_name, &v);
 			}
 			if (rc)
 				perm = v.name;
@@ -104,8 +104,7 @@ static int render_key(avtab_key_t *key, policydb_t *p, FILE *fp)
 	return 0;
 }
 
-struct callback_data
-{
+struct callback_data {
 	uint32_t attr;
 	policydb_t *policy;
 	FILE *fp;
@@ -128,7 +127,8 @@ static int output_avrule(avtab_key_t *key, avtab_datum_t *datum, void *args)
 	return 0;
 }
 
-static int attribute_callback(hashtab_key_t key, hashtab_datum_t datum, void *datap)
+static int attribute_callback(hashtab_key_t key, hashtab_datum_t datum,
+			      void *datap)
 {
 	struct callback_data *cb_data = (struct callback_data *)datap;
 	type_datum_t *t = (type_datum_t *)datum;
@@ -136,9 +136,11 @@ static int attribute_callback(hashtab_key_t key, hashtab_datum_t datum, void *da
 	if (t->flavor == TYPE_ATTRIB) {
 		fprintf(cb_data->fp, "[Attribute %s]\n", key);
 		cb_data->attr = t->s.value;
-		if (avtab_map(&cb_data->policy->te_avtab, output_avrule, cb_data) < 0)
+		if (avtab_map(&cb_data->policy->te_avtab, output_avrule,
+			      cb_data) < 0)
 			return -1;
-		if (avtab_map(&cb_data->policy->te_cond_avtab, output_avrule, cb_data) < 0)
+		if (avtab_map(&cb_data->policy->te_cond_avtab, output_avrule,
+			      cb_data) < 0)
 			return -1;
 	}
 
@@ -164,8 +166,10 @@ static policydb_t *load_policy(const char *filename)
 	 * starting from the maximum supported policy version.
 	 */
 	if (!filename) {
-		for (suffix_ver = sepol_policy_kern_vers_max(); suffix_ver > 0; suffix_ver--) {
-			snprintf(pathname, sizeof(pathname), "%s.%d", selinux_binary_policy_path(), suffix_ver);
+		for (suffix_ver = sepol_policy_kern_vers_max(); suffix_ver > 0;
+		     suffix_ver--) {
+			snprintf(pathname, sizeof(pathname), "%s.%d",
+				 selinux_binary_policy_path(), suffix_ver);
 
 			if (access(pathname, F_OK) == 0) {
 				filename = pathname;
@@ -182,8 +186,8 @@ static policydb_t *load_policy(const char *filename)
 
 	fp = fopen(filename, "r");
 	if (fp == NULL) {
-		fprintf(stderr, "Can't open '%s':  %s\n",
-			filename, strerror(errno));
+		fprintf(stderr, "Can't open '%s':  %s\n", filename,
+			strerror(errno));
 		return NULL;
 	}
 
@@ -217,7 +221,6 @@ static policydb_t *load_policy(const char *filename)
 	fclose(fp);
 
 	return policydb;
-
 }
 
 static void usage(char *progname)

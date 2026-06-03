@@ -31,14 +31,7 @@
  * block than the global policy.  Thus the symbol table sizes are
  * smaller than those listed in policydb.c */
 static const unsigned int symtab_sizes[SYM_NUM] = {
-	2,
-	4,
-	8,
-	32,
-	16,
-	4,
-	2,
-	2,
+	2, 4, 8, 32, 16, 4, 2, 2,
 };
 
 avrule_block_t *avrule_block_create(void)
@@ -74,7 +67,7 @@ avrule_decl_t *avrule_decl_create(uint32_t decl_id)
 
 /* note that unlike the other destroy functions, this one does /NOT/
  * destroy the pointer itself */
-static void scope_index_destroy(scope_index_t * scope)
+static void scope_index_destroy(scope_index_t *scope)
 {
 	unsigned int i;
 	if (scope == NULL) {
@@ -91,7 +84,7 @@ static void scope_index_destroy(scope_index_t * scope)
 	free(scope->class_perms_map);
 }
 
-void avrule_decl_destroy(avrule_decl_t * x)
+void avrule_decl_destroy(avrule_decl_t *x)
 {
 	if (x == NULL) {
 		return;
@@ -109,7 +102,7 @@ void avrule_decl_destroy(avrule_decl_t * x)
 	free(x);
 }
 
-void avrule_block_destroy(avrule_block_t * x)
+void avrule_block_destroy(avrule_block_t *x)
 {
 	avrule_decl_t *decl;
 	if (x == NULL) {
@@ -124,7 +117,7 @@ void avrule_block_destroy(avrule_block_t * x)
 	free(x);
 }
 
-void avrule_block_list_destroy(avrule_block_t * x)
+void avrule_block_list_destroy(avrule_block_t *x)
 {
 	while (x != NULL) {
 		avrule_block_t *next = x->next;
@@ -135,8 +128,8 @@ void avrule_block_list_destroy(avrule_block_t * x)
 
 /* Get a conditional node from a avrule_decl with the same expression.
  * If that expression does not exist then create one. */
-cond_list_t *get_decl_cond_list(policydb_t * p, avrule_decl_t * decl,
-				cond_list_t * cond)
+cond_list_t *get_decl_cond_list(policydb_t *p, avrule_decl_t *decl,
+				cond_list_t *cond)
 {
 	cond_list_t *result;
 	int was_created;
@@ -152,10 +145,10 @@ cond_list_t *get_decl_cond_list(policydb_t * p, avrule_decl_t * decl,
  * marked as SCOPE_DECL, and any of its declaring block has been enabled,
  * then return 1.  Otherwise return 0. Can only be called after the 
  * decl_val_to_struct index has been created */
-int is_id_enabled(const char *id, const policydb_t * p, int symbol_table)
+int is_id_enabled(const char *id, const policydb_t *p, int symbol_table)
 {
-	const scope_datum_t *scope =
-	    (scope_datum_t *) hashtab_search(p->scope[symbol_table].table, id);
+	const scope_datum_t *scope = (scope_datum_t *)hashtab_search(
+		p->scope[symbol_table].table, id);
 	const avrule_decl_t *decl;
 	uint32_t len;
 
@@ -180,7 +173,7 @@ int is_id_enabled(const char *id, const policydb_t * p, int symbol_table)
 			}
 		}
 	} else {
-		decl = p->decl_val_to_struct[scope->decl_ids[len-1] - 1];
+		decl = p->decl_val_to_struct[scope->decl_ids[len - 1] - 1];
 		if (decl != NULL && decl->enabled) {
 			return 1;
 		}
@@ -200,9 +193,8 @@ int is_perm_existent(const class_datum_t *cladatum, const char *perm_id)
 	if (perm == NULL && cladatum->comdatum != 0) {
 		/* permission was not in this class.  before giving
 		 * up, check the class's parent */
-		perm =
-		    hashtab_search(cladatum->comdatum->permissions.table,
-				   perm_id);
+		perm = hashtab_search(cladatum->comdatum->permissions.table,
+				      perm_id);
 	}
 	if (perm == NULL) {
 		return 0;

@@ -19,10 +19,9 @@ typedef struct dbase_file dbase_t;
 #include "parse_utils.h"
 #include "debug.h"
 
-static int port_print(semanage_handle_t * handle,
-		      const semanage_port_t * port, FILE * str)
+static int port_print(semanage_handle_t *handle, const semanage_port_t *port,
+		      FILE *str)
 {
-
 	char *con_str = NULL;
 
 	int low = semanage_port_get_low(port);
@@ -50,17 +49,16 @@ static int port_print(semanage_handle_t * handle,
 	free(con_str);
 	return STATUS_SUCCESS;
 
-      err:
-	ERR(handle, "could not print port range %u - %u (%s) to stream",
-	    low, high, proto_str);
+err:
+	ERR(handle, "could not print port range %u - %u (%s) to stream", low,
+	    high, proto_str);
 	free(con_str);
 	return STATUS_ERR;
 }
 
-static int port_parse(semanage_handle_t * handle,
-		      parse_info_t * info, semanage_port_t * port)
+static int port_parse(semanage_handle_t *handle, parse_info_t *info,
+		      semanage_port_t *port)
 {
-
 	int low, high;
 	char *str = NULL;
 	semanage_context_t *con = NULL;
@@ -111,7 +109,6 @@ static int port_parse(semanage_handle_t * handle,
 	}
 
 	if (parse_optional_ch(info, '-') != STATUS_NODATA) {
-
 		if (parse_skip_space(handle, info) < 0)
 			goto err;
 		if (parse_fetch_int(handle, info, &high, ' ') < 0)
@@ -126,14 +123,15 @@ static int port_parse(semanage_handle_t * handle,
 	if (parse_fetch_string(handle, info, &str, ' ', 0) < 0)
 		goto err;
 	if (semanage_context_from_string(handle, str, &con) < 0) {
-		ERR(handle, "invalid security context \"%s\" (%s: %u)\n%s",
-		    str, info->filename, info->lineno, info->orig_line);
+		ERR(handle, "invalid security context \"%s\" (%s: %u)\n%s", str,
+		    info->filename, info->lineno, info->orig_line);
 		goto err;
 	}
 	if (con == NULL) {
-		ERR(handle, "<<none>> context is not valid "
-		    "for ports (%s: %u):\n%s", info->filename,
-		    info->lineno, info->orig_line);
+		ERR(handle,
+		    "<<none>> context is not valid "
+		    "for ports (%s: %u):\n%s",
+		    info->filename, info->lineno, info->orig_line);
 		goto err;
 	}
 	free(str);
@@ -148,11 +146,11 @@ static int port_parse(semanage_handle_t * handle,
 	semanage_context_free(con);
 	return STATUS_SUCCESS;
 
-      last:
+last:
 	parse_dispose_line(info);
 	return STATUS_NODATA;
 
-      err:
+err:
 	ERR(handle, "could not parse port record");
 	free(str);
 	semanage_context_free(con);
@@ -166,16 +164,10 @@ static const record_file_table_t SEMANAGE_PORT_FILE_RTABLE = {
 	.print = port_print,
 };
 
-int port_file_dbase_init(semanage_handle_t * handle,
-			 const char *path_ro,
-			 const char *path_rw,
-			 dbase_config_t * dconfig)
+int port_file_dbase_init(semanage_handle_t *handle, const char *path_ro,
+			 const char *path_rw, dbase_config_t *dconfig)
 {
-
-	if (dbase_file_init(handle,
-			    path_ro,
-			    path_rw,
-			    &SEMANAGE_PORT_RTABLE,
+	if (dbase_file_init(handle, path_ro, path_rw, &SEMANAGE_PORT_RTABLE,
 			    &SEMANAGE_PORT_FILE_RTABLE, &dconfig->dbase) < 0)
 		return STATUS_ERR;
 
@@ -183,8 +175,7 @@ int port_file_dbase_init(semanage_handle_t * handle,
 	return STATUS_SUCCESS;
 }
 
-void port_file_dbase_release(dbase_config_t * dconfig)
+void port_file_dbase_release(dbase_config_t *dconfig)
 {
-
 	dbase_file_release(dconfig->dbase);
 }

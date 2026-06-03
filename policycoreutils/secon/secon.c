@@ -15,25 +15,25 @@
 #include <selinux/selinux.h>
 #include <selinux/context.h>
 
-#define TRUE  1
+#define TRUE 1
 #define FALSE 0
 
-#define SECON_CONF_PROG_NAME "secon"	/* default program name */
-#define SECON_OPTS_SM "hVurtscmPRCfLp"	/* small options available, print */
-#define SECON_OPTS_GO "hVurtlscmPRCf:L:p:"	/* small options available, getopt */
+#define SECON_CONF_PROG_NAME "secon" /* default program name */
+#define SECON_OPTS_SM "hVurtscmPRCfLp" /* small options available, print */
+#define SECON_OPTS_GO "hVurtlscmPRCf:L:p:" /* small options available, getopt */
 
-#define OPTS_FROM_ARG      0
-#define OPTS_FROM_FILE     1
-#define OPTS_FROM_LINK     2
-#define OPTS_FROM_STDIN    3
-#define OPTS_FROM_CUR      4
-#define OPTS_FROM_CUREXE   5
-#define OPTS_FROM_CURFS    6
-#define OPTS_FROM_CURKEY   7
-#define OPTS_FROM_PROC     8
-#define OPTS_FROM_PROCEXE  9
-#define OPTS_FROM_PROCFS   10
-#define OPTS_FROM_PROCKEY  11
+#define OPTS_FROM_ARG 0
+#define OPTS_FROM_FILE 1
+#define OPTS_FROM_LINK 2
+#define OPTS_FROM_STDIN 3
+#define OPTS_FROM_CUR 4
+#define OPTS_FROM_CUREXE 5
+#define OPTS_FROM_CURFS 6
+#define OPTS_FROM_CURKEY 7
+#define OPTS_FROM_PROC 8
+#define OPTS_FROM_PROCEXE 9
+#define OPTS_FROM_PROCFS 10
+#define OPTS_FROM_PROCKEY 11
 
 struct context_color_t {
 	unsigned int valid;
@@ -49,19 +49,19 @@ struct context_color_t {
 };
 
 struct {
-	unsigned int disp_user:1;
-	unsigned int disp_role:1;
-	unsigned int disp_type:1;
-	unsigned int disp_sen:1;
-	unsigned int disp_clr:1;
-	unsigned int disp_mlsr:1;
+	unsigned int disp_user : 1;
+	unsigned int disp_role : 1;
+	unsigned int disp_type : 1;
+	unsigned int disp_sen : 1;
+	unsigned int disp_clr : 1;
+	unsigned int disp_mlsr : 1;
 
-	unsigned int disp_raw:1;
-	unsigned int disp_color:1;
+	unsigned int disp_raw : 1;
+	unsigned int disp_color : 1;
 
-	unsigned int disp_prompt:1;	/* no return, use : to sep */
+	unsigned int disp_prompt : 1; /* no return, use : to sep */
 
-	unsigned int from_type:8;	/* 16 bits, uses 4 bits */
+	unsigned int from_type : 8; /* 16 bits, uses 4 bits */
 
 	union {
 		pid_t pid;
@@ -69,9 +69,17 @@ struct {
 		const char *link;
 		const char *arg;
 	} f;
-} opts[1] = { {
-		FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
-		    FALSE, FALSE, FALSE, OPTS_FROM_ARG, {0} } };
+} opts[1] = { { FALSE,
+		FALSE,
+		FALSE,
+		FALSE,
+		FALSE,
+		FALSE,
+		FALSE,
+		FALSE,
+		FALSE,
+		OPTS_FROM_ARG,
+		{ 0 } } };
 
 static __attribute__((__noreturn__)) void usage(const char *name, int exit_code)
 {
@@ -117,8 +125,8 @@ static const char *opt_program_name(const char *argv0, const char *def)
 			def = argv0;
 
 		/* hack for libtool */
-		if ((strlen(def) > strlen("lt-"))
-		    && !memcmp("lt-", def, strlen("lt-")))
+		if ((strlen(def) > strlen("lt-")) &&
+		    !memcmp("lt-", def, strlen("lt-")))
 			def += 3;
 	}
 
@@ -154,60 +162,60 @@ static void cmd_line(int argc, char *argv[])
 	int optchar = 0;
 	const char *program_name = NULL;
 	struct option long_options[] = {
-		{"help", no_argument, NULL, 'h'},
-		{"version", no_argument, NULL, 'V'},
+		{ "help", no_argument, NULL, 'h' },
+		{ "version", no_argument, NULL, 'V' },
 
-		{"prompt", no_argument, NULL, 'P'},
+		{ "prompt", no_argument, NULL, 'P' },
 
-		{"user", no_argument, NULL, 'u'},
-		{"role", no_argument, NULL, 'r'},
-		{"type", no_argument, NULL, 't'},
-		{"level", no_argument, NULL, 'l'},	/* compat. */
-		{"sensitivity", no_argument, NULL, 's'},
-		{"range", no_argument, NULL, 'm'},
-		{"clearance", no_argument, NULL, 'c'},
-		{"mls-range", no_argument, NULL, 'm'},
+		{ "user", no_argument, NULL, 'u' },
+		{ "role", no_argument, NULL, 'r' },
+		{ "type", no_argument, NULL, 't' },
+		{ "level", no_argument, NULL, 'l' }, /* compat. */
+		{ "sensitivity", no_argument, NULL, 's' },
+		{ "range", no_argument, NULL, 'm' },
+		{ "clearance", no_argument, NULL, 'c' },
+		{ "mls-range", no_argument, NULL, 'm' },
 
-		{"raw", no_argument, NULL, 'R'},
-		{"color", no_argument, NULL, 'C'},
+		{ "raw", no_argument, NULL, 'R' },
+		{ "color", no_argument, NULL, 'C' },
 
-		{"current", no_argument, NULL, 1},
-		{"self", no_argument, NULL, 1},
-		{"current-exec", no_argument, NULL, 2},
-		{"self-exec", no_argument, NULL, 2},
-		{"current-fs", no_argument, NULL, 3},
-		{"self-fs", no_argument, NULL, 3},
-		{"current-key", no_argument, NULL, 4},
-		{"self-key", no_argument, NULL, 4},
+		{ "current", no_argument, NULL, 1 },
+		{ "self", no_argument, NULL, 1 },
+		{ "current-exec", no_argument, NULL, 2 },
+		{ "self-exec", no_argument, NULL, 2 },
+		{ "current-fs", no_argument, NULL, 3 },
+		{ "self-fs", no_argument, NULL, 3 },
+		{ "current-key", no_argument, NULL, 4 },
+		{ "self-key", no_argument, NULL, 4 },
 
-		{"parent", no_argument, NULL, 5},
-		{"parent-exec", no_argument, NULL, 6},
-		{"parent-fs", no_argument, NULL, 7},
-		{"parent-key", no_argument, NULL, 8},
+		{ "parent", no_argument, NULL, 5 },
+		{ "parent-exec", no_argument, NULL, 6 },
+		{ "parent-fs", no_argument, NULL, 7 },
+		{ "parent-key", no_argument, NULL, 8 },
 
-		{"file", required_argument, NULL, 'f'},
-		{"link", required_argument, NULL, 'L'},
-		{"pid", required_argument, NULL, 'p'},
-		{"pid-exec", required_argument, NULL, 9},
-		{"pid-fs", required_argument, NULL, 10},
-		{"pid-key", required_argument, NULL, 11},
+		{ "file", required_argument, NULL, 'f' },
+		{ "link", required_argument, NULL, 'L' },
+		{ "pid", required_argument, NULL, 'p' },
+		{ "pid-exec", required_argument, NULL, 9 },
+		{ "pid-fs", required_argument, NULL, 10 },
+		{ "pid-key", required_argument, NULL, 11 },
 
-		{NULL, 0, NULL, 0}
+		{ NULL, 0, NULL, 0 }
 	};
 	int done = FALSE;
 
 	program_name = opt_program_name(argv[0], SECON_CONF_PROG_NAME);
 
-	while ((optchar = getopt_long(argc, argv, SECON_OPTS_GO,
-				      long_options, NULL)) != -1) {
+	while ((optchar = getopt_long(argc, argv, SECON_OPTS_GO, long_options,
+				      NULL)) != -1) {
 		switch (optchar) {
 		case '?':
 			usage(program_name, EXIT_FAILURE);
 		case 'h':
 			usage(program_name, EXIT_SUCCESS);
 		case 'V':
-			fprintf(stdout,
-				" %s version %s.\n", program_name, VERSION);
+			fprintf(stdout, " %s version %s.\n", program_name,
+				VERSION);
 			exit(EXIT_SUCCESS);
 
 		case 'u':
@@ -309,11 +317,11 @@ static void cmd_line(int argc, char *argv[])
 		}
 	}
 
-	if (!done) {		/* default, if nothing specified */
+	if (!done) { /* default, if nothing specified */
 		opts->disp_user = TRUE;
 		opts->disp_role = TRUE;
 		opts->disp_type = TRUE;
-		if (!opts->disp_prompt) {	/* when displaying prompt, just output "normal" by default */
+		if (!opts->disp_prompt) { /* when displaying prompt, just output "normal" by default */
 			opts->disp_sen = TRUE;
 			opts->disp_clr = TRUE;
 		}
@@ -326,8 +334,8 @@ static void cmd_line(int argc, char *argv[])
 	argc -= optind;
 	argv += optind;
 
-	if (!argc && (opts->from_type == OPTS_FROM_ARG)
-	    && !isatty(STDIN_FILENO))
+	if (!argc && (opts->from_type == OPTS_FROM_ARG) &&
+	    !isatty(STDIN_FILENO))
 		opts->from_type = OPTS_FROM_STDIN;
 	if (!argc && (opts->from_type == OPTS_FROM_ARG))
 		opts->from_type = OPTS_FROM_CUR;
@@ -344,7 +352,7 @@ static void cmd_line(int argc, char *argv[])
 		errx(EXIT_FAILURE, "SELinux is not enabled");
 }
 
-static int my_getXcon_raw(pid_t pid, char  **con, const char *val)
+static int my_getXcon_raw(pid_t pid, char **con, const char *val)
 {
 	char buf[4096];
 	FILE *fp = NULL;
@@ -361,7 +369,7 @@ static int my_getXcon_raw(pid_t pid, char  **con, const char *val)
 	fclose(fp);
 
 	*con = NULL;
-	if (ptr) {		/* return *con = NULL, when proc file is empty */
+	if (ptr) { /* return *con = NULL, when proc file is empty */
 		char *tmp = strchr(ptr, '\n');
 
 		if (tmp)
@@ -404,29 +412,28 @@ static char *get_scon(void)
 		freecon(con_tmp);
 		break;
 
-	case OPTS_FROM_STDIN:
-		{
-			char buf[4096] = "";
-			char *ptr = buf;
+	case OPTS_FROM_STDIN: {
+		char buf[4096] = "";
+		char *ptr = buf;
 
-			while (!*ptr) {
-				if (!(ptr = fgets(buf, sizeof(buf), stdin)))
-					err(EXIT_FAILURE,
-					    " Couldn't read security context");
-
-				ptr += strspn(ptr, " \n\t");
-				ptr[strcspn(ptr, " \n\t")] = 0;
-			}
-
-			if (!(con_tmp = strdup(ptr)))
+		while (!*ptr) {
+			if (!(ptr = fgets(buf, sizeof(buf), stdin)))
 				err(EXIT_FAILURE,
-				    " Couldn't allocate security context");
-			if (selinux_trans_to_raw_context(con_tmp, &con) < 0)
-				err(EXIT_FAILURE,
-				    " Couldn't translate security context");
-			freecon(con_tmp);
-			break;
+				    " Couldn't read security context");
+
+			ptr += strspn(ptr, " \n\t");
+			ptr[strcspn(ptr, " \n\t")] = 0;
 		}
+
+		if (!(con_tmp = strdup(ptr)))
+			err(EXIT_FAILURE,
+			    " Couldn't allocate security context");
+		if (selinux_trans_to_raw_context(con_tmp, &con) < 0)
+			err(EXIT_FAILURE,
+			    " Couldn't translate security context");
+		freecon(con_tmp);
+		break;
+	}
 
 	case OPTS_FROM_CUR:
 		ret = getcon_raw(&con);
@@ -575,8 +582,7 @@ static char *disp__con_color_ansi(const char *name,
 	} else if (xstreq("type", name)) {
 		fg = disp__color_to_ansi(color->type_fg);
 		bg = disp__color_to_ansi(color->type_bg) + 10;
-	} else if (xstreq("sensitivity", name) ||
-		   xstreq("clearance", name) ||
+	} else if (xstreq("sensitivity", name) || xstreq("clearance", name) ||
 		   xstreq("mls-range", name)) {
 		fg = disp__color_to_ansi(color->range_fg);
 		bg = disp__color_to_ansi(color->range_bg) + 10;
@@ -600,12 +606,12 @@ static void disp__con_val(const char *name, const char *val,
 	assert(color);
 
 	if (!val)
-		val = "";	/* targeted has no "level" etc.,
+		val = ""; /* targeted has no "level" etc.,
 				   any errors should happen at context_new() time */
 
 	if (opts->disp_prompt) {
 		if (xstreq("mls-range", name) && !*val)
-			return;	/* skip, mls-range if it's empty */
+			return; /* skip, mls-range if it's empty */
 
 		if (opts->disp_color && color->valid) {
 			char *ansi = disp__con_color_ansi(name, color);
@@ -637,7 +643,7 @@ static void disp_con(const char *scon_raw)
 	else
 		scon = scon_trans;
 
-	if (!*scon) {		/* --self-exec and --self-fs etc. */
+	if (!*scon) { /* --self-exec and --self-fs etc. */
 		if (opts->disp_user)
 			disp__con_val("user", NULL, &color);
 		if (opts->disp_role)
@@ -706,7 +712,7 @@ static void disp_con(const char *scon_raw)
 
 		val = context_range_get(con);
 		if (!val)
-			val = "";	/* targeted has no "level" etc.,
+			val = ""; /* targeted has no "level" etc.,
 					   any errors should happen at context_new() time */
 
 		tmp = strdup(val);
@@ -726,7 +732,7 @@ static void disp_con(const char *scon_raw)
 
 		val = context_range_get(con);
 		if (!val)
-			val = "";	/* targeted has no "level" etc.,
+			val = ""; /* targeted has no "level" etc.,
 					   any errors should happen at context_new() time */
 
 		tmp = strdup(val);
@@ -734,7 +740,8 @@ static void disp_con(const char *scon_raw)
 			errx(EXIT_FAILURE, "Couldn't create context from: %s",
 			     scon);
 		if (strchr(tmp, '-'))
-			disp__con_val("clearance", strchr(tmp, '-') + 1, &color);
+			disp__con_val("clearance", strchr(tmp, '-') + 1,
+				      &color);
 		else
 			disp__con_val("clearance", tmp, &color);
 

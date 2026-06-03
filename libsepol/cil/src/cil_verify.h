@@ -38,12 +38,12 @@
 #include "cil_list.h"
 
 enum cil_syntax {
-	CIL_SYN_STRING      = 1 << 0,
-	CIL_SYN_LIST        = 1 << 1,
-	CIL_SYN_EMPTY_LIST  = 1 << 2,
-	CIL_SYN_N_LISTS     = 1 << 3,
-	CIL_SYN_N_STRINGS   = 1 << 4,
-	CIL_SYN_END         = 1 << 5
+	CIL_SYN_STRING = 1 << 0,
+	CIL_SYN_LIST = 1 << 1,
+	CIL_SYN_EMPTY_LIST = 1 << 2,
+	CIL_SYN_N_LISTS = 1 << 3,
+	CIL_SYN_N_STRINGS = 1 << 4,
+	CIL_SYN_END = 1 << 5
 };
 
 struct cil_args_verify {
@@ -55,20 +55,35 @@ struct cil_args_verify {
 	int *pass;
 };
 
-int cil_verify_name(const struct cil_db *db, const char *name, enum cil_flavor flavor);
-int __cil_verify_syntax(struct cil_tree_node *parse_current, enum cil_syntax s[], size_t len);
-int cil_verify_expr_syntax(struct cil_tree_node *current, enum cil_flavor op, enum cil_flavor expr_flavor);
-int cil_verify_constraint_leaf_expr_syntax(enum cil_flavor l_flavor, enum cil_flavor r_flavor, enum cil_flavor op, enum cil_flavor expr_flavor);
-int cil_verify_constraint_expr_syntax(struct cil_tree_node *current, enum cil_flavor op);
+int cil_verify_name(const struct cil_db *db, const char *name,
+		    enum cil_flavor flavor);
+int __cil_verify_syntax(struct cil_tree_node *parse_current,
+			enum cil_syntax s[], size_t len);
+int cil_verify_expr_syntax(struct cil_tree_node *current, enum cil_flavor op,
+			   enum cil_flavor expr_flavor);
+int cil_verify_constraint_leaf_expr_syntax(enum cil_flavor l_flavor,
+					   enum cil_flavor r_flavor,
+					   enum cil_flavor op,
+					   enum cil_flavor expr_flavor);
+int cil_verify_constraint_expr_syntax(struct cil_tree_node *current,
+				      enum cil_flavor op);
 int cil_verify_conditional_blocks(struct cil_tree_node *current);
-int cil_verify_decl_does_not_shadow_macro_parameter(struct cil_macro *macro, struct cil_tree_node *node, const char *name);
+int cil_verify_decl_does_not_shadow_macro_parameter(struct cil_macro *macro,
+						    struct cil_tree_node *node,
+						    const char *name);
 int __cil_verify_ranges(struct cil_list *list);
-int cil_verify_completed_ordered_list(struct cil_list *complete, struct cil_list *ordered_lists);
-int __cil_verify_ordered_node_helper(struct cil_tree_node *node, uint32_t *finished, void *extra_args);
+int cil_verify_completed_ordered_list(struct cil_list *complete,
+				      struct cil_list *ordered_lists);
+int __cil_verify_ordered_node_helper(struct cil_tree_node *node,
+				     uint32_t *finished, void *extra_args);
 int __cil_verify_ordered(struct cil_tree_node *current, enum cil_flavor flavor);
 int __cil_verify_initsids(struct cil_list *sids);
 int __cil_verify_senscat(struct cil_sens *sens, struct cil_cat *cat);
-int __cil_verify_helper(struct cil_tree_node *node, __attribute__((unused)) uint32_t *finished, void *extra_args);
-int __cil_pre_verify_helper(struct cil_tree_node *node, __attribute__((unused)) uint32_t *finished, void *extra_args);
+int __cil_verify_helper(struct cil_tree_node *node,
+			__attribute__((unused)) uint32_t *finished,
+			void *extra_args);
+int __cil_pre_verify_helper(struct cil_tree_node *node,
+			    __attribute__((unused)) uint32_t *finished,
+			    void *extra_args);
 
 #endif

@@ -67,14 +67,18 @@ extern int mls;
 /* Takes base, some number of modules, links them, and expands them
    reads source from myfiles array, which has the base string followed by
    each module string */
-static int expander_policy_init(policydb_t * mybase, int num_modules, policydb_t ** mymodules, policydb_t * myexpanded, const char *const *myfiles)
+static int expander_policy_init(policydb_t *mybase, int num_modules,
+				policydb_t **mymodules, policydb_t *myexpanded,
+				const char *const *myfiles)
 {
 	char *filename[num_modules + 1];
 	int i;
 
 	for (i = 0; i < num_modules + 1; i++) {
 		filename[i] = calloc(PATH_MAX, sizeof(char));
-		if (snprintf(filename[i], PATH_MAX, "policies/test-expander/%s%s", myfiles[i], mls ? ".mls" : ".std") < 0)
+		if (snprintf(filename[i], PATH_MAX,
+			     "policies/test-expander/%s%s", myfiles[i],
+			     mls ? ".mls" : ".std") < 0)
 			return -1;
 	}
 
@@ -106,8 +110,10 @@ static int expander_policy_init(policydb_t * mybase, int num_modules, policydb_t
 	for (i = 1; i < num_modules + 1; i++) {
 		mymodules[i - 1]->policy_type = POLICY_MOD;
 		mymodules[i - 1]->mls = mls;
-		if (read_source_policy(mymodules[i - 1], filename[i], myfiles[i])) {
-			fprintf(stderr, "read source policy failed %s\n", filename[i]);
+		if (read_source_policy(mymodules[i - 1], filename[i],
+				       myfiles[i])) {
+			fprintf(stderr, "read source policy failed %s\n",
+				filename[i]);
 			return -1;
 		}
 	}
@@ -139,33 +145,39 @@ int expander_test_init(void)
 	const char *user_files[] = { "user-base.conf", "user-module.conf" };
 	const char *alias_files[] = { "alias-base.conf", "alias-module.conf" };
 
-	rc = expander_policy_init(&basemod, 0, NULL, &base_expanded, &small_base_file);
+	rc = expander_policy_init(&basemod, 0, NULL, &base_expanded,
+				  &small_base_file);
 	if (rc != 0)
 		return rc;
 
 	mymod2 = &mod2;
-	rc = expander_policy_init(&basemod2, 1, &mymod2, &base_expanded2, files2);
+	rc = expander_policy_init(&basemod2, 1, &mymod2, &base_expanded2,
+				  files2);
 	if (rc != 0)
 		return rc;
 
-	rc = expander_policy_init(&base_only_mod, 0, NULL, &base_only_expanded, &base_only_file);
+	rc = expander_policy_init(&base_only_mod, 0, NULL, &base_only_expanded,
+				  &base_only_file);
 	if (rc != 0)
 		return rc;
 
 	mymod2 = &role_mod;
-	rc = expander_policy_init(&role_basemod, 1, &mymod2, &role_expanded, role_files);
+	rc = expander_policy_init(&role_basemod, 1, &mymod2, &role_expanded,
+				  role_files);
 	if (rc != 0)
 		return rc;
 
 	/* Just init the base for now, until we figure out how to separate out
 	   mls and non-mls tests since users can't be used in mls module */
 	mymod2 = &user_mod;
-	rc = expander_policy_init(&user_basemod, 0, NULL, &user_expanded, user_files);
+	rc = expander_policy_init(&user_basemod, 0, NULL, &user_expanded,
+				  user_files);
 	if (rc != 0)
 		return rc;
 
 	mymod2 = &alias_mod;
-	rc = expander_policy_init(&alias_basemod, 1, &mymod2, &alias_expanded, alias_files);
+	rc = expander_policy_init(&alias_basemod, 1, &mymod2, &alias_expanded,
+				  alias_files);
 	if (rc != 0)
 		return rc;
 
@@ -202,28 +214,35 @@ static void test_expander_indexes(void)
 
 static void test_expander_alias(void)
 {
-	test_alias_datum(&alias_expanded, "alias_check_1_a", "alias_check_1_t", 1, 0);
-	test_alias_datum(&alias_expanded, "alias_check_2_a", "alias_check_2_t", 1, 0);
-	test_alias_datum(&alias_expanded, "alias_check_3_a", "alias_check_3_t", 1, 0);
+	test_alias_datum(&alias_expanded, "alias_check_1_a", "alias_check_1_t",
+			 1, 0);
+	test_alias_datum(&alias_expanded, "alias_check_2_a", "alias_check_2_t",
+			 1, 0);
+	test_alias_datum(&alias_expanded, "alias_check_3_a", "alias_check_3_t",
+			 1, 0);
 }
 
 int expander_add_tests(CU_pSuite suite)
 {
-	if (NULL == CU_add_test(suite, "expander_indexes", test_expander_indexes)) {
+	if (NULL ==
+	    CU_add_test(suite, "expander_indexes", test_expander_indexes)) {
 		CU_cleanup_registry();
 		return CU_get_error();
 	}
 
-	if (NULL == CU_add_test(suite, "expander_attr_mapping", test_expander_attr_mapping)) {
+	if (NULL == CU_add_test(suite, "expander_attr_mapping",
+				test_expander_attr_mapping)) {
 		CU_cleanup_registry();
 		return CU_get_error();
 	}
 
-	if (NULL == CU_add_test(suite, "expander_role_mapping", test_expander_role_mapping)) {
+	if (NULL == CU_add_test(suite, "expander_role_mapping",
+				test_expander_role_mapping)) {
 		CU_cleanup_registry();
 		return CU_get_error();
 	}
-	if (NULL == CU_add_test(suite, "expander_user_mapping", test_expander_user_mapping)) {
+	if (NULL == CU_add_test(suite, "expander_user_mapping",
+				test_expander_user_mapping)) {
 		CU_cleanup_registry();
 		return CU_get_error();
 	}

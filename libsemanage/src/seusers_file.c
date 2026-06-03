@@ -19,10 +19,9 @@ typedef struct dbase_file dbase_t;
 #include "debug.h"
 #include "handle.h"
 
-static int seuser_print(semanage_handle_t * handle,
-			const semanage_seuser_t * seuser, FILE * str)
+static int seuser_print(semanage_handle_t *handle,
+			const semanage_seuser_t *seuser, FILE *str)
 {
-
 	const char *name = semanage_seuser_get_name(seuser);
 	const char *sename = semanage_seuser_get_sename(seuser);
 	const char *mls = semanage_seuser_get_mlsrange(seuser);
@@ -36,15 +35,14 @@ static int seuser_print(semanage_handle_t * handle,
 	fprintf(str, "\n");
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not print seuser %s to stream", name);
 	return STATUS_ERR;
 }
 
-static int seuser_parse(semanage_handle_t * handle,
-			parse_info_t * info, semanage_seuser_t * seuser)
+static int seuser_parse(semanage_handle_t *handle, parse_info_t *info,
+			semanage_seuser_t *seuser)
 {
-
 	char *str = NULL;
 
 	if (parse_skip_space(handle, info) < 0)
@@ -94,14 +92,14 @@ static int seuser_parse(semanage_handle_t * handle,
 	if (parse_assert_space(handle, info) < 0)
 		goto err;
 
-      out:
+out:
 	return STATUS_SUCCESS;
 
-      last:
+last:
 	parse_dispose_line(info);
 	return STATUS_NODATA;
 
-      err:
+err:
 	ERR(handle, "could not parse seuser record");
 	free(str);
 	parse_dispose_line(info);
@@ -114,16 +112,10 @@ static const record_file_table_t SEMANAGE_SEUSER_FILE_RTABLE = {
 	.print = seuser_print,
 };
 
-int seuser_file_dbase_init(semanage_handle_t * handle,
-			   const char *path_ro,
-			   const char *path_rw,
-			   dbase_config_t * dconfig)
+int seuser_file_dbase_init(semanage_handle_t *handle, const char *path_ro,
+			   const char *path_rw, dbase_config_t *dconfig)
 {
-
-	if (dbase_file_init(handle,
-			    path_ro,
-			    path_rw,
-			    &SEMANAGE_SEUSER_RTABLE,
+	if (dbase_file_init(handle, path_ro, path_rw, &SEMANAGE_SEUSER_RTABLE,
 			    &SEMANAGE_SEUSER_FILE_RTABLE, &dconfig->dbase) < 0)
 		return STATUS_ERR;
 
@@ -131,8 +123,7 @@ int seuser_file_dbase_init(semanage_handle_t * handle,
 	return STATUS_SUCCESS;
 }
 
-void seuser_file_dbase_release(dbase_config_t * dconfig)
+void seuser_file_dbase_release(dbase_config_t *dconfig)
 {
-
 	dbase_file_release(dconfig->dbase);
 }

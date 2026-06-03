@@ -33,11 +33,11 @@ typedef struct setab {
 	struct setab *next;
 } setab_t;
 
-#define COLOR_USER	0
-#define COLOR_ROLE	1
-#define COLOR_TYPE	2
-#define COLOR_RANGE	3
-#define N_COLOR		4
+#define COLOR_USER 0
+#define COLOR_ROLE 1
+#define COLOR_TYPE 2
+#define COLOR_RANGE 3
+#define N_COLOR 4
 
 #define AUX_RULE_COLOR "color"
 static const char *rules[] = { "user", "role", "type", "range" };
@@ -48,14 +48,15 @@ static semnemonic_t *mnemonics;
 
 static char *my_context;
 
-void finish_context_colors(void) {
+void finish_context_colors(void)
+{
 	setab_t *cur, *next;
 	semnemonic_t *ptr;
 	unsigned i;
 
 	for (i = 0; i < N_COLOR; i++) {
 		cur = clist[i];
-		while(cur) {
+		while (cur) {
 			next = cur->next;
 			free(cur->pattern);
 			free(cur);
@@ -77,7 +78,8 @@ void finish_context_colors(void) {
 	my_context = NULL;
 }
 
-static int check_dominance(const char *pattern, const char *raw) {
+static int check_dominance(const char *pattern, const char *raw)
+{
 	char *ctx;
 	context_t con;
 	struct av_decision avd;
@@ -85,7 +87,8 @@ static int check_dominance(const char *pattern, const char *raw) {
 	context_t my_tmp;
 	const char *raw_range;
 	security_class_t context_class = string_to_security_class("context");
-	access_vector_t context_contains_perm = string_to_av_perm(context_class, "contains");
+	access_vector_t context_contains_perm =
+		string_to_av_perm(context_class, "contains");
 
 	con = context_new(raw);
 	if (!con)
@@ -111,7 +114,8 @@ static int check_dominance(const char *pattern, const char *raw) {
 	if (!raw)
 		goto out;
 
-	rc = security_compute_av_raw(ctx, raw, context_class, context_contains_perm, &avd);
+	rc = security_compute_av_raw(ctx, raw, context_class,
+				     context_contains_perm, &avd);
 	if (rc)
 		goto out;
 
@@ -124,7 +128,8 @@ out:
 }
 
 static const secolor_t *find_color(int idx, const char *component,
-				   const char *raw) {
+				   const char *raw)
+{
 	setab_t *ptr = clist[idx];
 
 	if (idx == COLOR_RANGE) {
@@ -137,11 +142,11 @@ static const secolor_t *find_color(int idx, const char *component,
 
 	while (ptr) {
 		if (idx == COLOR_RANGE) {
-		    if (check_dominance(ptr->pattern, raw) == 0)
-			return &ptr->color;
+			if (check_dominance(ptr->pattern, raw) == 0)
+				return &ptr->color;
 		} else {
-		    if (fnmatch(ptr->pattern, component, 0) == 0)
-			return &ptr->color;
+			if (fnmatch(ptr->pattern, component, 0) == 0)
+				return &ptr->color;
 		}
 		ptr = ptr->next;
 	}
@@ -149,11 +154,13 @@ static const secolor_t *find_color(int idx, const char *component,
 	return NULL;
 }
 
-static int add_secolor(int idx, char *pattern, uint32_t fg, uint32_t bg) {
+static int add_secolor(int idx, char *pattern, uint32_t fg, uint32_t bg)
+{
 	setab_t *cptr;
 
 	cptr = calloc(1, sizeof(setab_t));
-	if (!cptr) return -1;
+	if (!cptr)
+		return -1;
 
 	cptr->pattern = strdup(pattern);
 	if (!cptr->pattern) {
@@ -211,17 +218,18 @@ static int add_mnemonic(const char *name, uint32_t color)
 	return 0;
 }
 
-
 /* Process line from color file.
    May modify the data pointed to by the buffer parameter */
-static int process_color(char *buffer, int line) {
+static int process_color(char *buffer, int line)
+{
 	char rule[10], pat[256], f[256], b[256];
 	uint32_t i, fg, bg;
 	int ret;
 
-	while(isspace(*buffer))
+	while (isspace(*buffer))
 		buffer++;
-	if(buffer[0] == '#' || buffer[0] == '\0') return 0;
+	if (buffer[0] == '#' || buffer[0] == '\0')
+		return 0;
 
 	ret = sscanf(buffer, "%8s %255s = %255s %255s", rule, pat, f, b);
 	if (ret == 4) {
@@ -229,8 +237,7 @@ static int process_color(char *buffer, int line) {
 			for (i = 0; i < N_COLOR; i++)
 				if (!strcmp(rule, rules[i]))
 					return add_secolor(i, pat, fg, bg);
-	}
-	else if (ret == 3) {
+	} else if (ret == 3) {
 		if (!strcmp(rule, AUX_RULE_COLOR)) {
 			if (sscanf(f, "#%x", &fg) == 1)
 				return add_mnemonic(pat, fg);
@@ -243,7 +250,8 @@ static int process_color(char *buffer, int line) {
 
 /* Read in color file.
  */
-int init_colors(void) {
+int init_colors(void)
+{
 	FILE *cfg = NULL;
 	size_t size = 0;
 	char *buffer = NULL;
@@ -252,11 +260,13 @@ int init_colors(void) {
 	getcon(&my_context);
 
 	cfg = fopen(selinux_colors_path(), "r");
-	if (!cfg) return 1;
+	if (!cfg)
+		return 1;
 
 	__fsetlocking(cfg, FSETLOCKING_BYCALLER);
 	while (getline(&buffer, &size, cfg) > 0) {
-		if( process_color(buffer, ++line) < 0 ) break;
+		if (process_color(buffer, ++line) < 0)
+			break;
 	}
 	free(buffer);
 
@@ -273,7 +283,8 @@ static const unsigned precedence[N_COLOR][N_COLOR - 1] = {
 
 static const secolor_t default_color = { 0x000000, 0xffffff };
 
-static int parse_components(context_t con, char **components) {
+static int parse_components(context_t con, char **components)
+{
 	components[COLOR_USER] = (char *)context_user_get(con);
 	components[COLOR_ROLE] = (char *)context_role_get(con);
 	components[COLOR_TYPE] = (char *)context_type_get(con);
@@ -284,7 +295,8 @@ static int parse_components(context_t con, char **components) {
 
 /* Look up colors.
  */
-int raw_color(const char *raw, char **color_str) {
+int raw_color(const char *raw, char **color_str)
+{
 #define CHARS_PER_COLOR 16
 	context_t con;
 	uint32_t i, j, mask = 0;
@@ -332,9 +344,9 @@ int raw_color(const char *raw, char **color_str) {
 
 	/* print results into a big long string */
 	for (i = 0; i < N_COLOR; i++) {
-		snprintf(buf, sizeof(buf), "#%06x #%06x ",
-			 items[i]->fg, items[i]->bg);
-		strncat(result, buf, result_size-1);
+		snprintf(buf, sizeof(buf), "#%06x #%06x ", items[i]->fg,
+			 items[i]->bg);
+		strncat(result, buf, result_size - 1);
 	}
 
 	*color_str = result;

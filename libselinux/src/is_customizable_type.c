@@ -42,8 +42,8 @@ static void customizable_init(void)
 		list = calloc(ctr + 1, sizeof(char *));
 		if (list) {
 			i = 0;
-			while (fgets_unlocked(buf, selinux_page_size, fp)
-			       && i < ctr) {
+			while (fgets_unlocked(buf, selinux_page_size, fp) &&
+			       i < ctr) {
 				buf[strlen(buf) - 1] = 0;
 				list[i] = strdup(buf);
 				if (!list[i]) {
@@ -65,7 +65,7 @@ static void customizable_init(void)
 	customizable_list = list;
 }
 
-int is_context_customizable(const char * scontext)
+int is_context_customizable(const char *scontext)
 {
 	int i;
 	const char *type;

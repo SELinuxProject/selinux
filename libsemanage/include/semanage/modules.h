@@ -32,8 +32,9 @@ typedef struct semanage_module_key semanage_module_key_t;
  * a transaction
  */
 
-extern int semanage_module_install(semanage_handle_t *,
-				   char *module_data, size_t data_len, const char *name, const char *ext_lang);
+extern int semanage_module_install(semanage_handle_t *, char *module_data,
+				   size_t data_len, const char *name,
+				   const char *ext_lang);
 extern int semanage_module_install_file(semanage_handle_t *,
 					const char *module_name);
 extern int semanage_module_remove(semanage_handle_t *, char *module_name);
@@ -53,16 +54,15 @@ typedef struct semanage_module_info semanage_module_info_t;
  * Returns 0 on success and -1 on error.
  */
 extern int semanage_module_extract(semanage_handle_t *sh,
-				  semanage_module_key_t *modkey,
-				  int extract_cil,
-				  void **mapped_data,
-				  size_t *data_len,
-				  semanage_module_info_t **modinfo);
-extern int semanage_module_list(semanage_handle_t *,
-				semanage_module_info_t **, int *num_modules);
+				   semanage_module_key_t *modkey,
+				   int extract_cil, void **mapped_data,
+				   size_t *data_len,
+				   semanage_module_info_t **modinfo);
+extern int semanage_module_list(semanage_handle_t *, semanage_module_info_t **,
+				int *num_modules);
 extern void semanage_module_info_datum_destroy(semanage_module_info_t *);
-extern semanage_module_info_t *semanage_module_list_nth(semanage_module_info_t * list,
-							int n);
+extern semanage_module_info_t *
+semanage_module_list_nth(semanage_module_info_t *list, int n);
 extern const char *semanage_module_get_name(semanage_module_info_t *);
 
 /* Module Info */
@@ -256,8 +256,7 @@ extern int semanage_module_list_all(semanage_handle_t *sh,
  */
 extern int semanage_module_install_info(semanage_handle_t *sh,
 					const semanage_module_info_t *modinfo,
-					char *data,
-					size_t data_len);
+					char *data, size_t data_len);
 
 /* Remove the module indicated by @modkey.
  * @modkey must have key values filled in.

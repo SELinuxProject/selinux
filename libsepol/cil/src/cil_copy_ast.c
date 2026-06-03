@@ -62,7 +62,8 @@ void cil_copy_list(struct cil_list *data, struct cil_list **copy)
 			break;
 		case CIL_LIST: {
 			struct cil_list *new_sub = NULL;
-			cil_copy_list((struct cil_list*)orig_item->data, &new_sub);
+			cil_copy_list((struct cil_list *)orig_item->data,
+				      &new_sub);
 			cil_list_append(new, CIL_LIST, new_sub);
 			break;
 		}
@@ -73,11 +74,11 @@ void cil_copy_list(struct cil_list *data, struct cil_list **copy)
 			pn->str = po->str;
 			pn->flavor = po->flavor;
 			cil_list_append(new, CIL_PARAM, pn);
-		}
-			break;
+		} break;
 
 		default:
-			cil_list_append(new, orig_item->flavor, orig_item->data);
+			cil_list_append(new, orig_item->flavor,
+					orig_item->data);
 			break;
 		}
 	}
@@ -85,7 +86,8 @@ void cil_copy_list(struct cil_list *data, struct cil_list **copy)
 	*copy = new;
 }
 
-static int cil_copy_node(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+static int cil_copy_node(__attribute__((unused)) struct cil_db *db, void *data,
+			 void **copy, __attribute__((unused)) symtab_t *symtab)
 {
 	char *new = NULL;
 
@@ -97,7 +99,8 @@ static int cil_copy_node(__attribute__((unused)) struct cil_db *db, void *data, 
 	return SEPOL_OK;
 }
 
-int cil_copy_ordered(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_ordered(__attribute__((unused)) struct cil_db *db, void *data,
+		     void **copy, __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_ordered *orig = data;
 	struct cil_ordered *new = NULL;
@@ -115,7 +118,8 @@ int cil_copy_ordered(__attribute__((unused)) struct cil_db *db, void *data, void
 	return SEPOL_OK;
 }
 
-int cil_copy_block(__attribute__((unused)) struct cil_db *db, void *data, void **copy, symtab_t *symtab)
+int cil_copy_block(__attribute__((unused)) struct cil_db *db, void *data,
+		   void **copy, symtab_t *symtab)
 {
 	struct cil_block *orig = data;
 	char *key = orig->datum.name;
@@ -124,11 +128,15 @@ int cil_copy_block(__attribute__((unused)) struct cil_db *db, void *data, void *
 	cil_symtab_get_datum(symtab, key, &datum);
 	if (datum != NULL) {
 		if (FLAVOR(datum) != CIL_BLOCK) {
-			cil_tree_log(NODE(orig), CIL_ERR, "Block %s being copied", key);
-			cil_tree_log(NODE(datum), CIL_ERR, "  Conflicts with %s already declared", cil_node_to_string(NODE(datum)));
+			cil_tree_log(NODE(orig), CIL_ERR,
+				     "Block %s being copied", key);
+			cil_tree_log(NODE(datum), CIL_ERR,
+				     "  Conflicts with %s already declared",
+				     cil_node_to_string(NODE(datum)));
 			return SEPOL_ERR;
 		}
-		cil_tree_log(NODE(orig), CIL_WARN, "Block %s being copied", key);
+		cil_tree_log(NODE(orig), CIL_WARN, "Block %s being copied",
+			     key);
 		cil_tree_log(NODE(datum), CIL_WARN, "  Previously declared");
 		*copy = datum;
 	} else {
@@ -140,7 +148,9 @@ int cil_copy_block(__attribute__((unused)) struct cil_db *db, void *data, void *
 	return SEPOL_OK;
 }
 
-int cil_copy_blockabstract(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_blockabstract(__attribute__((unused)) struct cil_db *db,
+			   void *data, void **copy,
+			   __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_blockabstract *orig = data;
 	struct cil_blockabstract *new = NULL;
@@ -155,7 +165,8 @@ int cil_copy_blockabstract(__attribute__((unused)) struct cil_db *db, void *data
 	return SEPOL_OK;
 }
 
-int cil_copy_blockinherit(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_blockinherit(__attribute__((unused)) struct cil_db *db, void *data,
+			  void **copy, __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_blockinherit *orig = data;
 	struct cil_blockinherit *new = NULL;
@@ -170,7 +181,9 @@ int cil_copy_blockinherit(__attribute__((unused)) struct cil_db *db, void *data,
 	return SEPOL_OK;
 }
 
-static int cil_copy_policycap(__attribute__((unused)) struct cil_db *db, __attribute__((unused)) void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+static int cil_copy_policycap(__attribute__((unused)) struct cil_db *db,
+			      __attribute__((unused)) void *data, void **copy,
+			      __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_policycap *new;
 
@@ -180,7 +193,9 @@ static int cil_copy_policycap(__attribute__((unused)) struct cil_db *db, __attri
 	return SEPOL_OK;
 }
 
-int cil_copy_perm(__attribute__((unused)) struct cil_db *db, __attribute__((unused)) void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_perm(__attribute__((unused)) struct cil_db *db,
+		  __attribute__((unused)) void *data, void **copy,
+		  __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_perm *new;
 
@@ -190,14 +205,16 @@ int cil_copy_perm(__attribute__((unused)) struct cil_db *db, __attribute__((unus
 	return SEPOL_OK;
 }
 
-void cil_copy_classperms(struct cil_classperms *orig, struct cil_classperms **new)
+void cil_copy_classperms(struct cil_classperms *orig,
+			 struct cil_classperms **new)
 {
 	cil_classperms_init(new);
 	(*new)->class_str = orig->class_str;
 	cil_copy_list(orig->perm_strs, &((*new)->perm_strs));
 }
 
-void cil_copy_classperms_set(struct cil_classperms_set *orig, struct cil_classperms_set **new)
+void cil_copy_classperms_set(struct cil_classperms_set *orig,
+			     struct cil_classperms_set **new)
 {
 	cil_classperms_set_init(new);
 	(*new)->set_str = orig->set_str;
@@ -225,7 +242,8 @@ void cil_copy_classperms_list(struct cil_list *orig, struct cil_list **new)
 	}
 }
 
-int cil_copy_classmapping(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_classmapping(__attribute__((unused)) struct cil_db *db, void *data,
+			  void **copy, __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_classmapping *orig = data;
 	struct cil_classmapping *new = NULL;
@@ -244,7 +262,9 @@ int cil_copy_classmapping(__attribute__((unused)) struct cil_db *db, void *data,
 	return SEPOL_OK;
 }
 
-int cil_copy_class(__attribute__((unused)) struct cil_db *db, __attribute__((unused)) void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_class(__attribute__((unused)) struct cil_db *db,
+		   __attribute__((unused)) void *data, void **copy,
+		   __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_class *new;
 
@@ -254,7 +274,8 @@ int cil_copy_class(__attribute__((unused)) struct cil_db *db, __attribute__((unu
 	return SEPOL_OK;
 }
 
-int cil_copy_classpermission(__attribute__((unused)) struct cil_db *db, void *data, void **copy, symtab_t *symtab)
+int cil_copy_classpermission(__attribute__((unused)) struct cil_db *db,
+			     void *data, void **copy, symtab_t *symtab)
 {
 	struct cil_classpermission *orig = data;
 	struct cil_classpermission *new;
@@ -264,7 +285,8 @@ int cil_copy_classpermission(__attribute__((unused)) struct cil_db *db, void *da
 	if (key != NULL) {
 		cil_symtab_get_datum(symtab, key, &datum);
 		if (datum != NULL) {
-			cil_log(CIL_ERR, "Named classpermission cannot be redefined\n");
+			cil_log(CIL_ERR,
+				"Named classpermission cannot be redefined\n");
 			return SEPOL_ERR;
 		}
 	}
@@ -276,7 +298,9 @@ int cil_copy_classpermission(__attribute__((unused)) struct cil_db *db, void *da
 	return SEPOL_OK;
 }
 
-int cil_copy_classpermissionset(__attribute__((unused)) struct cil_db *db, void *data, void **copy,  __attribute__((unused)) symtab_t *symtab)
+int cil_copy_classpermissionset(__attribute__((unused)) struct cil_db *db,
+				void *data, void **copy,
+				__attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_classpermissionset *orig = data;
 	struct cil_classpermissionset *new = NULL;
@@ -293,7 +317,8 @@ int cil_copy_classpermissionset(__attribute__((unused)) struct cil_db *db, void 
 	return SEPOL_OK;
 }
 
-int cil_copy_classcommon(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_classcommon(__attribute__((unused)) struct cil_db *db, void *data,
+			 void **copy, __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_classcommon *orig = data;
 	struct cil_classcommon *new = NULL;
@@ -310,7 +335,9 @@ int cil_copy_classcommon(__attribute__((unused)) struct cil_db *db, void *data, 
 	return SEPOL_OK;
 }
 
-int cil_copy_sid(__attribute__((unused)) struct cil_db *db, __attribute__((unused)) void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_sid(__attribute__((unused)) struct cil_db *db,
+		 __attribute__((unused)) void *data, void **copy,
+		 __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_sid *new;
 
@@ -320,7 +347,8 @@ int cil_copy_sid(__attribute__((unused)) struct cil_db *db, __attribute__((unuse
 	return SEPOL_OK;
 }
 
-int cil_copy_sidcontext(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_sidcontext(struct cil_db *db, void *data, void **copy,
+			__attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_sidcontext *orig = data;
 	struct cil_sidcontext *new = NULL;
@@ -339,7 +367,9 @@ int cil_copy_sidcontext(struct cil_db *db, void *data, void **copy, __attribute_
 	return SEPOL_OK;
 }
 
-int cil_copy_user(__attribute__((unused)) struct cil_db *db, __attribute__((unused)) void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_user(__attribute__((unused)) struct cil_db *db,
+		  __attribute__((unused)) void *data, void **copy,
+		  __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_user *new;
 
@@ -349,7 +379,9 @@ int cil_copy_user(__attribute__((unused)) struct cil_db *db, __attribute__((unus
 	return SEPOL_OK;
 }
 
-int cil_copy_userattribute(__attribute__((unused)) struct cil_db *db, __attribute__((unused)) void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_userattribute(__attribute__((unused)) struct cil_db *db,
+			   __attribute__((unused)) void *data, void **copy,
+			   __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_userattribute *new;
 
@@ -359,7 +391,8 @@ int cil_copy_userattribute(__attribute__((unused)) struct cil_db *db, __attribut
 	return SEPOL_OK;
 }
 
-int cil_copy_userattributeset(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_userattributeset(struct cil_db *db, void *data, void **copy,
+			      __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_userattributeset *orig = data;
 	struct cil_userattributeset *new = NULL;
@@ -376,7 +409,8 @@ int cil_copy_userattributeset(struct cil_db *db, void *data, void **copy, __attr
 	return SEPOL_OK;
 }
 
-int cil_copy_userrole(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_userrole(__attribute__((unused)) struct cil_db *db, void *data,
+		      void **copy, __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_userrole *orig = data;
 	struct cil_userrole *new = NULL;
@@ -391,7 +425,8 @@ int cil_copy_userrole(__attribute__((unused)) struct cil_db *db, void *data, voi
 	return SEPOL_OK;
 }
 
-int cil_copy_userlevel(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_userlevel(struct cil_db *db, void *data, void **copy,
+		       __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_userlevel *orig = data;
 	struct cil_userlevel *new = NULL;
@@ -411,7 +446,8 @@ int cil_copy_userlevel(struct cil_db *db, void *data, void **copy, __attribute__
 	return SEPOL_OK;
 }
 
-int cil_copy_userrange(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_userrange(struct cil_db *db, void *data, void **copy,
+		       __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_userrange *orig = data;
 	struct cil_userrange *new = NULL;
@@ -432,7 +468,8 @@ int cil_copy_userrange(struct cil_db *db, void *data, void **copy, __attribute__
 	return SEPOL_OK;
 }
 
-int cil_copy_userprefix(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_userprefix(__attribute__((unused)) struct cil_db *db, void *data,
+			void **copy, __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_userprefix *orig = data;
 	struct cil_userprefix *new = NULL;
@@ -447,7 +484,9 @@ int cil_copy_userprefix(__attribute__((unused)) struct cil_db *db, void *data, v
 	return SEPOL_OK;
 }
 
-int cil_copy_role(__attribute__((unused)) struct cil_db *db, __attribute__((unused)) void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_role(__attribute__((unused)) struct cil_db *db,
+		  __attribute__((unused)) void *data, void **copy,
+		  __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_role *new;
 
@@ -457,7 +496,8 @@ int cil_copy_role(__attribute__((unused)) struct cil_db *db, __attribute__((unus
 	return SEPOL_OK;
 }
 
-int cil_copy_roletype(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_roletype(__attribute__((unused)) struct cil_db *db, void *data,
+		      void **copy, __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_roletype *orig = data;
 	struct cil_roletype *new = NULL;
@@ -472,7 +512,9 @@ int cil_copy_roletype(__attribute__((unused)) struct cil_db *db, void *data, voi
 	return SEPOL_OK;
 }
 
-int cil_copy_roleattribute(__attribute__((unused)) struct cil_db *db, __attribute__((unused)) void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_roleattribute(__attribute__((unused)) struct cil_db *db,
+			   __attribute__((unused)) void *data, void **copy,
+			   __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_roleattribute *new;
 
@@ -482,7 +524,8 @@ int cil_copy_roleattribute(__attribute__((unused)) struct cil_db *db, __attribut
 	return SEPOL_OK;
 }
 
-int cil_copy_roleattributeset(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_roleattributeset(struct cil_db *db, void *data, void **copy,
+			      __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_roleattributeset *orig = data;
 	struct cil_roleattributeset *new = NULL;
@@ -490,7 +533,7 @@ int cil_copy_roleattributeset(struct cil_db *db, void *data, void **copy, __attr
 	cil_roleattributeset_init(&new);
 
 	new->attr_str = orig->attr_str;
-	
+
 	cil_copy_expr(db, orig->str_expr, &new->str_expr);
 	cil_copy_expr(db, orig->datum_expr, &new->datum_expr);
 
@@ -499,7 +542,8 @@ int cil_copy_roleattributeset(struct cil_db *db, void *data, void **copy, __attr
 	return SEPOL_OK;
 }
 
-int cil_copy_roleallow(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_roleallow(__attribute__((unused)) struct cil_db *db, void *data,
+		       void **copy, __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_roleallow *orig = data;
 	struct cil_roleallow *new = NULL;
@@ -514,7 +558,9 @@ int cil_copy_roleallow(__attribute__((unused)) struct cil_db *db, void *data, vo
 	return SEPOL_OK;
 }
 
-int cil_copy_type(__attribute__((unused)) struct cil_db *db, __attribute__((unused)) void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_type(__attribute__((unused)) struct cil_db *db,
+		  __attribute__((unused)) void *data, void **copy,
+		  __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_type *new;
 
@@ -524,7 +570,9 @@ int cil_copy_type(__attribute__((unused)) struct cil_db *db, __attribute__((unus
 	return SEPOL_OK;
 }
 
-int cil_copy_typepermissive(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_typepermissive(__attribute__((unused)) struct cil_db *db,
+			    void *data, void **copy,
+			    __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_typepermissive *orig = data;
 	struct cil_typepermissive *new = NULL;
@@ -538,7 +586,9 @@ int cil_copy_typepermissive(__attribute__((unused)) struct cil_db *db, void *dat
 	return SEPOL_OK;
 }
 
-int cil_copy_typeneveraudit(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_typeneveraudit(__attribute__((unused)) struct cil_db *db,
+			    void *data, void **copy,
+			    __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_typeneveraudit *orig = data;
 	struct cil_typeneveraudit *new = NULL;
@@ -552,7 +602,9 @@ int cil_copy_typeneveraudit(__attribute__((unused)) struct cil_db *db, void *dat
 	return SEPOL_OK;
 }
 
-int cil_copy_typeattribute(__attribute__((unused)) struct cil_db *db, __attribute__((unused)) void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_typeattribute(__attribute__((unused)) struct cil_db *db,
+			   __attribute__((unused)) void *data, void **copy,
+			   __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_typeattribute *new;
 
@@ -562,7 +614,8 @@ int cil_copy_typeattribute(__attribute__((unused)) struct cil_db *db, __attribut
 	return SEPOL_OK;
 }
 
-int cil_copy_typeattributeset(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_typeattributeset(struct cil_db *db, void *data, void **copy,
+			      __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_typeattributeset *orig = data;
 	struct cil_typeattributeset *new = NULL;
@@ -579,7 +632,10 @@ int cil_copy_typeattributeset(struct cil_db *db, void *data, void **copy, __attr
 	return SEPOL_OK;
 }
 
-static int cil_copy_expandtypeattribute(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+static int
+cil_copy_expandtypeattribute(__attribute__((unused)) struct cil_db *db,
+			     void *data, void **copy,
+			     __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_expandtypeattribute *orig = data;
 	struct cil_expandtypeattribute *new = NULL;
@@ -601,7 +657,9 @@ static int cil_copy_expandtypeattribute(__attribute__((unused)) struct cil_db *d
 	return SEPOL_OK;
 }
 
-static int cil_copy_alias(__attribute__((unused)) struct cil_db *db, __attribute__((unused)) void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+static int cil_copy_alias(__attribute__((unused)) struct cil_db *db,
+			  __attribute__((unused)) void *data, void **copy,
+			  __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_alias *new;
 
@@ -611,7 +669,9 @@ static int cil_copy_alias(__attribute__((unused)) struct cil_db *db, __attribute
 	return SEPOL_OK;
 }
 
-static int cil_copy_aliasactual(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused))symtab_t *symtab)
+static int cil_copy_aliasactual(__attribute__((unused)) struct cil_db *db,
+				void *data, void **copy,
+				__attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_aliasactual *orig = data;
 	struct cil_aliasactual *new = NULL;
@@ -628,7 +688,9 @@ static int cil_copy_aliasactual(__attribute__((unused)) struct cil_db *db, void 
 	return SEPOL_OK;
 }
 
-static int cil_copy_roletransition(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+static int cil_copy_roletransition(__attribute__((unused)) struct cil_db *db,
+				   void *data, void **copy,
+				   __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_roletransition *orig = data;
 	struct cil_roletransition *new = NULL;
@@ -645,7 +707,9 @@ static int cil_copy_roletransition(__attribute__((unused)) struct cil_db *db, vo
 	return SEPOL_OK;
 }
 
-int cil_copy_nametypetransition(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_nametypetransition(__attribute__((unused)) struct cil_db *db,
+				void *data, void **copy,
+				__attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_nametypetransition *orig = data;
 	struct cil_nametypetransition *new = NULL;
@@ -659,13 +723,13 @@ int cil_copy_nametypetransition(__attribute__((unused)) struct cil_db *db, void 
 	new->name = orig->name;
 	new->result_str = orig->result_str;
 
-
 	*copy = new;
 
 	return SEPOL_OK;
 }
 
-int cil_copy_rangetransition(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_rangetransition(struct cil_db *db, void *data, void **copy,
+			     __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_rangetransition *orig = data;
 	struct cil_rangetransition *new = NULL;
@@ -688,7 +752,8 @@ int cil_copy_rangetransition(struct cil_db *db, void *data, void **copy, __attri
 	return SEPOL_OK;
 }
 
-int cil_copy_bool(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_bool(__attribute__((unused)) struct cil_db *db, void *data,
+		  void **copy, __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_bool *orig = data;
 	struct cil_bool *new;
@@ -700,7 +765,9 @@ int cil_copy_bool(__attribute__((unused)) struct cil_db *db, void *data, void **
 	return SEPOL_OK;
 }
 
-static int cil_copy_tunable(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+static int cil_copy_tunable(__attribute__((unused)) struct cil_db *db,
+			    void *data, void **copy,
+			    __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_tunable *orig = data;
 	struct cil_tunable *new;
@@ -712,14 +779,17 @@ static int cil_copy_tunable(__attribute__((unused)) struct cil_db *db, void *dat
 	return SEPOL_OK;
 }
 
-static void cil_copy_fill_permissionx(struct cil_db *db, struct cil_permissionx *orig, struct cil_permissionx *new)
+static void cil_copy_fill_permissionx(struct cil_db *db,
+				      struct cil_permissionx *orig,
+				      struct cil_permissionx *new)
 {
 	new->kind = orig->kind;
 	new->obj_str = orig->obj_str;
 	cil_copy_expr(db, orig->expr_str, &new->expr_str);
 }
 
-int cil_copy_avrule(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_avrule(struct cil_db *db, void *data, void **copy,
+		    __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_avrule *orig = data;
 	struct cil_avrule *new = NULL;
@@ -732,13 +802,15 @@ int cil_copy_avrule(struct cil_db *db, void *data, void **copy, __attribute__((u
 	new->tgt_str = orig->tgt_str;
 
 	if (!new->is_extended) {
-		cil_copy_classperms_list(orig->perms.classperms, &new->perms.classperms);
+		cil_copy_classperms_list(orig->perms.classperms,
+					 &new->perms.classperms);
 	} else {
 		if (orig->perms.x.permx_str != NULL) {
 			new->perms.x.permx_str = orig->perms.x.permx_str;
 		} else {
 			cil_permissionx_init(&new->perms.x.permx);
-			cil_copy_fill_permissionx(db, orig->perms.x.permx, new->perms.x.permx);
+			cil_copy_fill_permissionx(db, orig->perms.x.permx,
+						  new->perms.x.permx);
 		}
 	}
 
@@ -747,7 +819,8 @@ int cil_copy_avrule(struct cil_db *db, void *data, void **copy, __attribute__((u
 	return SEPOL_OK;
 }
 
-static int cil_copy_permissionx(struct cil_db *db, void *data, void **copy, symtab_t *symtab)
+static int cil_copy_permissionx(struct cil_db *db, void *data, void **copy,
+				symtab_t *symtab)
 {
 	struct cil_permissionx *orig = data;
 	struct cil_permissionx *new;
@@ -767,7 +840,8 @@ static int cil_copy_permissionx(struct cil_db *db, void *data, void **copy, symt
 	return SEPOL_OK;
 }
 
-int cil_copy_deny_rule(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_deny_rule(__attribute__((unused)) struct cil_db *db, void *data,
+		       void **copy, __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_deny_rule *orig = data;
 	struct cil_deny_rule *new = NULL;
@@ -783,9 +857,10 @@ int cil_copy_deny_rule(__attribute__((unused)) struct cil_db *db, void *data, vo
 	return SEPOL_OK;
 }
 
-int cil_copy_type_rule(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_type_rule(__attribute__((unused)) struct cil_db *db, void *data,
+		       void **copy, __attribute__((unused)) symtab_t *symtab)
 {
-	struct cil_type_rule  *orig = data;
+	struct cil_type_rule *orig = data;
 	struct cil_type_rule *new = NULL;
 
 	cil_type_rule_init(&new);
@@ -801,7 +876,9 @@ int cil_copy_type_rule(__attribute__((unused)) struct cil_db *db, void *data, vo
 	return SEPOL_OK;
 }
 
-int cil_copy_sens(__attribute__((unused)) struct cil_db *db, __attribute__((unused)) void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_sens(__attribute__((unused)) struct cil_db *db,
+		  __attribute__((unused)) void *data, void **copy,
+		  __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_sens *new;
 
@@ -811,7 +888,9 @@ int cil_copy_sens(__attribute__((unused)) struct cil_db *db, __attribute__((unus
 	return SEPOL_OK;
 }
 
-int cil_copy_cat(__attribute__((unused)) struct cil_db *db, __attribute__((unused)) void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_cat(__attribute__((unused)) struct cil_db *db,
+		 __attribute__((unused)) void *data, void **copy,
+		 __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_cat *new;
 
@@ -821,14 +900,16 @@ int cil_copy_cat(__attribute__((unused)) struct cil_db *db, __attribute__((unuse
 	return SEPOL_OK;
 }
 
-static void cil_copy_cats(struct cil_db *db, struct cil_cats *orig, struct cil_cats **new)
+static void cil_copy_cats(struct cil_db *db, struct cil_cats *orig,
+			  struct cil_cats **new)
 {
 	cil_cats_init(new);
 	cil_copy_expr(db, orig->str_expr, &(*new)->str_expr);
 	cil_copy_expr(db, orig->datum_expr, &(*new)->datum_expr);
 }
 
-int cil_copy_catset(struct cil_db *db, void *data, void **copy, symtab_t *symtab)
+int cil_copy_catset(struct cil_db *db, void *data, void **copy,
+		    symtab_t *symtab)
 {
 	struct cil_catset *orig = data;
 	struct cil_catset *new;
@@ -848,7 +929,8 @@ int cil_copy_catset(struct cil_db *db, void *data, void **copy, symtab_t *symtab
 	return SEPOL_OK;
 }
 
-int cil_copy_senscat(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_senscat(struct cil_db *db, void *data, void **copy,
+		     __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_senscat *orig = data;
 	struct cil_senscat *new = NULL;
@@ -864,7 +946,8 @@ int cil_copy_senscat(struct cil_db *db, void *data, void **copy, __attribute__((
 	return SEPOL_OK;
 }
 
-void cil_copy_fill_level(struct cil_db *db, struct cil_level *orig, struct cil_level **new)
+void cil_copy_fill_level(struct cil_db *db, struct cil_level *orig,
+			 struct cil_level **new)
 {
 	cil_level_init(new);
 
@@ -896,7 +979,8 @@ int cil_copy_level(struct cil_db *db, void *data, void **copy, symtab_t *symtab)
 	return SEPOL_OK;
 }
 
-void cil_copy_fill_levelrange(struct cil_db *db, struct cil_levelrange *data, struct cil_levelrange *new)
+void cil_copy_fill_levelrange(struct cil_db *db, struct cil_levelrange *data,
+			      struct cil_levelrange *new)
 {
 	if (data->low_str != NULL) {
 		new->low_str = data->low_str;
@@ -911,7 +995,8 @@ void cil_copy_fill_levelrange(struct cil_db *db, struct cil_levelrange *data, st
 	}
 }
 
-int cil_copy_levelrange(struct cil_db *db, void *data, void **copy, symtab_t *symtab)
+int cil_copy_levelrange(struct cil_db *db, void *data, void **copy,
+			symtab_t *symtab)
 {
 	struct cil_levelrange *orig = data;
 	struct cil_levelrange *new;
@@ -921,7 +1006,8 @@ int cil_copy_levelrange(struct cil_db *db, void *data, void **copy, symtab_t *sy
 	if (key != NULL) {
 		cil_symtab_get_datum(symtab, key, &datum);
 		if (datum != NULL) {
-			cil_log(CIL_ERR, "Named levelrange cannot be redefined\n");
+			cil_log(CIL_ERR,
+				"Named levelrange cannot be redefined\n");
 			return SEPOL_ERR;
 		}
 	}
@@ -933,7 +1019,8 @@ int cil_copy_levelrange(struct cil_db *db, void *data, void **copy, symtab_t *sy
 	return SEPOL_OK;
 }
 
-void cil_copy_fill_context(struct cil_db *db, struct cil_context *data, struct cil_context *new)
+void cil_copy_fill_context(struct cil_db *db, struct cil_context *data,
+			   struct cil_context *new)
 {
 	new->user_str = data->user_str;
 	new->role_str = data->role_str;
@@ -947,7 +1034,8 @@ void cil_copy_fill_context(struct cil_db *db, struct cil_context *data, struct c
 	}
 }
 
-int cil_copy_context(struct cil_db *db, void *data, void **copy, symtab_t *symtab)
+int cil_copy_context(struct cil_db *db, void *data, void **copy,
+		     symtab_t *symtab)
 {
 	struct cil_context *orig = data;
 	struct cil_context *new;
@@ -969,7 +1057,8 @@ int cil_copy_context(struct cil_db *db, void *data, void **copy, symtab_t *symta
 	return SEPOL_OK;
 }
 
-int cil_copy_netifcon(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_netifcon(struct cil_db *db, void *data, void **copy,
+		      __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_netifcon *orig = data;
 	struct cil_netifcon *new = NULL;
@@ -989,7 +1078,8 @@ int cil_copy_netifcon(struct cil_db *db, void *data, void **copy, __attribute__(
 		new->packet_context_str = orig->packet_context_str;
 	} else {
 		cil_context_init(&new->packet_context);
-		cil_copy_fill_context(db, orig->packet_context, new->packet_context);
+		cil_copy_fill_context(db, orig->packet_context,
+				      new->packet_context);
 	}
 
 	*copy = new;
@@ -997,7 +1087,8 @@ int cil_copy_netifcon(struct cil_db *db, void *data, void **copy, __attribute__(
 	return SEPOL_OK;
 }
 
-int cil_copy_genfscon(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_genfscon(struct cil_db *db, void *data, void **copy,
+		      __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_genfscon *orig = data;
 	struct cil_genfscon *new = NULL;
@@ -1019,7 +1110,8 @@ int cil_copy_genfscon(struct cil_db *db, void *data, void **copy, __attribute__(
 	return SEPOL_OK;
 }
 
-int cil_copy_filecon(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_filecon(struct cil_db *db, void *data, void **copy,
+		     __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_filecon *orig = data;
 	struct cil_filecon *new = NULL;
@@ -1042,7 +1134,8 @@ int cil_copy_filecon(struct cil_db *db, void *data, void **copy, __attribute__((
 	return SEPOL_OK;
 }
 
-int cil_copy_nodecon(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_nodecon(struct cil_db *db, void *data, void **copy,
+		     __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_nodecon *orig = data;
 	struct cil_nodecon *new = NULL;
@@ -1075,7 +1168,8 @@ int cil_copy_nodecon(struct cil_db *db, void *data, void **copy, __attribute__((
 	return SEPOL_OK;
 }
 
-int cil_copy_ibpkeycon(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_ibpkeycon(struct cil_db *db, void *data, void **copy,
+		       __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_ibpkeycon *orig = data;
 	struct cil_ibpkeycon *new = NULL;
@@ -1098,7 +1192,8 @@ int cil_copy_ibpkeycon(struct cil_db *db, void *data, void **copy, __attribute__
 	return SEPOL_OK;
 }
 
-static int cil_copy_ibendportcon(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+static int cil_copy_ibendportcon(struct cil_db *db, void *data, void **copy,
+				 __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_ibendportcon *orig = data;
 	struct cil_ibendportcon *new = NULL;
@@ -1120,7 +1215,8 @@ static int cil_copy_ibendportcon(struct cil_db *db, void *data, void **copy, __a
 	return SEPOL_OK;
 }
 
-int cil_copy_portcon(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_portcon(struct cil_db *db, void *data, void **copy,
+		     __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_portcon *orig = data;
 	struct cil_portcon *new = NULL;
@@ -1143,7 +1239,8 @@ int cil_copy_portcon(struct cil_db *db, void *data, void **copy, __attribute__((
 	return SEPOL_OK;
 }
 
-int cil_copy_pirqcon(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_pirqcon(struct cil_db *db, void *data, void **copy,
+		     __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_pirqcon *orig = data;
 	struct cil_pirqcon *new = NULL;
@@ -1164,7 +1261,8 @@ int cil_copy_pirqcon(struct cil_db *db, void *data, void **copy, __attribute__((
 	return SEPOL_OK;
 }
 
-int cil_copy_iomemcon(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_iomemcon(struct cil_db *db, void *data, void **copy,
+		      __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_iomemcon *orig = data;
 	struct cil_iomemcon *new = NULL;
@@ -1186,7 +1284,8 @@ int cil_copy_iomemcon(struct cil_db *db, void *data, void **copy, __attribute__(
 	return SEPOL_OK;
 }
 
-int cil_copy_ioportcon(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_ioportcon(struct cil_db *db, void *data, void **copy,
+		       __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_ioportcon *orig = data;
 	struct cil_ioportcon *new = NULL;
@@ -1208,7 +1307,8 @@ int cil_copy_ioportcon(struct cil_db *db, void *data, void **copy, __attribute__
 	return SEPOL_OK;
 }
 
-int cil_copy_pcidevicecon(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_pcidevicecon(struct cil_db *db, void *data, void **copy,
+			  __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_pcidevicecon *orig = data;
 	struct cil_pcidevicecon *new = NULL;
@@ -1229,7 +1329,8 @@ int cil_copy_pcidevicecon(struct cil_db *db, void *data, void **copy, __attribut
 	return SEPOL_OK;
 }
 
-static int cil_copy_devicetreecon(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+static int cil_copy_devicetreecon(struct cil_db *db, void *data, void **copy,
+				  __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_devicetreecon *orig = data;
 	struct cil_devicetreecon *new = NULL;
@@ -1250,7 +1351,8 @@ static int cil_copy_devicetreecon(struct cil_db *db, void *data, void **copy, __
 	return SEPOL_OK;
 }
 
-int cil_copy_fsuse(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_fsuse(struct cil_db *db, void *data, void **copy,
+		   __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_fsuse *orig = data;
 	struct cil_fsuse *new = NULL;
@@ -1272,7 +1374,8 @@ int cil_copy_fsuse(struct cil_db *db, void *data, void **copy, __attribute__((un
 	return SEPOL_OK;
 }
 
-int cil_copy_expr(struct cil_db *db, struct cil_list *orig, struct cil_list **new)
+int cil_copy_expr(struct cil_db *db, struct cil_list *orig,
+		  struct cil_list **new)
 {
 	struct cil_list_item *curr;
 
@@ -1304,7 +1407,9 @@ int cil_copy_expr(struct cil_db *db, struct cil_list *orig, struct cil_list **ne
 			cil_list_append(*new, curr->flavor, curr->data);
 			break;
 		default:
-			cil_log(CIL_INFO, "Unknown flavor %d in expression being copied\n",curr->flavor);
+			cil_log(CIL_INFO,
+				"Unknown flavor %d in expression being copied\n",
+				curr->flavor);
 			cil_list_append(*new, curr->flavor, curr->data);
 			break;
 		}
@@ -1313,7 +1418,8 @@ int cil_copy_expr(struct cil_db *db, struct cil_list *orig, struct cil_list **ne
 	return SEPOL_OK;
 }
 
-int cil_copy_constrain(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_constrain(struct cil_db *db, void *data, void **copy,
+		       __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_constrain *orig = data;
 	struct cil_constrain *new = NULL;
@@ -1329,7 +1435,8 @@ int cil_copy_constrain(struct cil_db *db, void *data, void **copy, __attribute__
 	return SEPOL_OK;
 }
 
-int cil_copy_validatetrans(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_validatetrans(struct cil_db *db, void *data, void **copy,
+			   __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_validatetrans *orig = data;
 	struct cil_validatetrans *new = NULL;
@@ -1346,7 +1453,8 @@ int cil_copy_validatetrans(struct cil_db *db, void *data, void **copy, __attribu
 	return SEPOL_OK;
 }
 
-int cil_copy_call(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_call(struct cil_db *db, void *data, void **copy,
+		  __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_call *orig = data;
 	struct cil_call *new = NULL;
@@ -1359,12 +1467,13 @@ int cil_copy_call(struct cil_db *db, void *data, void **copy, __attribute__((unu
 
 	if (orig->args_tree != NULL) {
 		cil_tree_init(&new->args_tree);
-		rc = cil_copy_ast(db, orig->args_tree->root, new->args_tree->root);
+		rc = cil_copy_ast(db, orig->args_tree->root,
+				  new->args_tree->root);
 		if (rc != SEPOL_OK) {
 			goto exit;
 		}
 	}
-	
+
 	new->copied = orig->copied;
 
 	*copy = new;
@@ -1376,7 +1485,8 @@ exit:
 	return rc;
 }
 
-static int cil_copy_macro(__attribute__((unused)) struct cil_db *db, void *data, void **copy, symtab_t *symtab)
+static int cil_copy_macro(__attribute__((unused)) struct cil_db *db, void *data,
+			  void **copy, symtab_t *symtab)
 {
 	struct cil_macro *orig = data;
 	char *key = orig->datum.name;
@@ -1385,8 +1495,11 @@ static int cil_copy_macro(__attribute__((unused)) struct cil_db *db, void *data,
 	cil_symtab_get_datum(symtab, key, &datum);
 	if (datum != NULL) {
 		if (FLAVOR(datum) != CIL_MACRO) {
-			cil_tree_log(NODE(orig), CIL_ERR, "Macro %s being copied", key);
-			cil_tree_log(NODE(datum), CIL_ERR, "  Conflicts with %s already declared", cil_node_to_string(NODE(datum)));
+			cil_tree_log(NODE(orig), CIL_ERR,
+				     "Macro %s being copied", key);
+			cil_tree_log(NODE(datum), CIL_ERR,
+				     "  Conflicts with %s already declared",
+				     cil_node_to_string(NODE(datum)));
 			return SEPOL_ERR;
 		}
 		cil_tree_log(NODE(orig), CIL_WARN, "Skipping macro %s", key);
@@ -1404,7 +1517,9 @@ static int cil_copy_macro(__attribute__((unused)) struct cil_db *db, void *data,
 	return SEPOL_OK;
 }
 
-int cil_copy_optional(__attribute__((unused)) struct cil_db *db, __attribute__((unused)) void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_optional(__attribute__((unused)) struct cil_db *db,
+		      __attribute__((unused)) void *data, void **copy,
+		      __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_optional *new;
 
@@ -1420,11 +1535,12 @@ void cil_copy_fill_ipaddr(struct cil_ipaddr *data, struct cil_ipaddr *new)
 	memcpy(&new->ip, &data->ip, sizeof(data->ip));
 }
 
-int cil_copy_ipaddr(__attribute__((unused)) struct cil_db *db, void *data, void **copy, symtab_t *symtab)
+int cil_copy_ipaddr(__attribute__((unused)) struct cil_db *db, void *data,
+		    void **copy, symtab_t *symtab)
 {
 	struct cil_ipaddr *orig = data;
 	struct cil_ipaddr *new;
-	char * key = orig->datum.name;	
+	char *key = orig->datum.name;
 	struct cil_symtab_datum *datum;
 
 	cil_symtab_get_datum(symtab, key, &datum);
@@ -1440,7 +1556,9 @@ int cil_copy_ipaddr(__attribute__((unused)) struct cil_db *db, void *data, void 
 	return SEPOL_OK;
 }
 
-static int cil_copy_condblock(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+static int cil_copy_condblock(__attribute__((unused)) struct cil_db *db,
+			      void *data, void **copy,
+			      __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_condblock *orig = data;
 	struct cil_condblock *new = *copy;
@@ -1451,7 +1569,8 @@ static int cil_copy_condblock(__attribute__((unused)) struct cil_db *db, void *d
 	return SEPOL_OK;
 }
 
-int cil_copy_boolif(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_boolif(struct cil_db *db, void *data, void **copy,
+		    __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_booleanif *orig = data;
 	struct cil_booleanif *new = NULL;
@@ -1467,7 +1586,8 @@ int cil_copy_boolif(struct cil_db *db, void *data, void **copy, __attribute__((u
 	return SEPOL_OK;
 }
 
-static int cil_copy_tunif(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+static int cil_copy_tunif(struct cil_db *db, void *data, void **copy,
+			  __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_tunableif *orig = data;
 	struct cil_tunableif *new = NULL;
@@ -1482,7 +1602,9 @@ static int cil_copy_tunif(struct cil_db *db, void *data, void **copy, __attribut
 	return SEPOL_OK;
 }
 
-static int cil_copy_default(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+static int cil_copy_default(__attribute__((unused)) struct cil_db *db,
+			    void *data, void **copy,
+			    __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_default *orig = data;
 	struct cil_default *new = NULL;
@@ -1502,7 +1624,9 @@ static int cil_copy_default(__attribute__((unused)) struct cil_db *db, void *dat
 	return SEPOL_OK;
 }
 
-static int cil_copy_defaultrange(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+static int cil_copy_defaultrange(__attribute__((unused)) struct cil_db *db,
+				 void *data, void **copy,
+				 __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_defaultrange *orig = data;
 	struct cil_defaultrange *new = NULL;
@@ -1520,7 +1644,9 @@ static int cil_copy_defaultrange(__attribute__((unused)) struct cil_db *db, void
 	return SEPOL_OK;
 }
 
-static int cil_copy_handleunknown(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+static int cil_copy_handleunknown(__attribute__((unused)) struct cil_db *db,
+				  void *data, void **copy,
+				  __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_handleunknown *orig = data;
 	struct cil_handleunknown *new = NULL;
@@ -1532,7 +1658,8 @@ static int cil_copy_handleunknown(__attribute__((unused)) struct cil_db *db, voi
 	return SEPOL_OK;
 }
 
-static int cil_copy_mls(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+static int cil_copy_mls(__attribute__((unused)) struct cil_db *db, void *data,
+			void **copy, __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_mls *orig = data;
 	struct cil_mls *new = NULL;
@@ -1544,7 +1671,9 @@ static int cil_copy_mls(__attribute__((unused)) struct cil_db *db, void *data, v
 	return SEPOL_OK;
 }
 
-static int cil_copy_bounds(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+static int cil_copy_bounds(__attribute__((unused)) struct cil_db *db,
+			   void *data, void **copy,
+			   __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_bounds *orig = data;
 	struct cil_bounds *new = NULL;
@@ -1559,7 +1688,9 @@ static int cil_copy_bounds(__attribute__((unused)) struct cil_db *db, void *data
 	return SEPOL_OK;
 }
 
-static int cil_copy_src_info(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+static int cil_copy_src_info(__attribute__((unused)) struct cil_db *db,
+			     void *data, void **copy,
+			     __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_src_info *orig = data;
 	struct cil_src_info *new = NULL;
@@ -1575,7 +1706,8 @@ static int cil_copy_src_info(__attribute__((unused)) struct cil_db *db, void *da
 	return SEPOL_OK;
 }
 
-static int __cil_copy_node_helper(struct cil_tree_node *orig, uint32_t *finished, void *extra_args)
+static int __cil_copy_node_helper(struct cil_tree_node *orig,
+				  uint32_t *finished, void *extra_args)
 {
 	int rc = SEPOL_ERR;
 	struct cil_tree_node *parent = NULL;
@@ -1586,7 +1718,8 @@ static int __cil_copy_node_helper(struct cil_tree_node *orig, uint32_t *finished
 	enum cil_sym_index sym_index = CIL_SYM_UNKNOWN;
 	symtab_t *symtab = NULL;
 	void *data = NULL;
-	int (*copy_func)(struct cil_db *db, void *data, void **copy, symtab_t *symtab) = NULL;
+	int (*copy_func)(struct cil_db *db, void *data, void **copy,
+			 symtab_t *symtab) = NULL;
 	struct cil_blockinherit *blockinherit = NULL;
 
 	if (orig == NULL || extra_args == NULL) {
@@ -1596,7 +1729,6 @@ static int __cil_copy_node_helper(struct cil_tree_node *orig, uint32_t *finished
 	args = extra_args;
 	parent = args->dest;
 	db = args->db;
-
 
 	switch (orig->flavor) {
 	case CIL_BLOCK:
@@ -1895,7 +2027,8 @@ static int __cil_copy_node_helper(struct cil_tree_node *orig, uint32_t *finished
 		if (orig->flavor == CIL_MACRO && data == NULL) {
 			/* Skipping macro re-declaration */
 			if (args->orig_dest->flavor != CIL_BLOCKINHERIT) {
-				cil_log(CIL_ERR, "  Re-declaration of macro is only allowed when inheriting a block\n");
+				cil_log(CIL_ERR,
+					"  Re-declaration of macro is only allowed when inheriting a block\n");
 				return SEPOL_ERR;
 			}
 			*finished = CIL_TREE_SKIP_HEAD;
@@ -1910,25 +2043,34 @@ static int __cil_copy_node_helper(struct cil_tree_node *orig, uint32_t *finished
 		new->flavor = orig->flavor;
 		new->data = data;
 
-		if (orig->flavor == CIL_BLOCK && DATUM(data)->nodes->head != NULL) {
+		if (orig->flavor == CIL_BLOCK &&
+		    DATUM(data)->nodes->head != NULL) {
 			/* Duplicate block */
 			if (args->orig_dest->flavor != CIL_BLOCKINHERIT) {
-				cil_log(CIL_ERR, "  Re-declaration of block is only allowed when inheriting a block\n");
+				cil_log(CIL_ERR,
+					"  Re-declaration of block is only allowed when inheriting a block\n");
 				rc = SEPOL_ERR;
 				goto exit;
 			}
 			cil_list_append(DATUM(new->data)->nodes, CIL_NODE, new);
 		} else if (orig->flavor >= CIL_MIN_DECLARATIVE) {
 			/* Check the flavor of data if was found in the destination symtab */
-			if (DATUM(data)->nodes->head && FLAVOR(data) != orig->flavor) {
-				cil_tree_log(orig, CIL_ERR, "Incompatible flavor when trying to copy %s", DATUM(data)->name);
-				cil_tree_log(NODE(data), CIL_ERR, "Note: conflicting declaration");
+			if (DATUM(data)->nodes->head &&
+			    FLAVOR(data) != orig->flavor) {
+				cil_tree_log(
+					orig, CIL_ERR,
+					"Incompatible flavor when trying to copy %s",
+					DATUM(data)->name);
+				cil_tree_log(NODE(data), CIL_ERR,
+					     "Note: conflicting declaration");
 				new->flavor = FLAVOR(data);
 				rc = SEPOL_ERR;
 				goto exit;
 			}
 
-			rc = cil_add_decl_to_symtab(db, symtab, DATUM(orig->data)->name, DATUM(data), new);
+			rc = cil_add_decl_to_symtab(db, symtab,
+						    DATUM(orig->data)->name,
+						    DATUM(data), new);
 			if (rc != SEPOL_OK) {
 				if (rc == SEPOL_EEXIST) {
 					cil_symtab_datum_destroy(data);
@@ -1941,12 +2083,16 @@ static int __cil_copy_node_helper(struct cil_tree_node *orig, uint32_t *finished
 			}
 
 			namespace = new;
-			while (namespace->flavor != CIL_MACRO && namespace->flavor != CIL_BLOCK && namespace->flavor != CIL_ROOT) {
+			while (namespace->flavor != CIL_MACRO &&
+			       namespace->flavor != CIL_BLOCK &&
+			       namespace->flavor != CIL_ROOT) {
 				namespace = namespace->parent;
 			}
 
 			if (namespace->flavor == CIL_MACRO) {
-				rc = cil_verify_decl_does_not_shadow_macro_parameter(namespace->data, orig, DATUM(orig->data)->name);
+				rc = cil_verify_decl_does_not_shadow_macro_parameter(
+					namespace->data, orig,
+					DATUM(orig->data)->name);
 				if (rc != SEPOL_OK) {
 					goto exit;
 				}
@@ -1961,7 +2107,8 @@ static int __cil_copy_node_helper(struct cil_tree_node *orig, uint32_t *finished
 			// the copied blockinherit statement will be handled later, as if
 			// it wasn't in an in-statement
 			if (blockinherit->block != NULL) {
-				cil_list_append(blockinherit->block->bi_nodes, CIL_NODE, new);
+				cil_list_append(blockinherit->block->bi_nodes,
+						CIL_NODE, new);
 			}
 		}
 
@@ -1977,7 +2124,8 @@ static int __cil_copy_node_helper(struct cil_tree_node *orig, uint32_t *finished
 			args->dest = new;
 		}
 	} else {
-		cil_tree_log(orig, CIL_ERR, "Problem copying %s node", cil_node_to_string(orig));
+		cil_tree_log(orig, CIL_ERR, "Problem copying %s node",
+			     cil_node_to_string(orig));
 		goto exit;
 	}
 
@@ -1988,7 +2136,9 @@ exit:
 	return rc;
 }
 
-static int __cil_copy_last_child_helper(__attribute__((unused)) struct cil_tree_node *orig, void *extra_args)
+static int
+__cil_copy_last_child_helper(__attribute__((unused)) struct cil_tree_node *orig,
+			     void *extra_args)
 {
 	struct cil_tree_node *node = NULL;
 	struct cil_args_copy *args = NULL;
@@ -2005,7 +2155,8 @@ static int __cil_copy_last_child_helper(__attribute__((unused)) struct cil_tree_
 
 // dest is the parent node to copy into
 // if the copy is for a call to a macro, dest should be a pointer to the call
-int cil_copy_ast(struct cil_db *db, struct cil_tree_node *orig, struct cil_tree_node *dest)
+int cil_copy_ast(struct cil_db *db, struct cil_tree_node *orig,
+		 struct cil_tree_node *dest)
 {
 	int rc = SEPOL_ERR;
 	struct cil_args_copy extra_args;
@@ -2014,9 +2165,12 @@ int cil_copy_ast(struct cil_db *db, struct cil_tree_node *orig, struct cil_tree_
 	extra_args.dest = dest;
 	extra_args.db = db;
 
-	rc = cil_tree_walk(orig, __cil_copy_node_helper, NULL,  __cil_copy_last_child_helper, &extra_args);
+	rc = cil_tree_walk(orig, __cil_copy_node_helper, NULL,
+			   __cil_copy_last_child_helper, &extra_args);
 	if (rc != SEPOL_OK) {
-		cil_tree_log(dest, CIL_ERR, "Failed to copy %s to %s", cil_node_to_string(orig), cil_node_to_string(dest));
+		cil_tree_log(dest, CIL_ERR, "Failed to copy %s to %s",
+			     cil_node_to_string(orig),
+			     cil_node_to_string(dest));
 		goto exit;
 	}
 
@@ -2025,4 +2179,3 @@ int cil_copy_ast(struct cil_db *db, struct cil_tree_node *orig, struct cil_tree_
 exit:
 	return rc;
 }
-

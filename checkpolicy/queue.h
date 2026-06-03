@@ -47,16 +47,15 @@ void queue_destroy(queue_t);
    iterating through the hash table and will propagate the error
    return to its caller.
  */
-int queue_map(queue_t, int (*f) (queue_element_t, void *), void *);
+int queue_map(queue_t, int (*f)(queue_element_t, void *), void *);
 
 /*
    Same as queue_map, except that if f returns a non-zero status,
    then the element will be removed from the queue and the g
    function will be applied to the element. 
  */
-void queue_map_remove_on_error(queue_t,
-			       int (*f) (queue_element_t, void *),
-			       void (*g) (queue_element_t, void *), void *);
+void queue_map_remove_on_error(queue_t, int (*f)(queue_element_t, void *),
+			       void (*g)(queue_element_t, void *), void *);
 
 #endif
 

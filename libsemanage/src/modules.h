@@ -26,18 +26,17 @@
 
 #include "semanage/modules.h"
 
-
-int semanage_module_upgrade_file(semanage_handle_t * sh,
+int semanage_module_upgrade_file(semanage_handle_t *sh,
 				 const char *module_name);
-int semanage_module_install_base_file(semanage_handle_t * sh,
-				 const char *module_name);
+int semanage_module_install_base_file(semanage_handle_t *sh,
+				      const char *module_name);
 
 /* Module Info */
 struct semanage_module_info {
-	uint16_t priority;	/* key, module priority */
-	char *name;		/* key, module name */
-	char *lang_ext;		/* module source language extension */
-	int enabled;		/* module enabled/disabled status */
+	uint16_t priority; /* key, module priority */
+	char *name; /* key, module name */
+	char *lang_ext; /* module source language extension */
+	int enabled; /* module enabled/disabled status */
 };
 
 /* Initializes a pre-allocated module info struct.
@@ -70,8 +69,8 @@ int semanage_module_validate_version(const char *version);
 
 /* Module Key */
 struct semanage_module_key {
-	uint16_t priority;	/* module priority */
-	char *name;		/* module name */
+	uint16_t priority; /* module priority */
+	char *name; /* module name */
 };
 
 /* Initializes a pre-allocated module key struct.
@@ -98,8 +97,7 @@ enum semanage_module_path_type {
  */
 int semanage_module_get_path(semanage_handle_t *sh,
 			     const semanage_module_info_t *module,
-			     enum semanage_module_path_type type,
-			     char *path,
+			     enum semanage_module_path_type type, char *path,
 			     size_t len);
 
 extern const size_t CHECKSUM_CONTENT_SIZE;

@@ -29,14 +29,17 @@
 #include "test-common.h"
 #include "helpers.h"
 
-void test_sym_presence(policydb_t * p, const char *id, int sym_type, unsigned int scope_type, unsigned int *decls, unsigned int len)
+void test_sym_presence(policydb_t *p, const char *id, int sym_type,
+		       unsigned int scope_type, unsigned int *decls,
+		       unsigned int len)
 {
 	scope_datum_t *scope;
 	int found;
 	unsigned int i, j;
 	/* make sure it is in global symtab */
 	if (!hashtab_search(p->symtab[sym_type].table, id)) {
-		fprintf(stderr, "symbol %s not found in table %d\n", id, sym_type);
+		fprintf(stderr, "symbol %s not found in table %d\n", id,
+			sym_type);
 		CU_FAIL_FATAL();
 	}
 	/* make sure its scope is correct */
@@ -45,7 +48,8 @@ void test_sym_presence(policydb_t * p, const char *id, int sym_type, unsigned in
 	CU_ASSERT(scope->scope == scope_type);
 	CU_ASSERT(scope->decl_ids_len == len);
 	if (scope->decl_ids_len != len)
-		fprintf(stderr, "sym %s has %d decls, %d expected\n", id, scope->decl_ids_len, len);
+		fprintf(stderr, "sym %s has %d decls, %d expected\n", id,
+			scope->decl_ids_len, len);
 	for (i = 0; i < len; i++) {
 		found = 0;
 		for (j = 0; j < len; j++) {
@@ -54,32 +58,35 @@ void test_sym_presence(policydb_t * p, const char *id, int sym_type, unsigned in
 		}
 		CU_ASSERT(found == 1);
 	}
-
 }
 
-static int common_test_index(hashtab_key_t key, hashtab_datum_t datum, void *data)
+static int common_test_index(hashtab_key_t key, hashtab_datum_t datum,
+			     void *data)
 {
-	common_datum_t *d = (common_datum_t *) datum;
-	policydb_t *p = (policydb_t *) data;
+	common_datum_t *d = (common_datum_t *)datum;
+	policydb_t *p = (policydb_t *)data;
 
-	CU_ASSERT(p->sym_val_to_name[SYM_COMMONS][d->s.value - 1] == (char *)key);
+	CU_ASSERT(p->sym_val_to_name[SYM_COMMONS][d->s.value - 1] ==
+		  (char *)key);
 	return 0;
 }
 
-static int class_test_index(hashtab_key_t key, hashtab_datum_t datum, void *data)
+static int class_test_index(hashtab_key_t key, hashtab_datum_t datum,
+			    void *data)
 {
-	class_datum_t *d = (class_datum_t *) datum;
-	policydb_t *p = (policydb_t *) data;
+	class_datum_t *d = (class_datum_t *)datum;
+	policydb_t *p = (policydb_t *)data;
 
-	CU_ASSERT(p->sym_val_to_name[SYM_CLASSES][d->s.value - 1] == (char *)key);
+	CU_ASSERT(p->sym_val_to_name[SYM_CLASSES][d->s.value - 1] ==
+		  (char *)key);
 	CU_ASSERT(p->class_val_to_struct[d->s.value - 1] == d);
 	return 0;
 }
 
 static int role_test_index(hashtab_key_t key, hashtab_datum_t datum, void *data)
 {
-	role_datum_t *d = (role_datum_t *) datum;
-	policydb_t *p = (policydb_t *) data;
+	role_datum_t *d = (role_datum_t *)datum;
+	policydb_t *p = (policydb_t *)data;
 
 	CU_ASSERT(p->sym_val_to_name[SYM_ROLES][d->s.value - 1] == (char *)key);
 	CU_ASSERT(p->role_val_to_struct[d->s.value - 1] == d);
@@ -88,8 +95,8 @@ static int role_test_index(hashtab_key_t key, hashtab_datum_t datum, void *data)
 
 static int type_test_index(hashtab_key_t key, hashtab_datum_t datum, void *data)
 {
-	type_datum_t *d = (type_datum_t *) datum;
-	policydb_t *p = (policydb_t *) data;
+	type_datum_t *d = (type_datum_t *)datum;
+	policydb_t *p = (policydb_t *)data;
 
 	if (!d->primary)
 		return 0;
@@ -102,8 +109,8 @@ static int type_test_index(hashtab_key_t key, hashtab_datum_t datum, void *data)
 
 static int user_test_index(hashtab_key_t key, hashtab_datum_t datum, void *data)
 {
-	user_datum_t *d = (user_datum_t *) datum;
-	policydb_t *p = (policydb_t *) data;
+	user_datum_t *d = (user_datum_t *)datum;
+	policydb_t *p = (policydb_t *)data;
 
 	CU_ASSERT(p->sym_val_to_name[SYM_USERS][d->s.value - 1] == (char *)key);
 	CU_ASSERT(p->user_val_to_struct[d->s.value - 1] == d);
@@ -112,36 +119,41 @@ static int user_test_index(hashtab_key_t key, hashtab_datum_t datum, void *data)
 
 static int cond_test_index(hashtab_key_t key, hashtab_datum_t datum, void *data)
 {
-	cond_bool_datum_t *d = (cond_bool_datum_t *) datum;
-	policydb_t *p = (policydb_t *) data;
+	cond_bool_datum_t *d = (cond_bool_datum_t *)datum;
+	policydb_t *p = (policydb_t *)data;
 
 	CU_ASSERT(p->sym_val_to_name[SYM_BOOLS][d->s.value - 1] == (char *)key);
 	CU_ASSERT(p->bool_val_to_struct[d->s.value - 1] == d);
 	return 0;
 }
 
-static int level_test_index(hashtab_key_t key, hashtab_datum_t datum, void *data)
+static int level_test_index(hashtab_key_t key, hashtab_datum_t datum,
+			    void *data)
 {
-	level_datum_t *d = (level_datum_t *) datum;
-	policydb_t *p = (policydb_t *) data;
+	level_datum_t *d = (level_datum_t *)datum;
+	policydb_t *p = (policydb_t *)data;
 
-	CU_ASSERT(p->sym_val_to_name[SYM_LEVELS][d->level->sens - 1] == (char *)key);
+	CU_ASSERT(p->sym_val_to_name[SYM_LEVELS][d->level->sens - 1] ==
+		  (char *)key);
 	return 0;
 }
 
 static int cat_test_index(hashtab_key_t key, hashtab_datum_t datum, void *data)
 {
-	cat_datum_t *d = (cat_datum_t *) datum;
-	policydb_t *p = (policydb_t *) data;
+	cat_datum_t *d = (cat_datum_t *)datum;
+	policydb_t *p = (policydb_t *)data;
 
 	CU_ASSERT(p->sym_val_to_name[SYM_CATS][d->s.value - 1] == (char *)key);
 	return 0;
 }
 
-static int (*test_index_f[SYM_NUM]) (hashtab_key_t key, hashtab_datum_t datum, void *p) = {
-common_test_index, class_test_index, role_test_index, type_test_index, user_test_index, cond_test_index, level_test_index, cat_test_index,};
+static int (*test_index_f[SYM_NUM])(hashtab_key_t key, hashtab_datum_t datum,
+				    void *p) = {
+	common_test_index, class_test_index, role_test_index,  type_test_index,
+	user_test_index,   cond_test_index,  level_test_index, cat_test_index,
+};
 
-void test_policydb_indexes(policydb_t * p)
+void test_policydb_indexes(policydb_t *p)
 {
 	int i;
 
@@ -150,7 +162,8 @@ void test_policydb_indexes(policydb_t * p)
 	}
 }
 
-void test_alias_datum(policydb_t * p, const char *id, const char *primary_id, char mode, unsigned int flavor)
+void test_alias_datum(policydb_t *p, const char *id, const char *primary_id,
+		      char mode, unsigned int flavor)
 {
 	type_datum_t *type, *primary;
 	unsigned int my_primary, my_flavor, my_value;
@@ -184,7 +197,9 @@ void test_alias_datum(policydb_t * p, const char *id, const char *primary_id, ch
 	}
 }
 
-role_datum_t *test_role_type_set(policydb_t * p, const char *id, avrule_decl_t * decl, const char **types, unsigned int len, unsigned int flags)
+role_datum_t *test_role_type_set(policydb_t *p, const char *id,
+				 avrule_decl_t *decl, const char **types,
+				 unsigned int len, unsigned int flags)
 {
 	ebitmap_node_t *tnode;
 	unsigned int i, j, new, found = 0;
@@ -203,20 +218,23 @@ role_datum_t *test_role_type_set(policydb_t * p, const char *id, avrule_decl_t *
 	ebitmap_for_each_positive_bit(&role->types.types, tnode, i) {
 		new = 0;
 		for (j = 0; j < len; j++) {
-			if (strcmp(p->sym_val_to_name[SYM_TYPES][i], types[j]) == 0) {
+			if (strcmp(p->sym_val_to_name[SYM_TYPES][i],
+				   types[j]) == 0) {
 				found++;
 				new = 1;
 			}
 		}
 		if (new == 0) {
-			printf("\nRole %s had type %s not in types array\n",
-			       id, p->sym_val_to_name[SYM_TYPES][i]);
+			printf("\nRole %s had type %s not in types array\n", id,
+			       p->sym_val_to_name[SYM_TYPES][i]);
 		}
 		CU_ASSERT(new == 1);
 	}
 	CU_ASSERT(found == len);
 	if (found != len)
-		printf("\nrole %s has %d types, %d expected\n", p->sym_val_to_name[SYM_ROLES][role->s.value - 1], found, len);
+		printf("\nrole %s has %d types, %d expected\n",
+		       p->sym_val_to_name[SYM_ROLES][role->s.value - 1], found,
+		       len);
 	/* roles should never have anything in the negset */
 	CU_ASSERT(role->types.negset.highbit == 0);
 	CU_ASSERT(role->types.flags == flags);
@@ -224,7 +242,8 @@ role_datum_t *test_role_type_set(policydb_t * p, const char *id, avrule_decl_t *
 	return role;
 }
 
-void test_attr_types(policydb_t * p, const char *id, avrule_decl_t * decl, const char **types, int len)
+void test_attr_types(policydb_t *p, const char *id, avrule_decl_t *decl,
+		     const char **types, int len)
 {
 	ebitmap_node_t *tnode;
 	int j, new, found = 0;
@@ -234,7 +253,8 @@ void test_attr_types(policydb_t * p, const char *id, avrule_decl_t * decl, const
 	if (decl) {
 		attr = hashtab_search(decl->p_types.table, id);
 		if (attr == NULL)
-			printf("could not find attr %s in decl %d\n", id, decl->decl_id);
+			printf("could not find attr %s in decl %d\n", id,
+			       decl->decl_id);
 	} else {
 		attr = hashtab_search(p->p_types.table, id);
 		if (attr == NULL)
@@ -248,14 +268,15 @@ void test_attr_types(policydb_t * p, const char *id, avrule_decl_t * decl, const
 	ebitmap_for_each_positive_bit(&attr->types, tnode, i) {
 		new = 0;
 		for (j = 0; j < len; j++) {
-			if (strcmp(p->sym_val_to_name[SYM_TYPES][i], types[j]) == 0) {
+			if (strcmp(p->sym_val_to_name[SYM_TYPES][i],
+				   types[j]) == 0) {
 				found++;
 				new = 1;
 			}
 		}
 		if (new == 0) {
-			printf("\nattr %s had type %s not in types array\n",
-			       id, p->sym_val_to_name[SYM_TYPES][i]);
+			printf("\nattr %s had type %s not in types array\n", id,
+			       p->sym_val_to_name[SYM_TYPES][i]);
 		}
 		CU_ASSERT(new == 1);
 	}

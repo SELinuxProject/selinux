@@ -36,4 +36,3 @@ int security_get_checkreqprot(void)
 
 	return checkreqprot;
 }
-

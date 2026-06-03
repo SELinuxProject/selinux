@@ -28,9 +28,9 @@
 
 static int filename_select(const struct dirent *d)
 {
-	if (d->d_name[0] == '.'
-	    && (d->d_name[1] == '\0'
-		|| (d->d_name[1] == '.' && d->d_name[2] == '\0')))
+	if (d->d_name[0] == '.' &&
+	    (d->d_name[1] == '\0' ||
+	     (d->d_name[1] == '.' && d->d_name[2] == '\0')))
 		return 0;
 	return 1;
 }
@@ -77,19 +77,19 @@ int security_get_boolean_names(char ***names, int *len)
 	}
 	rc = 0;
 	*names = n;
-      out:
+out:
 	for (i = 0; i < *len; i++) {
 		free(namelist[i]);
 	}
 	free(namelist);
 	return rc;
-      bad_freen:
+bad_freen:
 	if (i > 0) {
 		while (i >= 1)
 			free(n[--i]);
 	}
 	free(n);
-      bad:
+bad:
 	goto out;
 }
 
@@ -148,7 +148,8 @@ out:
 	return sub;
 }
 
-static int bool_open(const char *name, int flag) {
+static int bool_open(const char *name, int flag)
+{
 	char *fname = NULL;
 	char *alt_name = NULL;
 	size_t len;
@@ -167,7 +168,8 @@ static int bool_open(const char *name, int flag) {
 	if (!fname)
 		return -1;
 
-	ret = snprintf(fname, len, "%s%s%s", selinux_mnt, SELINUX_BOOL_DIR, name);
+	ret = snprintf(fname, len, "%s%s%s", selinux_mnt, SELINUX_BOOL_DIR,
+		       name);
 	if (ret < 0 || (size_t)ret >= len)
 		goto out;
 
@@ -186,7 +188,8 @@ static int bool_open(const char *name, int flag) {
 		goto out;
 	fname = ptr;
 
-	ret = snprintf(fname, len, "%s%s%s", selinux_mnt, SELINUX_BOOL_DIR, alt_name);
+	ret = snprintf(fname, len, "%s%s%s", selinux_mnt, SELINUX_BOOL_DIR,
+		       alt_name);
 	if (ret < 0 || (size_t)ret >= len)
 		goto out;
 
@@ -326,20 +329,19 @@ int security_commit_booleans(void)
 		return -1;
 }
 
-static void rollback(SELboolean * boollist, int end)
+static void rollback(SELboolean *boollist, int end)
 {
 	int i;
 
 	for (i = 0; i < end; i++)
-		security_set_boolean(boollist[i].name,
-				     security_get_boolean_active(boollist[i].
-								 name));
+		security_set_boolean(
+			boollist[i].name,
+			security_get_boolean_active(boollist[i].name));
 }
 
-int security_set_boolean_list(size_t boolcnt, SELboolean * boollist,
+int security_set_boolean_list(size_t boolcnt, SELboolean *boollist,
 			      int permanent)
 {
-
 	size_t i;
 	for (i = 0; i < boolcnt; i++) {
 		boollist[i].value = !!boollist[i].value;
@@ -372,8 +374,8 @@ int security_load_booleans(char *path __attribute__((unused)))
 #include "selinux_internal.h"
 
 int security_set_boolean_list(size_t boolcnt __attribute__((unused)),
-	SELboolean * boollist __attribute__((unused)),
-	int permanent __attribute__((unused)))
+			      SELboolean *boollist __attribute__((unused)),
+			      int permanent __attribute__((unused)))
 {
 	return -1;
 }
@@ -384,7 +386,7 @@ int security_load_booleans(char *path __attribute__((unused)))
 }
 
 int security_get_boolean_names(char ***names __attribute__((unused)),
-	int *len __attribute__((unused)))
+			       int *len __attribute__((unused)))
 {
 	return -1;
 }
@@ -400,7 +402,7 @@ int security_get_boolean_active(const char *name __attribute__((unused)))
 }
 
 int security_set_boolean(const char *name __attribute__((unused)),
-	int value __attribute__((unused)))
+			 int value __attribute__((unused)))
 {
 	return -1;
 }
@@ -415,4 +417,3 @@ char *selinux_boolean_sub(const char *name __attribute__((unused)))
 	return NULL;
 }
 #endif
-

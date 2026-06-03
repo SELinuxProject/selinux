@@ -89,9 +89,11 @@ static void init_selinuxmnt(void)
 	if (selinux_mnt)
 		return;
 
-	if (verify_selinuxmnt(SELINUXMNT) == 0) return;
+	if (verify_selinuxmnt(SELINUXMNT) == 0)
+		return;
 
-	if (verify_selinuxmnt(OLDSELINUXMNT) == 0) return;
+	if (verify_selinuxmnt(OLDSELINUXMNT) == 0)
+		return;
 
 	/* Drop back to detecting it the long way. */
 	if (!selinuxfs_exists())
@@ -113,7 +115,7 @@ static void init_selinuxmnt(void)
 		tmp = strchr(p, ' ');
 		if (!tmp)
 			goto out;
-		if (!strncmp(tmp + 1, SELINUXFS" ", strlen(SELINUXFS)+1)) {
+		if (!strncmp(tmp + 1, SELINUXFS " ", strlen(SELINUXFS) + 1)) {
 			*tmp = '\0';
 			break;
 		}
@@ -123,7 +125,7 @@ static void init_selinuxmnt(void)
 	if (num > 0)
 		verify_selinuxmnt(p);
 
-      out:
+out:
 	free(buf);
 	if (fp)
 		fclose(fp);
@@ -136,14 +138,12 @@ void fini_selinuxmnt(void)
 	selinux_mnt = NULL;
 }
 
-
 void set_selinuxmnt(const char *mnt)
 {
 	selinux_mnt = strdup(mnt);
 }
 
-
-static void init_lib(void) __attribute__ ((constructor));
+static void init_lib(void) __attribute__((constructor));
 static void init_lib(void)
 {
 	selinux_page_size = sysconf(_SC_PAGE_SIZE);
@@ -153,7 +153,7 @@ static void init_lib(void)
 #endif
 }
 
-static void fini_lib(void) __attribute__ ((destructor));
+static void fini_lib(void) __attribute__((destructor));
 static void fini_lib(void)
 {
 	fini_selinuxmnt();

@@ -10,10 +10,8 @@
 #include "policy.h"
 #include "mapping.h"
 
-int security_validatetrans_raw(const char *scon,
-			       const char *tcon,
-			       security_class_t tclass,
-			       const char *newcon)
+int security_validatetrans_raw(const char *scon, const char *tcon,
+			       security_class_t tclass, const char *newcon)
 {
 	char path[PATH_MAX];
 	char *buf = NULL;
@@ -38,7 +36,8 @@ int security_validatetrans_raw(const char *scon,
 		goto out;
 	}
 
-	bufsz = snprintf(buf, size, "%s %s %hu %s", scon, tcon, unmap_class(tclass), newcon);
+	bufsz = snprintf(buf, size, "%s %s %hu %s", scon, tcon,
+			 unmap_class(tclass), newcon);
 	if (bufsz >= size || bufsz < 0) {
 		// It got truncated or there was an encoding error
 		goto out;
@@ -57,11 +56,8 @@ out:
 	return ret;
 }
 
-
-int security_validatetrans(const char *scon,
-			   const char *tcon,
-			   security_class_t tclass,
-			   const char *newcon)
+int security_validatetrans(const char *scon, const char *tcon,
+			   security_class_t tclass, const char *newcon)
 {
 	int ret = -1;
 	char *rscon = NULL;
@@ -89,4 +85,3 @@ out:
 
 	return ret;
 }
-

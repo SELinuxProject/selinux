@@ -37,7 +37,8 @@
 #include "../../src/cil_internal.h"
 
 // TODO rewrite to use the gen_tree function
-void test_cil_parser(CuTest *tc) {
+void test_cil_parser(CuTest *tc)
+{
 	int rc = 0;
 	struct cil_file_data *data;
 
@@ -49,9 +50,9 @@ void test_cil_parser(CuTest *tc) {
 
 	set_cil_file_data(&data);
 
-	rc = cil_parser("policy.cil", data->buffer, data->file_size + 2, &test_parse_root);
+	rc = cil_parser("policy.cil", data->buffer, data->file_size + 2,
+			&test_parse_root);
 	CuAssertIntEquals(tc, SEPOL_OK, rc);
 	CuAssertPtrNotNull(tc, test_parse_root);
 	// TODO add checking of the parse tree that is returned
 }
-

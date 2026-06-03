@@ -29,16 +29,17 @@
 
 extern policydb_t user_expanded;
 
-static void check_user_roles(policydb_t * p, const char *user_name, const char **role_names, int num_roles)
+static void check_user_roles(policydb_t *p, const char *user_name,
+			     const char **role_names, int num_roles)
 {
 	user_datum_t *user;
 	ebitmap_node_t *tnode;
 	unsigned int i;
 	int j;
-	unsigned char *found;	/* array of booleans of roles found */
-	int extra = 0;		/* number of extra roles found */
+	unsigned char *found; /* array of booleans of roles found */
+	int extra = 0; /* number of extra roles found */
 
-	user = (user_datum_t *) hashtab_search(p->p_users.table, user_name);
+	user = (user_datum_t *)hashtab_search(p->p_users.table, user_name);
 	if (!user) {
 		printf("%s not found\n", user_name);
 		CU_FAIL("user not found");
@@ -49,7 +50,8 @@ static void check_user_roles(policydb_t * p, const char *user_name, const char *
 	ebitmap_for_each_positive_bit(&user->roles.roles, tnode, i) {
 		extra++;
 		for (j = 0; j < num_roles; j++) {
-			if (strcmp(role_names[j], p->p_role_val_to_name[i]) == 0) {
+			if (strcmp(role_names[j], p->p_role_val_to_name[i]) ==
+			    0) {
 				extra--;
 				found[j] += 1;
 				break;
@@ -58,7 +60,8 @@ static void check_user_roles(policydb_t * p, const char *user_name, const char *
 	}
 	for (j = 0; j < num_roles; j++) {
 		if (found[j] != 1) {
-			printf("role %s associated with user %s %d times\n", role_names[j], user_name, found[j]);
+			printf("role %s associated with user %s %d times\n",
+			       role_names[j], user_name, found[j]);
 			CU_FAIL("user mapping failure\n");
 		}
 	}

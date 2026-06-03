@@ -31,7 +31,7 @@ extern "C" {
 #include <sepol/context.h>
 
 /* Set internal policydb from a file for subsequent service calls. */
-extern int sepol_set_policydb_from_file(FILE * fp);
+extern int sepol_set_policydb_from_file(FILE *fp);
 
 #ifdef __cplusplus
 }

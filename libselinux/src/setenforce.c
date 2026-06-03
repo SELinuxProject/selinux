@@ -33,4 +33,3 @@ int security_setenforce(int value)
 
 	return 0;
 }
-

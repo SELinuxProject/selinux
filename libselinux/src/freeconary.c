@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <errno.h>
 
-void freeconary(char ** con)
+void freeconary(char **con)
 {
 	char **ptr;
 
@@ -15,4 +15,3 @@ void freeconary(char ** con)
 	}
 	free(con);
 }
-

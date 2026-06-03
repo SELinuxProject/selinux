@@ -99,7 +99,7 @@ char *semanage_split(const char *str, const char *delim)
 	return strdup(retval + strlen(delim));
 }
 
-int semanage_list_push(semanage_list_t ** list, const char *data)
+int semanage_list_push(semanage_list_t **list, const char *data)
 {
 	semanage_list_t *temp = NULL;
 
@@ -122,7 +122,7 @@ int semanage_list_push(semanage_list_t ** list, const char *data)
 	return 0;
 }
 
-char *semanage_list_pop(semanage_list_t ** list)
+char *semanage_list_pop(semanage_list_t **list)
 {
 	semanage_list_t *node = NULL;
 	char *data = NULL;
@@ -139,7 +139,7 @@ char *semanage_list_pop(semanage_list_t ** list)
 	return data;
 }
 
-void semanage_list_destroy(semanage_list_t ** list)
+void semanage_list_destroy(semanage_list_t **list)
 {
 	semanage_list_t *temp;
 
@@ -150,7 +150,7 @@ void semanage_list_destroy(semanage_list_t ** list)
 	}
 }
 
-semanage_list_t *semanage_list_find(semanage_list_t * l, const char *data)
+semanage_list_t *semanage_list_find(semanage_list_t *l, const char *data)
 {
 	if (!data)
 		return NULL;
@@ -160,7 +160,7 @@ semanage_list_t *semanage_list_find(semanage_list_t * l, const char *data)
 	return l;
 }
 
-int semanage_list_sort(semanage_list_t ** l)
+int semanage_list_sort(semanage_list_t **l)
 {
 	semanage_list_t **array = NULL;
 	semanage_list_t *temp = NULL;
@@ -175,7 +175,7 @@ int semanage_list_sort(semanage_list_t ** l)
 
 	array = malloc(sizeof(semanage_list_t *) * count);
 	if (!array)
-		return ENOMEM;	/* couldn't allocate memory for sort */
+		return ENOMEM; /* couldn't allocate memory for sort */
 	for (temp = *l; temp; temp = temp->next) {
 		array[i++] = temp;
 	}
@@ -292,7 +292,8 @@ char *semanage_str_replace(const char *search, const char *replace,
  *
  * returns the newly created node or NULL on error
  */
-static semanage_list_t *list_addafter_controlmem(semanage_list_t * item, char *data)
+static semanage_list_t *list_addafter_controlmem(semanage_list_t *item,
+						 char *data)
 {
 	semanage_list_t *temp = malloc(sizeof(semanage_list_t));
 
@@ -305,15 +306,15 @@ static semanage_list_t *list_addafter_controlmem(semanage_list_t * item, char *d
 	return temp;
 }
 
-semanage_list_t *semanage_slurp_file_filter(FILE * file,
-					    int (*pred) (const char *))
+semanage_list_t *semanage_slurp_file_filter(FILE *file,
+					    int (*pred)(const char *))
 {
 	semanage_list_t head;
 	semanage_list_t *current = &head;
 	char *line = NULL;
 	size_t buff_len = 0;
 
-	head.next = NULL;	/* initialize head, we aren't going to use the data */
+	head.next = NULL; /* initialize head, we aren't going to use the data */
 	while (getline(&line, &buff_len, file) >= 0) {
 		if (pred(line)) {
 			semanage_rtrim(line, '\n');

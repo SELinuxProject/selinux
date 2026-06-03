@@ -13,7 +13,7 @@
 pthread_mutex_t log_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 /* default implementations */
-static int __attribute__ ((format(printf, 2, 3)))
+static int __attribute__((format(printf, 2, 3)))
 default_selinux_log(int type __attribute__((unused)), const char *fmt, ...)
 {
 	int rc;
@@ -24,62 +24,50 @@ default_selinux_log(int type __attribute__((unused)), const char *fmt, ...)
 	return rc;
 }
 
-static int
-default_selinux_audit(void *ptr __attribute__((unused)),
-		      security_class_t cls __attribute__((unused)),
-		      char *buf __attribute__((unused)),
-		      size_t len __attribute__((unused)))
+static int default_selinux_audit(void *ptr __attribute__((unused)),
+				 security_class_t cls __attribute__((unused)),
+				 char *buf __attribute__((unused)),
+				 size_t len __attribute__((unused)))
 {
 	return 0;
 }
 
-static int
-default_selinux_validate(char **ctx)
+static int default_selinux_validate(char **ctx)
 {
 #ifndef BUILD_HOST
 	return security_check_context(*ctx);
 #else
-	(void) ctx;
+	(void)ctx;
 	return 0;
 #endif
 }
 
-static int
-default_selinux_setenforce(int enforcing __attribute__((unused)))
+static int default_selinux_setenforce(int enforcing __attribute__((unused)))
 {
 	return 0;
 }
 
-static int
-default_selinux_policyload(int seqno __attribute__((unused)))
+static int default_selinux_policyload(int seqno __attribute__((unused)))
 {
 	return 0;
 }
 
 /* callback pointers */
-int __attribute__ ((format(printf, 2, 3)))
-(*selinux_log_direct)(int, const char *, ...) =
-	default_selinux_log;
+int __attribute__((format(printf, 2,
+			  3))) (*selinux_log_direct)(int, const char *,
+						     ...) = default_selinux_log;
 
-int
-(*selinux_audit) (void *, security_class_t, char *, size_t) =
-	default_selinux_audit;
+int (*selinux_audit)(void *, security_class_t, char *,
+		     size_t) = default_selinux_audit;
 
-int
-(*selinux_validate)(char **ctx) =
-	default_selinux_validate;
+int (*selinux_validate)(char **ctx) = default_selinux_validate;
 
-int
-(*selinux_netlink_setenforce) (int enforcing) =
-	default_selinux_setenforce;
+int (*selinux_netlink_setenforce)(int enforcing) = default_selinux_setenforce;
 
-int
-(*selinux_netlink_policyload) (int seqno) =
-	default_selinux_policyload;
+int (*selinux_netlink_policyload)(int seqno) = default_selinux_policyload;
 
 /* callback setting function */
-void
-selinux_set_callback(int type, union selinux_callback cb)
+void selinux_set_callback(int type, union selinux_callback cb)
 {
 	switch (type) {
 	case SELINUX_CB_LOG:
@@ -101,8 +89,7 @@ selinux_set_callback(int type, union selinux_callback cb)
 }
 
 /* callback getting function */
-union selinux_callback
-selinux_get_callback(int type)
+union selinux_callback selinux_get_callback(int type)
 {
 	union selinux_callback cb;
 

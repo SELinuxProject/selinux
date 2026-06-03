@@ -6,7 +6,7 @@
 #include "selinux_internal.h"
 #include "context_internal.h"
 
-int selinux_check_securetty_context(const char * tty_context)
+int selinux_check_securetty_context(const char *tty_context)
 {
 	FILE *fp = fopen(selinux_securetty_types_path(), "re");
 	if (!fp)

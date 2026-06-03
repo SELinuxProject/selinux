@@ -11,18 +11,16 @@
 
 /* Create a low level node structure from
  * a high level representation */
-static int node_from_record(sepol_handle_t * handle,
-			    const policydb_t * policydb,
-			    ocontext_t ** node, const sepol_node_t * data)
+static int node_from_record(sepol_handle_t *handle, const policydb_t *policydb,
+			    ocontext_t **node, const sepol_node_t *data)
 {
-
 	ocontext_t *tmp_node = NULL;
 	context_struct_t *tmp_con = NULL;
 	char *addr_buf = NULL, *mask_buf = NULL;
 	size_t addr_bsize, mask_bsize;
 	int proto;
 
-	tmp_node = (ocontext_t *) calloc(1, sizeof(ocontext_t));
+	tmp_node = (ocontext_t *)calloc(1, sizeof(ocontext_t));
 	if (!tmp_node)
 		goto omem;
 
@@ -64,10 +62,10 @@ static int node_from_record(sepol_handle_t * handle,
 	*node = tmp_node;
 	return STATUS_SUCCESS;
 
-      omem:
+omem:
 	ERR(handle, "out of memory");
 
-      err:
+err:
 	if (tmp_node != NULL) {
 		context_destroy(&tmp_node->context[0]);
 		free(tmp_node);
@@ -80,11 +78,9 @@ static int node_from_record(sepol_handle_t * handle,
 	return STATUS_ERR;
 }
 
-static int node_to_record(sepol_handle_t * handle,
-			  const policydb_t * policydb,
-			  ocontext_t * node, int proto, sepol_node_t ** record)
+static int node_to_record(sepol_handle_t *handle, const policydb_t *policydb,
+			  ocontext_t *node, int proto, sepol_node_t **record)
 {
-
 	context_struct_t *con = &node->context[0];
 
 	sepol_context_t *tmp_con = NULL;
@@ -96,7 +92,6 @@ static int node_to_record(sepol_handle_t * handle,
 	sepol_node_set_proto(tmp_record, proto);
 
 	switch (proto) {
-
 	case SEPOL_PROTO_IP4:
 		if (sepol_node_set_addr_bytes(handle, tmp_record,
 					      (const char *)&node->u.node.addr,
@@ -136,7 +131,7 @@ static int node_to_record(sepol_handle_t * handle,
 	*record = tmp_record;
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not convert node to record");
 	sepol_context_free(tmp_con);
 	sepol_node_free(tmp_record);
@@ -144,10 +139,9 @@ static int node_to_record(sepol_handle_t * handle,
 }
 
 /* Return the number of nodes */
-extern int sepol_node_count(sepol_handle_t * handle __attribute__ ((unused)),
-			    const sepol_policydb_t * p, unsigned int *response)
+extern int sepol_node_count(sepol_handle_t *handle __attribute__((unused)),
+			    const sepol_policydb_t *p, unsigned int *response)
 {
-
 	unsigned int count = 0;
 	ocontext_t *c, *head;
 	const policydb_t *policydb = &p->p;
@@ -166,11 +160,9 @@ extern int sepol_node_count(sepol_handle_t * handle __attribute__ ((unused)),
 }
 
 /* Check if a node exists */
-int sepol_node_exists(sepol_handle_t * handle,
-		      const sepol_policydb_t * p,
-		      const sepol_node_key_t * key, int *response)
+int sepol_node_exists(sepol_handle_t *handle, const sepol_policydb_t *p,
+		      const sepol_node_key_t *key, int *response)
 {
-
 	const policydb_t *policydb = &p->p;
 	ocontext_t *c, *head;
 
@@ -179,38 +171,34 @@ int sepol_node_exists(sepol_handle_t * handle,
 	sepol_node_key_unpack(key, &addr, &mask, &proto);
 
 	switch (proto) {
+	case SEPOL_PROTO_IP4: {
+		head = policydb->ocontexts[OCON_NODE];
+		for (c = head; c; c = c->next) {
+			unsigned int *addr2 = &c->u.node.addr;
+			unsigned int *mask2 = &c->u.node.mask;
 
-	case SEPOL_PROTO_IP4:
-		{
-			head = policydb->ocontexts[OCON_NODE];
-			for (c = head; c; c = c->next) {
-				unsigned int *addr2 = &c->u.node.addr;
-				unsigned int *mask2 = &c->u.node.mask;
-
-				if (!memcmp(addr, addr2, 4) &&
-				    !memcmp(mask, mask2, 4)) {
-
-					*response = 1;
-					return STATUS_SUCCESS;
-				}
+			if (!memcmp(addr, addr2, 4) &&
+			    !memcmp(mask, mask2, 4)) {
+				*response = 1;
+				return STATUS_SUCCESS;
 			}
-			break;
 		}
-	case SEPOL_PROTO_IP6:
-		{
-			head = policydb->ocontexts[OCON_NODE6];
-			for (c = head; c; c = c->next) {
-				unsigned int *addr2 = c->u.node6.addr;
-				unsigned int *mask2 = c->u.node6.mask;
+		break;
+	}
+	case SEPOL_PROTO_IP6: {
+		head = policydb->ocontexts[OCON_NODE6];
+		for (c = head; c; c = c->next) {
+			unsigned int *addr2 = c->u.node6.addr;
+			unsigned int *mask2 = c->u.node6.mask;
 
-				if (!memcmp(addr, addr2, 16) &&
-				    !memcmp(mask, mask2, 16)) {
-					*response = 1;
-					return STATUS_SUCCESS;
-				}
+			if (!memcmp(addr, addr2, 16) &&
+			    !memcmp(mask, mask2, 16)) {
+				*response = 1;
+				return STATUS_SUCCESS;
 			}
-			break;
 		}
+		break;
+	}
 	default:
 		ERR(handle, "unsupported protocol %u", proto);
 		goto err;
@@ -219,18 +207,16 @@ int sepol_node_exists(sepol_handle_t * handle,
 	*response = 0;
 	return STATUS_SUCCESS;
 
-      err:
-	ERR(handle, "could not check if node %s/%s (%s) exists",
-	    addr, mask, sepol_node_get_proto_str(proto));
+err:
+	ERR(handle, "could not check if node %s/%s (%s) exists", addr, mask,
+	    sepol_node_get_proto_str(proto));
 	return STATUS_ERR;
 }
 
 /* Query a node */
-int sepol_node_query(sepol_handle_t * handle,
-		     const sepol_policydb_t * p,
-		     const sepol_node_key_t * key, sepol_node_t ** response)
+int sepol_node_query(sepol_handle_t *handle, const sepol_policydb_t *p,
+		     const sepol_node_key_t *key, sepol_node_t **response)
 {
-
 	const policydb_t *policydb = &p->p;
 	ocontext_t *c, *head;
 
@@ -239,45 +225,40 @@ int sepol_node_query(sepol_handle_t * handle,
 	sepol_node_key_unpack(key, &addr, &mask, &proto);
 
 	switch (proto) {
+	case SEPOL_PROTO_IP4: {
+		head = policydb->ocontexts[OCON_NODE];
+		for (c = head; c; c = c->next) {
+			unsigned int *addr2 = &c->u.node.addr;
+			unsigned int *mask2 = &c->u.node.mask;
 
-	case SEPOL_PROTO_IP4:
-		{
-			head = policydb->ocontexts[OCON_NODE];
-			for (c = head; c; c = c->next) {
-				unsigned int *addr2 = &c->u.node.addr;
-				unsigned int *mask2 = &c->u.node.mask;
-
-				if (!memcmp(addr, addr2, 4) &&
-				    !memcmp(mask, mask2, 4)) {
-
-					if (node_to_record(handle, policydb,
-							   c, SEPOL_PROTO_IP4,
-							   response) < 0)
-						goto err;
-					return STATUS_SUCCESS;
-				}
+			if (!memcmp(addr, addr2, 4) &&
+			    !memcmp(mask, mask2, 4)) {
+				if (node_to_record(handle, policydb, c,
+						   SEPOL_PROTO_IP4,
+						   response) < 0)
+					goto err;
+				return STATUS_SUCCESS;
 			}
-			break;
 		}
-	case SEPOL_PROTO_IP6:
-		{
-			head = policydb->ocontexts[OCON_NODE6];
-			for (c = head; c; c = c->next) {
-				unsigned int *addr2 = c->u.node6.addr;
-				unsigned int *mask2 = c->u.node6.mask;
+		break;
+	}
+	case SEPOL_PROTO_IP6: {
+		head = policydb->ocontexts[OCON_NODE6];
+		for (c = head; c; c = c->next) {
+			unsigned int *addr2 = c->u.node6.addr;
+			unsigned int *mask2 = c->u.node6.mask;
 
-				if (!memcmp(addr, addr2, 16) &&
-				    !memcmp(mask, mask2, 16)) {
-
-					if (node_to_record(handle, policydb,
-							   c, SEPOL_PROTO_IP6,
-							   response) < 0)
-						goto err;
-					return STATUS_SUCCESS;
-				}
+			if (!memcmp(addr, addr2, 16) &&
+			    !memcmp(mask, mask2, 16)) {
+				if (node_to_record(handle, policydb, c,
+						   SEPOL_PROTO_IP6,
+						   response) < 0)
+					goto err;
+				return STATUS_SUCCESS;
 			}
-			break;
 		}
+		break;
+	}
 	default:
 		ERR(handle, "unsupported protocol %u", proto);
 		goto err;
@@ -285,19 +266,16 @@ int sepol_node_query(sepol_handle_t * handle,
 	*response = NULL;
 	return STATUS_SUCCESS;
 
-      err:
-	ERR(handle, "could not query node %s/%s (%s)",
-	    addr, mask, sepol_node_get_proto_str(proto));
+err:
+	ERR(handle, "could not query node %s/%s (%s)", addr, mask,
+	    sepol_node_get_proto_str(proto));
 	return STATUS_ERR;
-
 }
 
 /* Load a node into policy */
-int sepol_node_modify(sepol_handle_t * handle,
-		      sepol_policydb_t * p,
-		      const sepol_node_key_t * key, const sepol_node_t * data)
+int sepol_node_modify(sepol_handle_t *handle, sepol_policydb_t *p,
+		      const sepol_node_key_t *key, const sepol_node_t *data)
 {
-
 	policydb_t *policydb = &p->p;
 	ocontext_t *node = NULL;
 
@@ -310,21 +288,18 @@ int sepol_node_modify(sepol_handle_t * handle,
 		goto err;
 
 	switch (proto) {
-
-	case SEPOL_PROTO_IP4:
-		{
-			/* Attach to context list */
-			node->next = policydb->ocontexts[OCON_NODE];
-			policydb->ocontexts[OCON_NODE] = node;
-			break;
-		}
-	case SEPOL_PROTO_IP6:
-		{
-			/* Attach to context list */
-			node->next = policydb->ocontexts[OCON_NODE6];
-			policydb->ocontexts[OCON_NODE6] = node;
-			break;
-		}
+	case SEPOL_PROTO_IP4: {
+		/* Attach to context list */
+		node->next = policydb->ocontexts[OCON_NODE];
+		policydb->ocontexts[OCON_NODE] = node;
+		break;
+	}
+	case SEPOL_PROTO_IP6: {
+		/* Attach to context list */
+		node->next = policydb->ocontexts[OCON_NODE6];
+		policydb->ocontexts[OCON_NODE6] = node;
+		break;
+	}
 	default:
 		ERR(handle, "unsupported protocol %u", proto);
 		goto err;
@@ -332,9 +307,9 @@ int sepol_node_modify(sepol_handle_t * handle,
 
 	return STATUS_SUCCESS;
 
-      err:
-	ERR(handle, "could not load node %s/%s (%s)",
-	    addr, mask, sepol_node_get_proto_str(proto));
+err:
+	ERR(handle, "could not load node %s/%s (%s)", addr, mask,
+	    sepol_node_get_proto_str(proto));
 	if (node != NULL) {
 		context_destroy(&node->context[0]);
 		free(node);
@@ -342,12 +317,10 @@ int sepol_node_modify(sepol_handle_t * handle,
 	return STATUS_ERR;
 }
 
-int sepol_node_iterate(sepol_handle_t * handle,
-		       const sepol_policydb_t * p,
-		       int (*fn) (const sepol_node_t * node,
-				  void *fn_arg), void *arg)
+int sepol_node_iterate(sepol_handle_t *handle, const sepol_policydb_t *p,
+		       int (*fn)(const sepol_node_t *node, void *fn_arg),
+		       void *arg)
 {
-
 	const policydb_t *policydb = &p->p;
 	ocontext_t *c, *head;
 	sepol_node_t *node = NULL;
@@ -355,8 +328,8 @@ int sepol_node_iterate(sepol_handle_t * handle,
 
 	head = policydb->ocontexts[OCON_NODE];
 	for (c = head; c; c = c->next) {
-		if (node_to_record(handle, policydb, c, SEPOL_PROTO_IP4, &node)
-		    < 0)
+		if (node_to_record(handle, policydb, c, SEPOL_PROTO_IP4,
+				   &node) < 0)
 			goto err;
 
 		/* Invoke handler */
@@ -374,8 +347,8 @@ int sepol_node_iterate(sepol_handle_t * handle,
 
 	head = policydb->ocontexts[OCON_NODE6];
 	for (c = head; c; c = c->next) {
-		if (node_to_record(handle, policydb, c, SEPOL_PROTO_IP6, &node)
-		    < 0)
+		if (node_to_record(handle, policydb, c, SEPOL_PROTO_IP6,
+				   &node) < 0)
 			goto err;
 
 		/* Invoke handler */
@@ -393,7 +366,7 @@ int sepol_node_iterate(sepol_handle_t * handle,
 
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not iterate over nodes");
 	sepol_node_free(node);
 	return STATUS_ERR;

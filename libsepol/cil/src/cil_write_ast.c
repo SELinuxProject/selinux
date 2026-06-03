@@ -40,8 +40,8 @@
 #include "cil_tree.h"
 #include "cil_write_ast.h"
 
-
-static inline const char *datum_or_str(struct cil_symtab_datum *datum, const char *str)
+static inline const char *datum_or_str(struct cil_symtab_datum *datum,
+				       const char *str)
 {
 	return datum && datum->fqn ? datum->fqn : str;
 }
@@ -83,7 +83,8 @@ static void write_expr(FILE *out, struct cil_list *expr)
 			break;
 		case CIL_OP: {
 			const char *op_str;
-			enum cil_flavor op_flavor = (enum cil_flavor)(uintptr_t)curr->data;
+			enum cil_flavor op_flavor =
+				(enum cil_flavor)(uintptr_t)curr->data;
 			switch (op_flavor) {
 			case CIL_AND:
 				op_str = CIL_KEY_AND;
@@ -127,7 +128,8 @@ static void write_expr(FILE *out, struct cil_list *expr)
 		}
 		case CIL_CONS_OPERAND: {
 			const char *operand_str;
-			enum cil_flavor operand_flavor = (enum cil_flavor)(uintptr_t)curr->data;
+			enum cil_flavor operand_flavor =
+				(enum cil_flavor)(uintptr_t)curr->data;
 			switch (operand_flavor) {
 			case CIL_CONS_U1:
 				operand_str = CIL_KEY_CONS_U1;
@@ -216,7 +218,7 @@ static void write_string_list(FILE *out, struct cil_list *list)
 			fprintf(out, " ");
 		else
 			notfirst = 1;
-		fprintf(out, "%s", (char*)curr->data);
+		fprintf(out, "%s", (char *)curr->data);
 	}
 	fprintf(out, ")");
 }
@@ -285,9 +287,11 @@ static void write_classperms_list(FILE *out, struct cil_list *cp_list)
 			struct cil_classpermission *cp = cp_set->set;
 			if (cp) {
 				if (cp->datum.name)
-					fprintf(out, "%s", datum_to_str(DATUM(cp)));
+					fprintf(out, "%s",
+						datum_to_str(DATUM(cp)));
 				else
-					write_classperms_list(out,cp->classperms);
+					write_classperms_list(out,
+							      cp->classperms);
 			} else {
 				fprintf(out, "%s", cp_set->set_str);
 			}
@@ -310,7 +314,8 @@ static void write_permx(FILE *out, struct cil_permissionx *permx)
 		} else {
 			fprintf(out, "<?KIND> ");
 		}
-		fprintf(out, "%s ", datum_or_str(DATUM(permx->obj), permx->obj_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(permx->obj), permx->obj_str));
 		write_expr(out, permx->expr_str);
 		fprintf(out, ")");
 	}
@@ -331,7 +336,8 @@ static void write_level(FILE *out, struct cil_level *level, int print_name)
 		fprintf(out, "%s", datum_to_str(DATUM(level)));
 	} else {
 		fprintf(out, "(");
-		fprintf(out, "%s", datum_or_str(DATUM(level->sens), level->sens_str));
+		fprintf(out, "%s",
+			datum_or_str(DATUM(level->sens), level->sens_str));
 		if (level->cats) {
 			fprintf(out, " ");
 			write_cats(out, level->cats);
@@ -359,15 +365,19 @@ static void write_range(FILE *out, struct cil_levelrange *range, int print_name)
 	}
 }
 
-static void write_context(FILE *out, struct cil_context *context, int print_name)
+static void write_context(FILE *out, struct cil_context *context,
+			  int print_name)
 {
 	if (print_name && context->datum.name) {
 		fprintf(out, "%s", datum_to_str(DATUM(context)));
 	} else {
 		fprintf(out, "(");
-		fprintf(out, "%s ", datum_or_str(DATUM(context->user), context->user_str));
-		fprintf(out, "%s ", datum_or_str(DATUM(context->role), context->role_str));
-		fprintf(out, "%s ", datum_or_str(DATUM(context->type), context->type_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(context->user), context->user_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(context->role), context->role_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(context->type), context->type_str));
 		if (context->range)
 			write_range(out, context->range, CIL_TRUE);
 		else
@@ -405,7 +415,7 @@ static void write_call_args(FILE *out, struct cil_list *args)
 
 	fprintf(out, "(");
 	cil_list_for_each(item, args) {
-		struct cil_args* arg = item->data;
+		struct cil_args *arg = item->data;
 		enum cil_flavor arg_flavor = arg->flavor;
 		if (notfirst)
 			fprintf(out, " ");
@@ -420,7 +430,8 @@ static void write_call_args(FILE *out, struct cil_list *args)
 		case CIL_BOOL:
 		case CIL_CLASS:
 		case CIL_MAP_CLASS: {
-			fprintf(out, "%s", datum_or_str(DATUM(arg->arg), arg->arg_str));
+			fprintf(out, "%s",
+				datum_or_str(DATUM(arg->arg), arg->arg_str));
 			break;
 		}
 		case CIL_DECLARED_STRING: {
@@ -433,7 +444,8 @@ static void write_call_args(FILE *out, struct cil_list *args)
 		}
 		case CIL_CATSET: {
 			if (arg->arg) {
-				struct cil_catset *catset = (struct cil_catset *)arg->arg;
+				struct cil_catset *catset =
+					(struct cil_catset *)arg->arg;
 				write_cats(out, catset->cats);
 			} else {
 				fprintf(out, "%s", arg->arg_str);
@@ -442,7 +454,8 @@ static void write_call_args(FILE *out, struct cil_list *args)
 		}
 		case CIL_LEVEL: {
 			if (arg->arg) {
-				struct cil_level *level = (struct cil_level *)arg->arg;
+				struct cil_level *level =
+					(struct cil_level *)arg->arg;
 				write_level(out, level, CIL_TRUE);
 			} else {
 				fprintf(out, "%s", arg->arg_str);
@@ -451,7 +464,8 @@ static void write_call_args(FILE *out, struct cil_list *args)
 		}
 		case CIL_LEVELRANGE: {
 			if (arg->arg) {
-				struct cil_levelrange *range = (struct cil_levelrange *)arg->arg;
+				struct cil_levelrange *range =
+					(struct cil_levelrange *)arg->arg;
 				write_range(out, range, CIL_TRUE);
 			} else {
 				fprintf(out, "%s", arg->arg_str);
@@ -460,7 +474,8 @@ static void write_call_args(FILE *out, struct cil_list *args)
 		}
 		case CIL_IPADDR: {
 			if (arg->arg) {
-				struct cil_ipaddr *addr = (struct cil_ipaddr *)arg->arg;
+				struct cil_ipaddr *addr =
+					(struct cil_ipaddr *)arg->arg;
 				write_ipaddr(out, addr);
 			} else {
 				fprintf(out, "%s", arg->arg_str);
@@ -469,18 +484,22 @@ static void write_call_args(FILE *out, struct cil_list *args)
 		}
 		case CIL_CLASSPERMISSION: {
 			if (arg->arg) {
-				struct cil_classpermission *cp = (struct cil_classpermission *)arg->arg;
+				struct cil_classpermission *cp =
+					(struct cil_classpermission *)arg->arg;
 				if (cp->datum.name)
-					fprintf(out, "%s", datum_to_str(DATUM(cp)));
+					fprintf(out, "%s",
+						datum_to_str(DATUM(cp)));
 				else
-					write_classperms_list(out, cp->classperms);
+					write_classperms_list(out,
+							      cp->classperms);
 			} else {
 				fprintf(out, "%s", arg->arg_str);
 			}
 			break;
 		}
 		default:
-			fprintf(out, "<?ARG:%s>", datum_or_str(DATUM(arg->arg), arg->arg_str));
+			fprintf(out, "<?ARG:%s>",
+				datum_or_str(DATUM(arg->arg), arg->arg_str));
 			break;
 		}
 	}
@@ -506,7 +525,7 @@ static void write_call_args_tree(FILE *out, struct cil_tree_node *arg_node)
 static const char *macro_param_flavor_to_string(enum cil_flavor flavor)
 {
 	const char *str;
-	switch(flavor) {
+	switch (flavor) {
 	case CIL_TYPE:
 		str = CIL_KEY_TYPE;
 		break;
@@ -559,12 +578,14 @@ static const char *macro_param_flavor_to_string(enum cil_flavor flavor)
 static void cil_write_src_info_node(FILE *out, struct cil_tree_node *node)
 {
 	struct cil_src_info *info = node->data;
-	if (info->kind == CIL_KEY_SRC_CIL || info->kind == CIL_KEY_SRC_HLL_LMS) {
+	if (info->kind == CIL_KEY_SRC_CIL ||
+	    info->kind == CIL_KEY_SRC_HLL_LMS) {
 		fprintf(out, ";;* lms %u %s\n", info->hll_line, info->path);
 	} else if (info->kind == CIL_KEY_SRC_HLL_LMX) {
 		fprintf(out, ";;* lmx %u %s\n", info->hll_line, info->path);
 	} else {
-		fprintf(out, ";;* <?SRC_INFO_KIND> %u %s\n", info->hll_line, info->path);
+		fprintf(out, ";;* <?SRC_INFO_KIND> %u %s\n", info->hll_line,
+			info->path);
 	}
 }
 
@@ -574,7 +595,7 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 		return;
 	}
 
-	switch(node->flavor) {
+	switch (node->flavor) {
 	case CIL_NODE: {
 		fprintf(out, "%s\n", (char *)node->data);
 		break;
@@ -589,12 +610,15 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_BLOCKINHERIT: {
 		struct cil_blockinherit *inherit = node->data;
-		fprintf(out, "(blockinherit %s)\n", datum_or_str(DATUM(inherit->block), inherit->block_str));
+		fprintf(out, "(blockinherit %s)\n",
+			datum_or_str(DATUM(inherit->block),
+				     inherit->block_str));
 		break;
 	}
 	case CIL_IN: {
 		struct cil_in *in = node->data;
-		fprintf(out, "(in %s", datum_or_str(DATUM(in->block), in->block_str));
+		fprintf(out, "(in %s",
+			datum_or_str(DATUM(in->block), in->block_str));
 		if (!node->cl_head)
 			fprintf(out, ")");
 		fprintf(out, "\n");
@@ -634,7 +658,8 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_CONDBLOCK: {
 		struct cil_condblock *cb = node->data;
-		fprintf(out, "(%s", cb->flavor == CIL_CONDTRUE ? "true" : "false");
+		fprintf(out, "(%s",
+			cb->flavor == CIL_CONDTRUE ? "true" : "false");
 		if (!node->cl_head)
 			fprintf(out, ")");
 		fprintf(out, "\n");
@@ -647,7 +672,10 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 		if (macro->params) {
 			cil_list_for_each(curr, macro->params) {
 				struct cil_param *param = curr->data;
-				fprintf(out, "(%s %s)", macro_param_flavor_to_string(param->flavor), param->str);
+				fprintf(out, "(%s %s)",
+					macro_param_flavor_to_string(
+						param->flavor),
+					param->str);
 			}
 		}
 		fprintf(out, ")");
@@ -658,7 +686,8 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_CALL: {
 		struct cil_call *call = node->data;
-		fprintf(out, "(call %s", datum_or_str(DATUM(call->macro), call->macro_str));
+		fprintf(out, "(call %s",
+			datum_or_str(DATUM(call->macro), call->macro_str));
 		if (call->args) {
 			fprintf(out, " ");
 			write_call_args(out, call->args);
@@ -673,7 +702,9 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_BLOCKABSTRACT: {
 		struct cil_blockabstract *abstract = node->data;
-		fprintf(out, "(blockabstract %s)\n", datum_or_str(DATUM(abstract->block), abstract->block_str));
+		fprintf(out, "(blockabstract %s)\n",
+			datum_or_str(DATUM(abstract->block),
+				     abstract->block_str));
 		break;
 	}
 	case CIL_MLS: {
@@ -794,8 +825,10 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_CLASSCOMMON: {
 		struct cil_classcommon *cc = node->data;
-		fprintf(out, "(classcommon %s ", datum_or_str(DATUM(cc->class), cc->class_str));
-		fprintf(out, "%s", datum_or_str(DATUM(cc->common), cc->common_str));
+		fprintf(out, "(classcommon %s ",
+			datum_or_str(DATUM(cc->class), cc->class_str));
+		fprintf(out, "%s",
+			datum_or_str(DATUM(cc->common), cc->common_str));
 		fprintf(out, ")\n");
 		break;
 	}
@@ -806,7 +839,8 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_CLASSPERMISSIONSET: {
 		struct cil_classpermissionset *cps = node->data;
-		fprintf(out, "(classpermissionset %s ", datum_or_str(DATUM(cps->set), cps->set_str));
+		fprintf(out, "(classpermissionset %s ",
+			datum_or_str(DATUM(cps->set), cps->set_str));
 		write_classperms_list(out, cps->classperms);
 		fprintf(out, ")\n");
 		break;
@@ -820,8 +854,12 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_CLASSMAPPING: {
 		struct cil_classmapping *mapping = node->data;
-		fprintf(out, "(classmapping %s ", datum_or_str(DATUM(mapping->map_class), mapping->map_class_str));
-		fprintf(out, "%s ", datum_or_str(DATUM(mapping->map_perm), mapping->map_perm_str));
+		fprintf(out, "(classmapping %s ",
+			datum_or_str(DATUM(mapping->map_class),
+				     mapping->map_class_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(mapping->map_perm),
+				     mapping->map_perm_str));
 		write_classperms_list(out, mapping->classperms);
 		fprintf(out, ")\n");
 		break;
@@ -836,7 +874,8 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 		} else {
 			fprintf(out, "<?KIND> ");
 		}
-		fprintf(out, "%s ", datum_or_str(DATUM(permx->obj), permx->obj_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(permx->obj), permx->obj_str));
 		write_expr(out, permx->expr_str);
 		fprintf(out, "))\n");
 		break;
@@ -848,7 +887,8 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_SIDCONTEXT: {
 		struct cil_sidcontext *sidcon = node->data;
-		fprintf(out, "(sidcontext %s ", datum_or_str(DATUM(sidcon->sid), sidcon->sid_str));
+		fprintf(out, "(sidcontext %s ",
+			datum_or_str(DATUM(sidcon->sid), sidcon->sid_str));
 		if (sidcon->context)
 			write_context(out, sidcon->context, CIL_TRUE);
 		else
@@ -869,12 +909,14 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_BOOL: {
 		struct cil_bool *boolean = node->data;
-		fprintf(out, "(boolean %s %s)\n", datum_to_str(DATUM(boolean)), boolean->value ? "true" : "false");
+		fprintf(out, "(boolean %s %s)\n", datum_to_str(DATUM(boolean)),
+			boolean->value ? "true" : "false");
 		break;
 	}
 	case CIL_TUNABLE: {
 		struct cil_tunable *tunable = node->data;
-		fprintf(out, "(tunable %s %s)\n", datum_to_str(DATUM(tunable)), tunable->value ? "true" : "false");
+		fprintf(out, "(tunable %s %s)\n", datum_to_str(DATUM(tunable)),
+			tunable->value ? "true" : "false");
 		break;
 	}
 	case CIL_SENS: {
@@ -884,13 +926,18 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_SENSALIAS: {
 		struct cil_alias *alias = node->data;
-		fprintf(out, "(sensitivityalias %s)\n", datum_to_str(DATUM(alias)));
+		fprintf(out, "(sensitivityalias %s)\n",
+			datum_to_str(DATUM(alias)));
 		break;
 	}
 	case CIL_SENSALIASACTUAL: {
 		struct cil_aliasactual *aliasactual = node->data;
-		fprintf(out, "(sensitivityaliasactual %s ", datum_or_str(DATUM(aliasactual->alias), aliasactual->alias_str));
-		fprintf(out, "%s", datum_or_str(DATUM(aliasactual->actual), aliasactual->actual_str));
+		fprintf(out, "(sensitivityaliasactual %s ",
+			datum_or_str(DATUM(aliasactual->alias),
+				     aliasactual->alias_str));
+		fprintf(out, "%s",
+			datum_or_str(DATUM(aliasactual->actual),
+				     aliasactual->actual_str));
 		fprintf(out, ")\n");
 		break;
 	}
@@ -901,13 +948,18 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_CATALIAS: {
 		struct cil_alias *alias = node->data;
-		fprintf(out, "(categoryalias %s)\n", datum_to_str(DATUM(alias)));
+		fprintf(out, "(categoryalias %s)\n",
+			datum_to_str(DATUM(alias)));
 		break;
 	}
 	case CIL_CATALIASACTUAL: {
 		struct cil_aliasactual *aliasactual = node->data;
-		fprintf(out, "(categoryaliasactual %s ", datum_or_str(DATUM(aliasactual->alias), aliasactual->alias_str));
-		fprintf(out, "%s", datum_or_str(DATUM(aliasactual->actual), aliasactual->actual_str));
+		fprintf(out, "(categoryaliasactual %s ",
+			datum_or_str(DATUM(aliasactual->alias),
+				     aliasactual->alias_str));
+		fprintf(out, "%s",
+			datum_or_str(DATUM(aliasactual->actual),
+				     aliasactual->actual_str));
 		fprintf(out, ")\n");
 		break;
 	}
@@ -932,7 +984,8 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	case CIL_SENSCAT: {
 		struct cil_senscat *senscat = node->data;
 		fprintf(out, "(sensitivitycategory ");
-		fprintf(out, "%s ", datum_or_str(DATUM(senscat->sens), senscat->sens_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(senscat->sens), senscat->sens_str));
 		write_cats(out, senscat->cats);
 		fprintf(out, ")\n");
 		break;
@@ -974,7 +1027,8 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_USERATTRIBUTESET: {
 		struct cil_userattributeset *attr = node->data;
-		fprintf(out, "(userattributeset %s ", datum_or_str(DATUM(attr->attr), attr->attr_str));
+		fprintf(out, "(userattributeset %s ",
+			datum_or_str(DATUM(attr->attr), attr->attr_str));
 		if (attr->datum_expr)
 			write_expr(out, attr->datum_expr);
 		else
@@ -985,14 +1039,20 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	case CIL_USERROLE: {
 		struct cil_userrole *userrole = node->data;
 		fprintf(out, "(userrole ");
-		fprintf(out, "%s ", datum_or_str(DATUM(userrole->user), userrole->user_str));
-		fprintf(out, "%s", datum_or_str(DATUM(userrole->role), userrole->role_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(userrole->user),
+				     userrole->user_str));
+		fprintf(out, "%s",
+			datum_or_str(DATUM(userrole->role),
+				     userrole->role_str));
 		fprintf(out, ")\n");
 		break;
 	}
 	case CIL_USERLEVEL: {
 		struct cil_userlevel *userlevel = node->data;
-		fprintf(out, "(userlevel %s ", datum_or_str(DATUM(userlevel->user), userlevel->user_str));
+		fprintf(out, "(userlevel %s ",
+			datum_or_str(DATUM(userlevel->user),
+				     userlevel->user_str));
 		if (userlevel->level)
 			write_level(out, userlevel->level, CIL_TRUE);
 		else
@@ -1002,7 +1062,9 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_USERRANGE: {
 		struct cil_userrange *userrange = node->data;
-		fprintf(out, "(userrange %s ", datum_or_str(DATUM(userrange->user), userrange->user_str));
+		fprintf(out, "(userrange %s ",
+			datum_or_str(DATUM(userrange->user),
+				     userrange->user_str));
 		if (userrange->range)
 			write_range(out, userrange->range, CIL_TRUE);
 		else
@@ -1013,21 +1075,27 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	case CIL_USERBOUNDS: {
 		struct cil_bounds *bounds = node->data;
 		fprintf(out, "(userbounds ");
-		fprintf(out, "%s ", datum_or_str(DATUM(bounds->parent), bounds->parent_str));
-		fprintf(out, "%s)\n", datum_or_str(DATUM(bounds->child), bounds->child_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(bounds->parent),
+				     bounds->parent_str));
+		fprintf(out, "%s)\n",
+			datum_or_str(DATUM(bounds->child), bounds->child_str));
 		break;
 	}
 	case CIL_USERPREFIX: {
 		struct cil_userprefix *prefix = node->data;
 		fprintf(out, "(userprefix ");
-		fprintf(out, "%s ", datum_or_str(DATUM(prefix->user), prefix->user_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(prefix->user), prefix->user_str));
 		fprintf(out, "%s)\n", prefix->prefix_str);
 		break;
 	}
 	case CIL_SELINUXUSER: {
 		struct cil_selinuxuser *selinuxuser = node->data;
 		fprintf(out, "(selinuxuser %s ", selinuxuser->name_str);
-		fprintf(out, "%s ", datum_or_str(DATUM(selinuxuser->user), selinuxuser->user_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(selinuxuser->user),
+				     selinuxuser->user_str));
 		if (selinuxuser->range)
 			write_range(out, selinuxuser->range, CIL_TRUE);
 		else
@@ -1038,7 +1106,9 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	case CIL_SELINUXUSERDEFAULT: {
 		struct cil_selinuxuser *selinuxuser = node->data;
 		fprintf(out, "(selinuxuserdefault ");
-		fprintf(out, "%s ", datum_or_str(DATUM(selinuxuser->user), selinuxuser->user_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(selinuxuser->user),
+				     selinuxuser->user_str));
 		if (selinuxuser->range)
 			write_range(out, selinuxuser->range, CIL_TRUE);
 		else
@@ -1056,7 +1126,8 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_ROLEATTRIBUTESET: {
 		struct cil_roleattributeset *attr = node->data;
-		fprintf(out, "(roleattributeset %s ", datum_or_str(DATUM(attr->attr), attr->attr_str));
+		fprintf(out, "(roleattributeset %s ",
+			datum_or_str(DATUM(attr->attr), attr->attr_str));
 		if (attr->datum_expr)
 			write_expr(out, attr->datum_expr);
 		else
@@ -1067,16 +1138,23 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	case CIL_ROLETYPE: {
 		struct cil_roletype *roletype = node->data;
 		fprintf(out, "(roletype ");
-		fprintf(out, "%s ", datum_or_str(DATUM(roletype->role), roletype->role_str));
-		fprintf(out, "%s", datum_or_str(DATUM(roletype->type), roletype->type_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(roletype->role),
+				     roletype->role_str));
+		fprintf(out, "%s",
+			datum_or_str(DATUM(roletype->type),
+				     roletype->type_str));
 		fprintf(out, ")\n");
 		break;
 	}
 	case CIL_ROLEBOUNDS: {
 		struct cil_bounds *bounds = node->data;
 		fprintf(out, "(rolebounds ");
-		fprintf(out, "%s ", datum_or_str(DATUM(bounds->parent), bounds->parent_str));
-		fprintf(out, "%s)\n", datum_or_str(DATUM(bounds->child), bounds->child_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(bounds->parent),
+				     bounds->parent_str));
+		fprintf(out, "%s)\n",
+			datum_or_str(DATUM(bounds->child), bounds->child_str));
 		break;
 	}
 	case CIL_TYPE: {
@@ -1089,8 +1167,12 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_TYPEALIASACTUAL: {
 		struct cil_aliasactual *aliasactual = node->data;
-		fprintf(out, "(typealiasactual %s ", datum_or_str(DATUM(aliasactual->alias), aliasactual->alias_str));
-		fprintf(out, "%s", datum_or_str(DATUM(aliasactual->actual), aliasactual->actual_str));
+		fprintf(out, "(typealiasactual %s ",
+			datum_or_str(DATUM(aliasactual->alias),
+				     aliasactual->alias_str));
+		fprintf(out, "%s",
+			datum_or_str(DATUM(aliasactual->actual),
+				     aliasactual->actual_str));
 		fprintf(out, ")\n");
 		break;
 	}
@@ -1100,7 +1182,8 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_TYPEATTRIBUTESET: {
 		struct cil_typeattributeset *attr = node->data;
-		fprintf(out, "(typeattributeset %s ", datum_or_str(DATUM(attr->attr), attr->attr_str));
+		fprintf(out, "(typeattributeset %s ",
+			datum_or_str(DATUM(attr->attr), attr->attr_str));
 		if (attr->datum_expr)
 			write_expr(out, attr->datum_expr);
 		else
@@ -1135,25 +1218,40 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	case CIL_TYPEBOUNDS: {
 		struct cil_bounds *bounds = node->data;
 		fprintf(out, "(typebounds ");
-		fprintf(out, "%s ", datum_or_str(DATUM(bounds->parent), bounds->parent_str));
-		fprintf(out, "%s)\n", datum_or_str(DATUM(bounds->child), bounds->child_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(bounds->parent),
+				     bounds->parent_str));
+		fprintf(out, "%s)\n",
+			datum_or_str(DATUM(bounds->child), bounds->child_str));
 		break;
 	}
 	case CIL_ROLEALLOW: {
 		struct cil_roleallow *roleallow = node->data;
 		fprintf(out, "(roleallow ");
-		fprintf(out, "%s ", datum_or_str(DATUM(roleallow->src), roleallow->src_str));
-		fprintf(out, "%s", datum_or_str(DATUM(roleallow->tgt), roleallow->tgt_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(roleallow->src),
+				     roleallow->src_str));
+		fprintf(out, "%s",
+			datum_or_str(DATUM(roleallow->tgt),
+				     roleallow->tgt_str));
 		fprintf(out, ")\n");
 		break;
 	}
 	case CIL_ROLETRANSITION: {
 		struct cil_roletransition *roletrans = node->data;
 		fprintf(out, "(roletransition ");
-		fprintf(out, "%s ", datum_or_str(DATUM(roletrans->src), roletrans->src_str));
-		fprintf(out, "%s ", datum_or_str(DATUM(roletrans->tgt), roletrans->tgt_str));
-		fprintf(out, "%s ", datum_or_str(DATUM(roletrans->obj), roletrans->obj_str));
-		fprintf(out, "%s", datum_or_str(DATUM(roletrans->result), roletrans->result_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(roletrans->src),
+				     roletrans->src_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(roletrans->tgt),
+				     roletrans->tgt_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(roletrans->obj),
+				     roletrans->obj_str));
+		fprintf(out, "%s",
+			datum_or_str(DATUM(roletrans->result),
+				     roletrans->result_str));
 		fprintf(out, ")\n");
 		break;
 	}
@@ -1170,8 +1268,10 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 		else
 			fprintf(out, "(<?AVRULE> ");
 
-		fprintf(out, "%s ", datum_or_str(DATUM(rule->src), rule->src_str));
-		fprintf(out, "%s ", datum_or_str(DATUM(rule->tgt), rule->tgt_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(rule->src), rule->src_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(rule->tgt), rule->tgt_str));
 		write_classperms_list(out, rule->perms.classperms);
 		fprintf(out, ")\n");
 		break;
@@ -1188,10 +1288,12 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 			fprintf(out, "(neverallowx ");
 		else
 			fprintf(out, "(<?AVRULEX> ");
-		fprintf(out, "%s ", datum_or_str(DATUM(rule->src), rule->src_str));
-		fprintf(out, "%s ", datum_or_str(DATUM(rule->tgt), rule->tgt_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(rule->src), rule->src_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(rule->tgt), rule->tgt_str));
 		if (rule->perms.x.permx_str) {
-			fprintf(out, "%s",rule->perms.x.permx_str);
+			fprintf(out, "%s", rule->perms.x.permx_str);
 		} else {
 			write_permx(out, rule->perms.x.permx);
 		}
@@ -1202,8 +1304,10 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 		struct cil_deny_rule *rule = node->data;
 		fprintf(out, "(deny ");
 
-		fprintf(out, "%s ", datum_or_str(DATUM(rule->src), rule->src_str));
-		fprintf(out, "%s ", datum_or_str(DATUM(rule->tgt), rule->tgt_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(rule->src), rule->src_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(rule->tgt), rule->tgt_str));
 		write_classperms_list(out, rule->classperms);
 		fprintf(out, ")\n");
 		break;
@@ -1218,34 +1322,45 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 			fprintf(out, "(typechange ");
 		else
 			fprintf(out, "(<?TYPERULE> ");
-		fprintf(out, "%s ", datum_or_str(DATUM(rule->src), rule->src_str));
-		fprintf(out, "%s ", datum_or_str(DATUM(rule->tgt), rule->tgt_str));
-		fprintf(out, "%s ", datum_or_str(DATUM(rule->obj), rule->obj_str));
-		fprintf(out, "%s", datum_or_str(DATUM(rule->result), rule->result_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(rule->src), rule->src_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(rule->tgt), rule->tgt_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(rule->obj), rule->obj_str));
+		fprintf(out, "%s",
+			datum_or_str(DATUM(rule->result), rule->result_str));
 		fprintf(out, ")\n");
 		break;
 	}
 	case CIL_NAMETYPETRANSITION: {
 		struct cil_nametypetransition *rule = node->data;
 		fprintf(out, "(typetransition ");
-		fprintf(out, "%s ", datum_or_str(DATUM(rule->src), rule->src_str));
-		fprintf(out, "%s ", datum_or_str(DATUM(rule->tgt), rule->tgt_str));
-		fprintf(out, "%s ", datum_or_str(DATUM(rule->obj), rule->obj_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(rule->src), rule->src_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(rule->tgt), rule->tgt_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(rule->obj), rule->obj_str));
 		if (rule->name) {
 			fprintf(out, "\"%s\" ", DATUM(rule->name)->fqn);
 		} else {
 			fprintf(out, "%s ", rule->name_str);
 		}
-		fprintf(out, "%s", datum_or_str(DATUM(rule->result), rule->result_str));
+		fprintf(out, "%s",
+			datum_or_str(DATUM(rule->result), rule->result_str));
 		fprintf(out, ")\n");
 		break;
 	}
 	case CIL_RANGETRANSITION: {
 		struct cil_rangetransition *rule = node->data;
 		fprintf(out, "(rangetransition ");
-		fprintf(out, "%s ", datum_or_str(DATUM(rule->src), rule->src_str));
-		fprintf(out, "%s ", datum_or_str(DATUM(rule->exec), rule->exec_str));
-		fprintf(out, "%s ", datum_or_str(DATUM(rule->obj), rule->obj_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(rule->src), rule->src_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(rule->exec), rule->exec_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(rule->obj), rule->obj_str));
 		if (rule->range)
 			write_range(out, rule->range, CIL_TRUE);
 		else
@@ -1270,7 +1385,8 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	case CIL_VALIDATETRANS: {
 		struct cil_validatetrans *vt = node->data;
 		fprintf(out, "(validatetrans ");
-		fprintf(out, "%s ", datum_or_str(DATUM(vt->class), vt->class_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(vt->class), vt->class_str));
 		if (vt->datum_expr)
 			write_expr(out, vt->datum_expr);
 		else
@@ -1281,7 +1397,8 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	case CIL_MLSVALIDATETRANS: {
 		struct cil_validatetrans *vt = node->data;
 		fprintf(out, "(mlsvalidatetrans ");
-		fprintf(out, "%s ", datum_or_str(DATUM(vt->class), vt->class_str));
+		fprintf(out, "%s ",
+			datum_or_str(DATUM(vt->class), vt->class_str));
 		if (vt->datum_expr)
 			write_expr(out, vt->datum_expr);
 		else
@@ -1344,7 +1461,8 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	case CIL_IBPKEYCON: {
 		struct cil_ibpkeycon *ibpkeycon = node->data;
 		fprintf(out, "(ibpkeycon %s ", ibpkeycon->subnet_prefix_str);
-		fprintf(out, "(%d %d) ", ibpkeycon->pkey_low, ibpkeycon->pkey_high);
+		fprintf(out, "(%d %d) ", ibpkeycon->pkey_low,
+			ibpkeycon->pkey_high);
 		if (ibpkeycon->context)
 			write_context(out, ibpkeycon->context, CIL_TRUE);
 		else if (ibpkeycon->context_str)
@@ -1368,7 +1486,8 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 		if (portcon->port_low == portcon->port_high)
 			fprintf(out, "%d ", portcon->port_low);
 		else
-			fprintf(out, "(%d %d) ", portcon->port_low, portcon->port_high);
+			fprintf(out, "(%d %d) ", portcon->port_low,
+				portcon->port_high);
 		if (portcon->context)
 			write_context(out, portcon->context, CIL_TRUE);
 		else
@@ -1399,7 +1518,8 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	case CIL_GENFSCON: {
 		struct cil_genfscon *genfscon = node->data;
 		fprintf(out, "(genfscon ");
-		fprintf(out, "%s \"%s\" ", genfscon->fs_str, genfscon->path_str);
+		fprintf(out, "%s \"%s\" ", genfscon->fs_str,
+			genfscon->path_str);
 		if (genfscon->file_type != CIL_FILECON_ANY) {
 			switch (genfscon->file_type) {
 			case CIL_FILECON_FILE:
@@ -1451,7 +1571,8 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_IBENDPORTCON: {
 		struct cil_ibendportcon *ibendportcon = node->data;
-		fprintf(out, "(ibendportcon %s %u ", ibendportcon->dev_name_str, ibendportcon->port);
+		fprintf(out, "(ibendportcon %s %u ", ibendportcon->dev_name_str,
+			ibendportcon->port);
 		if (ibendportcon->context)
 			write_context(out, ibendportcon->context, CIL_TRUE);
 		else
@@ -1471,7 +1592,8 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_IOMEMCON: {
 		struct cil_iomemcon *iomemcon = node->data;
-		fprintf(out, "(iomemcon (%"PRId64" %"PRId64") ", iomemcon->iomem_low, iomemcon->iomem_high);
+		fprintf(out, "(iomemcon (%" PRId64 " %" PRId64 ") ",
+			iomemcon->iomem_low, iomemcon->iomem_high);
 		if (iomemcon->context)
 			write_context(out, iomemcon->context, CIL_TRUE);
 		else
@@ -1485,7 +1607,8 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 		if (ioportcon->ioport_low == ioportcon->ioport_high)
 			fprintf(out, "%d ", ioportcon->ioport_low);
 		else
-			fprintf(out, "(%d %d) ", ioportcon->ioport_low, ioportcon->ioport_high);
+			fprintf(out, "(%d %d) ", ioportcon->ioport_low,
+				ioportcon->ioport_high);
 
 		if (ioportcon->context)
 			write_context(out, ioportcon->context, CIL_TRUE);
@@ -1543,10 +1666,11 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 		char buf[256];
 		if (inet_ntop(ipaddr->family, &ipaddr->ip, buf, 256) == NULL)
 			strcpy(buf, "<?IPADDR>");
-		fprintf(out, "(ipaddr %s %s)\n", datum_to_str(&ipaddr->datum), buf);
+		fprintf(out, "(ipaddr %s %s)\n", datum_to_str(&ipaddr->datum),
+			buf);
 		break;
 	}
-	default :
+	default:
 		fprintf(out, "(<?RULE:%s>)\n", cil_node_to_string(node));
 		break;
 	}
@@ -1565,11 +1689,14 @@ struct cil_write_ast_args {
  * Helper functions for writing the parse AST
  */
 
-static int __write_parse_ast_node_helper(struct cil_tree_node *node, __attribute__((unused)) uint32_t *finished, void *extra_args)
+static int __write_parse_ast_node_helper(struct cil_tree_node *node,
+					 __attribute__((unused))
+					 uint32_t *finished,
+					 void *extra_args)
 {
 	struct cil_write_ast_args *args = extra_args;
 
-	fprintf(args->out, "%*s", args->depth*4, "");
+	fprintf(args->out, "%*s", args->depth * 4, "");
 	if (!node->data) {
 		if (node->cl_head)
 			fprintf(args->out, "(\n");
@@ -1593,7 +1720,8 @@ static int __write_parse_ast_node_helper(struct cil_tree_node *node, __attribute
 	return SEPOL_OK;
 }
 
-static int __write_parse_ast_first_child_helper(struct cil_tree_node *node, void *extra_args)
+static int __write_parse_ast_first_child_helper(struct cil_tree_node *node,
+						void *extra_args)
 {
 	struct cil_write_ast_args *args = extra_args;
 	struct cil_tree_node *parent = node->parent;
@@ -1605,7 +1733,8 @@ static int __write_parse_ast_first_child_helper(struct cil_tree_node *node, void
 	return SEPOL_OK;
 }
 
-static int __write_parse_ast_last_child_helper(struct cil_tree_node *node, void *extra_args)
+static int __write_parse_ast_last_child_helper(struct cil_tree_node *node,
+					       void *extra_args)
 {
 	struct cil_write_ast_args *args = extra_args;
 	struct cil_tree_node *parent = node->parent;
@@ -1615,7 +1744,7 @@ static int __write_parse_ast_last_child_helper(struct cil_tree_node *node, void 
 	}
 
 	args->depth--;
-	fprintf(args->out, "%*s", args->depth*4, "");
+	fprintf(args->out, "%*s", args->depth * 4, "");
 	fprintf(args->out, ")\n");
 
 	return SEPOL_OK;
@@ -1625,7 +1754,8 @@ static int __write_parse_ast_last_child_helper(struct cil_tree_node *node, void 
  * Helper functions for writing the CIL AST for the build and resolve phases
  */
 
-static int __write_cil_ast_node_helper(struct cil_tree_node *node, uint32_t *finished, void *extra_args)
+static int __write_cil_ast_node_helper(struct cil_tree_node *node,
+				       uint32_t *finished, void *extra_args)
 {
 	struct cil_write_ast_args *args = extra_args;
 
@@ -1638,18 +1768,20 @@ static int __write_cil_ast_node_helper(struct cil_tree_node *node, uint32_t *fin
 		return SEPOL_OK;
 	}
 
-	fprintf(args->out, "%*s", args->depth*4, "");
+	fprintf(args->out, "%*s", args->depth * 4, "");
 
 	cil_write_ast_node(args->out, node);
 
-	if (node->flavor == CIL_CLASS || node->flavor == CIL_COMMON || node->flavor == CIL_MAP_CLASS) {
+	if (node->flavor == CIL_CLASS || node->flavor == CIL_COMMON ||
+	    node->flavor == CIL_MAP_CLASS) {
 		*finished = CIL_TREE_SKIP_HEAD;
 	}
 
 	return SEPOL_OK;
 }
 
-static int __write_cil_ast_first_child_helper(struct cil_tree_node *node, void *extra_args)
+static int __write_cil_ast_first_child_helper(struct cil_tree_node *node,
+					      void *extra_args)
 {
 	struct cil_write_ast_args *args = extra_args;
 	struct cil_tree_node *parent = node->parent;
@@ -1661,7 +1793,8 @@ static int __write_cil_ast_first_child_helper(struct cil_tree_node *node, void *
 	return SEPOL_OK;
 }
 
-static int __write_cil_ast_last_child_helper(struct cil_tree_node *node, void *extra_args)
+static int __write_cil_ast_last_child_helper(struct cil_tree_node *node,
+					     void *extra_args)
 {
 	struct cil_write_ast_args *args = extra_args;
 	struct cil_tree_node *parent = node->parent;
@@ -1674,13 +1807,14 @@ static int __write_cil_ast_last_child_helper(struct cil_tree_node *node, void *e
 	}
 
 	args->depth--;
-	fprintf(args->out, "%*s", args->depth*4, "");
+	fprintf(args->out, "%*s", args->depth * 4, "");
 	fprintf(args->out, ")\n");
 
 	return SEPOL_OK;
 }
 
-int cil_write_ast(FILE *out, enum cil_write_ast_phase phase, struct cil_tree_node *node)
+int cil_write_ast(FILE *out, enum cil_write_ast_phase phase,
+		  struct cil_tree_node *node)
 {
 	struct cil_write_ast_args extra_args;
 	int rc;
@@ -1689,9 +1823,15 @@ int cil_write_ast(FILE *out, enum cil_write_ast_phase phase, struct cil_tree_nod
 	extra_args.depth = 0;
 
 	if (phase == CIL_WRITE_AST_PHASE_PARSE) {
-		rc = cil_tree_walk(node, __write_parse_ast_node_helper, __write_parse_ast_first_child_helper, __write_parse_ast_last_child_helper, &extra_args);
+		rc = cil_tree_walk(node, __write_parse_ast_node_helper,
+				   __write_parse_ast_first_child_helper,
+				   __write_parse_ast_last_child_helper,
+				   &extra_args);
 	} else {
-		rc = cil_tree_walk(node, __write_cil_ast_node_helper, __write_cil_ast_first_child_helper, __write_cil_ast_last_child_helper, &extra_args);
+		rc = cil_tree_walk(node, __write_cil_ast_node_helper,
+				   __write_cil_ast_first_child_helper,
+				   __write_cil_ast_last_child_helper,
+				   &extra_args);
 	}
 
 	if (rc != SEPOL_OK) {

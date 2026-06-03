@@ -27,15 +27,14 @@ extern "C" {
 #endif
 
 extern avrule_block_t *avrule_block_create(void);
-extern void avrule_block_destroy(avrule_block_t * x);
+extern void avrule_block_destroy(avrule_block_t *x);
 extern avrule_decl_t *avrule_decl_create(uint32_t decl_id);
-extern void avrule_decl_destroy(avrule_decl_t * x);
-extern void avrule_block_list_destroy(avrule_block_t * x);
-extern avrule_decl_t *get_avrule_decl(policydb_t * p, uint32_t decl_id);
-extern cond_list_t *get_decl_cond_list(policydb_t * p,
-				       avrule_decl_t * decl,
-				       cond_list_t * cond);
-extern int is_id_enabled(const char *id, const policydb_t * p, int symbol_table);
+extern void avrule_decl_destroy(avrule_decl_t *x);
+extern void avrule_block_list_destroy(avrule_block_t *x);
+extern avrule_decl_t *get_avrule_decl(policydb_t *p, uint32_t decl_id);
+extern cond_list_t *get_decl_cond_list(policydb_t *p, avrule_decl_t *decl,
+				       cond_list_t *cond);
+extern int is_id_enabled(const char *id, const policydb_t *p, int symbol_table);
 extern int is_perm_existent(const class_datum_t *cladatum, const char *perm_id);
 
 #ifdef __cplusplus

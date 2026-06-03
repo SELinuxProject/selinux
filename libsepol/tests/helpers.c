@@ -32,16 +32,19 @@
 #include <stdlib.h>
 #include <limits.h>
 
-int test_load_policy(policydb_t * p, int policy_type, int mls, const char *test_name, const char *policy_name)
+int test_load_policy(policydb_t *p, int policy_type, int mls,
+		     const char *test_name, const char *policy_name)
 {
 	char filename[PATH_MAX];
 
 	if (mls) {
-		if (snprintf(filename, PATH_MAX, "policies/%s/%s.mls", test_name, policy_name) < 0) {
+		if (snprintf(filename, PATH_MAX, "policies/%s/%s.mls",
+			     test_name, policy_name) < 0) {
 			return -1;
 		}
 	} else {
-		if (snprintf(filename, PATH_MAX, "policies/%s/%s.std", test_name, policy_name) < 0) {
+		if (snprintf(filename, PATH_MAX, "policies/%s/%s.std",
+			     test_name, policy_name) < 0) {
 			return -1;
 		}
 	}
@@ -64,9 +67,10 @@ int test_load_policy(policydb_t * p, int policy_type, int mls, const char *test_
 	return 0;
 }
 
-avrule_decl_t *test_find_decl_by_sym(policydb_t * p, int symtab, const char *sym)
+avrule_decl_t *test_find_decl_by_sym(policydb_t *p, int symtab, const char *sym)
 {
-	scope_datum_t *scope = (scope_datum_t *) hashtab_search(p->scope[symtab].table, sym);
+	scope_datum_t *scope =
+		(scope_datum_t *)hashtab_search(p->scope[symtab].table, sym);
 
 	if (scope == NULL) {
 		return NULL;

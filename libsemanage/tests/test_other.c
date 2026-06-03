@@ -82,8 +82,8 @@ void test_semanage_context(void)
 	semanage_context_free(con);
 	con = NULL;
 
-	CU_ASSERT(semanage_context_from_string(sh, "my_u:my_r:my_t:s0",
-					       &con) >= 0);
+	CU_ASSERT(semanage_context_from_string(sh, "my_u:my_r:my_t:s0", &con) >=
+		  0);
 	CU_ASSERT_STRING_EQUAL(semanage_context_get_user(con), "my_u");
 	CU_ASSERT_STRING_EQUAL(semanage_context_get_role(con), "my_r");
 	CU_ASSERT_STRING_EQUAL(semanage_context_get_type(con), "my_t");
@@ -114,7 +114,8 @@ void test_debug(void)
 	CU_ASSERT(semanage_module_info_create(sh, &modinfo) >= 0);
 
 	/* test */
-	CU_ASSERT(semanage_module_info_set_priority(sh, modinfo, (uint16_t)-42) < 0);
+	CU_ASSERT(semanage_module_info_set_priority(sh, modinfo,
+						    (uint16_t)-42) < 0);
 
 	/* cleanup */
 	semanage_module_info_destroy(sh, modinfo);

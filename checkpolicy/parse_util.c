@@ -32,13 +32,14 @@ extern unsigned int policydb_errors;
 extern policydb_t *policydbp;
 extern int mlspol;
 
-int read_source_policy(policydb_t * p, const char *file, const char *progname)
+int read_source_policy(policydb_t *p, const char *file, const char *progname)
 {
 	int rc = -1;
 
 	yyin = fopen(file, "r");
 	if (!yyin) {
-		fprintf(stderr, "%s:  unable to open %s:  %s\n", progname, file, strerror(errno));
+		fprintf(stderr, "%s:  unable to open %s:  %s\n", progname, file,
+			strerror(errno));
 		return -1;
 	}
 

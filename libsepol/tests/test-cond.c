@@ -38,7 +38,8 @@ int cond_test_init(void)
 		return -1;
 	}
 
-	if (test_load_policy(&basemod, POLICY_BASE, 1, "test-cond", "refpolicy-base.conf"))
+	if (test_load_policy(&basemod, POLICY_BASE, 1, "test-cond",
+			     "refpolicy-base.conf"))
 		goto cleanup;
 
 	if (link_modules(NULL, &basemod, NULL, 0, 0)) {
@@ -53,7 +54,7 @@ int cond_test_init(void)
 
 	return 0;
 
-      cleanup:
+cleanup:
 	policydb_destroy(&basemod);
 	policydb_destroy(&base_expanded);
 	return -1;
@@ -88,7 +89,8 @@ static void test_cond_expr_equal(void)
 
 int cond_add_tests(CU_pSuite suite)
 {
-	if (NULL == CU_add_test(suite, "cond_expr_equal", test_cond_expr_equal)) {
+	if (NULL ==
+	    CU_add_test(suite, "cond_expr_equal", test_cond_expr_equal)) {
 		return CU_get_error();
 	}
 	return 0;

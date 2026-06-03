@@ -10,16 +10,14 @@
 #include <sepol/errcodes.h>
 #include <sepol/policydb/policydb.h>
 
-
 #include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern int link_modules(sepol_handle_t * handle,
-			policydb_t * b, policydb_t ** mods, int len,
-			int verbose);
+extern int link_modules(sepol_handle_t *handle, policydb_t *b,
+			policydb_t **mods, int len, int verbose);
 
 #ifdef __cplusplus
 }

@@ -1,4 +1,4 @@
-#define _GNU_SOURCE  /* vasprintf(3) */
+#define _GNU_SOURCE /* vasprintf(3) */
 
 #include "test-neverallow.h"
 
@@ -53,20 +53,23 @@ static void messages_check(unsigned count, const char *const expected[count])
 
 		if (strcmp(expected[i], m->msg) != 0) {
 			CU_FAIL("messages differ from expected");
-			fprintf(stderr, "\n<expected: '''%s''', got: '''%s'''>\n", expected[i], m->msg);
+			fprintf(stderr,
+				"\n<expected: '''%s''', got: '''%s'''>\n",
+				expected[i], m->msg);
 		}
 	}
 
 	if (m) {
 		CU_FAIL("more messages than expected");
-		fprintf(stderr, "\n<expected %u; next message: '''%s'''>\n", count, m->msg);
+		fprintf(stderr, "\n<expected %u; next message: '''%s'''>\n",
+			count, m->msg);
 	}
 }
 
-__attribute__ ((format(printf, 3, 4)))
-static void msg_handler(void *varg __attribute__ ((unused)),
-			sepol_handle_t * handle __attribute__ ((unused)),
-			const char *fmt, ...)
+__attribute__((format(printf, 3, 4))) static void
+msg_handler(void *varg __attribute__((unused)),
+	    sepol_handle_t *handle __attribute__((unused)), const char *fmt,
+	    ...)
 {
 	char *msg;
 	va_list ap;
@@ -129,7 +132,8 @@ static void test_neverallow_basic(void)
 	if (policydb_init(&base_expanded))
 		CU_FAIL_FATAL("Failed to initialize policy");
 
-	if (test_load_policy(&basemod, POLICY_BASE, mls, "test-neverallow", "policy.conf"))
+	if (test_load_policy(&basemod, POLICY_BASE, mls, "test-neverallow",
+			     "policy.conf"))
 		CU_FAIL_FATAL("Failed to load policy");
 
 	if (link_modules(NULL, &basemod, NULL, 0, 0))
@@ -143,7 +147,8 @@ static void test_neverallow_basic(void)
 
 	sepol_msg_set_callback(handle, msg_handler, NULL);
 
-	if (check_assertions(handle, &base_expanded, base_expanded.global->branch_list->avrules) != -1)
+	if (check_assertions(handle, &base_expanded,
+			     base_expanded.global->branch_list->avrules) != -1)
 		CU_FAIL("Assertions did not trigger");
 
 	messages_check(ARRAY_SIZE(expected_messages), expected_messages);
@@ -198,7 +203,8 @@ static void test_neverallow_minus_self(void)
 	if (policydb_init(&base_expanded))
 		CU_FAIL_FATAL("Failed to initialize policy");
 
-	if (test_load_policy(&basemod, POLICY_BASE, mls, "test-neverallow", "policy_minus_self.conf"))
+	if (test_load_policy(&basemod, POLICY_BASE, mls, "test-neverallow",
+			     "policy_minus_self.conf"))
 		CU_FAIL_FATAL("Failed to load policy");
 
 	if (link_modules(NULL, &basemod, NULL, 0, 0))
@@ -212,7 +218,8 @@ static void test_neverallow_minus_self(void)
 
 	sepol_msg_set_callback(handle, msg_handler, NULL);
 
-	if (check_assertions(handle, &base_expanded, base_expanded.global->branch_list->avrules) != -1)
+	if (check_assertions(handle, &base_expanded,
+			     base_expanded.global->branch_list->avrules) != -1)
 		CU_FAIL("Assertions did not trigger");
 
 	messages_check(ARRAY_SIZE(expected_messages), expected_messages);
@@ -268,7 +275,8 @@ static void test_neverallow_not_self(void)
 	if (policydb_init(&base_expanded))
 		CU_FAIL_FATAL("Failed to initialize policy");
 
-	if (test_load_policy(&basemod, POLICY_BASE, mls, "test-neverallow", "policy_not_self.conf"))
+	if (test_load_policy(&basemod, POLICY_BASE, mls, "test-neverallow",
+			     "policy_not_self.conf"))
 		CU_FAIL_FATAL("Failed to load policy");
 
 	if (link_modules(NULL, &basemod, NULL, 0, 0))
@@ -282,7 +290,8 @@ static void test_neverallow_not_self(void)
 
 	sepol_msg_set_callback(handle, msg_handler, NULL);
 
-	if (check_assertions(handle, &base_expanded, base_expanded.global->branch_list->avrules) != -1)
+	if (check_assertions(handle, &base_expanded,
+			     base_expanded.global->branch_list->avrules) != -1)
 		CU_FAIL("Assertions did not trigger");
 
 	messages_check(ARRAY_SIZE(expected_messages), expected_messages);
@@ -320,7 +329,8 @@ static void test_neverallow_cond(void)
 	if (policydb_init(&base_expanded))
 		CU_FAIL_FATAL("Failed to initialize policy");
 
-	if (test_load_policy(&basemod, POLICY_BASE, mls, "test-neverallow", "policy_cond.conf"))
+	if (test_load_policy(&basemod, POLICY_BASE, mls, "test-neverallow",
+			     "policy_cond.conf"))
 		CU_FAIL_FATAL("Failed to load policy");
 
 	if (link_modules(NULL, &basemod, NULL, 0, 0))
@@ -334,7 +344,8 @@ static void test_neverallow_cond(void)
 
 	sepol_msg_set_callback(handle, msg_handler, NULL);
 
-	if (check_assertions(handle, &base_expanded, base_expanded.global->branch_list->avrules) != -1)
+	if (check_assertions(handle, &base_expanded,
+			     base_expanded.global->branch_list->avrules) != -1)
 		CU_FAIL("Assertions did not trigger");
 
 	messages_check(ARRAY_SIZE(expected_messages), expected_messages);
@@ -354,22 +365,26 @@ int neverallow_add_tests(CU_pSuite suite)
 	if (mls)
 		return 0;
 
-	if (NULL == CU_add_test(suite, "neverallow_basic", test_neverallow_basic)) {
+	if (NULL ==
+	    CU_add_test(suite, "neverallow_basic", test_neverallow_basic)) {
 		CU_cleanup_registry();
 		return CU_get_error();
 	}
 
-	if (NULL == CU_add_test(suite, "neverallow_not_self", test_neverallow_not_self)) {
+	if (NULL == CU_add_test(suite, "neverallow_not_self",
+				test_neverallow_not_self)) {
 		CU_cleanup_registry();
 		return CU_get_error();
 	}
 
-	if (NULL == CU_add_test(suite, "neverallow_minus_self", test_neverallow_minus_self)) {
+	if (NULL == CU_add_test(suite, "neverallow_minus_self",
+				test_neverallow_minus_self)) {
 		CU_cleanup_registry();
 		return CU_get_error();
 	}
 
-	if (NULL == CU_add_test(suite, "neverallow_cond", test_neverallow_cond)) {
+	if (NULL ==
+	    CU_add_test(suite, "neverallow_cond", test_neverallow_cond)) {
 		CU_cleanup_registry();
 		return CU_get_error();
 	}

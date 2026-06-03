@@ -57,9 +57,10 @@ int semanage_ibpkey_count_local(semanage_handle_t *handle,
 	return dbase_count(handle, dconfig, response);
 }
 
-int semanage_ibpkey_iterate_local(semanage_handle_t *handle,
-				  int (*handler)(const semanage_ibpkey_t *record,
-						 void *varg), void *handler_arg)
+int semanage_ibpkey_iterate_local(
+	semanage_handle_t *handle,
+	int (*handler)(const semanage_ibpkey_t *record, void *varg),
+	void *handler_arg)
 {
 	dbase_config_t *dconfig = semanage_ibpkey_dbase_local(handle);
 
@@ -67,13 +68,13 @@ int semanage_ibpkey_iterate_local(semanage_handle_t *handle,
 }
 
 int semanage_ibpkey_list_local(semanage_handle_t *handle,
-			       semanage_ibpkey_t ***records, unsigned int *count)
+			       semanage_ibpkey_t ***records,
+			       unsigned int *count)
 {
 	dbase_config_t *dconfig = semanage_ibpkey_dbase_local(handle);
 
 	return dbase_list(handle, dconfig, records, count);
 }
-
 
 int semanage_ibpkey_validate_local(semanage_handle_t *handle)
 {
@@ -92,18 +93,20 @@ int semanage_ibpkey_validate_local(semanage_handle_t *handle)
 		goto err;
 
 	if (nibpkeys > 1)
-		qsort(ibpkeys, nibpkeys, sizeof(semanage_ibpkey_t *), semanage_ibpkey_compare2_qsort);
+		qsort(ibpkeys, nibpkeys, sizeof(semanage_ibpkey_t *),
+		      semanage_ibpkey_compare2_qsort);
 
 	/* Test each ibpkey for overlap */
 	while (i < nibpkeys) {
-		if (STATUS_SUCCESS != semanage_ibpkey_get_subnet_prefix(handle,
-									ibpkeys[i],
-									&subnet_prefix_str)) {
+		if (STATUS_SUCCESS !=
+		    semanage_ibpkey_get_subnet_prefix(handle, ibpkeys[i],
+						      &subnet_prefix_str)) {
 			ERR(handle, "Couldn't get subnet prefix string");
 			goto err;
 		}
 
-		subnet_prefix = semanage_ibpkey_get_subnet_prefix_bytes(ibpkeys[i]);
+		subnet_prefix =
+			semanage_ibpkey_get_subnet_prefix_bytes(ibpkeys[i]);
 		low = semanage_ibpkey_get_low(ibpkeys[i]);
 		high = semanage_ibpkey_get_high(ibpkeys[i]);
 
@@ -116,23 +119,26 @@ int semanage_ibpkey_validate_local(semanage_handle_t *handle)
 			j++;
 
 			if (STATUS_SUCCESS !=
-				semanage_ibpkey_get_subnet_prefix(handle,
-								  ibpkeys[j],
-								  &subnet_prefix_str2)) {
-				ERR(handle, "Couldn't get subnet prefix string");
+			    semanage_ibpkey_get_subnet_prefix(
+				    handle, ibpkeys[j], &subnet_prefix_str2)) {
+				ERR(handle,
+				    "Couldn't get subnet prefix string");
 				goto err;
 			}
-			subnet_prefix2 = semanage_ibpkey_get_subnet_prefix_bytes(ibpkeys[j]);
+			subnet_prefix2 =
+				semanage_ibpkey_get_subnet_prefix_bytes(
+					ibpkeys[j]);
 			low2 = semanage_ibpkey_get_low(ibpkeys[j]);
 			high2 = semanage_ibpkey_get_high(ibpkeys[j]);
 		} while (subnet_prefix != subnet_prefix2);
 
 		/* Overlap detected */
 		if (low2 <= high) {
-			ERR(handle, "ibpkey overlap between ranges "
+			ERR(handle,
+			    "ibpkey overlap between ranges "
 			    "(%s) %u - %u <--> (%s) %u - %u.",
-			    subnet_prefix_str, low, high,
-			    subnet_prefix_str2, low2, high2);
+			    subnet_prefix_str, low, high, subnet_prefix_str2,
+			    low2, high2);
 			goto invalid;
 		}
 

@@ -122,12 +122,12 @@ static semanage_bool_t *get_bool_nth(int idx)
 	res = semanage_bool_list(sh, &records, &count);
 
 	CU_ASSERT_FATAL(res >= 0);
-	CU_ASSERT_FATAL(count >= (unsigned int) idx + 1);
+	CU_ASSERT_FATAL(count >= (unsigned int)idx + 1);
 
 	boolean = records[idx];
 
 	for (unsigned int i = 0; i < count; i++)
-		if (i != (unsigned int) idx)
+		if (i != (unsigned int)idx)
 			semanage_bool_free(records[i]);
 
 	free(records);
@@ -330,13 +330,13 @@ static void helper_bool_compare(level_t level, int bool_idx1, int bool_idx2)
 
 static void test_bool_compare(void)
 {
-	helper_bool_compare(SH_CONNECT, I_FIRST,  I_FIRST);
-	helper_bool_compare(SH_CONNECT, I_FIRST,  I_SECOND);
+	helper_bool_compare(SH_CONNECT, I_FIRST, I_FIRST);
+	helper_bool_compare(SH_CONNECT, I_FIRST, I_SECOND);
 	helper_bool_compare(SH_CONNECT, I_SECOND, I_FIRST);
 	helper_bool_compare(SH_CONNECT, I_SECOND, I_SECOND);
 
-	helper_bool_compare(SH_TRANS, I_FIRST,  I_FIRST);
-	helper_bool_compare(SH_TRANS, I_FIRST,  I_SECOND);
+	helper_bool_compare(SH_TRANS, I_FIRST, I_FIRST);
+	helper_bool_compare(SH_TRANS, I_FIRST, I_SECOND);
 	helper_bool_compare(SH_TRANS, I_SECOND, I_FIRST);
 	helper_bool_compare(SH_TRANS, I_SECOND, I_SECOND);
 }
@@ -368,19 +368,20 @@ static void helper_bool_compare2(level_t level, int bool_idx1, int bool_idx2)
 
 static void test_bool_compare2(void)
 {
-	helper_bool_compare2(SH_CONNECT, I_FIRST,  I_FIRST);
-	helper_bool_compare2(SH_CONNECT, I_FIRST,  I_SECOND);
+	helper_bool_compare2(SH_CONNECT, I_FIRST, I_FIRST);
+	helper_bool_compare2(SH_CONNECT, I_FIRST, I_SECOND);
 	helper_bool_compare2(SH_CONNECT, I_SECOND, I_FIRST);
 	helper_bool_compare2(SH_CONNECT, I_SECOND, I_SECOND);
 
-	helper_bool_compare2(SH_TRANS, I_FIRST,  I_FIRST);
-	helper_bool_compare2(SH_TRANS, I_FIRST,  I_SECOND);
+	helper_bool_compare2(SH_TRANS, I_FIRST, I_FIRST);
+	helper_bool_compare2(SH_TRANS, I_FIRST, I_SECOND);
 	helper_bool_compare2(SH_TRANS, I_SECOND, I_FIRST);
 	helper_bool_compare2(SH_TRANS, I_SECOND, I_SECOND);
 }
 
 /* Function bool_get_name, bool_set_name */
-static void helper_bool_get_set_name(level_t level, int bool_idx, const char *name)
+static void helper_bool_get_set_name(level_t level, int bool_idx,
+				     const char *name)
 {
 	semanage_bool_t *boolean;
 	const char *new_name = NULL;
@@ -511,7 +512,7 @@ static void test_bool_clone(void)
 static void helper_bool_query(level_t level, const char *bool_str, int exp_res)
 {
 	semanage_bool_key_t *key;
-	semanage_bool_t *resp = (void *) 42;
+	semanage_bool_t *resp = (void *)42;
 
 	setup_handle(level);
 
@@ -534,17 +535,18 @@ static void helper_bool_query(level_t level, const char *bool_str, int exp_res)
 
 static void test_bool_query(void)
 {
-	helper_bool_query(SH_CONNECT, BOOL1_NAME,  1);
+	helper_bool_query(SH_CONNECT, BOOL1_NAME, 1);
 	helper_bool_query(SH_CONNECT, BOOL2_NAME, 1);
 	helper_bool_query(SH_CONNECT, BOOL_NONEXISTENT, -1);
 
-	helper_bool_query(SH_TRANS, BOOL1_NAME,  1);
+	helper_bool_query(SH_TRANS, BOOL1_NAME, 1);
 	helper_bool_query(SH_TRANS, BOOL2_NAME, 1);
 	helper_bool_query(SH_TRANS, BOOL_NONEXISTENT, -1);
 }
 
 /* Function bool_exists */
-static void helper_bool_exists(level_t level, const char *bool_str, int exp_resp)
+static void helper_bool_exists(level_t level, const char *bool_str,
+			       int exp_resp)
 {
 	semanage_bool_key_t *key;
 	int resp;
@@ -563,11 +565,11 @@ static void helper_bool_exists(level_t level, const char *bool_str, int exp_resp
 
 static void test_bool_exists(void)
 {
-	helper_bool_exists(SH_CONNECT, BOOL1_NAME,  1);
+	helper_bool_exists(SH_CONNECT, BOOL1_NAME, 1);
 	helper_bool_exists(SH_CONNECT, BOOL2_NAME, 1);
 	helper_bool_exists(SH_CONNECT, BOOL_NONEXISTENT, 0);
 
-	helper_bool_exists(SH_TRANS, BOOL1_NAME,  1);
+	helper_bool_exists(SH_TRANS, BOOL1_NAME, 1);
 	helper_bool_exists(SH_TRANS, BOOL2_NAME, 1);
 	helper_bool_exists(SH_TRANS, BOOL_NONEXISTENT, 0);
 }
@@ -601,7 +603,8 @@ static void test_bool_count(void)
 /* Function bool_iterate */
 static unsigned int counter_bool_iterate = 0;
 
-static int handler_bool_iterate(__attribute__((unused)) const semanage_bool_t *record,
+static int handler_bool_iterate(__attribute__((unused))
+				const semanage_bool_t *record,
 				__attribute__((unused)) void *varg)
 {
 	counter_bool_iterate++;
@@ -677,7 +680,7 @@ static void test_bool_list(void)
 
 /* Function bool_modify_local, bool_del_local */
 static void helper_bool_modify_del_local(level_t level, const char *name,
-				  int old_val, int exp_res)
+					 int old_val, int exp_res)
 {
 	semanage_bool_t *boolean;
 	semanage_bool_t *boolean_local = NULL;
@@ -711,14 +714,14 @@ static void helper_bool_modify_del_local(level_t level, const char *name,
 			helper_begin_transaction();
 		}
 
-		CU_ASSERT(semanage_bool_query_local(sh, key,
-					            &boolean_local) >= 0);
+		CU_ASSERT(semanage_bool_query_local(sh, key, &boolean_local) >=
+			  0);
 		CU_ASSERT(semanage_bool_compare2(boolean_local, boolean) == 0);
 		semanage_bool_free(boolean_local);
 
 		CU_ASSERT(semanage_bool_del_local(sh, key) >= 0);
-		CU_ASSERT(semanage_bool_query_local(sh, key,
-						    &boolean_local) < 0);
+		CU_ASSERT(semanage_bool_query_local(sh, key, &boolean_local) <
+			  0);
 	}
 
 	/* cleanup */
@@ -858,7 +861,8 @@ static void test_bool_count_local(void)
 /* Function bool_iterate_local */
 static unsigned int counter_bool_iterate_local = 0;
 
-static int handler_bool_iterate_local(__attribute__((unused)) const semanage_bool_t *record,
+static int handler_bool_iterate_local(__attribute__((unused))
+				      const semanage_bool_t *record,
 				      __attribute__((unused)) void *varg)
 {
 	counter_bool_iterate_local++;

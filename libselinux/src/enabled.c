@@ -20,7 +20,6 @@ int is_selinux_enabled(void)
 #endif
 }
 
-
 /*
  * Function: is_selinux_mls_enabled()
  * Return:   1 on success
@@ -53,4 +52,3 @@ int is_selinux_mls_enabled(void)
 
 	return enabled;
 }
-

@@ -36,4 +36,3 @@ int security_deny_unknown(void)
 
 	return deny_unknown;
 }
-

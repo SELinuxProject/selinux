@@ -20,10 +20,9 @@ typedef struct dbase_file dbase_t;
 #include "parse_utils.h"
 #include "debug.h"
 
-static int bool_print(semanage_handle_t * handle,
-		      const semanage_bool_t * boolean, FILE * str)
+static int bool_print(semanage_handle_t *handle, const semanage_bool_t *boolean,
+		      FILE *str)
 {
-
 	const char *name = semanage_bool_get_name(boolean);
 	int value = semanage_bool_get_value(boolean);
 
@@ -35,10 +34,9 @@ static int bool_print(semanage_handle_t * handle,
 	return STATUS_SUCCESS;
 }
 
-static int bool_parse(semanage_handle_t * handle,
-		      parse_info_t * info, semanage_bool_t * boolean)
+static int bool_parse(semanage_handle_t *handle, parse_info_t *info,
+		      semanage_bool_t *boolean)
 {
-
 	int value = 0;
 	char *str = NULL;
 
@@ -77,9 +75,11 @@ static int bool_parse(semanage_handle_t * handle,
 		goto err;
 
 	if (value != 0 && value != 1) {
-		ERR(handle, "invalid boolean value for \"%s\": %u "
-		    "(%s: %u)\n%s", semanage_bool_get_name(boolean),
-		    value, info->filename, info->lineno, info->orig_line);
+		ERR(handle,
+		    "invalid boolean value for \"%s\": %u "
+		    "(%s: %u)\n%s",
+		    semanage_bool_get_name(boolean), value, info->filename,
+		    info->lineno, info->orig_line);
 		goto err;
 	}
 	semanage_bool_set_value(boolean, value);
@@ -89,11 +89,11 @@ static int bool_parse(semanage_handle_t * handle,
 
 	return STATUS_SUCCESS;
 
-      last:
+last:
 	parse_dispose_line(info);
 	return STATUS_NODATA;
 
-      err:
+err:
 	ERR(handle, "could not parse boolean record");
 	free(str);
 	parse_dispose_line(info);
@@ -106,16 +106,10 @@ static const record_file_table_t SEMANAGE_BOOL_FILE_RTABLE = {
 	.print = bool_print,
 };
 
-int bool_file_dbase_init(semanage_handle_t * handle,
-			 const char *path_ro,
-			 const char *path_rw,
-			 dbase_config_t * dconfig)
+int bool_file_dbase_init(semanage_handle_t *handle, const char *path_ro,
+			 const char *path_rw, dbase_config_t *dconfig)
 {
-
-	if (dbase_file_init(handle,
-			    path_ro,
-			    path_rw,
-			    &SEMANAGE_BOOL_RTABLE,
+	if (dbase_file_init(handle, path_ro, path_rw, &SEMANAGE_BOOL_RTABLE,
 			    &SEMANAGE_BOOL_FILE_RTABLE, &dconfig->dbase) < 0)
 		return STATUS_ERR;
 
@@ -123,8 +117,7 @@ int bool_file_dbase_init(semanage_handle_t * handle,
 	return STATUS_SUCCESS;
 }
 
-void bool_file_dbase_release(dbase_config_t * dconfig)
+void bool_file_dbase_release(dbase_config_t *dconfig)
 {
-
 	dbase_file_release(dconfig->dbase);
 }

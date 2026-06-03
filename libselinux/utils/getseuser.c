@@ -17,13 +17,16 @@ int main(int argc, char **argv)
 	}
 
 	if (!is_selinux_enabled()) {
-		fprintf(stderr, "%s may be used only on a SELinux enabled kernel.\n", argv[0]);
+		fprintf(stderr,
+			"%s may be used only on a SELinux enabled kernel.\n",
+			argv[0]);
 		return 4;
 	}
 
 	rc = getseuserbyname(argv[1], &seuser, &level);
 	if (rc) {
-		fprintf(stderr, "getseuserbyname failed:  %s\n", strerror(errno));
+		fprintf(stderr, "getseuserbyname failed:  %s\n",
+			strerror(errno));
 		return 2;
 	}
 	printf("seuser:  %s, level %s\n", seuser, level);
@@ -36,9 +39,12 @@ int main(int argc, char **argv)
 		return 5;
 	}
 
-	n = get_ordered_context_list_with_level(seuser, level, argv[2], &contextlist);
+	n = get_ordered_context_list_with_level(seuser, level, argv[2],
+						&contextlist);
 	if (n < 0) {
-		fprintf(stderr, "get_ordered_context_list_with_level failed:  %s\n", strerror(errno));
+		fprintf(stderr,
+			"get_ordered_context_list_with_level failed:  %s\n",
+			strerror(errno));
 		free(seuser);
 		free(level);
 		return 3;

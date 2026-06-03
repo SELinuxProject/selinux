@@ -47,13 +47,15 @@ int main(int argc, char **argv)
 
 	fp = fopen(ppfile, "r");
 	if (!fp) {
-		fprintf(stderr, "%s:  Could not open file %s:  %s\n", argv[0], ppfile, strerror(errno));
+		fprintf(stderr, "%s:  Could not open file %s:  %s\n", argv[0],
+			ppfile, strerror(errno));
 		goto failure;
 	}
 	sepol_policy_file_set_fp(in, fp);
 
 	if (sepol_module_package_read(pkg, in, 0) == -1) {
-		fprintf(stderr, "%s:  Error while reading policy module from %s\n",
+		fprintf(stderr,
+			"%s:  Error while reading policy module from %s\n",
 			argv[0], ppfile);
 		goto failure;
 	}
@@ -70,20 +72,23 @@ int main(int argc, char **argv)
 
 	fp = fopen(modfile, "w");
 	if (!fp) {
-		fprintf(stderr, "%s:  Could not open file %s:  %s\n", argv[0], modfile, strerror(errno));
+		fprintf(stderr, "%s:  Could not open file %s:  %s\n", argv[0],
+			modfile, strerror(errno));
 		goto failure;
 	}
 	sepol_policy_file_set_fp(out, fp);
 
 	if (sepol_policydb_write(sepol_module_package_get_policy(pkg), out)) {
-		fprintf(stderr, "%s:  Error while writing module to %s\n", argv[0], modfile);
+		fprintf(stderr, "%s:  Error while writing module to %s\n",
+			argv[0], modfile);
 		goto failure;
 	}
 
 	ret = fclose(fp);
 	fp = NULL;
 	if (ret) {
-		fprintf(stderr, "%s:  Error while closing file %s:  %s\n", argv[0], modfile, strerror(errno));
+		fprintf(stderr, "%s:  Error while closing file %s:  %s\n",
+			argv[0], modfile, strerror(errno));
 		goto failure;
 	}
 
@@ -94,19 +99,22 @@ int main(int argc, char **argv)
 	if (fcfile && len) {
 		fp = fopen(fcfile, "w");
 		if (!fp) {
-			fprintf(stderr, "%s:  Could not open file %s:  %s\n", argv[0], fcfile, strerror(errno));
+			fprintf(stderr, "%s:  Could not open file %s:  %s\n",
+				argv[0], fcfile, strerror(errno));
 			goto failure;
 		}
 		fcdata = sepol_module_package_get_file_contexts(pkg);
 		if (fwrite(fcdata, 1, len, fp) != len) {
-			fprintf(stderr, "%s:  Could not write file %s:  %s\n", argv[0], fcfile, strerror(errno));
+			fprintf(stderr, "%s:  Could not write file %s:  %s\n",
+				argv[0], fcfile, strerror(errno));
 			goto failure;
 		}
 
 		ret = fclose(fp);
 		fp = NULL;
 		if (ret) {
-			fprintf(stderr, "%s:  Could not close file %s:  %s\n", argv[0], fcfile, strerror(errno));
+			fprintf(stderr, "%s:  Could not close file %s:  %s\n",
+				argv[0], fcfile, strerror(errno));
 			goto failure;
 		}
 	}

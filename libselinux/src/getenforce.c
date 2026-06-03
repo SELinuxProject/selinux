@@ -36,4 +36,3 @@ int security_getenforce(void)
 
 	return !!enforce;
 }
-

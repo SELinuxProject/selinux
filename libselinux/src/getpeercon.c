@@ -11,7 +11,7 @@
 #define SO_PEERSEC 31
 #endif
 
-int getpeercon_raw(int fd, char ** context)
+int getpeercon_raw(int fd, char **context)
 {
 	char *buf;
 	socklen_t size;
@@ -34,7 +34,7 @@ int getpeercon_raw(int fd, char ** context)
 		memset(buf, 0, size);
 		ret = getsockopt(fd, SOL_SOCKET, SO_PEERSEC, buf, &size);
 	}
-      out:
+out:
 	if (ret < 0)
 		free(buf);
 	else
@@ -42,11 +42,10 @@ int getpeercon_raw(int fd, char ** context)
 	return ret;
 }
 
-
-int getpeercon(int fd, char ** context)
+int getpeercon(int fd, char **context)
 {
 	int ret;
-	char * rcontext;
+	char *rcontext;
 
 	ret = getpeercon_raw(fd, &rcontext);
 

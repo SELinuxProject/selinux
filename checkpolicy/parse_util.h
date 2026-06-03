@@ -30,6 +30,6 @@
  * expected policy type set. The string progname is used for
  * error messages. No checking of assertions, hierarchy, etc.
  * is done. */
-int read_source_policy(policydb_t * p, const char *file, const char *progname);
+int read_source_policy(policydb_t *p, const char *file, const char *progname);
 
 #endif

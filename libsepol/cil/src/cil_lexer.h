@@ -44,7 +44,7 @@
 
 struct token {
 	uint32_t type;
-	char * value;
+	char *value;
 	uint32_t line;
 };
 

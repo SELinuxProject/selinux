@@ -36,4 +36,3 @@ int security_reject_unknown(void)
 
 	return reject_unknown;
 }
-

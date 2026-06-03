@@ -46,13 +46,12 @@ int security_load_policy(const void *data, size_t len)
 	return 0;
 }
 
-
 #ifndef ANDROID
 #undef max
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 
 int selinux_mkload_policy(int preservebools __attribute__((unused)))
-{	
+{
 	int kernvers = security_policyvers();
 	int maxvers = kernvers, minvers = DEFAULT_POLICY_VERSION, vers;
 	char path[PATH_MAX];
@@ -67,12 +66,14 @@ int selinux_mkload_policy(int preservebools __attribute__((unused)))
 	int (*vers_min)(void) = NULL;
 	int (*policy_file_create)(sepol_policy_file_t **) = NULL;
 	void (*policy_file_free)(sepol_policy_file_t *) = NULL;
-	void (*policy_file_set_mem)(sepol_policy_file_t *, char*, size_t) = NULL;
+	void (*policy_file_set_mem)(sepol_policy_file_t *, char *, size_t) =
+		NULL;
 	int (*policydb_create)(sepol_policydb_t **) = NULL;
 	void (*policydb_free)(sepol_policydb_t *) = NULL;
 	int (*policydb_read)(sepol_policydb_t *, sepol_policy_file_t *) = NULL;
 	int (*policydb_set_vers)(sepol_policydb_t *, unsigned int) = NULL;
-	int (*policydb_to_image)(sepol_handle_t *, sepol_policydb_t *, void **, size_t *) = NULL;
+	int (*policydb_to_image)(sepol_handle_t *, sepol_policydb_t *, void **,
+				 size_t *) = NULL;
 
 #ifdef SHARED
 	char *errormsg = NULL;
@@ -81,17 +82,23 @@ int selinux_mkload_policy(int preservebools __attribute__((unused)))
 	if (libsepolh) {
 		usesepol = 1;
 		dlerror();
-#define DLERR() do { if ((errormsg = dlerror())) goto dlclose; } while (0)
+#define DLERR()                             \
+	do {                                \
+		if ((errormsg = dlerror())) \
+			goto dlclose;       \
+	} while (0)
 		vers_max = dlsym(libsepolh, "sepol_policy_kern_vers_max");
 		DLERR();
 		vers_min = dlsym(libsepolh, "sepol_policy_kern_vers_min");
 		DLERR();
 
-		policy_file_create = dlsym(libsepolh, "sepol_policy_file_create");
+		policy_file_create =
+			dlsym(libsepolh, "sepol_policy_file_create");
 		DLERR();
 		policy_file_free = dlsym(libsepolh, "sepol_policy_file_free");
 		DLERR();
-		policy_file_set_mem = dlsym(libsepolh, "sepol_policy_file_set_mem");
+		policy_file_set_mem =
+			dlsym(libsepolh, "sepol_policy_file_set_mem");
 		DLERR();
 		policydb_create = dlsym(libsepolh, "sepol_policydb_create");
 		DLERR();
@@ -125,28 +132,28 @@ int selinux_mkload_policy(int preservebools __attribute__((unused)))
 	}
 
 	vers = maxvers;
-      search:
-	snprintf(path, sizeof(path), "%s.%d",
-		 selinux_binary_policy_path(), vers);
+search:
+	snprintf(path, sizeof(path), "%s.%d", selinux_binary_policy_path(),
+		 vers);
 	fd = open(path, O_RDONLY | O_CLOEXEC);
-	while (fd < 0 && errno == ENOENT
-	       && --vers >= minvers) {
+	while (fd < 0 && errno == ENOENT && --vers >= minvers) {
 		/* Check prior versions to see if old policy is available */
 		snprintf(path, sizeof(path), "%s.%d",
 			 selinux_binary_policy_path(), vers);
 		fd = open(path, O_RDONLY | O_CLOEXEC);
 	}
 	if (fd < 0) {
-		selinux_log(SELINUX_ERROR,
-		            "SELinux:  Could not open policy file <= %s.%d:  %m\n",
-		            selinux_binary_policy_path(), maxvers);
+		selinux_log(
+			SELINUX_ERROR,
+			"SELinux:  Could not open policy file <= %s.%d:  %m\n",
+			selinux_binary_policy_path(), maxvers);
 		goto dlclose;
 	}
 
 	if (fstat(fd, &sb) < 0) {
 		selinux_log(SELINUX_ERROR,
-		            "SELinux:  Could not stat policy file %s:  %m\n",
-		            path);
+			    "SELinux:  Could not stat policy file %s:  %m\n",
+			    path);
 		goto close;
 	}
 
@@ -154,8 +161,8 @@ int selinux_mkload_policy(int preservebools __attribute__((unused)))
 	data = map = mmap(NULL, size, PROT_READ, MAP_PRIVATE, fd, 0);
 	if (map == MAP_FAILED) {
 		selinux_log(SELINUX_ERROR,
-		            "SELinux:  Could not map policy file %s:  %m\n",
-		            path);
+			    "SELinux:  Could not map policy file %s:  %m\n",
+			    path);
 		goto close;
 	}
 
@@ -176,9 +183,10 @@ int selinux_mkload_policy(int preservebools __attribute__((unused)))
 		if (policydb_set_vers(policydb, kernvers) ||
 		    policydb_to_image(NULL, policydb, &data, &size)) {
 			/* Downgrade failed, keep searching. */
-			selinux_log(SELINUX_ERROR,
-			            "SELinux:  Could not downgrade policy file %s, searching for an older version.\n",
-			            path);
+			selinux_log(
+				SELINUX_ERROR,
+				"SELinux:  Could not downgrade policy file %s, searching for an older version.\n",
+				path);
 			policy_file_free(pf);
 			policydb_free(policydb);
 			munmap(map, sb.st_size);
@@ -191,19 +199,19 @@ int selinux_mkload_policy(int preservebools __attribute__((unused)))
 	}
 
 	rc = security_load_policy(data, size);
-	
+
 	if (rc)
 		selinux_log(SELINUX_ERROR,
-		            "SELinux:  Could not load policy file %s:  %m\n",
-		            path);
+			    "SELinux:  Could not load policy file %s:  %m\n",
+			    path);
 
-      unmap:
+unmap:
 	if (data != map)
 		free(data);
 	munmap(map, sb.st_size);
-      close:
+close:
 	close(fd);
-      dlclose:
+dlclose:
 #ifdef SHARED
 	if (errormsg)
 		selinux_log(SELINUX_ERROR, "libselinux:  %s\n", errormsg);
@@ -212,7 +220,6 @@ int selinux_mkload_policy(int preservebools __attribute__((unused)))
 #endif
 	return rc;
 }
-
 
 /*
  * Mount point for selinuxfs. 
@@ -254,11 +261,14 @@ int selinux_init_load_policy(int *enforce)
 			char *search = buf;
 			char *tmp;
 			while ((tmp = strstr(search, "enforcing="))) {
-				if (tmp == buf || isspace((unsigned char)*(tmp - 1))) {
-					char *valstr = tmp + sizeof("enforcing=") - 1;
+				if (tmp == buf ||
+				    isspace((unsigned char)*(tmp - 1))) {
+					char *valstr =
+						tmp + sizeof("enforcing=") - 1;
 					char *endptr;
 					errno = 0;
-					const long val = strtol(valstr, &endptr, 0);
+					const long val =
+						strtol(valstr, &endptr, 0);
 					if (endptr != valstr && errno == 0) {
 						secmdline = val ? 1 : 0;
 					} else {
@@ -282,7 +292,7 @@ int selinux_init_load_policy(int *enforce)
 	else if (seconfig >= 0)
 		*enforce = seconfig;
 	else
-		*enforce = 0;	/* unspecified or disabled */
+		*enforce = 0; /* unspecified or disabled */
 
 	/*
 	 * Check for the existence of SELinux via selinuxfs, and 
@@ -290,19 +300,22 @@ int selinux_init_load_policy(int *enforce)
 	 */
 	const char *mntpoint = NULL;
 	/* First make sure /sys is mounted */
-	(void) mount("sysfs", "/sys", "sysfs", 0, 0);
+	(void)mount("sysfs", "/sys", "sysfs", 0, 0);
 
 	/* MS_NODEV can't be set because of /sys/fs/selinux/null device, used by Android */
-	if (mount(SELINUXFS, SELINUXMNT, SELINUXFS, MS_NOEXEC | MS_NOSUID, 0) == 0 || errno == EBUSY) {
+	if (mount(SELINUXFS, SELINUXMNT, SELINUXFS, MS_NOEXEC | MS_NOSUID, 0) ==
+		    0 ||
+	    errno == EBUSY) {
 		mntpoint = SELINUXMNT;
 	} else {
 		/* check old mountpoint */
-		if (mount(SELINUXFS, OLDSELINUXMNT, SELINUXFS, 0, 0) == 0 || errno == EBUSY) {
+		if (mount(SELINUXFS, OLDSELINUXMNT, SELINUXFS, 0, 0) == 0 ||
+		    errno == EBUSY) {
 			mntpoint = OLDSELINUXMNT;
 		}
 	}
 
-	if (! mntpoint ) {
+	if (!mntpoint) {
 		if (errno == ENODEV || !selinuxfs_exists()) {
 			/*
 			 * SELinux was disabled in the kernel, either
@@ -313,12 +326,14 @@ int selinux_init_load_policy(int *enforce)
 			*enforce = 0;
 		} else {
 			/* Only emit this error if selinux was not disabled */
-			selinux_log(SELINUX_ERROR, "Mount failed for selinuxfs on %s:  %m\n", SELINUXMNT);
+			selinux_log(SELINUX_ERROR,
+				    "Mount failed for selinuxfs on %s:  %m\n",
+				    SELINUXMNT);
 		}
 
 		if (rc == 0)
 			umount2("/proc", MNT_DETACH);
-                
+
 		goto noload;
 	}
 	set_selinuxmnt(mntpoint);
@@ -361,7 +376,10 @@ int selinux_init_load_policy(int *enforce)
 	if (orig_enforce != *enforce) {
 		rc = security_setenforce(*enforce);
 		if (rc < 0) {
-			selinux_log(SELINUX_ERROR, "SELinux:  Unable to switch to %s mode:  %m\n", (*enforce ? "enforcing" : "permissive"));
+			selinux_log(
+				SELINUX_ERROR,
+				"SELinux:  Unable to switch to %s mode:  %m\n",
+				(*enforce ? "enforcing" : "permissive"));
 			if (*enforce)
 				goto noload;
 		}
@@ -376,7 +394,7 @@ int selinux_init_load_policy(int *enforce)
 	/* Load the policy. */
 	return selinux_mkload_policy(0);
 
-      noload:
+noload:
 	/*
 	 * Only return 0 on a successful completion of policy load.
 	 * In any other case, we want to return an error so that init

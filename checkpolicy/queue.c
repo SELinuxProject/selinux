@@ -14,7 +14,7 @@ queue_t queue_create(void)
 {
 	queue_t q;
 
-	q = (queue_t) malloc(sizeof(struct queue_info));
+	q = (queue_t)malloc(sizeof(struct queue_info));
 	if (q == NULL)
 		return NULL;
 
@@ -30,7 +30,7 @@ int queue_insert(queue_t q, queue_element_t e)
 	if (!q)
 		return -1;
 
-	newnode = (queue_node_ptr_t) malloc(sizeof(struct queue_node));
+	newnode = (queue_node_ptr_t)malloc(sizeof(struct queue_node));
 	if (newnode == NULL)
 		return -1;
 
@@ -54,7 +54,7 @@ int queue_push(queue_t q, queue_element_t e)
 	if (!q)
 		return -1;
 
-	newnode = (queue_node_ptr_t) malloc(sizeof(struct queue_node));
+	newnode = (queue_node_ptr_t)malloc(sizeof(struct queue_node));
 	if (newnode == NULL)
 		return -1;
 
@@ -140,7 +140,7 @@ void queue_destroy(queue_t q)
 	free(q);
 }
 
-int queue_map(queue_t q, int (*f) (queue_element_t, void *), void *vp)
+int queue_map(queue_t q, int (*f)(queue_element_t, void *), void *vp)
 {
 	queue_node_ptr_t p;
 	int ret;
@@ -158,9 +158,8 @@ int queue_map(queue_t q, int (*f) (queue_element_t, void *), void *vp)
 	return 0;
 }
 
-void queue_map_remove_on_error(queue_t q,
-			       int (*f) (queue_element_t, void *),
-			       void (*g) (queue_element_t, void *), void *vp)
+void queue_map_remove_on_error(queue_t q, int (*f)(queue_element_t, void *),
+			       void (*g)(queue_element_t, void *), void *vp)
 {
 	queue_node_ptr_t p, last, temp;
 	int ret;

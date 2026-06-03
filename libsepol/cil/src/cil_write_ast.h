@@ -42,6 +42,7 @@ enum cil_write_ast_phase {
 };
 
 void cil_write_ast_node(FILE *out, struct cil_tree_node *node);
-int cil_write_ast(FILE *out, enum cil_write_ast_phase phase, struct cil_tree_node *node);
+int cil_write_ast(FILE *out, enum cil_write_ast_phase phase,
+		  struct cil_tree_node *node);
 
 #endif /* CIL_WRITE_AST_H_ */

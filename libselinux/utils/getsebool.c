@@ -6,7 +6,7 @@
 #include <string.h>
 #include <selinux/selinux.h>
 
-static __attribute__ ((__noreturn__)) void usage(const char *progname)
+static __attribute__((__noreturn__)) void usage(const char *progname)
 {
 	fprintf(stderr, "usage:  %s -a or %s boolean...\n", progname, progname);
 	exit(1);
@@ -74,7 +74,7 @@ int main(int argc, char **argv)
 	for (i = 0; i < len; i++) {
 		active = security_get_boolean_active(names[i]);
 		if (active < 0) {
-			if (get_all && errno == EACCES) 
+			if (get_all && errno == EACCES)
 				continue;
 			fprintf(stderr, "Error getting active value for %s\n",
 				names[i]);
@@ -89,7 +89,7 @@ int main(int argc, char **argv)
 			goto out;
 		}
 		char *alt_name = selinux_boolean_sub(names[i]);
-		if (! alt_name) {
+		if (!alt_name) {
 			perror("Out of memory\n");
 			rc = -1;
 			goto out;
@@ -106,7 +106,7 @@ int main(int argc, char **argv)
 		free(alt_name);
 	}
 
-      out:
+out:
 	for (i = 0; i < len; i++)
 		free(names[i]);
 	free(names);

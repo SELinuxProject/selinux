@@ -45,14 +45,14 @@ extern "C" {
  * in reverse polish notation.
  */
 typedef struct cond_expr {
-#define COND_BOOL	1	/* plain bool */
-#define COND_NOT	2	/* !bool */
-#define COND_OR		3	/* bool || bool */
-#define COND_AND	4	/* bool && bool */
-#define COND_XOR	5	/* bool ^ bool */
-#define COND_EQ		6	/* bool == bool */
-#define COND_NEQ	7	/* bool != bool */
-#define COND_LAST	COND_NEQ
+#define COND_BOOL 1 /* plain bool */
+#define COND_NOT 2 /* !bool */
+#define COND_OR 3 /* bool || bool */
+#define COND_AND 4 /* bool && bool */
+#define COND_XOR 5 /* bool ^ bool */
+#define COND_EQ 6 /* bool == bool */
+#define COND_NEQ 7 /* bool != bool */
+#define COND_LAST COND_NEQ
 	uint32_t expr_type;
 	/* The member `boolean` was renamed from `bool` in version 3.6 */
 #define COND_EXPR_T_RENAME_BOOL_BOOLEAN
@@ -92,55 +92,54 @@ typedef struct cond_node {
 	uint32_t expr_pre_comp;
 	struct cond_node *next;
 	/* a tunable conditional, calculated and used at expansion */
-#define	COND_NODE_FLAGS_TUNABLE	UINT32_C(0x01)
+#define COND_NODE_FLAGS_TUNABLE UINT32_C(0x01)
 	uint32_t flags;
 } cond_node_t;
 
-extern int cond_evaluate_expr(policydb_t * p, cond_expr_t * expr);
-extern cond_expr_t *cond_copy_expr(cond_expr_t * expr);
+extern int cond_evaluate_expr(policydb_t *p, cond_expr_t *expr);
+extern cond_expr_t *cond_copy_expr(cond_expr_t *expr);
 
-extern int cond_expr_equal(cond_node_t * a, cond_node_t * b);
-extern int cond_normalize_expr(policydb_t * p, cond_node_t * cn);
-extern void cond_node_destroy(cond_node_t * node);
-extern void cond_expr_destroy(cond_expr_t * expr);
+extern int cond_expr_equal(cond_node_t *a, cond_node_t *b);
+extern int cond_normalize_expr(policydb_t *p, cond_node_t *cn);
+extern void cond_node_destroy(cond_node_t *node);
+extern void cond_expr_destroy(cond_expr_t *expr);
 
-extern cond_node_t *cond_node_find(policydb_t * p,
-				   cond_node_t * needle, cond_node_t * haystack,
-				   int *was_created);
+extern cond_node_t *cond_node_find(policydb_t *p, cond_node_t *needle,
+				   cond_node_t *haystack, int *was_created);
 
-extern cond_node_t *cond_node_create(policydb_t * p, cond_node_t * node);
+extern cond_node_t *cond_node_create(policydb_t *p, cond_node_t *node);
 
-extern cond_node_t *cond_node_search(policydb_t * p, cond_node_t * list,
-				     cond_node_t * cn);
+extern cond_node_t *cond_node_search(policydb_t *p, cond_node_t *list,
+				     cond_node_t *cn);
 
-extern int evaluate_conds(policydb_t * p);
+extern int evaluate_conds(policydb_t *p);
 
-extern avtab_datum_t *cond_av_list_search(avtab_key_t * key,
-					  cond_av_list_t * cond_list);
+extern avtab_datum_t *cond_av_list_search(avtab_key_t *key,
+					  cond_av_list_t *cond_list);
 
-extern void cond_av_list_destroy(cond_av_list_t * list);
+extern void cond_av_list_destroy(cond_av_list_t *list);
 
-extern void cond_optimize_lists(cond_list_t * cl);
+extern void cond_optimize_lists(cond_list_t *cl);
 
-extern int cond_policydb_init(policydb_t * p);
-extern void cond_policydb_destroy(policydb_t * p);
-extern void cond_list_destroy(cond_list_t * list);
+extern int cond_policydb_init(policydb_t *p);
+extern void cond_policydb_destroy(policydb_t *p);
+extern void cond_list_destroy(cond_list_t *list);
 
-extern int cond_init_bool_indexes(policydb_t * p);
+extern int cond_init_bool_indexes(policydb_t *p);
 extern int cond_destroy_bool(hashtab_key_t key, hashtab_datum_t datum, void *p);
 
 extern int cond_index_bool(hashtab_key_t key, hashtab_datum_t datum,
 			   void *datap);
 
-extern int cond_read_bool(policydb_t * p, hashtab_t h, struct policy_file *fp);
+extern int cond_read_bool(policydb_t *p, hashtab_t h, struct policy_file *fp);
 
-extern int cond_read_list(policydb_t * p, cond_list_t ** list, void *fp);
+extern int cond_read_list(policydb_t *p, cond_list_t **list, void *fp);
 
-extern void cond_compute_av(avtab_t * ctab, avtab_key_t * key,
+extern void cond_compute_av(avtab_t *ctab, avtab_key_t *key,
 			    struct sepol_av_decision *avd);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif				/* _CONDITIONAL_H_ */
+#endif /* _CONDITIONAL_H_ */

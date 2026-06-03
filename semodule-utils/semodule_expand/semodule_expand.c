@@ -32,7 +32,8 @@ static void usage(const char *program_name)
 int main(int argc, char **argv)
 {
 	const char *basename, *outname;
-	int ch, ret, show_version = 0, verbose = 0, policyvers = 0, check_assertions = 1;
+	int ch, ret, show_version = 0, verbose = 0, policyvers = 0,
+		     check_assertions = 1;
 	struct sepol_policy_file *pf = NULL;
 	sepol_module_package_t *base = NULL;
 	sepol_policydb_t *out = NULL, *p;
@@ -50,35 +51,35 @@ int main(int argc, char **argv)
 		case 'h':
 			usage(argv[0]);
 			return EXIT_SUCCESS;
-		case 'c':{
-				long int n;
+		case 'c': {
+			long int n;
 
-				errno = 0;
-				n = strtol(optarg, NULL, 10);
-				if (errno) {
-					fprintf(stderr,
-						"%s:  Invalid policyvers specified: %s\n",
-						argv[0], optarg);
-					usage(argv[0]);
-					return EXIT_FAILURE;
-				}
-				if (n < sepol_policy_kern_vers_min()
-				    || n > sepol_policy_kern_vers_max()) {
-					fprintf(stderr,
-						"%s:  policyvers value %ld not in range %d-%d\n",
-						argv[0], n,
-						sepol_policy_kern_vers_min(),
-						sepol_policy_kern_vers_max());
-					usage(argv[0]);
-					return EXIT_FAILURE;
-				}
-				policyvers = n;
-				break;
+			errno = 0;
+			n = strtol(optarg, NULL, 10);
+			if (errno) {
+				fprintf(stderr,
+					"%s:  Invalid policyvers specified: %s\n",
+					argv[0], optarg);
+				usage(argv[0]);
+				return EXIT_FAILURE;
 			}
-		case 'a':{
-				check_assertions = 0;
-				break;
+			if (n < sepol_policy_kern_vers_min() ||
+			    n > sepol_policy_kern_vers_max()) {
+				fprintf(stderr,
+					"%s:  policyvers value %ld not in range %d-%d\n",
+					argv[0], n,
+					sepol_policy_kern_vers_min(),
+					sepol_policy_kern_vers_max());
+				usage(argv[0]);
+				return EXIT_FAILURE;
 			}
+			policyvers = n;
+			break;
+		}
+		case 'a': {
+			check_assertions = 0;
+			break;
+		}
 		default:
 			usage(argv[0]);
 			return EXIT_FAILURE;
@@ -126,8 +127,8 @@ int main(int argc, char **argv)
 
 	fp = fopen(basename, "re");
 	if (!fp) {
-		fprintf(stderr, "%s:  Can't open '%s':  %s\n",
-			argv[0], basename, strerror(errno));
+		fprintf(stderr, "%s:  Can't open '%s':  %s\n", argv[0],
+			basename, strerror(errno));
 		goto failure;
 	}
 
@@ -173,8 +174,8 @@ int main(int argc, char **argv)
 
 	outfile = fopen(outname, "we");
 	if (!outfile) {
-		fprintf(stderr, "%s:  Can't open '%s':  %s\n",
-			argv[0], outname, strerror(errno));
+		fprintf(stderr, "%s:  Can't open '%s':  %s\n", argv[0], outname,
+			strerror(errno));
 		goto failure;
 	}
 

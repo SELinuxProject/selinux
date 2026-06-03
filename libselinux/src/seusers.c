@@ -16,9 +16,8 @@
 
 /* Process line from seusers.conf and split into its fields.
    Returns 0 on success, -1 on comments, and -2 on error. */
-static int process_seusers(const char *buffer,
-			   char **luserp,
-			   char **seuserp, char **levelp, int mls_enabled)
+static int process_seusers(const char *buffer, char **luserp, char **seuserp,
+			   char **levelp, int mls_enabled)
 {
 	char *newbuf = strdup(buffer);
 	char *luser = NULL, *seuser = NULL, *level = NULL;
@@ -33,7 +32,7 @@ static int process_seusers(const char *buffer,
 		start++;
 	if (*start == '#' || *start == 0) {
 		free(newbuf);
-		return -1;	/* Comment or empty line, skip over */
+		return -1; /* Comment or empty line, skip over */
 	}
 	end = strchr(start, ':');
 	if (!end)
@@ -78,26 +77,27 @@ static int process_seusers(const char *buffer,
 	if (!strcmp(level, ""))
 		goto err;
 
-      out:
+out:
 	free(newbuf);
 	*luserp = luser;
 	*seuserp = seuser;
 	*levelp = level;
 	return 0;
-      err:
+err:
 	free(newbuf);
 	free(luser);
 	free(seuser);
 	free(level);
-	return -2;		/* error */
+	return -2; /* error */
 }
 
-int require_seusers  = 0;
+int require_seusers = 0;
 
 #include <pwd.h>
 #include <grp.h>
 
-static gid_t get_default_gid(const char *name) {
+static gid_t get_default_gid(const char *name)
+{
 	struct passwd pwstorage, *pwent = NULL;
 	gid_t gid = (gid_t)-1;
 	/* Allocate space for the getpwnam_r buffer */
@@ -129,7 +129,8 @@ static gid_t get_default_gid(const char *name) {
 	return gid;
 }
 
-static int check_group(const char *group, const char *name, const gid_t gid) {
+static int check_group(const char *group, const char *name, const gid_t gid)
+{
 	int match = 0;
 	int i, ng = 0;
 	gid_t *groups = NULL;
@@ -140,21 +141,17 @@ static int check_group(const char *group, const char *name, const gid_t gid) {
 		rbuflen = 1024;
 	char *rbuf;
 
-	while(1) {
+	while (1) {
 		rbuf = malloc(rbuflen);
 		if (rbuf == NULL)
 			return 0;
-		int retval = getgrnam_r(group, &gbuf, rbuf, 
-				rbuflen, &grent);
-		if (retval == ERANGE && rbuflen < LONG_MAX / 2)
-		{
+		int retval = getgrnam_r(group, &gbuf, rbuf, rbuflen, &grent);
+		if (retval == ERANGE && rbuflen < LONG_MAX / 2) {
 			free(rbuf);
 			rbuflen = rbuflen * 2;
-		} else if ( retval != 0 || grent == NULL )
-		{
+		} else if (retval != 0 || grent == NULL) {
 			goto done;
-		} else
-		{
+		} else {
 			break;
 		}
 	}
@@ -179,7 +176,7 @@ static int check_group(const char *group, const char *name, const gid_t gid) {
 		}
 	}
 
- done:
+done:
 	free(groups);
 	free(rbuf);
 	return match;
@@ -214,23 +211,23 @@ int getseuserbyname(const char *name, char **r_seuser, char **r_level)
 		rc = process_seusers(buffer, &username, &seuser, &level,
 				     mls_enabled);
 		if (rc == -1)
-			continue;	/* comment, skip */
+			continue; /* comment, skip */
 		if (rc == -2) {
-			selinux_log(SELINUX_ERROR, "%s:  error on line %lu, skipping...\n",
-						   selinux_usersconf_path(), lineno);
+			selinux_log(SELINUX_ERROR,
+				    "%s:  error on line %lu, skipping...\n",
+				    selinux_usersconf_path(), lineno);
 			continue;
 		}
 
 		if (!strcmp(username, name))
 			break;
 
-		if (username[0] == '%' && 
-		    !groupseuser && 
+		if (username[0] == '%' && !groupseuser &&
 		    check_group(&username[1], name, gid)) {
-				groupseuser = seuser;
-				grouplevel = level;
+			groupseuser = seuser;
+			grouplevel = level;
 		} else {
-			if (!defaultseuser && 
+			if (!defaultseuser &&
 			    !strcmp(username, "__default__")) {
 				defaultseuser = seuser;
 				defaultlevel = level;
@@ -272,7 +269,7 @@ int getseuserbyname(const char *name, char **r_seuser, char **r_level)
 		return 0;
 	}
 
-      nomatch:
+nomatch:
 	if (require_seusers)
 		return -1;
 
@@ -284,8 +281,9 @@ int getseuserbyname(const char *name, char **r_seuser, char **r_level)
 	return 0;
 }
 
-int getseuser(const char *username, const char *service, 
-	      char **r_seuser, char **r_level) {
+int getseuser(const char *username, const char *service, char **r_seuser,
+	      char **r_level)
+{
 	int ret = -1;
 	int len = 0;
 	char *seuser = NULL;
@@ -295,11 +293,13 @@ int getseuser(const char *username, const char *service,
 	char *rec = NULL;
 	char *path = NULL;
 	FILE *fp = NULL;
-	if (asprintf(&path,"%s/logins/%s", selinux_policy_root(), username) <  0)
+	if (asprintf(&path, "%s/logins/%s", selinux_policy_root(), username) <
+	    0)
 		goto err;
 	fp = fopen(path, "re");
 	free(path);
-	if (fp == NULL) goto err;
+	if (fp == NULL)
+		goto err;
 	__fsetlocking(fp, FSETLOCKING_BYCALLER);
 	while (getline(&buffer, &size, fp) > 0) {
 		if (strncmp(buffer, "*:", 2) == 0) {
@@ -318,32 +318,37 @@ int getseuser(const char *username, const char *service,
 		}
 	}
 
-	if (! rec)  goto err;
+	if (!rec)
+		goto err;
 	seuser = strchr(rec, ':');
-	if (! seuser) goto err;
+	if (!seuser)
+		goto err;
 
 	seuser++;
 	level = strchr(seuser, ':');
-	if (! level) goto err;
+	if (!level)
+		goto err;
 	*level = 0;
 	level++;
 	*r_seuser = strdup(seuser);
-	if (! *r_seuser) goto err;
+	if (!*r_seuser)
+		goto err;
 
 	len = strlen(level);
-	if (len && level[len-1] == '\n')
-		level[len-1] = 0;
+	if (len && level[len - 1] == '\n')
+		level[len - 1] = 0;
 
 	*r_level = strdup(level);
-	if (! *r_level) {
+	if (!*r_level) {
 		free(*r_seuser);
 		goto err;
 	}
 	ret = 0;
 
-	err:
+err:
 	free(buffer);
-	if (fp) fclose(fp);
+	if (fp)
+		fclose(fp);
 	free(rec);
 
 	return (ret ? getseuserbyname(username, r_seuser, r_level) : ret);

@@ -9,8 +9,7 @@
 #include "policy.h"
 #include <limits.h>
 
-int security_canonicalize_context_raw(const char * con,
-				      char ** canoncon)
+int security_canonicalize_context_raw(const char *con, char **canoncon)
 {
 	char path[PATH_MAX];
 	char *buf;
@@ -57,19 +56,17 @@ int security_canonicalize_context_raw(const char * con,
 		goto out;
 	}
 	ret = 0;
-      out:
+out:
 	free(buf);
 	close(fd);
 	return ret;
 }
 
-
-int security_canonicalize_context(const char * con,
-				      char ** canoncon)
+int security_canonicalize_context(const char *con, char **canoncon)
 {
 	int ret;
-	char * rcon;
-	char * rcanoncon;
+	char *rcon;
+	char *rcanoncon;
 
 	if (selinux_trans_to_raw_context(con, &rcon))
 		return -1;
@@ -84,4 +81,3 @@ int security_canonicalize_context(const char * con,
 
 	return ret;
 }
-

@@ -90,7 +90,7 @@ static int policy_file_length(struct policy_file *fp, size_t *out)
 	return 0;
 }
 
-static int module_package_init(sepol_module_package_t * p)
+static int module_package_init(sepol_module_package_t *p)
 {
 	memset(p, 0, sizeof(sepol_module_package_t));
 	if (sepol_policydb_create(&p->policy))
@@ -115,7 +115,7 @@ static int set_char(char **field, char *data, size_t len)
 	return 0;
 }
 
-int sepol_module_package_create(sepol_module_package_t ** p)
+int sepol_module_package_create(sepol_module_package_t **p)
 {
 	int rc;
 
@@ -132,11 +132,10 @@ int sepol_module_package_create(sepol_module_package_t ** p)
 	return rc;
 }
 
-
 /* Deallocates all memory associated with a module package, including
  * the pointer itself.  Does nothing if p is NULL.
  */
-void sepol_module_package_free(sepol_module_package_t * p)
+void sepol_module_package_free(sepol_module_package_t *p)
 {
 	if (p == NULL)
 		return;
@@ -149,49 +148,48 @@ void sepol_module_package_free(sepol_module_package_t * p)
 	free(p);
 }
 
-
-char *sepol_module_package_get_file_contexts(sepol_module_package_t * p)
+char *sepol_module_package_get_file_contexts(sepol_module_package_t *p)
 {
 	return p->file_contexts;
 }
 
-size_t sepol_module_package_get_file_contexts_len(sepol_module_package_t * p)
+size_t sepol_module_package_get_file_contexts_len(sepol_module_package_t *p)
 {
 	return p->file_contexts_len;
 }
 
-char *sepol_module_package_get_seusers(sepol_module_package_t * p)
+char *sepol_module_package_get_seusers(sepol_module_package_t *p)
 {
 	return p->seusers;
 }
 
-size_t sepol_module_package_get_seusers_len(sepol_module_package_t * p)
+size_t sepol_module_package_get_seusers_len(sepol_module_package_t *p)
 {
 	return p->seusers_len;
 }
 
-char *sepol_module_package_get_user_extra(sepol_module_package_t * p)
+char *sepol_module_package_get_user_extra(sepol_module_package_t *p)
 {
 	return p->user_extra;
 }
 
-size_t sepol_module_package_get_user_extra_len(sepol_module_package_t * p)
+size_t sepol_module_package_get_user_extra_len(sepol_module_package_t *p)
 {
 	return p->user_extra_len;
 }
 
-char *sepol_module_package_get_netfilter_contexts(sepol_module_package_t * p)
+char *sepol_module_package_get_netfilter_contexts(sepol_module_package_t *p)
 {
 	return p->netfilter_contexts;
 }
 
-size_t sepol_module_package_get_netfilter_contexts_len(sepol_module_package_t *
-						       p)
+size_t
+sepol_module_package_get_netfilter_contexts_len(sepol_module_package_t *p)
 {
 	return p->netfilter_contexts_len;
 }
 
-int sepol_module_package_set_file_contexts(sepol_module_package_t * p,
+int sepol_module_package_set_file_contexts(sepol_module_package_t *p,
 					   char *data, size_t len)
 {
 	if (set_char(&p->file_contexts, data, len))
@@ -201,8 +199,8 @@ int sepol_module_package_set_file_contexts(sepol_module_package_t * p,
 	return 0;
 }
 
-int sepol_module_package_set_seusers(sepol_module_package_t * p,
-				     char *data, size_t len)
+int sepol_module_package_set_seusers(sepol_module_package_t *p, char *data,
+				     size_t len)
 {
 	if (set_char(&p->seusers, data, len))
 		return -1;
@@ -211,8 +209,8 @@ int sepol_module_package_set_seusers(sepol_module_package_t * p,
 	return 0;
 }
 
-int sepol_module_package_set_user_extra(sepol_module_package_t * p,
-					char *data, size_t len)
+int sepol_module_package_set_user_extra(sepol_module_package_t *p, char *data,
+					size_t len)
 {
 	if (set_char(&p->user_extra, data, len))
 		return -1;
@@ -221,7 +219,7 @@ int sepol_module_package_set_user_extra(sepol_module_package_t * p,
 	return 0;
 }
 
-int sepol_module_package_set_netfilter_contexts(sepol_module_package_t * p,
+int sepol_module_package_set_netfilter_contexts(sepol_module_package_t *p,
 						char *data, size_t len)
 {
 	if (set_char(&p->netfilter_contexts, data, len))
@@ -231,7 +229,7 @@ int sepol_module_package_set_netfilter_contexts(sepol_module_package_t * p,
 	return 0;
 }
 
-sepol_policydb_t *sepol_module_package_get_policy(sepol_module_package_t * p)
+sepol_policydb_t *sepol_module_package_get_policy(sepol_module_package_t *p)
 {
 	return p->policy;
 }
@@ -242,9 +240,8 @@ sepol_policydb_t *sepol_module_package_get_policy(sepol_module_package_t * p)
  * variable). 'base_fc_len' is the length of base's file context; it
  * too is a reference variable.  Return 0 on success, -1 if out of
  * memory. */
-static int link_file_contexts(sepol_module_package_t * base,
-			      sepol_module_package_t ** modules,
-			      int num_modules)
+static int link_file_contexts(sepol_module_package_t *base,
+			      sepol_module_package_t **modules, int num_modules)
 {
 	size_t fc_len;
 	int i;
@@ -274,8 +271,8 @@ static int link_file_contexts(sepol_module_package_t * base,
  * variable). 'base_nc_len' is the length of base's netfilter contexts; it
  * too is a reference variable.  Return 0 on success, -1 if out of
  * memory. */
-static int link_netfilter_contexts(sepol_module_package_t * base,
-				   sepol_module_package_t ** modules,
+static int link_netfilter_contexts(sepol_module_package_t *base,
+				   sepol_module_package_t **modules,
 				   int num_modules)
 {
 	size_t base_nc_len;
@@ -287,29 +284,28 @@ static int link_netfilter_contexts(sepol_module_package_t * base,
 		base_nc_len += modules[i]->netfilter_contexts_len;
 	}
 
-	if ((base_context =
-	     (char *)realloc(base->netfilter_contexts, base_nc_len)) == NULL) {
+	if ((base_context = (char *)realloc(base->netfilter_contexts,
+					    base_nc_len)) == NULL) {
 		return -1;
 	}
 	base->netfilter_contexts = base_context;
 	for (i = 0; i < num_modules; i++) {
 		if (modules[i]->netfilter_contexts_len > 0) {
-			memcpy(base->netfilter_contexts + base->netfilter_contexts_len,
+			memcpy(base->netfilter_contexts +
+				       base->netfilter_contexts_len,
 			       modules[i]->netfilter_contexts,
 			       modules[i]->netfilter_contexts_len);
 			base->netfilter_contexts_len +=
-			    modules[i]->netfilter_contexts_len;
+				modules[i]->netfilter_contexts_len;
 		}
-
 	}
 	return 0;
 }
 
 /* Links the module packages into the base.  Returns 0 on success, -1
  * if a requirement was not met, or -2 for all other errors. */
-int sepol_link_packages(sepol_handle_t * handle,
-			sepol_module_package_t * base,
-			sepol_module_package_t ** modules, int num_modules,
+int sepol_link_packages(sepol_handle_t *handle, sepol_module_package_t *base,
+			sepol_module_package_t **modules, int num_modules,
 			int verbose)
 {
 	policydb_t **mod_pols = NULL;
@@ -373,21 +369,21 @@ static int read_helper(char *buf, struct policy_file *file, uint32_t bytes)
 
 /* Get the section offsets from a package file, offsets will be malloc'd to
  * the appropriate size and the caller must free() them */
-static int module_package_read_offsets(sepol_module_package_t * mod,
+static int module_package_read_offsets(sepol_module_package_t *mod,
 				       struct policy_file *file,
-				       size_t ** offsets, uint32_t * sections)
+				       size_t **offsets, uint32_t *sections)
 {
 	uint32_t *buf = NULL, nsec;
 	unsigned i;
 	size_t *off = NULL;
 	int rc;
 
-	buf = malloc(sizeof(uint32_t)*3);
+	buf = malloc(sizeof(uint32_t) * 3);
 	if (!buf) {
 		ERR(file->handle, "out of memory");
 		goto err;
 	}
-	  
+
 	rc = next_entry(buf, file, sizeof(uint32_t) * 3);
 	if (rc < 0) {
 		ERR(file->handle, "module package header truncated");
@@ -409,7 +405,7 @@ static int module_package_read_offsets(sepol_module_package_t * mod,
 		goto err;
 	}
 
-	off = (size_t *) calloc(nsec + 1, sizeof(size_t));
+	off = (size_t *)calloc(nsec + 1, sizeof(size_t));
 	if (!off) {
 		ERR(file->handle, "out of memory");
 		goto err;
@@ -430,9 +426,10 @@ static int module_package_read_offsets(sepol_module_package_t * mod,
 	for (i = 0; i < nsec; i++) {
 		off[i] = le32_to_cpu(buf[i]);
 		if (i && off[i] < off[i - 1]) {
-			ERR(file->handle, "offsets are not increasing (at %u, "
-			    "offset %zu -> %zu", i, off[i - 1],
-			    off[i]);
+			ERR(file->handle,
+			    "offsets are not increasing (at %u, "
+			    "offset %zu -> %zu",
+			    i, off[i - 1], off[i]);
 			goto err;
 		}
 	}
@@ -441,10 +438,11 @@ static int module_package_read_offsets(sepol_module_package_t * mod,
 	if (rc < 0)
 		goto err;
 
-	if (nsec && off[nsec] < off[nsec-1]) {
-		ERR(file->handle, "offset greater than file size (at %u, "
-		    "offset %zu -> %zu", nsec, off[nsec - 1],
-		    off[nsec]);
+	if (nsec && off[nsec] < off[nsec - 1]) {
+		ERR(file->handle,
+		    "offset greater than file size (at %u, "
+		    "offset %zu -> %zu",
+		    nsec, off[nsec - 1], off[nsec]);
 		goto err;
 	}
 	*offsets = off;
@@ -459,12 +457,12 @@ err:
 
 /* Flags for which sections have been seen during parsing of module package. */
 #define SEEN_MOD 1
-#define SEEN_FC  2
+#define SEEN_FC 2
 #define SEEN_SEUSER 4
 #define SEEN_USER_EXTRA 8
 #define SEEN_NETFILTER 16
 
-int sepol_module_package_read(sepol_module_package_t * mod,
+int sepol_module_package_read(sepol_module_package_t *mod,
 			      struct sepol_policy_file *spf, int verbose)
 {
 	struct policy_file *file = &spf->pf;
@@ -479,18 +477,21 @@ int sepol_module_package_read(sepol_module_package_t * mod,
 	/* we know the section offsets, seek to them and read in the data */
 
 	for (i = 0; i < nsec; i++) {
-
 		if (policy_file_seek(file, offsets[i])) {
-			ERR(file->handle, "error seeking to offset %zu for "
-			    "module package section %u", offsets[i], i);
+			ERR(file->handle,
+			    "error seeking to offset %zu for "
+			    "module package section %u",
+			    offsets[i], i);
 			goto cleanup;
 		}
 
 		len = offsets[i + 1] - offsets[i];
 
 		if (len < sizeof(uint32_t)) {
-			ERR(file->handle, "module package section %u "
-			    "has too small length %zu", i, len);
+			ERR(file->handle,
+			    "module package section %u "
+			    "has too small length %zu",
+			    i, len);
 			goto cleanup;
 		}
 
@@ -514,14 +515,13 @@ int sepol_module_package_read(sepol_module_package_t * mod,
 
 			mod->file_contexts_len = len - sizeof(uint32_t);
 			mod->file_contexts =
-			    (char *)malloc(mod->file_contexts_len);
+				(char *)malloc(mod->file_contexts_len);
 			if (!mod->file_contexts) {
 				ERR(file->handle, "out of memory");
 				goto cleanup;
 			}
-			if (read_helper
-			    (mod->file_contexts, file,
-			     mod->file_contexts_len)) {
+			if (read_helper(mod->file_contexts, file,
+					mod->file_contexts_len)) {
 				ERR(file->handle,
 				    "invalid file contexts section at section %u",
 				    i);
@@ -568,8 +568,8 @@ int sepol_module_package_read(sepol_module_package_t * mod,
 				ERR(file->handle, "out of memory");
 				goto cleanup;
 			}
-			if (read_helper
-			    (mod->user_extra, file, mod->user_extra_len)) {
+			if (read_helper(mod->user_extra, file,
+					mod->user_extra_len)) {
 				ERR(file->handle,
 				    "invalid user_extra section at section %u",
 				    i);
@@ -589,14 +589,13 @@ int sepol_module_package_read(sepol_module_package_t * mod,
 
 			mod->netfilter_contexts_len = len - sizeof(uint32_t);
 			mod->netfilter_contexts =
-			    (char *)malloc(mod->netfilter_contexts_len);
+				(char *)malloc(mod->netfilter_contexts_len);
 			if (!mod->netfilter_contexts) {
 				ERR(file->handle, "out of memory");
 				goto cleanup;
 			}
-			if (read_helper
-			    (mod->netfilter_contexts, file,
-			     mod->netfilter_contexts_len)) {
+			if (read_helper(mod->netfilter_contexts, file,
+					mod->netfilter_contexts_len)) {
 				ERR(file->handle,
 				    "invalid netfilter contexts section at section %u",
 				    i);
@@ -644,7 +643,7 @@ int sepol_module_package_read(sepol_module_package_t * mod,
 	free(offsets);
 	return 0;
 
-      cleanup:
+cleanup:
 	free(offsets);
 	return -1;
 }
@@ -668,10 +667,11 @@ int sepol_module_package_info(struct sepol_policy_file *spf, int *type,
 	}
 
 	for (i = 0; i < nsec; i++) {
-
 		if (policy_file_seek(file, offsets[i])) {
-			ERR(file->handle, "error seeking to offset "
-			    "%zu for module package section %u", offsets[i], i);
+			ERR(file->handle,
+			    "error seeking to offset "
+			    "%zu for module package section %u",
+			    offsets[i], i);
 			goto cleanup;
 		}
 
@@ -753,9 +753,8 @@ int sepol_module_package_info(struct sepol_policy_file *spf, int *type,
 			id = malloc(len + 1);
 			if (!id) {
 				ERR(file->handle,
-				    "out of memory (at section %u)",
-				    i);
-				goto cleanup;				
+				    "out of memory (at section %u)", i);
+				goto cleanup;
 			}
 			rc = next_entry(id, file, len);
 			free(id);
@@ -765,7 +764,7 @@ int sepol_module_package_info(struct sepol_policy_file *spf, int *type,
 				    i);
 				goto cleanup;
 			}
-			
+
 			rc = next_entry(buf, file, sizeof(uint32_t) * 5);
 			if (rc < 0) {
 				ERR(file->handle,
@@ -816,7 +815,7 @@ int sepol_module_package_info(struct sepol_policy_file *spf, int *type,
 			if (str_read(version, file, len)) {
 				ERR(file->handle,
 				    "cannot read module version (at section %u): %m",
-				i);
+				    i);
 				goto cleanup;
 			}
 			seen |= SEEN_MOD;
@@ -824,7 +823,6 @@ int sepol_module_package_info(struct sepol_policy_file *spf, int *type,
 		default:
 			break;
 		}
-
 	}
 
 	if ((seen & SEEN_MOD) == 0) {
@@ -836,7 +834,7 @@ int sepol_module_package_info(struct sepol_policy_file *spf, int *type,
 	free(offsets);
 	return 0;
 
-      cleanup:
+cleanup:
 	sepol_module_package_free(mod);
 	free(offsets);
 	return -1;
@@ -862,7 +860,7 @@ static int write_helper(char *data, size_t len, struct policy_file *file)
 	return 0;
 }
 
-int sepol_module_package_write(sepol_module_package_t * p,
+int sepol_module_package_write(sepol_module_package_t *p,
 			       struct sepol_policy_file *spf)
 {
 	struct policy_file *file = &spf->pf;
@@ -888,8 +886,8 @@ int sepol_module_package_write(sepol_module_package_t * p,
 	}
 
 	/* seusers and user_extra only supported in base at the moment */
-	if ((p->seusers || p->user_extra)
-	    && (p->policy->p.policy_type != SEPOL_POLICY_BASE)) {
+	if ((p->seusers || p->user_extra) &&
+	    (p->policy->p.policy_type != SEPOL_POLICY_BASE)) {
 		ERR(file->handle,
 		    "seuser and user_extra sections only supported in base");
 		return -1;
@@ -964,7 +962,6 @@ int sepol_module_package_write(sepol_module_package_t * p,
 			return -1;
 		if (write_helper(p->seusers, p->seusers_len, file))
 			return -1;
-
 	}
 	if (p->user_extra) {
 		buf[0] = cpu_to_le32(SEPOL_PACKAGE_SECTION_USER_EXTRA);
@@ -977,24 +974,22 @@ int sepol_module_package_write(sepol_module_package_t * p,
 		buf[0] = cpu_to_le32(SEPOL_PACKAGE_SECTION_NETFILTER);
 		if (put_entry(buf, sizeof(uint32_t), 1, file) != 1)
 			return -1;
-		if (write_helper
-		    (p->netfilter_contexts, p->netfilter_contexts_len, file))
+		if (write_helper(p->netfilter_contexts,
+				 p->netfilter_contexts_len, file))
 			return -1;
 	}
 	return 0;
 }
 
-int sepol_link_modules(sepol_handle_t * handle,
-		       sepol_policydb_t * base,
-		       sepol_policydb_t ** modules, size_t len, int verbose)
+int sepol_link_modules(sepol_handle_t *handle, sepol_policydb_t *base,
+		       sepol_policydb_t **modules, size_t len, int verbose)
 {
-	return link_modules(handle, &base->p, (policydb_t **) modules, len,
+	return link_modules(handle, &base->p, (policydb_t **)modules, len,
 			    verbose);
 }
 
-int sepol_expand_module(sepol_handle_t * handle,
-			sepol_policydb_t * base,
-			sepol_policydb_t * out, int verbose, int check)
+int sepol_expand_module(sepol_handle_t *handle, sepol_policydb_t *base,
+			sepol_policydb_t *out, int verbose, int check)
 {
 	return expand_module(handle, &base->p, &out->p, verbose, check);
 }

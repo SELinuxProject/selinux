@@ -25,18 +25,16 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Sha1Context - This must be initialised using Sha1Initialised. Do not modify the contents of this structure directly.
-typedef struct
-{
-    uint32_t        State[5];
-    uint32_t        Count[2];
-    uint8_t         Buffer[64];
+typedef struct {
+	uint32_t State[5];
+	uint32_t Count[2];
+	uint8_t Buffer[64];
 } Sha1Context;
 
-#define SHA1_HASH_SIZE           ( 160 / 8 )
+#define SHA1_HASH_SIZE (160 / 8)
 
-typedef struct
-{
-    uint8_t      bytes [SHA1_HASH_SIZE];
+typedef struct {
+	uint8_t bytes[SHA1_HASH_SIZE];
 } SHA1_HASH;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -48,11 +46,7 @@ typedef struct
 //
 //  Initialises an SHA1 Context. Use this to initialise/reset a context.
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void
-    Sha1Initialise
-    (
-        Sha1Context*                Context
-    );
+void Sha1Initialise(Sha1Context *Context);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  Sha1Update
@@ -60,13 +54,7 @@ void
 //  Adds data to the SHA1 context. This will process the data and update the internal state of the context. Keep on
 //  calling this function until all the data has been added. Then call Sha1Finalise to calculate the hash.
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void
-    Sha1Update
-    (
-        Sha1Context*        Context,
-        const void*         Buffer,
-        uint32_t            BufferSize
-    );
+void Sha1Update(Sha1Context *Context, const void *Buffer, uint32_t BufferSize);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  Sha1Finalise
@@ -74,12 +62,7 @@ void
 //  Performs the final calculation of the hash and returns the digest (20 byte buffer containing 160bit hash). After
 //  calling this, Sha1Initialised must be used to reuse the context.
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void
-    Sha1Finalise
-    (
-        Sha1Context*                Context,
-        SHA1_HASH*                  Digest
-    );
+void Sha1Finalise(Sha1Context *Context, SHA1_HASH *Digest);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #endif //_sha1_h_

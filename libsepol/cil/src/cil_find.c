@@ -43,7 +43,8 @@ struct cil_args_find {
 	int match_self;
 };
 
-static int cil_type_match_any(struct cil_symtab_datum *d1, struct cil_symtab_datum *d2)
+static int cil_type_match_any(struct cil_symtab_datum *d1,
+			      struct cil_symtab_datum *d2)
 {
 	enum cil_flavor f1 = FLAVOR(d1);
 	enum cil_flavor f2 = FLAVOR(d2);
@@ -79,7 +80,8 @@ static int cil_type_match_any(struct cil_symtab_datum *d1, struct cil_symtab_dat
 	return CIL_FALSE;
 }
 
-static int cil_type_matches(ebitmap_t *matches, struct cil_symtab_datum *d1, struct cil_symtab_datum *d2)
+static int cil_type_matches(ebitmap_t *matches, struct cil_symtab_datum *d1,
+			    struct cil_symtab_datum *d2)
 {
 	int rc = SEPOL_OK;
 	enum cil_flavor f1 = FLAVOR(d1);
@@ -98,14 +100,16 @@ static int cil_type_matches(ebitmap_t *matches, struct cil_symtab_datum *d1, str
 				rc = ebitmap_set_bit(matches, t1->value, 1);
 			}
 		} else if (f1 == CIL_TYPEATTRIBUTE && f2 != CIL_TYPEATTRIBUTE) {
-			struct cil_typeattribute *a = (struct cil_typeattribute *)d1;
+			struct cil_typeattribute *a =
+				(struct cil_typeattribute *)d1;
 			struct cil_type *t = (struct cil_type *)d2;
 			if (ebitmap_get_bit(a->types, t->value)) {
 				rc = ebitmap_set_bit(matches, t->value, 1);
 			}
 		} else { // f1 != CIL_TYPEATTRIBUTE && f2 == CIL_TYPEATTRIBUTE
 			struct cil_type *t = (struct cil_type *)d1;
-			struct cil_typeattribute *a = (struct cil_typeattribute *)d2;
+			struct cil_typeattribute *a =
+				(struct cil_typeattribute *)d2;
 			if (ebitmap_get_bit(a->types, t->value)) {
 				rc = ebitmap_set_bit(matches, t->value, 1);
 			}
@@ -122,7 +126,9 @@ static int cil_type_matches(ebitmap_t *matches, struct cil_symtab_datum *d1, str
  * s2, and t2 are the source and type of the other rule
  * Assumes there is a match between s1 and s2
  */
-static int cil_self_match_any(struct cil_symtab_datum *s1, struct cil_symtab_datum *s2, struct cil_symtab_datum *t2)
+static int cil_self_match_any(struct cil_symtab_datum *s1,
+			      struct cil_symtab_datum *s2,
+			      struct cil_symtab_datum *t2)
 {
 	int rc;
 
@@ -149,11 +155,13 @@ static int cil_self_match_any(struct cil_symtab_datum *s1, struct cil_symtab_dat
  * s2 and t2 are the source and type of the other rule
  * Assumes there is a match between s1 and s2
  */
-static int cil_notself_match_any(struct cil_symtab_datum *s1, struct cil_symtab_datum *s2, struct cil_symtab_datum *t2)
+static int cil_notself_match_any(struct cil_symtab_datum *s1,
+				 struct cil_symtab_datum *s2,
+				 struct cil_symtab_datum *t2)
 {
 	int rc;
 	ebitmap_node_t *snode, *tnode;
-	unsigned int s,t;
+	unsigned int s, t;
 
 	if (FLAVOR(s1) != CIL_TYPEATTRIBUTE) {
 		struct cil_type *ts1 = (struct cil_type *)s1;
@@ -163,7 +171,8 @@ static int cil_notself_match_any(struct cil_symtab_datum *s1, struct cil_symtab_
 				return CIL_TRUE;
 			}
 		} else {
-			struct cil_typeattribute *at2 = (struct cil_typeattribute *)t2;
+			struct cil_typeattribute *at2 =
+				(struct cil_typeattribute *)t2;
 			ebitmap_for_each_positive_bit(at2->types, tnode, t) {
 				if (t != (unsigned int)ts1->value) {
 					return CIL_TRUE;
@@ -188,9 +197,11 @@ static int cil_notself_match_any(struct cil_symtab_datum *s1, struct cil_symtab_
 				}
 			}
 		} else {
-			struct cil_typeattribute *at2 = (struct cil_typeattribute *)t2;
+			struct cil_typeattribute *at2 =
+				(struct cil_typeattribute *)t2;
 			ebitmap_for_each_positive_bit(&smap, snode, s) {
-				ebitmap_for_each_positive_bit(at2->types, tnode, t) {
+				ebitmap_for_each_positive_bit(at2->types, tnode,
+							      t) {
 					if (s != t) {
 						ebitmap_destroy(&smap);
 						return CIL_TRUE;
@@ -208,12 +219,14 @@ static int cil_notself_match_any(struct cil_symtab_datum *s1, struct cil_symtab_
  * s2, and t2 are the source and type of the other rule
  * Assumes there is a match between s1 and s2
  */
-static int cil_other_match_any(struct cil_symtab_datum *s1, struct cil_symtab_datum *s2, struct cil_symtab_datum *t2)
+static int cil_other_match_any(struct cil_symtab_datum *s1,
+			       struct cil_symtab_datum *s2,
+			       struct cil_symtab_datum *t2)
 {
 	int rc;
 	ebitmap_t smap, tmap;
 	ebitmap_node_t *snode, *tnode;
-	unsigned int s,t;
+	unsigned int s, t;
 
 	if (FLAVOR(s1) != CIL_TYPEATTRIBUTE) {
 		return CIL_FALSE;
@@ -271,25 +284,29 @@ static int cil_notself_other_match_any(struct cil_symtab_datum *s2)
 	return CIL_FALSE;
 }
 
-static int cil_classperms_match_any(struct cil_classperms *cp1, struct cil_classperms *cp2)
+static int cil_classperms_match_any(struct cil_classperms *cp1,
+				    struct cil_classperms *cp2)
 {
 	struct cil_class *c1 = cp1->class;
 	struct cil_class *c2 = cp2->class;
 	struct cil_list_item *i1, *i2;
 
-	if (&c1->datum != &c2->datum) return CIL_FALSE;
+	if (&c1->datum != &c2->datum)
+		return CIL_FALSE;
 
 	cil_list_for_each(i1, cp1->perms) {
 		struct cil_perm *p1 = i1->data;
 		cil_list_for_each(i2, cp2->perms) {
 			struct cil_perm *p2 = i2->data;
-			if (&p1->datum == &p2->datum) return CIL_TRUE;
+			if (&p1->datum == &p2->datum)
+				return CIL_TRUE;
 		}
 	}
 	return CIL_FALSE;
 }
 
-static int __cil_classperms_list_match_any(struct cil_classperms *cp1, struct cil_list *cpl2)
+static int __cil_classperms_list_match_any(struct cil_classperms *cp1,
+					   struct cil_list *cpl2)
 {
 	int rc;
 	struct cil_list_item *curr;
@@ -299,26 +316,32 @@ static int __cil_classperms_list_match_any(struct cil_classperms *cp1, struct ci
 			struct cil_classperms *cp = curr->data;
 			if (FLAVOR(cp->class) == CIL_CLASS) {
 				rc = cil_classperms_match_any(cp1, cp);
-				if (rc == CIL_TRUE) return CIL_TRUE;
+				if (rc == CIL_TRUE)
+					return CIL_TRUE;
 			} else { /* MAP */
 				struct cil_list_item *i = NULL;
 				cil_list_for_each(i, cp->perms) {
 					struct cil_perm *cmp = i->data;
-					rc = __cil_classperms_list_match_any(cp1, cmp->classperms);
-					if (rc == CIL_TRUE) return CIL_TRUE;
+					rc = __cil_classperms_list_match_any(
+						cp1, cmp->classperms);
+					if (rc == CIL_TRUE)
+						return CIL_TRUE;
 				}
 			}
 		} else { /* SET */
 			struct cil_classperms_set *cp_set = curr->data;
 			struct cil_classpermission *cp = cp_set->set;
-			rc = __cil_classperms_list_match_any(cp1, cp->classperms);
-			if (rc == CIL_TRUE) return CIL_TRUE;
+			rc = __cil_classperms_list_match_any(cp1,
+							     cp->classperms);
+			if (rc == CIL_TRUE)
+				return CIL_TRUE;
 		}
 	}
 	return CIL_FALSE;
 }
 
-static int cil_classperms_list_match_any(struct cil_list *cpl1, struct cil_list *cpl2)
+static int cil_classperms_list_match_any(struct cil_list *cpl1,
+					 struct cil_list *cpl2)
 {
 	int rc;
 	struct cil_list_item *curr;
@@ -328,26 +351,32 @@ static int cil_classperms_list_match_any(struct cil_list *cpl1, struct cil_list 
 			struct cil_classperms *cp = curr->data;
 			if (FLAVOR(cp->class) == CIL_CLASS) {
 				rc = __cil_classperms_list_match_any(cp, cpl2);
-				if (rc == CIL_TRUE) return CIL_TRUE;
+				if (rc == CIL_TRUE)
+					return CIL_TRUE;
 			} else { /* MAP */
 				struct cil_list_item *i = NULL;
 				cil_list_for_each(i, cp->perms) {
 					struct cil_perm *cmp = i->data;
-					rc = cil_classperms_list_match_any(cmp->classperms, cpl2);
-					if (rc == CIL_TRUE) return CIL_TRUE;
+					rc = cil_classperms_list_match_any(
+						cmp->classperms, cpl2);
+					if (rc == CIL_TRUE)
+						return CIL_TRUE;
 				}
 			}
 		} else { /* SET */
 			struct cil_classperms_set *cp_set = curr->data;
 			struct cil_classpermission *cp = cp_set->set;
-			rc = cil_classperms_list_match_any(cp->classperms, cpl2);
-			if (rc == CIL_TRUE) return CIL_TRUE;
+			rc = cil_classperms_list_match_any(cp->classperms,
+							   cpl2);
+			if (rc == CIL_TRUE)
+				return CIL_TRUE;
 		}
 	}
 	return CIL_FALSE;
 }
 
-static void __add_classes_from_classperms_list(struct cil_list *classperms, struct cil_list *class_list)
+static void __add_classes_from_classperms_list(struct cil_list *classperms,
+					       struct cil_list *class_list)
 {
 	struct cil_list_item *curr;
 
@@ -355,23 +384,27 @@ static void __add_classes_from_classperms_list(struct cil_list *classperms, stru
 		if (curr->flavor == CIL_CLASSPERMS) {
 			struct cil_classperms *cp = curr->data;
 			if (FLAVOR(cp->class) == CIL_CLASS) {
-				cil_list_append(class_list, CIL_CLASS, cp->class);
+				cil_list_append(class_list, CIL_CLASS,
+						cp->class);
 			} else { /* MAP */
 				struct cil_list_item *i = NULL;
 				cil_list_for_each(i, cp->perms) {
 					struct cil_perm *cmp = i->data;
-					__add_classes_from_classperms_list(cmp->classperms, class_list);
+					__add_classes_from_classperms_list(
+						cmp->classperms, class_list);
 				}
 			}
 		} else { /* SET */
 			struct cil_classperms_set *cp_set = curr->data;
 			struct cil_classpermission *cp = cp_set->set;
-			__add_classes_from_classperms_list(cp->classperms, class_list);
+			__add_classes_from_classperms_list(cp->classperms,
+							   class_list);
 		}
 	}
 }
 
-static int __add_classes_from_map_perms(__attribute__((unused)) hashtab_key_t k, hashtab_datum_t d, void *args)
+static int __add_classes_from_map_perms(__attribute__((unused)) hashtab_key_t k,
+					hashtab_datum_t d, void *args)
 {
 	struct cil_list *class_list = args;
 	struct cil_perm *cmp = (struct cil_perm *)d;
@@ -390,26 +423,31 @@ struct cil_list *cil_expand_class(struct cil_class *class)
 	if (FLAVOR(class) == CIL_CLASS) {
 		cil_list_append(class_list, CIL_CLASS, class);
 	} else { /* MAP */
-		cil_symtab_map(&class->perms, __add_classes_from_map_perms, class_list);
+		cil_symtab_map(&class->perms, __add_classes_from_map_perms,
+			       class_list);
 	}
 
 	return class_list;
 }
 
-static int cil_permissionx_match_any(struct cil_permissionx *px1, struct cil_permissionx *px2)
+static int cil_permissionx_match_any(struct cil_permissionx *px1,
+				     struct cil_permissionx *px2)
 {
 	int rc = CIL_FALSE;
 	struct cil_list *cl1 = NULL;
 	struct cil_list *cl2 = NULL;
 
-	if (px1->kind != px2->kind) goto exit;
+	if (px1->kind != px2->kind)
+		goto exit;
 
-	if (!ebitmap_match_any(px1->perms, px2->perms)) goto exit;
+	if (!ebitmap_match_any(px1->perms, px2->perms))
+		goto exit;
 
 	cl1 = cil_expand_class(px1->obj);
 	cl2 = cil_expand_class(px2->obj);
 
-	if (!cil_list_match_any(cl1, cl2)) goto exit;
+	if (!cil_list_match_any(cl1, cl2))
+		goto exit;
 
 	rc = CIL_TRUE;
 
@@ -420,7 +458,10 @@ exit:
 	return rc;
 }
 
-static int cil_find_matching_avrule(struct cil_tree_node *node, struct cil_avrule *avrule, struct cil_avrule *target, struct cil_list *matching, int match_self)
+static int cil_find_matching_avrule(struct cil_tree_node *node,
+				    struct cil_avrule *avrule,
+				    struct cil_avrule *target,
+				    struct cil_list *matching, int match_self)
 {
 	int rc = SEPOL_OK;
 	struct cil_symtab_datum *s1 = avrule->src;
@@ -428,19 +469,24 @@ static int cil_find_matching_avrule(struct cil_tree_node *node, struct cil_avrul
 	struct cil_symtab_datum *s2 = target->src;
 	struct cil_symtab_datum *t2 = target->tgt;
 
-	if (match_self != CIL_TRUE && avrule == target) goto exit;
+	if (match_self != CIL_TRUE && avrule == target)
+		goto exit;
 
-	if (avrule->rule_kind != target->rule_kind) goto exit;
+	if (avrule->rule_kind != target->rule_kind)
+		goto exit;
 
-	if (avrule->is_extended != target->is_extended) goto exit;
+	if (avrule->is_extended != target->is_extended)
+		goto exit;
 
-	if (!cil_type_match_any(s1, s2)) goto exit;
+	if (!cil_type_match_any(s1, s2))
+		goto exit;
 
 	if (t1->fqn == CIL_KEY_SELF) {
 		if (t2->fqn == CIL_KEY_SELF) {
 			/* The earlier check whether s1 and s2 matches is all that is needed */
 			rc = CIL_TRUE;
-		} else if (t2->fqn == CIL_KEY_NOTSELF || t2->fqn == CIL_KEY_OTHER) {
+		} else if (t2->fqn == CIL_KEY_NOTSELF ||
+			   t2->fqn == CIL_KEY_OTHER) {
 			rc = CIL_FALSE;
 		} else {
 			rc = cil_self_match_any(s1, s2, t2);
@@ -487,11 +533,13 @@ static int cil_find_matching_avrule(struct cil_tree_node *node, struct cil_avrul
 	}
 
 	if (!target->is_extended) {
-		if (cil_classperms_list_match_any(avrule->perms.classperms, target->perms.classperms)) {
+		if (cil_classperms_list_match_any(avrule->perms.classperms,
+						  target->perms.classperms)) {
 			cil_list_append(matching, CIL_NODE, node);
 		}
 	} else {
-		if (cil_permissionx_match_any(avrule->perms.x.permx, target->perms.x.permx)) {
+		if (cil_permissionx_match_any(avrule->perms.x.permx,
+					      target->perms.x.permx)) {
 			cil_list_append(matching, CIL_NODE, node);
 		}
 	}
@@ -502,7 +550,9 @@ exit:
 	return rc;
 }
 
-static int __cil_find_matching_avrule_in_ast(struct cil_tree_node *node, uint32_t *finished, void *extra_args)
+static int __cil_find_matching_avrule_in_ast(struct cil_tree_node *node,
+					     uint32_t *finished,
+					     void *extra_args)
 {
 	int rc = SEPOL_OK;
 	struct cil_args_find *args = extra_args;
@@ -518,7 +568,10 @@ static int __cil_find_matching_avrule_in_ast(struct cil_tree_node *node, uint32_
 		goto exit;
 	} else if (node->flavor == CIL_AVRULE || node->flavor == CIL_AVRULEX) {
 		if (node->flavor == args->flavor) {
-			rc = cil_find_matching_avrule(node, node->data, args->target, args->matching, args->match_self);
+			rc = cil_find_matching_avrule(node, node->data,
+						      args->target,
+						      args->matching,
+						      args->match_self);
 		}
 	}
 
@@ -526,7 +579,9 @@ exit:
 	return rc;
 }
 
-int cil_find_matching_avrule_in_ast(struct cil_tree_node *current, enum cil_flavor flavor, void *target, struct cil_list *matching, int match_self)
+int cil_find_matching_avrule_in_ast(struct cil_tree_node *current,
+				    enum cil_flavor flavor, void *target,
+				    struct cil_list *matching, int match_self)
 {
 	int rc;
 	struct cil_args_find args;
@@ -536,9 +591,11 @@ int cil_find_matching_avrule_in_ast(struct cil_tree_node *current, enum cil_flav
 	args.matching = matching;
 	args.match_self = match_self;
 
-	rc = cil_tree_walk(current, __cil_find_matching_avrule_in_ast, NULL, NULL, &args);
+	rc = cil_tree_walk(current, __cil_find_matching_avrule_in_ast, NULL,
+			   NULL, &args);
 	if (rc) {
-		cil_log(CIL_ERR, "An error occurred while searching for avrule in AST\n");
+		cil_log(CIL_ERR,
+			"An error occurred while searching for avrule in AST\n");
 	}
 
 	return rc;

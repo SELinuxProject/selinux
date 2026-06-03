@@ -10,10 +10,8 @@ extern int policydb_validate(sepol_handle_t *handle, const policydb_t *p);
 
 extern int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size);
 
-
 // set to 1 to enable more verbose libsepol logging
 #define VERBOSE 0
-
 
 static int write_binary_policy(policydb_t *p, FILE *outfp)
 {
@@ -36,7 +34,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 
 	policy_file_init(&pf);
 	pf.type = PF_USE_MEMORY;
-	pf.data = (char *) data;
+	pf.data = (char *)data;
 	pf.len = size;
 
 	if (policydb_init(&policydb))
@@ -49,16 +47,17 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 		goto exit;
 
 	if (policydb.policy_type == POLICY_KERN) {
-		(void) policydb_optimize(&policydb);
+		(void)policydb_optimize(&policydb);
 
 		if (policydb_validate(NULL, &policydb) == -1)
 			abort();
 	}
 
 	if (policydb.global->branch_list)
-		(void) check_assertions(NULL, &policydb, policydb.global->branch_list->avrules);
+		(void)check_assertions(NULL, &policydb,
+				       policydb.global->branch_list->avrules);
 
-	(void) hierarchy_check_constraints(NULL, &policydb);
+	(void)hierarchy_check_constraints(NULL, &policydb);
 
 	devnull = fopen("/dev/null", "we");
 	if (!devnull)
@@ -81,11 +80,13 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 		if (policydb_init(&out))
 			goto exit;
 
-		if (expand_module(NULL, &policydb, &out, VERBOSE, /*check_assertions=*/0))
+		if (expand_module(NULL, &policydb, &out, VERBOSE,
+				  /*check_assertions=*/0))
 			goto exit;
 
-		(void) check_assertions(NULL, &out, out.global->branch_list->avrules);
-		(void) hierarchy_check_constraints(NULL, &out);
+		(void)check_assertions(NULL, &out,
+				       out.global->branch_list->avrules);
+		(void)hierarchy_check_constraints(NULL, &out);
 
 		if (write_binary_policy(&out, devnull))
 			abort();
@@ -95,7 +96,6 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 
 		if (sepol_kernel_policydb_to_cil(devnull, &out))
 			abort();
-
 	}
 
 exit:

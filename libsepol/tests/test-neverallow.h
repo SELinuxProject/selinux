@@ -7,4 +7,4 @@ int neverallow_test_init(void);
 int neverallow_test_cleanup(void);
 int neverallow_add_tests(CU_pSuite suite);
 
-#endif  /* TEST_NEVERALLOW_H__ */
+#endif /* TEST_NEVERALLOW_H__ */

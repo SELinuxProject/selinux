@@ -21,7 +21,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-
 /* FLASK */
 
 /*
@@ -34,26 +33,24 @@
 
 #include "private.h"
 
-hashtab_t hashtab_create(unsigned int (*hash_value) (hashtab_t h,
-						     const_hashtab_key_t key),
-			 int (*keycmp) (hashtab_t h,
-					const_hashtab_key_t key1,
-					const_hashtab_key_t key2),
+hashtab_t hashtab_create(unsigned int (*hash_value)(hashtab_t h,
+						    const_hashtab_key_t key),
+			 int (*keycmp)(hashtab_t h, const_hashtab_key_t key1,
+				       const_hashtab_key_t key2),
 			 unsigned int size)
 {
-
 	hashtab_t p;
 
-	p = (hashtab_t) malloc(sizeof(hashtab_val_t));
+	p = (hashtab_t)malloc(sizeof(hashtab_val_t));
 	if (p == NULL)
 		return p;
 
-	*p = (hashtab_val_t) {
+	*p = (hashtab_val_t){
 		.size = size,
 		.nel = 0,
 		.hash_value = hash_value,
 		.keycmp = keycmp,
-		.htable = (hashtab_ptr_t *) calloc(size, sizeof(hashtab_ptr_t)),
+		.htable = (hashtab_ptr_t *)calloc(size, sizeof(hashtab_ptr_t)),
 	};
 
 	if (p->htable == NULL) {
@@ -115,7 +112,8 @@ int hashtab_insert(hashtab_t h, hashtab_key_t key, hashtab_datum_t datum)
 
 	hvalue = h->hash_value(h, key);
 
-	for (prev = NULL, cur = h->htable[hvalue]; cur; prev = cur, cur = cur->next) {
+	for (prev = NULL, cur = h->htable[hvalue]; cur;
+	     prev = cur, cur = cur->next) {
 		int cmp;
 
 		cmp = h->keycmp(h, key, cur->key);
@@ -126,10 +124,10 @@ int hashtab_insert(hashtab_t h, hashtab_key_t key, hashtab_datum_t datum)
 		break;
 	}
 
-	newnode = (hashtab_ptr_t) malloc(sizeof(hashtab_node_t));
+	newnode = (hashtab_ptr_t)malloc(sizeof(hashtab_node_t));
 	if (newnode == NULL)
 		return SEPOL_ENOMEM;
-	*newnode = (hashtab_node_t) {
+	*newnode = (hashtab_node_t){
 		.key = key,
 		.datum = datum,
 	};
@@ -146,8 +144,9 @@ int hashtab_insert(hashtab_t h, hashtab_key_t key, hashtab_datum_t datum)
 }
 
 int hashtab_remove(hashtab_t h, hashtab_key_t key,
-		   void (*destroy) (hashtab_key_t k,
-				    hashtab_datum_t d, void *args), void *args)
+		   void (*destroy)(hashtab_key_t k, hashtab_datum_t d,
+				   void *args),
+		   void *args)
 {
 	unsigned int hvalue;
 	hashtab_ptr_t cur, last;
@@ -157,7 +156,8 @@ int hashtab_remove(hashtab_t h, hashtab_key_t key,
 
 	hvalue = h->hash_value(h, key);
 
-	for (last = NULL, cur = h->htable[hvalue]; cur; last = cur, cur = cur->next) {
+	for (last = NULL, cur = h->htable[hvalue]; cur;
+	     last = cur, cur = cur->next) {
 		int cmp;
 
 		cmp = h->keycmp(h, key, cur->key);
@@ -185,7 +185,6 @@ int hashtab_remove(hashtab_t h, hashtab_key_t key,
 
 hashtab_datum_t hashtab_search(hashtab_t h, const_hashtab_key_t key)
 {
-
 	unsigned int hvalue;
 	hashtab_ptr_t cur;
 
@@ -230,8 +229,8 @@ void hashtab_destroy(hashtab_t h)
 }
 
 int hashtab_map(hashtab_t h,
-		int (*apply) (hashtab_key_t k,
-			      hashtab_datum_t d, void *args), void *args)
+		int (*apply)(hashtab_key_t k, hashtab_datum_t d, void *args),
+		void *args)
 {
 	unsigned int i;
 	hashtab_ptr_t cur;
@@ -277,8 +276,7 @@ void hashtab_hash_eval(hashtab_t h, const char *tag)
 		}
 	}
 
-	printf
-	    ("%s:  %d entries and %zu/%d buckets used, longest chain length %zu, chain length^2 %zu, normalized chain length^2 %.2f\n",
-	     tag, h->nel, slots_used, h->size, max_chain_len, chain2_len_sum,
-	     chain2_len_sum ? (float)chain2_len_sum / slots_used : 0);
+	printf("%s:  %d entries and %zu/%d buckets used, longest chain length %zu, chain length^2 %zu, normalized chain length^2 %.2f\n",
+	       tag, h->nel, slots_used, h->size, max_chain_len, chain2_len_sum,
+	       chain2_len_sum ? (float)chain2_len_sum / slots_used : 0);
 }

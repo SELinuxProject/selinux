@@ -14,7 +14,7 @@
 static int object_name_encode(const char *objname, char *buffer, size_t buflen)
 {
 	unsigned char code;
-	size_t	offset = 0;
+	size_t offset = 0;
 
 	if (buflen - offset < 1)
 		return -1;
@@ -34,8 +34,8 @@ static int object_name_encode(const char *objname, char *buffer, size_t buflen)
 			buffer[offset++] = '+';
 		} else {
 			static const char *const table = "0123456789ABCDEF";
-			int	l = (code & 0x0f);
-			int	h = (code & 0xf0) >> 4;
+			int l = (code & 0x0f);
+			int h = (code & 0xf0) >> 4;
 
 			if (buflen - offset < 3)
 				return -1;
@@ -48,11 +48,9 @@ static int object_name_encode(const char *objname, char *buffer, size_t buflen)
 	return 0;
 }
 
-int security_compute_create_name_raw(const char * scon,
-				     const char * tcon,
+int security_compute_create_name_raw(const char *scon, const char *tcon,
 				     security_class_t tclass,
-				     const char *objname,
-				     char ** newcon)
+				     const char *objname, char **newcon)
 {
 	char path[PATH_MAX];
 	char *buf;
@@ -76,16 +74,14 @@ int security_compute_create_name_raw(const char * scon,
 		goto out;
 	}
 
-	len = snprintf(buf, size, "%s %s %hu",
-		       scon, tcon, unmap_class(tclass));
+	len = snprintf(buf, size, "%s %s %hu", scon, tcon, unmap_class(tclass));
 	if (len < 0 || (size_t)len >= size) {
 		errno = EOVERFLOW;
 		ret = -1;
 		goto out;
 	}
 
-	if (objname &&
-	    object_name_encode(objname, buf + len, size - len) < 0) {
+	if (objname && object_name_encode(objname, buf + len, size - len) < 0) {
 		errno = ENAMETOOLONG;
 		ret = -1;
 		goto out;
@@ -106,31 +102,27 @@ int security_compute_create_name_raw(const char * scon,
 		goto out;
 	}
 	ret = 0;
-      out:
+out:
 	free(buf);
 	close(fd);
 	return ret;
 }
 
-int security_compute_create_raw(const char * scon,
-				const char * tcon,
-				security_class_t tclass,
-				char ** newcon)
+int security_compute_create_raw(const char *scon, const char *tcon,
+				security_class_t tclass, char **newcon)
 {
-	return security_compute_create_name_raw(scon, tcon, tclass,
-						NULL, newcon);
+	return security_compute_create_name_raw(scon, tcon, tclass, NULL,
+						newcon);
 }
 
-int security_compute_create_name(const char * scon,
-				 const char * tcon,
-				 security_class_t tclass,
-				 const char *objname,
-				 char ** newcon)
+int security_compute_create_name(const char *scon, const char *tcon,
+				 security_class_t tclass, const char *objname,
+				 char **newcon)
 {
 	int ret;
-	char * rscon;
-	char * rtcon;
-	char * rnewcon;
+	char *rscon;
+	char *rtcon;
+	char *rnewcon;
 
 	if (selinux_trans_to_raw_context(scon, &rscon))
 		return -1;
@@ -139,8 +131,8 @@ int security_compute_create_name(const char * scon,
 		return -1;
 	}
 
-	ret = security_compute_create_name_raw(rscon, rtcon, tclass,
-					       objname, &rnewcon);
+	ret = security_compute_create_name_raw(rscon, rtcon, tclass, objname,
+					       &rnewcon);
 	freecon(rscon);
 	freecon(rtcon);
 	if (!ret) {
@@ -151,10 +143,8 @@ int security_compute_create_name(const char * scon,
 	return ret;
 }
 
-int security_compute_create(const char * scon,
-				const char * tcon,
-			    security_class_t tclass,
-				char ** newcon)
+int security_compute_create(const char *scon, const char *tcon,
+			    security_class_t tclass, char **newcon)
 {
 	return security_compute_create_name(scon, tcon, tclass, NULL, newcon);
 }

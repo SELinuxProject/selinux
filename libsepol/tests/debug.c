@@ -24,7 +24,7 @@
 
 #include <stdlib.h>
 
-void print_ebitmap(ebitmap_t * bitmap, FILE * fp)
+void print_ebitmap(ebitmap_t *bitmap, FILE *fp)
 {
 	uint32_t i;
 	for (i = 0; i < bitmap->highbit; i++) {
@@ -34,14 +34,14 @@ void print_ebitmap(ebitmap_t * bitmap, FILE * fp)
 }
 
 /* stolen from dispol.c */
-void display_expr(policydb_t * p, cond_expr_t * exp, FILE * fp)
+void display_expr(policydb_t *p, cond_expr_t *exp, FILE *fp)
 {
-
 	cond_expr_t *cur;
 	for (cur = exp; cur != NULL; cur = cur->next) {
 		switch (cur->expr_type) {
 		case COND_BOOL:
-			fprintf(fp, "%s ", p->p_bool_val_to_name[cur->boolean - 1]);
+			fprintf(fp, "%s ",
+				p->p_bool_val_to_name[cur->boolean - 1]);
 			break;
 		case COND_NOT:
 			fprintf(fp, "! ");

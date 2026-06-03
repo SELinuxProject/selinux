@@ -34,7 +34,9 @@
 #ifndef CIL_FIND_H_
 #define CIL_FIND_H_
 
-int cil_find_matching_avrule_in_ast(struct cil_tree_node *current, enum cil_flavor flavor, void *target, struct cil_list *matching, int match_self);
+int cil_find_matching_avrule_in_ast(struct cil_tree_node *current,
+				    enum cil_flavor flavor, void *target,
+				    struct cil_list *matching, int match_self);
 struct cil_list *cil_expand_class(struct cil_class *class);
 
 #endif

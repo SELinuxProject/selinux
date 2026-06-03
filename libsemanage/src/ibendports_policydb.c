@@ -43,12 +43,12 @@ static const record_policydb_table_t SEMANAGE_IBENDPORT_POLICYDB_RTABLE = {
 int ibendport_policydb_dbase_init(semanage_handle_t *handle,
 				  dbase_config_t *dconfig)
 {
-	if (dbase_policydb_init(handle,
-				semanage_path(SEMANAGE_ACTIVE, SEMANAGE_STORE_KERNEL),
-				semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_KERNEL),
-				&SEMANAGE_IBENDPORT_RTABLE,
-				&SEMANAGE_IBENDPORT_POLICYDB_RTABLE,
-				&dconfig->dbase) < 0)
+	if (dbase_policydb_init(
+		    handle,
+		    semanage_path(SEMANAGE_ACTIVE, SEMANAGE_STORE_KERNEL),
+		    semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_KERNEL),
+		    &SEMANAGE_IBENDPORT_RTABLE,
+		    &SEMANAGE_IBENDPORT_POLICYDB_RTABLE, &dconfig->dbase) < 0)
 		return STATUS_ERR;
 
 	dconfig->dtable = &SEMANAGE_POLICYDB_DTABLE;

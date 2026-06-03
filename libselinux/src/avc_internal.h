@@ -16,21 +16,22 @@
 #include "callbacks.h"
 
 /* callback pointers */
-extern void *(*avc_func_malloc) (size_t) ;
-extern void (*avc_func_free) (void *);
+extern void *(*avc_func_malloc)(size_t);
+extern void (*avc_func_free)(void *);
 
-extern void (*avc_func_log) (const char *, ...) __attribute__((__format__(printf,1,2))) ;
-extern void (*avc_func_audit) (void *, security_class_t, char *, size_t);
+extern void (*avc_func_log)(const char *, ...)
+	__attribute__((__format__(printf, 1, 2)));
+extern void (*avc_func_audit)(void *, security_class_t, char *, size_t);
 
-extern int avc_using_threads ;
-extern int avc_app_main_loop ;
-extern void *(*avc_func_create_thread) (void (*)(void));
-extern void (*avc_func_stop_thread) (void *);
+extern int avc_using_threads;
+extern int avc_app_main_loop;
+extern void *(*avc_func_create_thread)(void (*)(void));
+extern void (*avc_func_stop_thread)(void *);
 
-extern void *(*avc_func_alloc_lock) (void);
-extern void (*avc_func_get_lock) (void *);
-extern void (*avc_func_release_lock) (void *);
-extern void (*avc_func_free_lock) (void *);
+extern void *(*avc_func_alloc_lock)(void);
+extern void (*avc_func_get_lock)(void *);
+extern void (*avc_func_release_lock)(void *);
+extern void (*avc_func_free_lock)(void *);
 
 /* selinux status processing for netlink and sestatus */
 extern int avc_process_setenforce(int enforcing);
@@ -64,10 +65,10 @@ static inline void set_callbacks(const struct avc_memory_callback *mem_cb,
 
 /* message prefix and enforcing mode*/
 #define AVC_PREFIX_SIZE 16
-extern char avc_prefix[AVC_PREFIX_SIZE] ;
-extern int avc_running ;
-extern int avc_enforcing ;
-extern int avc_setenforce ;
+extern char avc_prefix[AVC_PREFIX_SIZE];
+extern int avc_running;
+extern int avc_enforcing;
+extern int avc_setenforce;
 
 /* user-supplied callback interface for avc */
 static inline void *avc_malloc(size_t size)
@@ -84,16 +85,16 @@ static inline void avc_free(void *ptr)
 }
 
 /* this is a macro in order to use the variadic capability. */
-#define avc_log(type, format...) \
-  do { \
-    if (avc_func_log) \
-      avc_func_log(format); \
-    else \
-      selinux_log(type, format); \
-  } while (0)
+#define avc_log(type, format...)                   \
+	do {                                       \
+		if (avc_func_log)                  \
+			avc_func_log(format);      \
+		else                               \
+			selinux_log(type, format); \
+	} while (0)
 
-static inline void avc_suppl_audit(void *ptr, security_class_t class,
-				   char *buf, size_t len)
+static inline void avc_suppl_audit(void *ptr, security_class_t class, char *buf,
+				   size_t len)
 {
 	if (avc_func_audit)
 		avc_func_audit(ptr, class, buf, len);
@@ -101,7 +102,7 @@ static inline void avc_suppl_audit(void *ptr, security_class_t class,
 		selinux_audit(ptr, class, buf, len);
 }
 
-static inline void *avc_create_thread(void (*run) (void))
+static inline void *avc_create_thread(void (*run)(void))
 {
 	return avc_func_create_thread ? avc_func_create_thread(run) : NULL;
 }
@@ -138,19 +139,23 @@ static inline void avc_free_lock(void *lock)
 /* statistics helper routines */
 #ifdef AVC_CACHE_STATS
 
-#define avc_cache_stats_incr(field) \
-  do { \
-    cache_stats.field ++; \
-  } while (0)
-#define avc_cache_stats_add(field, num) \
-  do { \
-    cache_stats.field += (num); \
-  } while (0)
+#define avc_cache_stats_incr(field)  \
+	do {                         \
+		cache_stats.field++; \
+	} while (0)
+#define avc_cache_stats_add(field, num)     \
+	do {                                \
+		cache_stats.field += (num); \
+	} while (0)
 
 #else
 
-#define avc_cache_stats_incr(field) do {} while (0)
-#define avc_cache_stats_add(field, num) do {} while (0)
+#define avc_cache_stats_incr(field) \
+	do {                        \
+	} while (0)
+#define avc_cache_stats_add(field, num) \
+	do {                            \
+	} while (0)
 
 #endif
 
@@ -158,26 +163,25 @@ static inline void avc_free_lock(void *lock)
 #define AVC_AUDIT_BUFSIZE 1024
 
 /* again, we need the variadic capability here */
-#define log_append(buf,format...) \
-  snprintf(buf+strlen(buf), AVC_AUDIT_BUFSIZE-strlen(buf), format)
+#define log_append(buf, format...) \
+	snprintf(buf + strlen(buf), AVC_AUDIT_BUFSIZE - strlen(buf), format)
 
 /* internal callbacks */
 int avc_ss_grant(security_id_t ssid, security_id_t tsid,
 		 security_class_t tclass, access_vector_t perms,
-		 uint32_t seqno) ;
+		 uint32_t seqno);
 int avc_ss_try_revoke(security_id_t ssid, security_id_t tsid,
-		      security_class_t tclass,
-		      access_vector_t perms, uint32_t seqno,
-		      access_vector_t * out_retained) ;
+		      security_class_t tclass, access_vector_t perms,
+		      uint32_t seqno, access_vector_t *out_retained);
 int avc_ss_revoke(security_id_t ssid, security_id_t tsid,
 		  security_class_t tclass, access_vector_t perms,
-		  uint32_t seqno) ;
-int avc_ss_reset(uint32_t seqno) ;
+		  uint32_t seqno);
+int avc_ss_reset(uint32_t seqno);
 int avc_ss_set_auditallow(security_id_t ssid, security_id_t tsid,
 			  security_class_t tclass, access_vector_t perms,
-			  uint32_t seqno, uint32_t enable) ;
+			  uint32_t seqno, uint32_t enable);
 int avc_ss_set_auditdeny(security_id_t ssid, security_id_t tsid,
 			 security_class_t tclass, access_vector_t perms,
-			 uint32_t seqno, uint32_t enable) ;
+			 uint32_t seqno, uint32_t enable);
 
-#endif				/* _SELINUX_AVC_INTERNAL_H_ */
+#endif /* _SELINUX_AVC_INTERNAL_H_ */

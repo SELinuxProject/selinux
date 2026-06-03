@@ -43,7 +43,8 @@ struct cil_fqn_args {
 	struct cil_tree_node *node;
 };
 
-static int __cil_fqn_qualify_decls(__attribute__((unused)) hashtab_key_t k, hashtab_datum_t d, void *args)
+static int __cil_fqn_qualify_decls(__attribute__((unused)) hashtab_key_t k,
+				   hashtab_datum_t d, void *args)
 {
 	struct cil_fqn_args *fqn_args = args;
 	struct cil_symtab_datum *datum = (struct cil_symtab_datum *)d;
@@ -57,7 +58,8 @@ static int __cil_fqn_qualify_decls(__attribute__((unused)) hashtab_key_t k, hash
 
 	newlen = fqn_args->len + strlen(datum->name);
 	if (newlen >= CIL_MAX_NAME_LENGTH) {
-		cil_log(CIL_INFO, "Fully qualified name for %s is too long\n", datum->name);
+		cil_log(CIL_INFO, "Fully qualified name for %s is too long\n",
+			datum->name);
 		rc = SEPOL_ERR;
 		goto exit;
 	}
@@ -69,7 +71,8 @@ exit:
 	return rc;
 }
 
-static int __cil_fqn_qualify_blocks(__attribute__((unused)) hashtab_key_t k, hashtab_datum_t d, void *args)
+static int __cil_fqn_qualify_blocks(__attribute__((unused)) hashtab_key_t k,
+				    hashtab_datum_t d, void *args)
 {
 	struct cil_fqn_args *fqn_args = args;
 	struct cil_fqn_args child_args;
@@ -86,7 +89,9 @@ static int __cil_fqn_qualify_blocks(__attribute__((unused)) hashtab_key_t k, has
 
 	newlen = fqn_args->len + strlen(datum->name) + 1;
 	if (newlen >= CIL_MAX_NAME_LENGTH) {
-		cil_log(CIL_INFO, "Fully qualified name for block %s is too long\n", datum->name);
+		cil_log(CIL_INFO,
+			"Fully qualified name for block %s is too long\n",
+			datum->name);
 		rc = SEPOL_ERR;
 		goto exit;
 	}
@@ -97,7 +102,7 @@ static int __cil_fqn_qualify_blocks(__attribute__((unused)) hashtab_key_t k, has
 	strcat(child_args.prefix, datum->name);
 	strcat(child_args.prefix, ".");
 
-	for (i=1; i<CIL_SYM_NUM; i++) {
+	for (i = 1; i < CIL_SYM_NUM; i++) {
 		switch (i) {
 		case CIL_SYM_CLASSPERMSETS:
 		case CIL_SYM_CONTEXTS:
@@ -111,7 +116,9 @@ static int __cil_fqn_qualify_blocks(__attribute__((unused)) hashtab_key_t k, has
 			/* Valid policy capability names are defined in libsepol */
 			break;
 		default:
-			rc = cil_symtab_map(&(block->symtab[i]), __cil_fqn_qualify_decls, &child_args);
+			rc = cil_symtab_map(&(block->symtab[i]),
+					    __cil_fqn_qualify_decls,
+					    &child_args);
 			if (rc != SEPOL_OK) {
 				goto exit;
 			}
@@ -119,11 +126,13 @@ static int __cil_fqn_qualify_blocks(__attribute__((unused)) hashtab_key_t k, has
 		}
 	}
 
-	rc = cil_symtab_map(&(block->symtab[CIL_SYM_BLOCKS]), __cil_fqn_qualify_blocks, &child_args);
+	rc = cil_symtab_map(&(block->symtab[CIL_SYM_BLOCKS]),
+			    __cil_fqn_qualify_blocks, &child_args);
 
 exit:
 	if (rc != SEPOL_OK) {
-		cil_tree_log(node, CIL_ERR,"Problem qualifying names in block");
+		cil_tree_log(node, CIL_ERR,
+			     "Problem qualifying names in block");
 	}
 
 	return rc;
@@ -138,6 +147,6 @@ int cil_fqn_qualify(struct cil_tree_node *root_node)
 	fqn_args.len = 0;
 	fqn_args.node = root_node;
 
-	return cil_symtab_map(&(root->symtab[CIL_SYM_BLOCKS]), __cil_fqn_qualify_blocks, &fqn_args);
+	return cil_symtab_map(&(root->symtab[CIL_SYM_BLOCKS]),
+			      __cil_fqn_qualify_blocks, &fqn_args);
 }
-

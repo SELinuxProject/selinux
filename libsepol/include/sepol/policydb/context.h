@@ -37,15 +37,14 @@ typedef struct context_struct {
 	mls_range_t range;
 } context_struct_t;
 
-static inline void mls_context_init(context_struct_t * c)
+static inline void mls_context_init(context_struct_t *c)
 {
 	mls_range_init(&c->range);
 }
 
-static inline int mls_context_cpy(context_struct_t * dst,
-				  const context_struct_t * src)
+static inline int mls_context_cpy(context_struct_t *dst,
+				  const context_struct_t *src)
 {
-
 	if (mls_range_cpy(&dst->range, &src->range) < 0)
 		return -1;
 
@@ -55,7 +54,8 @@ static inline int mls_context_cpy(context_struct_t * dst,
 /*
  * Sets both levels in the MLS range of 'dst' to the low level of 'src'.
  */
-static inline int mls_context_cpy_low(context_struct_t *dst, const context_struct_t *src)
+static inline int mls_context_cpy_low(context_struct_t *dst,
+				      const context_struct_t *src)
 {
 	int rc;
 
@@ -75,7 +75,8 @@ out:
 /*
  * Sets both levels in the MLS range of 'dst' to the high level of 'src'.
  */
-static inline int mls_context_cpy_high(context_struct_t *dst, const context_struct_t *src)
+static inline int mls_context_cpy_high(context_struct_t *dst,
+				       const context_struct_t *src)
 {
 	int rc;
 
@@ -92,19 +93,21 @@ out:
 	return rc;
 }
 
-static inline int mls_context_glblub(context_struct_t *dst, const context_struct_t *c1, const context_struct_t *c2)
+static inline int mls_context_glblub(context_struct_t *dst,
+				     const context_struct_t *c1,
+				     const context_struct_t *c2)
 {
 	return mls_range_glblub(&dst->range, &c1->range, &c2->range);
 }
 
-static inline int mls_context_cmp(const context_struct_t * c1, const context_struct_t * c2)
+static inline int mls_context_cmp(const context_struct_t *c1,
+				  const context_struct_t *c2)
 {
 	return (mls_level_eq(&c1->range.level[0], &c2->range.level[0]) &&
 		mls_level_eq(&c1->range.level[1], &c2->range.level[1]));
-
 }
 
-static inline void mls_context_destroy(context_struct_t * c)
+static inline void mls_context_destroy(context_struct_t *c)
 {
 	if (c == NULL)
 		return;
@@ -113,12 +116,13 @@ static inline void mls_context_destroy(context_struct_t * c)
 	mls_context_init(c);
 }
 
-static inline void context_init(context_struct_t * c)
+static inline void context_init(context_struct_t *c)
 {
 	memset(c, 0, sizeof(*c));
 }
 
-static inline int context_cpy(context_struct_t * dst, const context_struct_t * src)
+static inline int context_cpy(context_struct_t *dst,
+			      const context_struct_t *src)
 {
 	dst->user = src->user;
 	dst->role = src->role;
@@ -126,7 +130,7 @@ static inline int context_cpy(context_struct_t * dst, const context_struct_t * s
 	return mls_context_cpy(dst, src);
 }
 
-static inline void context_destroy(context_struct_t * c)
+static inline void context_destroy(context_struct_t *c)
 {
 	if (c == NULL)
 		return;
@@ -135,10 +139,10 @@ static inline void context_destroy(context_struct_t * c)
 	mls_context_destroy(c);
 }
 
-static inline int context_cmp(const context_struct_t * c1, const context_struct_t * c2)
+static inline int context_cmp(const context_struct_t *c1,
+			      const context_struct_t *c2)
 {
-	return ((c1->user == c2->user) &&
-		(c1->role == c2->role) &&
+	return ((c1->user == c2->user) && (c1->role == c2->role) &&
 		(c1->type == c2->type) && mls_context_cmp(c1, c2));
 }
 

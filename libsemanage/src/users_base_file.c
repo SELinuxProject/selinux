@@ -20,10 +20,9 @@ typedef struct dbase_file dbase_t;
 #include "parse_utils.h"
 #include "debug.h"
 
-static int user_base_print(semanage_handle_t * handle,
-			   const semanage_user_base_t * user, FILE * str)
+static int user_base_print(semanage_handle_t *handle,
+			   const semanage_user_base_t *user, FILE *str)
 {
-
 	const char **roles = NULL;
 	unsigned int i, nroles;
 
@@ -56,16 +55,15 @@ static int user_base_print(semanage_handle_t * handle,
 	free(roles);
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	free(roles);
 	ERR(handle, "could not print user %s to stream", name);
 	return STATUS_ERR;
 }
 
-static int user_base_parse(semanage_handle_t * handle,
-			   parse_info_t * info, semanage_user_base_t * user)
+static int user_base_parse(semanage_handle_t *handle, parse_info_t *info,
+			   semanage_user_base_t *user)
 {
-
 	int islist;
 	char *str = NULL;
 	const char *start;
@@ -111,9 +109,9 @@ static int user_base_parse(semanage_handle_t * handle,
 			goto err;
 
 		start = info->ptr;
-		while (*(info->ptr) &&
-		       *(info->ptr) != ';' &&
-		       *(info->ptr) != '}' && !isspace((unsigned char)*(info->ptr)))
+		while (*(info->ptr) && *(info->ptr) != ';' &&
+		       *(info->ptr) != '}' &&
+		       !isspace((unsigned char)*(info->ptr)))
 			info->ptr++;
 
 		delim = *(info->ptr);
@@ -174,20 +172,20 @@ static int user_base_parse(semanage_handle_t * handle,
 	str = NULL;
 
 	/* Check for semicolon */
-      semicolon:
+semicolon:
 	if (parse_skip_space(handle, info) < 0)
 		goto err;
 	if (parse_assert_ch(handle, info, ';') < 0)
 		goto err;
 
-      skip_semicolon:
+skip_semicolon:
 	return STATUS_SUCCESS;
 
-      last:
+last:
 	parse_dispose_line(info);
 	return STATUS_NODATA;
 
-      err:
+err:
 	ERR(handle, "could not parse user record");
 	free(str);
 	parse_dispose_line(info);
@@ -200,26 +198,19 @@ static const record_file_table_t SEMANAGE_USER_BASE_FILE_RTABLE = {
 	.print = user_base_print,
 };
 
-int user_base_file_dbase_init(semanage_handle_t * handle,
-			      const char *path_ro,
-			      const char *path_rw,
-			      dbase_config_t * dconfig)
+int user_base_file_dbase_init(semanage_handle_t *handle, const char *path_ro,
+			      const char *path_rw, dbase_config_t *dconfig)
 {
-
-	if (dbase_file_init(handle,
-			    path_ro,
-			    path_rw,
-			    &SEMANAGE_USER_BASE_RTABLE,
-			    &SEMANAGE_USER_BASE_FILE_RTABLE,
-			    &dconfig->dbase) < 0)
+	if (dbase_file_init(
+		    handle, path_ro, path_rw, &SEMANAGE_USER_BASE_RTABLE,
+		    &SEMANAGE_USER_BASE_FILE_RTABLE, &dconfig->dbase) < 0)
 		return STATUS_ERR;
 
 	dconfig->dtable = &SEMANAGE_FILE_DTABLE;
 	return STATUS_SUCCESS;
 }
 
-void user_base_file_dbase_release(dbase_config_t * dconfig)
+void user_base_file_dbase_release(dbase_config_t *dconfig)
 {
-
 	dbase_file_release(dconfig->dbase);
 }

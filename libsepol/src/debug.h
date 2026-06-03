@@ -32,38 +32,34 @@
  * The variable h has been renamed to _sepol_h to reduce this chance, but
  * it is still wrong.
  */
-#define msg_write(handle_arg, level_arg,			   \
-		  channel_arg, func_arg, ...) do {		   \
-		sepol_handle_t *_sepol_h = (handle_arg) ?: &sepol_compat_handle; \
-		if (_sepol_h->msg_callback) {			   \
-			_sepol_h->msg_fname = func_arg;		   \
-			_sepol_h->msg_channel = channel_arg;	   \
-			_sepol_h->msg_level = level_arg;	   \
-								   \
-			_sepol_h->msg_callback(			   \
-				_sepol_h->msg_callback_arg,	   \
-				_sepol_h, __VA_ARGS__);		   \
-		}                                                  \
-	} while(0)
+#define msg_write(handle_arg, level_arg, channel_arg, func_arg, ...)            \
+	do {                                                                    \
+		sepol_handle_t *_sepol_h = (handle_arg) ?:                      \
+							  &sepol_compat_handle; \
+		if (_sepol_h->msg_callback) {                                   \
+			_sepol_h->msg_fname = func_arg;                         \
+			_sepol_h->msg_channel = channel_arg;                    \
+			_sepol_h->msg_level = level_arg;                        \
+                                                                                \
+			_sepol_h->msg_callback(_sepol_h->msg_callback_arg,      \
+					       _sepol_h, __VA_ARGS__);          \
+		}                                                               \
+	} while (0)
 
 #define ERR(handle, ...) \
-	msg_write(handle, SEPOL_MSG_ERR, "libsepol", \
-	__FUNCTION__, __VA_ARGS__)
+	msg_write(handle, SEPOL_MSG_ERR, "libsepol", __FUNCTION__, __VA_ARGS__)
 
 #define INFO(handle, ...) \
-	msg_write(handle, SEPOL_MSG_INFO, "libsepol", \
-	__FUNCTION__, __VA_ARGS__)
+	msg_write(handle, SEPOL_MSG_INFO, "libsepol", __FUNCTION__, __VA_ARGS__)
 
 #define WARN(handle, ...) \
-	msg_write(handle, SEPOL_MSG_WARN, "libsepol", \
-	__FUNCTION__, __VA_ARGS__)
+	msg_write(handle, SEPOL_MSG_WARN, "libsepol", __FUNCTION__, __VA_ARGS__)
 
 #ifdef __GNUC__
-__attribute__ ((format(printf, 3, 4)))
+__attribute__((format(printf, 3, 4)))
 #endif
-extern void sepol_msg_default_handler(void *varg,
-					     sepol_handle_t * msg,
-					     const char *fmt, ...);
+extern void sepol_msg_default_handler(void *varg, sepol_handle_t *msg,
+				      const char *fmt, ...);
 
 extern struct sepol_handle sepol_compat_handle;
 

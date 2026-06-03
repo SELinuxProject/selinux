@@ -51,12 +51,12 @@ typedef struct expand_state {
 	int expand_neverallow;
 } expand_state_t;
 
-static void expand_state_init(expand_state_t * state)
+static void expand_state_init(expand_state_t *state)
 {
 	memset(state, 0, sizeof(expand_state_t));
 }
 
-static int map_ebitmap(ebitmap_t * src, ebitmap_t * dst, uint32_t * map)
+static int map_ebitmap(ebitmap_t *src, ebitmap_t *dst, uint32_t *map)
 {
 	unsigned int i;
 	ebitmap_node_t *tnode;
@@ -112,11 +112,11 @@ static int type_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	expand_state_t *state;
 
 	id = (char *)key;
-	type = (type_datum_t *) datum;
-	state = (expand_state_t *) data;
+	type = (type_datum_t *)datum;
+	state = (expand_state_t *)data;
 
-	if ((type->flavor == TYPE_TYPE && !type->primary)
-	    || type->flavor == TYPE_ALIAS) {
+	if ((type->flavor == TYPE_TYPE && !type->primary) ||
+	    type->flavor == TYPE_ALIAS) {
 		/* aliases are handled later */
 		return 0;
 	}
@@ -134,7 +134,7 @@ static int type_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		return -1;
 	}
 
-	new_type = (type_datum_t *) malloc(sizeof(type_datum_t));
+	new_type = (type_datum_t *)malloc(sizeof(type_datum_t));
 	if (!new_type) {
 		ERR(state->handle, "Out of memory!");
 		free(new_id);
@@ -154,9 +154,8 @@ static int type_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	new_type->primary = 1;
 	state->typemap[type->s.value - 1] = new_type->s.value;
 
-	ret = hashtab_insert(state->out->p_types.table,
-			     (hashtab_key_t) new_id,
-			     (hashtab_datum_t) new_type);
+	ret = hashtab_insert(state->out->p_types.table, (hashtab_key_t)new_id,
+			     (hashtab_datum_t)new_type);
 	if (ret) {
 		free(new_id);
 		free(new_type);
@@ -165,13 +164,15 @@ static int type_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	}
 
 	if (new_type->flags & TYPE_FLAGS_PERMISSIVE)
-		if (ebitmap_set_bit(&state->out->permissive_map, new_type->s.value, 1)) {
+		if (ebitmap_set_bit(&state->out->permissive_map,
+				    new_type->s.value, 1)) {
 			ERR(state->handle, "Out of memory!");
 			return -1;
 		}
 
 	if (new_type->flags & TYPE_FLAGS_NEVERAUDIT)
-		if (ebitmap_set_bit(&state->out->neveraudit_map, new_type->s.value, 1)) {
+		if (ebitmap_set_bit(&state->out->neveraudit_map,
+				    new_type->s.value, 1)) {
 			ERR(state->handle, "Out of memory!");
 			return -1;
 		}
@@ -188,8 +189,8 @@ static int attr_convert_callback(hashtab_key_t key, hashtab_datum_t datum,
 	ebitmap_t tmp_union;
 
 	id = (char *)key;
-	type = (type_datum_t *) datum;
-	state = (expand_state_t *) data;
+	type = (type_datum_t *)datum;
+	state = (expand_state_t *)data;
 
 	if (type->flavor != TYPE_ATTRIB)
 		return 0;
@@ -222,7 +223,8 @@ static int attr_convert_callback(hashtab_key_t key, hashtab_datum_t datum,
 	return 0;
 }
 
-static int expand_attributes_in_attributes(sepol_handle_t *handle, policydb_t *p)
+static int expand_attributes_in_attributes(sepol_handle_t *handle,
+					   policydb_t *p)
 {
 	ebitmap_t attrs, types;
 	ebitmap_node_t *ni, *nj;
@@ -230,7 +232,7 @@ static int expand_attributes_in_attributes(sepol_handle_t *handle, policydb_t *p
 	type_datum_t *td, *ad;
 
 	ebitmap_init(&attrs);
-	for (i=0; i < p->p_types.nprim; i++) {
+	for (i = 0; i < p->p_types.nprim; i++) {
 		td = p->type_val_to_struct[i];
 		if (td && td->flavor == TYPE_ATTRIB)
 			ebitmap_set_bit(&attrs, i, 1);
@@ -244,16 +246,20 @@ static int expand_attributes_in_attributes(sepol_handle_t *handle, policydb_t *p
 			if (ebitmap_match_any(&td->types, &attrs)) {
 				done = 0;
 				ebitmap_init(&types);
-				ebitmap_for_each_positive_bit(&td->types, nj, j) {
+				ebitmap_for_each_positive_bit(&td->types, nj,
+							      j) {
 					if (i == j) {
-						ERR(handle, "Found loop in type attributes involving: %s", p->p_type_val_to_name[i]);
+						ERR(handle,
+						    "Found loop in type attributes involving: %s",
+						    p->p_type_val_to_name[i]);
 						ebitmap_destroy(&attrs);
 						ebitmap_destroy(&types);
 						return -1;
 					}
 					if (ebitmap_get_bit(&attrs, j)) {
 						ad = p->type_val_to_struct[j];
-						ebitmap_union(&types, &ad->types);
+						ebitmap_union(&types,
+							      &ad->types);
 					} else {
 						ebitmap_set_bit(&types, j, 1);
 					}
@@ -284,10 +290,10 @@ static int perm_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	perm_datum_t *perm, *new_perm;
 
 	id = key;
-	perm = (perm_datum_t *) datum;
-	s = (symtab_t *) data;
+	perm = (perm_datum_t *)datum;
+	s = (symtab_t *)data;
 
-	new_perm = (perm_datum_t *) malloc(sizeof(perm_datum_t));
+	new_perm = (perm_datum_t *)malloc(sizeof(perm_datum_t));
 	if (!new_perm) {
 		return -1;
 	}
@@ -302,7 +308,7 @@ static int perm_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	new_perm->s.value = perm->s.value;
 	s->nprim++;
 
-	ret = hashtab_insert(s->table, new_id, (hashtab_datum_t) new_perm);
+	ret = hashtab_insert(s->table, new_id, (hashtab_datum_t)new_perm);
 	if (ret) {
 		free(new_id);
 		free(new_perm);
@@ -321,13 +327,13 @@ static int common_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	expand_state_t *state;
 
 	id = (char *)key;
-	common = (common_datum_t *) datum;
-	state = (expand_state_t *) data;
+	common = (common_datum_t *)datum;
+	state = (expand_state_t *)data;
 
 	if (state->verbose)
 		INFO(state->handle, "copying common %s", id);
 
-	new_common = (common_datum_t *) malloc(sizeof(common_datum_t));
+	new_common = (common_datum_t *)malloc(sizeof(common_datum_t));
 	if (!new_common) {
 		ERR(state->handle, "Out of memory!");
 		return -1;
@@ -351,9 +357,8 @@ static int common_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	new_common->s.value = common->s.value;
 	state->out->p_commons.nprim++;
 
-	ret =
-	    hashtab_insert(state->out->p_commons.table, new_id,
-			   (hashtab_datum_t) new_common);
+	ret = hashtab_insert(state->out->p_commons.table, new_id,
+			     (hashtab_datum_t)new_common);
 	if (ret) {
 		ERR(state->handle, "hashtab overflow");
 		free(new_common);
@@ -361,9 +366,8 @@ static int common_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		return -1;
 	}
 
-	if (hashtab_map
-	    (common->permissions.table, perm_copy_callback,
-	     &new_common->permissions)) {
+	if (hashtab_map(common->permissions.table, perm_copy_callback,
+			&new_common->permissions)) {
 		ERR(state->handle, "Out of memory!");
 		return -1;
 	}
@@ -371,9 +375,8 @@ static int common_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	return 0;
 }
 
-static int constraint_node_clone(constraint_node_t ** dst,
-				 constraint_node_t * src,
-				 expand_state_t * state)
+static int constraint_node_clone(constraint_node_t **dst,
+				 constraint_node_t *src, expand_state_t *state)
 {
 	constraint_node_t *new_con = NULL, *last_new_con = NULL;
 	constraint_expr_t *new_expr = NULL;
@@ -381,7 +384,7 @@ static int constraint_node_clone(constraint_node_t ** dst,
 	while (src != NULL) {
 		constraint_expr_t *expr, *expr_l = NULL;
 		new_con =
-		    (constraint_node_t *) malloc(sizeof(constraint_node_t));
+			(constraint_node_t *)malloc(sizeof(constraint_node_t));
 		if (!new_con) {
 			goto out_of_mem;
 		}
@@ -404,31 +407,36 @@ static int constraint_node_clone(constraint_node_t ** dst,
 					 * attributes for sepol_compute_av_reason_buffer(3)
 					 * so that utilities can analyse constraint errors.
 					 */
-					if (map_ebitmap(&expr->type_names->types,
-							&new_expr->type_names->types,
-							state->typemap)) {
-						ERR(NULL, "Failed to map type_names->types");
+					if (map_ebitmap(
+						    &expr->type_names->types,
+						    &new_expr->type_names->types,
+						    state->typemap)) {
+						ERR(NULL,
+						    "Failed to map type_names->types");
 						goto out_of_mem;
 					}
 					/* Type sets require expansion and conversion. */
-					if (expand_convert_type_set(state->out,
-								    state->
-								    typemap,
-								    expr->
-								    type_names,
-								    &new_expr->
-								    names, 1)) {
+					if (expand_convert_type_set(
+						    state->out, state->typemap,
+						    expr->type_names,
+						    &new_expr->names, 1)) {
 						goto out_of_mem;
 					}
 				} else if (new_expr->attr & CEXPR_ROLE) {
-					if (map_ebitmap(&expr->names, &new_expr->names, state->rolemap)) {
+					if (map_ebitmap(&expr->names,
+							&new_expr->names,
+							state->rolemap)) {
 						goto out_of_mem;
 					}
-					if (ebitmap_expand_roles(state->out, &new_expr->names)) {
+					if (ebitmap_expand_roles(
+						    state->out,
+						    &new_expr->names)) {
 						goto out_of_mem;
 					}
 				} else if (new_expr->attr & CEXPR_USER) {
-					if (map_ebitmap(&expr->names, &new_expr->names, state->usermap)) {
+					if (map_ebitmap(&expr->names,
+							&new_expr->names,
+							state->usermap)) {
 						goto out_of_mem;
 					}
 				} else {
@@ -457,7 +465,7 @@ static int constraint_node_clone(constraint_node_t ** dst,
 	}
 
 	return 0;
-      out_of_mem:
+out_of_mem:
 	ERR(state->handle, "Out of memory!");
 	if (new_con)
 		free(new_con);
@@ -470,30 +478,37 @@ static int class_copy_default_new_object(expand_state_t *state,
 					 class_datum_t *newdatum)
 {
 	if (olddatum->default_user) {
-		if (newdatum->default_user && olddatum->default_user != newdatum->default_user) {
-			ERR(state->handle, "Found conflicting default user definitions");
+		if (newdatum->default_user &&
+		    olddatum->default_user != newdatum->default_user) {
+			ERR(state->handle,
+			    "Found conflicting default user definitions");
 			return SEPOL_ENOTSUP;
 		}
 		newdatum->default_user = olddatum->default_user;
-
 	}
 	if (olddatum->default_role) {
-		if (newdatum->default_role && olddatum->default_role != newdatum->default_role) {
-			ERR(state->handle, "Found conflicting default role definitions");
+		if (newdatum->default_role &&
+		    olddatum->default_role != newdatum->default_role) {
+			ERR(state->handle,
+			    "Found conflicting default role definitions");
 			return SEPOL_ENOTSUP;
 		}
 		newdatum->default_role = olddatum->default_role;
 	}
 	if (olddatum->default_type) {
-		if (newdatum->default_type && olddatum->default_type != newdatum->default_type) {
-			ERR(state->handle, "Found conflicting default type definitions");
+		if (newdatum->default_type &&
+		    olddatum->default_type != newdatum->default_type) {
+			ERR(state->handle,
+			    "Found conflicting default type definitions");
 			return SEPOL_ENOTSUP;
 		}
 		newdatum->default_type = olddatum->default_type;
 	}
 	if (olddatum->default_range) {
-		if (newdatum->default_range && olddatum->default_range != newdatum->default_range) {
-			ERR(state->handle, "Found conflicting default range definitions");
+		if (newdatum->default_range &&
+		    olddatum->default_range != newdatum->default_range) {
+			ERR(state->handle,
+			    "Found conflicting default range definitions");
 			return SEPOL_ENOTSUP;
 		}
 		newdatum->default_range = olddatum->default_range;
@@ -510,8 +525,8 @@ static int class_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	expand_state_t *state;
 
 	id = (char *)key;
-	class = (class_datum_t *) datum;
-	state = (expand_state_t *) data;
+	class = (class_datum_t *)datum;
+	state = (expand_state_t *)data;
 
 	if (!is_id_enabled(id, state->base, SYM_CLASSES)) {
 		/* identifier's scope is not enabled */
@@ -521,7 +536,7 @@ static int class_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	if (state->verbose)
 		INFO(state->handle, "copying class %s", id);
 
-	new_class = (class_datum_t *) malloc(sizeof(class_datum_t));
+	new_class = (class_datum_t *)malloc(sizeof(class_datum_t));
 	if (!new_class) {
 		ERR(state->handle, "Out of memory!");
 		return -1;
@@ -541,7 +556,7 @@ static int class_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		free(new_class);
 		return ret;
 	}
-	
+
 	new_id = strdup(id);
 	if (!new_id) {
 		ERR(state->handle, "Out of memory!");
@@ -549,9 +564,8 @@ static int class_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		return -1;
 	}
 
-	ret =
-	    hashtab_insert(state->out->p_classes.table, new_id,
-			   (hashtab_datum_t) new_class);
+	ret = hashtab_insert(state->out->p_classes.table, new_id,
+			     (hashtab_datum_t)new_class);
 	if (ret) {
 		ERR(state->handle, "hashtab overflow");
 		free(new_class);
@@ -559,9 +573,8 @@ static int class_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		return -1;
 	}
 
-	if (hashtab_map
-	    (class->permissions.table, perm_copy_callback,
-	     &new_class->permissions)) {
+	if (hashtab_map(class->permissions.table, perm_copy_callback,
+			&new_class->permissions)) {
 		ERR(state->handle, "hashtab overflow");
 		return -1;
 	}
@@ -573,16 +586,15 @@ static int class_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 			return -1;
 		}
 
-		new_class->comdatum =
-		    hashtab_search(state->out->p_commons.table,
-				   new_class->comkey);
+		new_class->comdatum = hashtab_search(
+			state->out->p_commons.table, new_class->comkey);
 		if (!new_class->comdatum) {
 			ERR(state->handle, "could not find common datum %s",
 			    new_class->comkey);
 			return -1;
 		}
 		new_class->permissions.nprim +=
-		    new_class->comdatum->permissions.nprim;
+			new_class->comdatum->permissions.nprim;
 	}
 
 	return 0;
@@ -596,8 +608,8 @@ static int constraint_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	expand_state_t *state;
 
 	id = (char *)key;
-	class = (class_datum_t *) datum;
-	state = (expand_state_t *) data;
+	class = (class_datum_t *)datum;
+	state = (expand_state_t *)data;
 
 	new_class = hashtab_search(state->out->p_classes.table, id);
 	if (!new_class) {
@@ -606,10 +618,10 @@ static int constraint_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	}
 
 	/* constraints */
-	if (constraint_node_clone
-	    (&new_class->constraints, class->constraints, state) == -1
-	    || constraint_node_clone(&new_class->validatetrans,
-				     class->validatetrans, state) == -1) {
+	if (constraint_node_clone(&new_class->constraints, class->constraints,
+				  state) == -1 ||
+	    constraint_node_clone(&new_class->validatetrans,
+				  class->validatetrans, state) == -1) {
 		return -1;
 	}
 	return 0;
@@ -619,11 +631,11 @@ static int constraint_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
  * The boundaries have to be copied after the types/roles/users are copied,
  * because it refers hashtab to lookup destinated objects.
  */
-static int type_bounds_copy_callback(hashtab_key_t key,
-				     hashtab_datum_t datum, void *data)
+static int type_bounds_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
+				     void *data)
 {
-	expand_state_t *state = (expand_state_t *) data;
-	type_datum_t *type = (type_datum_t *) datum;
+	expand_state_t *state = (expand_state_t *)data;
+	type_datum_t *type = (type_datum_t *)datum;
 	type_datum_t *dest;
 	uint32_t bounds_val;
 
@@ -649,11 +661,11 @@ static int type_bounds_copy_callback(hashtab_key_t key,
 	return 0;
 }
 
-static int role_bounds_copy_callback(hashtab_key_t key,
-				     hashtab_datum_t datum, void *data)
+static int role_bounds_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
+				     void *data)
 {
-	expand_state_t *state = (expand_state_t *) data;
-	role_datum_t *role = (role_datum_t *) datum;
+	expand_state_t *state = (expand_state_t *)data;
+	role_datum_t *role = (role_datum_t *)datum;
 	role_datum_t *dest;
 	uint32_t bounds_val;
 
@@ -679,11 +691,11 @@ static int role_bounds_copy_callback(hashtab_key_t key,
 	return 0;
 }
 
-static int user_bounds_copy_callback(hashtab_key_t key,
-				     hashtab_datum_t datum, void *data)
+static int user_bounds_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
+				     void *data)
 {
-	expand_state_t *state = (expand_state_t *) data;
-	user_datum_t *user = (user_datum_t *) datum;
+	expand_state_t *state = (expand_state_t *)data;
+	user_datum_t *user = (user_datum_t *)datum;
 	user_datum_t *dest;
 	uint32_t bounds_val;
 
@@ -724,8 +736,8 @@ static int alias_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	uint32_t prival;
 
 	id = (char *)key;
-	alias = (type_datum_t *) datum;
-	state = (expand_state_t *) data;
+	alias = (type_datum_t *)datum;
+	state = (expand_state_t *)data;
 
 	/* ignore regular types */
 	if (alias->flavor == TYPE_TYPE && alias->primary)
@@ -735,18 +747,18 @@ static int alias_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	if (alias->flavor == TYPE_ATTRIB)
 		return 0;
 
-	if (alias->flavor == TYPE_ALIAS) 
+	if (alias->flavor == TYPE_ALIAS)
 		prival = alias->primary;
-	else 
+	else
 		prival = alias->s.value;
 
 	if (!is_id_enabled(state->base->p_type_val_to_name[prival - 1],
-			state->base, SYM_TYPES)) {
+			   state->base, SYM_TYPES)) {
 		/* The primary type for this alias is not enabled, the alias 
  		 * shouldn't be either */
 		return 0;
 	}
-		
+
 	if (state->verbose)
 		INFO(state->handle, "copying alias %s", id);
 
@@ -756,7 +768,7 @@ static int alias_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		return -1;
 	}
 
-	new_alias = (type_datum_t *) malloc(sizeof(type_datum_t));
+	new_alias = (type_datum_t *)malloc(sizeof(type_datum_t));
 	if (!new_alias) {
 		ERR(state->handle, "Out of memory!");
 		free(new_id);
@@ -768,13 +780,12 @@ static int alias_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	else if (alias->flavor == TYPE_ALIAS)
 		new_alias->s.value = state->typemap[alias->primary - 1];
 	else
-		assert(0);	/* unreachable */
+		assert(0); /* unreachable */
 
 	new_alias->flags = alias->flags;
 
-	ret = hashtab_insert(state->out->p_types.table,
-			     (hashtab_key_t) new_id,
-			     (hashtab_datum_t) new_alias);
+	ret = hashtab_insert(state->out->p_types.table, (hashtab_key_t)new_id,
+			     (hashtab_datum_t)new_alias);
 
 	if (ret) {
 		ERR(state->handle, "hashtab overflow");
@@ -786,13 +797,15 @@ static int alias_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	state->typemap[alias->s.value - 1] = new_alias->s.value;
 
 	if (new_alias->flags & TYPE_FLAGS_PERMISSIVE)
-		if (ebitmap_set_bit(&state->out->permissive_map, new_alias->s.value, 1)) {
+		if (ebitmap_set_bit(&state->out->permissive_map,
+				    new_alias->s.value, 1)) {
 			ERR(state->handle, "Out of memory!");
 			return -1;
 		}
 
 	if (new_alias->flags & TYPE_FLAGS_NEVERAUDIT)
-		if (ebitmap_set_bit(&state->out->neveraudit_map, new_alias->s.value, 1)) {
+		if (ebitmap_set_bit(&state->out->neveraudit_map,
+				    new_alias->s.value, 1)) {
 			ERR(state->handle, "Out of memory!");
 			return -1;
 		}
@@ -800,7 +813,9 @@ static int alias_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	return 0;
 }
 
-static int role_dominates_copy_callback(hashtab_key_t key __attribute__ ((unused)), hashtab_datum_t datum, void *data)
+static int role_dominates_copy_callback(hashtab_key_t key
+					__attribute__((unused)),
+					hashtab_datum_t datum, void *data)
 {
 	char *id;
 	role_datum_t *role, *new_role;
@@ -808,8 +823,8 @@ static int role_dominates_copy_callback(hashtab_key_t key __attribute__ ((unused
 	ebitmap_t mapped;
 
 	id = (char *)key;
-	role = (role_datum_t *) datum;
-	state = (expand_state_t *) data;
+	role = (role_datum_t *)datum;
+	state = (expand_state_t *)data;
 
 	if (!is_id_enabled(id, state->base, SYM_ROLES)) {
 		/* identifier's scope is not enabled */
@@ -819,7 +834,8 @@ static int role_dominates_copy_callback(hashtab_key_t key __attribute__ ((unused
 	if (state->verbose)
 		INFO(state->handle, "Copying role dominates %s", id);
 
-	new_role = (role_datum_t *) hashtab_search(state->out->p_roles.table, id);
+	new_role =
+		(role_datum_t *)hashtab_search(state->out->p_roles.table, id);
 	if (!new_role) {
 		ERR(state->handle, "Role lookup failed for %s", id);
 		return -1;
@@ -836,7 +852,8 @@ static int role_dominates_copy_callback(hashtab_key_t key __attribute__ ((unused
 	return 0;
 }
 
-static int role_types_copy_callback(hashtab_key_t key, hashtab_datum_t datum, void *data)
+static int role_types_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
+				    void *data)
 {
 	char *id;
 	role_datum_t *role, *new_role;
@@ -844,7 +861,7 @@ static int role_types_copy_callback(hashtab_key_t key, hashtab_datum_t datum, vo
 	ebitmap_t tmp_union_types;
 
 	id = key;
-	role = (role_datum_t *) datum;
+	role = (role_datum_t *)datum;
 	state = (expand_state_t *)data;
 
 	if (!is_id_enabled(id, state->base, SYM_ROLES)) {
@@ -855,7 +872,8 @@ static int role_types_copy_callback(hashtab_key_t key, hashtab_datum_t datum, vo
 	if (state->verbose)
 		INFO(state->handle, "copying types for role %s", id);
 
-	new_role = (role_datum_t *)hashtab_search(state->out->p_roles.table, id);
+	new_role =
+		(role_datum_t *)hashtab_search(state->out->p_roles.table, id);
 	if (!new_role) {
 		ERR(state->handle, "Could not find role %s", id);
 		return -1;
@@ -863,8 +881,8 @@ static int role_types_copy_callback(hashtab_key_t key, hashtab_datum_t datum, vo
 
 	/* convert types in the role datum in the global symtab */
 	ebitmap_init(&tmp_union_types);
-	if (expand_convert_type_set
-	    (state->out, state->typemap, &role->types, &tmp_union_types, 1)) {
+	if (expand_convert_type_set(state->out, state->typemap, &role->types,
+				    &tmp_union_types, 1)) {
 		ebitmap_destroy(&tmp_union_types);
 		ERR(state->handle, "Out of memory!");
 		return -1;
@@ -879,7 +897,8 @@ static int role_types_copy_callback(hashtab_key_t key, hashtab_datum_t datum, vo
 	return 0;
 }
 
-static int role_roles_copy_callback(hashtab_key_t key, hashtab_datum_t datum, void *data)
+static int role_roles_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
+				    void *data)
 {
 	char *id;
 	role_datum_t *role, *new_role;
@@ -887,7 +906,7 @@ static int role_roles_copy_callback(hashtab_key_t key, hashtab_datum_t datum, vo
 	ebitmap_t mapped;
 
 	id = key;
-	role = (role_datum_t *) datum;
+	role = (role_datum_t *)datum;
 	state = (expand_state_t *)data;
 
 	if (role->flavor != ROLE_ATTRIB) {
@@ -902,7 +921,8 @@ static int role_roles_copy_callback(hashtab_key_t key, hashtab_datum_t datum, vo
 	if (state->verbose)
 		INFO(state->handle, "copying roles for role %s", id);
 
-	new_role = (role_datum_t *)hashtab_search(state->out->p_roles.table, id);
+	new_role =
+		(role_datum_t *)hashtab_search(state->out->p_roles.table, id);
 	if (!new_role) {
 		ERR(state->handle, "Could not find role %s", id);
 		return -1;
@@ -920,7 +940,8 @@ static int role_roles_copy_callback(hashtab_key_t key, hashtab_datum_t datum, vo
 
 	return 0;
 }
-static int expand_role_attributes_in_attributes(sepol_handle_t *handle, policydb_t *p)
+static int expand_role_attributes_in_attributes(sepol_handle_t *handle,
+						policydb_t *p)
 {
 	ebitmap_t attrs, roles;
 	ebitmap_node_t *ni, *nj;
@@ -928,7 +949,7 @@ static int expand_role_attributes_in_attributes(sepol_handle_t *handle, policydb
 	role_datum_t *rd, *ad;
 
 	ebitmap_init(&attrs);
-	for (i=0; i < p->p_roles.nprim; i++) {
+	for (i = 0; i < p->p_roles.nprim; i++) {
 		rd = p->role_val_to_struct[i];
 		if (rd && rd->flavor == ROLE_ATTRIB)
 			ebitmap_set_bit(&attrs, i, 1);
@@ -942,16 +963,20 @@ static int expand_role_attributes_in_attributes(sepol_handle_t *handle, policydb
 			if (ebitmap_match_any(&rd->roles, &attrs)) {
 				done = 0;
 				ebitmap_init(&roles);
-				ebitmap_for_each_positive_bit(&rd->roles, nj, j) {
+				ebitmap_for_each_positive_bit(&rd->roles, nj,
+							      j) {
 					if (i == j) {
-						ERR(handle, "Found loop in role attributes involving: %s", p->p_role_val_to_name[i]);
+						ERR(handle,
+						    "Found loop in role attributes involving: %s",
+						    p->p_role_val_to_name[i]);
 						ebitmap_destroy(&attrs);
 						ebitmap_destroy(&roles);
 						return -1;
 					}
 					if (ebitmap_get_bit(&attrs, j)) {
 						ad = p->role_val_to_struct[j];
-						ebitmap_union(&roles, &ad->roles);
+						ebitmap_union(&roles,
+							      &ad->roles);
 					} else {
 						ebitmap_set_bit(&roles, j, 1);
 					}
@@ -1018,8 +1043,8 @@ static int role_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	expand_state_t *state;
 
 	id = key;
-	role = (role_datum_t *) datum;
-	state = (expand_state_t *) data;
+	role = (role_datum_t *)datum;
+	state = (expand_state_t *)data;
 
 	if (strcmp(id, OBJECT_R) == 0) {
 		/* object_r is always value 1 */
@@ -1035,9 +1060,10 @@ static int role_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	if (state->verbose)
 		INFO(state->handle, "copying role %s", id);
 
-	new_role = (role_datum_t *) hashtab_search(state->out->p_roles.table, id);
+	new_role =
+		(role_datum_t *)hashtab_search(state->out->p_roles.table, id);
 	if (!new_role) {
-		new_role = (role_datum_t *) malloc(sizeof(role_datum_t));
+		new_role = (role_datum_t *)malloc(sizeof(role_datum_t));
 		if (!new_role) {
 			ERR(state->handle, "Out of memory!");
 			return -1;
@@ -1056,8 +1082,8 @@ static int role_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		new_role->s.value = state->out->p_roles.nprim;
 		state->rolemap[role->s.value - 1] = new_role->s.value;
 		ret = hashtab_insert(state->out->p_roles.table,
-				     (hashtab_key_t) new_id,
-				     (hashtab_datum_t) new_role);
+				     (hashtab_key_t)new_id,
+				     (hashtab_datum_t)new_role);
 
 		if (ret) {
 			ERR(state->handle, "hashtab overflow");
@@ -1070,8 +1096,8 @@ static int role_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	return 0;
 }
 
-int mls_semantic_level_expand(mls_semantic_level_t * sl, mls_level_t * l,
-			      policydb_t * p, sepol_handle_t * h)
+int mls_semantic_level_expand(mls_semantic_level_t *sl, mls_level_t *l,
+			      policydb_t *p, sepol_handle_t *h)
 {
 	mls_semantic_cat_t *cat;
 	level_datum_t *levdatum;
@@ -1087,14 +1113,16 @@ int mls_semantic_level_expand(mls_semantic_level_t * sl, mls_level_t * l,
 		return 0;
 
 	/* Invalid sensitivity */
-	if (sl->sens > p->p_levels.nprim || !p->p_sens_val_to_name[sl->sens - 1])
+	if (sl->sens > p->p_levels.nprim ||
+	    !p->p_sens_val_to_name[sl->sens - 1])
 		return -1;
 
 	l->sens = sl->sens;
-	levdatum = (level_datum_t *) hashtab_search(p->p_levels.table,
-						    p->p_sens_val_to_name[l->sens - 1]);
+	levdatum = (level_datum_t *)hashtab_search(
+		p->p_levels.table, p->p_sens_val_to_name[l->sens - 1]);
 	if (!levdatum) {
-		ERR(h, "%s: Impossible situation found, nothing in p_levels.table.",
+		ERR(h,
+		    "%s: Impossible situation found, nothing in p_levels.table.",
 		    __func__);
 		errno = ENOENT;
 		return -1;
@@ -1102,13 +1130,17 @@ int mls_semantic_level_expand(mls_semantic_level_t * sl, mls_level_t * l,
 	for (cat = sl->cat; cat; cat = cat->next) {
 		if (!cat->low || cat->low > cat->high) {
 			ERR(h, "Category range is not valid %s.%s",
-			    cat->low > 0 ? p->p_cat_val_to_name[cat->low - 1] : "Invalid",
-			    cat->high > 0 ? p->p_cat_val_to_name[cat->high - 1] : "Invalid");
+			    cat->low > 0 ? p->p_cat_val_to_name[cat->low - 1] :
+					   "Invalid",
+			    cat->high > 0 ?
+				    p->p_cat_val_to_name[cat->high - 1] :
+				    "Invalid");
 			return -1;
 		}
 		for (i = cat->low - 1; i < cat->high; i++) {
 			if (!ebitmap_get_bit(&levdatum->level->cat, i)) {
-				ERR(h, "Category %s can not be associated with "
+				ERR(h,
+				    "Category %s can not be associated with "
 				    "level %s",
 				    p->p_cat_val_to_name[i],
 				    p->p_sens_val_to_name[l->sens - 1]);
@@ -1124,8 +1156,8 @@ int mls_semantic_level_expand(mls_semantic_level_t * sl, mls_level_t * l,
 	return 0;
 }
 
-int mls_semantic_range_expand(mls_semantic_range_t * sr, mls_range_t * r,
-			      policydb_t * p, sepol_handle_t * h)
+int mls_semantic_range_expand(mls_semantic_range_t *sr, mls_range_t *r,
+			      policydb_t *p, sepol_handle_t *h)
 {
 	if (mls_semantic_level_expand(&sr->level[0], &r->level[0], p, h) < 0)
 		return -1;
@@ -1155,8 +1187,8 @@ static int user_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	ebitmap_t tmp_union;
 
 	id = key;
-	user = (user_datum_t *) datum;
-	state = (expand_state_t *) data;
+	user = (user_datum_t *)datum;
+	state = (expand_state_t *)data;
 
 	if (!is_id_enabled(id, state->base, SYM_USERS)) {
 		/* identifier's scope is not enabled */
@@ -1167,9 +1199,9 @@ static int user_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		INFO(state->handle, "copying user %s", id);
 
 	new_user =
-	    (user_datum_t *) hashtab_search(state->out->p_users.table, id);
+		(user_datum_t *)hashtab_search(state->out->p_users.table, id);
 	if (!new_user) {
-		new_user = (user_datum_t *) malloc(sizeof(user_datum_t));
+		new_user = (user_datum_t *)malloc(sizeof(user_datum_t));
 		if (!new_user) {
 			ERR(state->handle, "Out of memory!");
 			return -1;
@@ -1187,8 +1219,8 @@ static int user_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 			return -1;
 		}
 		ret = hashtab_insert(state->out->p_users.table,
-				     (hashtab_key_t) new_id,
-				     (hashtab_datum_t) new_user);
+				     (hashtab_key_t)new_id,
+				     (hashtab_datum_t)new_user);
 		if (ret) {
 			ERR(state->handle, "hashtab overflow");
 			user_datum_destroy(new_user);
@@ -1199,8 +1231,8 @@ static int user_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 
 		/* expand the semantic MLS info */
 		if (mls_semantic_range_expand(&user->range,
-					      &new_user->exp_range,
-					      state->out, state->handle)) {
+					      &new_user->exp_range, state->out,
+					      state->handle)) {
 			return -1;
 		}
 		if (mls_semantic_level_expand(&user->dfltlevel,
@@ -1212,7 +1244,7 @@ static int user_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 				       &new_user->exp_range.level[0],
 				       &new_user->exp_range.level[1])) {
 			ERR(state->handle, "default level not within user "
-			    "range");
+					   "range");
 			return -1;
 		}
 	} else {
@@ -1242,7 +1274,8 @@ static int user_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	ebitmap_init(&tmp_union);
 
 	/* get global roles for this user */
-	if (role_set_expand(&user->roles, &tmp_union, state->out, state->base, state->rolemap)) {
+	if (role_set_expand(&user->roles, &tmp_union, state->out, state->base,
+			    state->rolemap)) {
 		ERR(state->handle, "Out of memory!");
 		ebitmap_destroy(&tmp_union);
 		return -1;
@@ -1267,8 +1300,8 @@ static int bool_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	char *id, *new_id;
 
 	id = key;
-	boolean = (cond_bool_datum_t *) datum;
-	state = (expand_state_t *) data;
+	boolean = (cond_bool_datum_t *)datum;
+	state = (expand_state_t *)data;
 
 	if (!is_id_enabled(id, state->base, SYM_BOOLS)) {
 		/* identifier's scope is not enabled */
@@ -1283,7 +1316,7 @@ static int bool_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	if (state->verbose)
 		INFO(state->handle, "copying boolean %s", id);
 
-	new_bool = (cond_bool_datum_t *) malloc(sizeof(cond_bool_datum_t));
+	new_bool = (cond_bool_datum_t *)malloc(sizeof(cond_bool_datum_t));
 	if (!new_bool) {
 		ERR(state->handle, "Out of memory!");
 		return -1;
@@ -1299,9 +1332,8 @@ static int bool_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	state->out->p_bools.nprim++;
 	new_bool->s.value = state->out->p_bools.nprim;
 
-	ret = hashtab_insert(state->out->p_bools.table,
-			     (hashtab_key_t) new_id,
-			     (hashtab_datum_t) new_bool);
+	ret = hashtab_insert(state->out->p_bools.table, (hashtab_key_t)new_id,
+			     (hashtab_datum_t)new_bool);
 	if (ret) {
 		ERR(state->handle, "hashtab overflow");
 		free(new_bool);
@@ -1320,8 +1352,8 @@ static int bool_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 static int sens_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 			      void *data)
 {
-	expand_state_t *state = (expand_state_t *) data;
-	level_datum_t *level = (level_datum_t *) datum, *new_level = NULL;
+	expand_state_t *state = (expand_state_t *)data;
+	level_datum_t *level = (level_datum_t *)datum, *new_level = NULL;
 	char *id = (char *)key, *new_id = NULL;
 
 	if (!is_id_enabled(id, state->base, SYM_LEVELS)) {
@@ -1332,11 +1364,11 @@ static int sens_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	if (state->verbose)
 		INFO(state->handle, "copying sensitivity level %s", id);
 
-	new_level = (level_datum_t *) malloc(sizeof(level_datum_t));
+	new_level = (level_datum_t *)malloc(sizeof(level_datum_t));
 	if (!new_level)
 		goto out_of_mem;
 	level_datum_init(new_level);
-	new_level->level = (mls_level_t *) malloc(sizeof(mls_level_t));
+	new_level->level = (mls_level_t *)malloc(sizeof(mls_level_t));
 	if (!new_level->level)
 		goto out_of_mem;
 	mls_level_init(new_level->level);
@@ -1350,14 +1382,13 @@ static int sens_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	new_level->isalias = level->isalias;
 	state->out->p_levels.nprim++;
 
-	if (hashtab_insert(state->out->p_levels.table,
-			   (hashtab_key_t) new_id,
-			   (hashtab_datum_t) new_level)) {
+	if (hashtab_insert(state->out->p_levels.table, (hashtab_key_t)new_id,
+			   (hashtab_datum_t)new_level)) {
 		goto out_of_mem;
 	}
 	return 0;
 
-      out_of_mem:
+out_of_mem:
 	ERR(state->handle, "Out of memory!");
 	if (new_level != NULL && new_level->level != NULL) {
 		mls_level_destroy(new_level->level);
@@ -1372,8 +1403,8 @@ static int sens_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 static int cats_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 			      void *data)
 {
-	expand_state_t *state = (expand_state_t *) data;
-	cat_datum_t *cat = (cat_datum_t *) datum, *new_cat = NULL;
+	expand_state_t *state = (expand_state_t *)data;
+	cat_datum_t *cat = (cat_datum_t *)datum, *new_cat = NULL;
 	char *id = (char *)key, *new_id = NULL;
 
 	if (!is_id_enabled(id, state->base, SYM_CATS)) {
@@ -1384,7 +1415,7 @@ static int cats_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	if (state->verbose)
 		INFO(state->handle, "copying category attribute %s", id);
 
-	new_cat = (cat_datum_t *) malloc(sizeof(cat_datum_t));
+	new_cat = (cat_datum_t *)malloc(sizeof(cat_datum_t));
 	if (!new_cat)
 		goto out_of_mem;
 	cat_datum_init(new_cat);
@@ -1395,14 +1426,14 @@ static int cats_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	new_cat->s.value = cat->s.value;
 	new_cat->isalias = cat->isalias;
 	state->out->p_cats.nprim++;
-	if (hashtab_insert(state->out->p_cats.table,
-			   (hashtab_key_t) new_id, (hashtab_datum_t) new_cat)) {
+	if (hashtab_insert(state->out->p_cats.table, (hashtab_key_t)new_id,
+			   (hashtab_datum_t)new_cat)) {
 		goto out_of_mem;
 	}
 
 	return 0;
 
-      out_of_mem:
+out_of_mem:
 	ERR(state->handle, "Out of memory!");
 	cat_datum_destroy(new_cat);
 	free(new_cat);
@@ -1410,7 +1441,7 @@ static int cats_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	return -1;
 }
 
-static int copy_role_allows(expand_state_t * state, role_allow_rule_t * rules)
+static int copy_role_allows(expand_state_t *state, role_allow_rule_t *rules)
 {
 	unsigned int i, j;
 	role_allow_t *cur_allow, *n, *l;
@@ -1419,19 +1450,22 @@ static int copy_role_allows(expand_state_t * state, role_allow_rule_t * rules)
 	ebitmap_node_t *snode, *tnode;
 
 	/* start at the end of the list */
-	for (l = state->out->role_allow; l && l->next; l = l->next) ;
+	for (l = state->out->role_allow; l && l->next; l = l->next)
+		;
 
 	cur = rules;
 	while (cur) {
 		ebitmap_init(&roles);
 		ebitmap_init(&new_roles);
 
-		if (role_set_expand(&cur->roles, &roles, state->out, state->base, state->rolemap)) {
+		if (role_set_expand(&cur->roles, &roles, state->out,
+				    state->base, state->rolemap)) {
 			ERR(state->handle, "Out of memory!");
 			return -1;
 		}
 
-		if (role_set_expand(&cur->new_roles, &new_roles, state->out, state->base, state->rolemap)) {
+		if (role_set_expand(&cur->new_roles, &new_roles, state->out,
+				    state->base, state->rolemap)) {
 			ERR(state->handle, "Out of memory!");
 			return -1;
 		}
@@ -1448,8 +1482,8 @@ static int copy_role_allows(expand_state_t * state, role_allow_rule_t * rules)
 				}
 				if (cur_allow)
 					continue;
-				n = (role_allow_t *)
-				    malloc(sizeof(role_allow_t));
+				n = (role_allow_t *)malloc(
+					sizeof(role_allow_t));
 				if (!n) {
 					ERR(state->handle, "Out of memory!");
 					return -1;
@@ -1475,7 +1509,7 @@ static int copy_role_allows(expand_state_t * state, role_allow_rule_t * rules)
 	return 0;
 }
 
-static int copy_role_trans(expand_state_t * state, role_trans_rule_t * rules)
+static int copy_role_trans(expand_state_t *state, role_trans_rule_t *rules)
 {
 	unsigned int i, j, k;
 	role_trans_t *n, *l, *cur_trans;
@@ -1484,47 +1518,62 @@ static int copy_role_trans(expand_state_t * state, role_trans_rule_t * rules)
 	ebitmap_node_t *rnode, *tnode, *cnode;
 
 	/* start at the end of the list */
-	for (l = state->out->role_tr; l && l->next; l = l->next) ;
+	for (l = state->out->role_tr; l && l->next; l = l->next)
+		;
 
 	cur = rules;
 	while (cur) {
 		ebitmap_init(&roles);
 		ebitmap_init(&types);
 
-		if (role_set_expand(&cur->roles, &roles, state->out, state->base, state->rolemap)) {
+		if (role_set_expand(&cur->roles, &roles, state->out,
+				    state->base, state->rolemap)) {
 			ERR(state->handle, "Out of memory!");
 			return -1;
 		}
-		if (expand_convert_type_set
-		    (state->out, state->typemap, &cur->types, &types, 1)) {
+		if (expand_convert_type_set(state->out, state->typemap,
+					    &cur->types, &types, 1)) {
 			ERR(state->handle, "Out of memory!");
 			return -1;
 		}
 		ebitmap_for_each_positive_bit(&roles, rnode, i) {
 			ebitmap_for_each_positive_bit(&types, tnode, j) {
-				ebitmap_for_each_positive_bit(&cur->classes, cnode, k) {
+				ebitmap_for_each_positive_bit(&cur->classes,
+							      cnode, k) {
 					cur_trans = state->out->role_tr;
 					while (cur_trans) {
 						unsigned int mapped_role;
 
-						mapped_role = state->rolemap[cur->new_role - 1];
+						mapped_role =
+							state->rolemap
+								[cur->new_role -
+								 1];
 
 						if ((cur_trans->role ==
-								i + 1) &&
+						     i + 1) &&
 						    (cur_trans->type ==
-								j + 1) &&
+						     j + 1) &&
 						    (cur_trans->tclass ==
-								k + 1)) {
-							if (cur_trans->new_role == mapped_role) {
+						     k + 1)) {
+							if (cur_trans->new_role ==
+							    mapped_role) {
 								break;
 							} else {
 								ERR(state->handle,
-									"Conflicting role trans rule %s %s : %s { %s vs %s }",
-									state->out->p_role_val_to_name[i],
-									state->out->p_type_val_to_name[j],
-									state->out->p_class_val_to_name[k],
-									state->out->p_role_val_to_name[mapped_role - 1],
-									state->out->p_role_val_to_name[cur_trans->new_role - 1]);
+								    "Conflicting role trans rule %s %s : %s { %s vs %s }",
+								    state->out->p_role_val_to_name
+									    [i],
+								    state->out->p_type_val_to_name
+									    [j],
+								    state->out->p_class_val_to_name
+									    [k],
+								    state->out->p_role_val_to_name
+									    [mapped_role -
+									     1],
+								    state->out->p_role_val_to_name
+									    [cur_trans
+										     ->new_role -
+									     1]);
 								return -1;
 							}
 						}
@@ -1533,19 +1582,20 @@ static int copy_role_trans(expand_state_t * state, role_trans_rule_t * rules)
 					if (cur_trans)
 						continue;
 
-					n = (role_trans_t *)
-						malloc(sizeof(role_trans_t));
+					n = (role_trans_t *)malloc(
+						sizeof(role_trans_t));
 					if (!n) {
 						ERR(state->handle,
-							"Out of memory!");
+						    "Out of memory!");
 						return -1;
 					}
 					memset(n, 0, sizeof(role_trans_t));
 					n->role = i + 1;
 					n->type = j + 1;
 					n->tclass = k + 1;
-					n->new_role = state->rolemap
-							[cur->new_role - 1];
+					n->new_role =
+						state->rolemap[cur->new_role -
+							       1];
 					if (l)
 						l->next = n;
 					else
@@ -1573,17 +1623,16 @@ static int expand_filename_trans_helper(expand_state_t *state,
 
 	mapped_otype = state->typemap[rule->otype - 1];
 
-	rc = policydb_filetrans_insert(
-		state->out, s + 1, t + 1,
-		rule->tclass, rule->name,
-		NULL, mapped_otype, &present_otype
-	);
+	rc = policydb_filetrans_insert(state->out, s + 1, t + 1, rule->tclass,
+				       rule->name, NULL, mapped_otype,
+				       &present_otype);
 	if (rc == SEPOL_EEXIST) {
 		/* duplicate rule, ignore */
 		if (present_otype == mapped_otype)
 			return 0;
 
-		ERR(state->handle, "Conflicting name-based type_transition %s %s:%s \"%s\":  %s vs %s",
+		ERR(state->handle,
+		    "Conflicting name-based type_transition %s %s:%s \"%s\":  %s vs %s",
 		    state->out->p_type_val_to_name[s],
 		    state->out->p_type_val_to_name[t],
 		    state->out->p_class_val_to_name[rule->tclass - 1],
@@ -1598,7 +1647,8 @@ static int expand_filename_trans_helper(expand_state_t *state,
 	return 0;
 }
 
-static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *rules)
+static int expand_filename_trans(expand_state_t *state,
+				 filename_trans_rule_t *rules)
 {
 	unsigned int i, j;
 	filename_trans_rule_t *cur_rule;
@@ -1623,19 +1673,16 @@ static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *r
 			return -1;
 		}
 
-
 		ebitmap_for_each_positive_bit(&stypes, snode, i) {
 			ebitmap_for_each_positive_bit(&ttypes, tnode, j) {
 				rc = expand_filename_trans_helper(
-					state, cur_rule, i, j
-				);
+					state, cur_rule, i, j);
 				if (rc)
 					return rc;
 			}
 			if (cur_rule->flags & RULE_SELF) {
 				rc = expand_filename_trans_helper(
-					state, cur_rule, i, i
-				);
+					state, cur_rule, i, i);
 				if (rc)
 					return rc;
 			}
@@ -1650,8 +1697,8 @@ static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *r
 }
 
 static int exp_rangetr_helper(uint32_t stype, uint32_t ttype, uint32_t tclass,
-			      mls_semantic_range_t * trange,
-			      expand_state_t * state)
+			      mls_semantic_range_t *trange,
+			      expand_state_t *state)
 {
 	range_trans_t *rt = NULL, key;
 	mls_range_t *r, *exp_range = NULL;
@@ -1671,7 +1718,7 @@ static int exp_rangetr_helper(uint32_t stype, uint32_t ttype, uint32_t tclass,
 	key.source_type = stype;
 	key.target_type = ttype;
 	key.target_class = tclass;
-	r = hashtab_search(state->out->range_tr, (hashtab_key_t) &key);
+	r = hashtab_search(state->out->range_tr, (hashtab_key_t)&key);
 	if (r) {
 		if (mls_range_eq(r, exp_range)) {
 			/* duplicate, ignore */
@@ -1681,8 +1728,7 @@ static int exp_rangetr_helper(uint32_t stype, uint32_t ttype, uint32_t tclass,
 		}
 
 		/* conflict */
-		ERR(state->handle,
-		    "Conflicting range trans rule %s %s : %s",
+		ERR(state->handle, "Conflicting range trans rule %s %s : %s",
 		    state->out->p_type_val_to_name[stype - 1],
 		    state->out->p_type_val_to_name[ttype - 1],
 		    state->out->p_class_val_to_name[tclass - 1]);
@@ -1698,12 +1744,10 @@ static int exp_rangetr_helper(uint32_t stype, uint32_t ttype, uint32_t tclass,
 	rt->target_type = ttype;
 	rt->target_class = tclass;
 
-	rc = hashtab_insert(state->out->range_tr, (hashtab_key_t) rt,
-			    exp_range);
+	rc = hashtab_insert(state->out->range_tr, (hashtab_key_t)rt, exp_range);
 	if (rc) {
 		ERR(state->handle, "Out of memory!");
 		goto err;
-
 	}
 
 	return 0;
@@ -1716,8 +1760,7 @@ err:
 	return -1;
 }
 
-static int expand_range_trans(expand_state_t * state,
-			      range_trans_rule_t * rules)
+static int expand_range_trans(expand_state_t *state, range_trans_rule_t *rules)
 {
 	unsigned int i, j, k;
 	range_trans_rule_t *rule;
@@ -1750,12 +1793,11 @@ static int expand_range_trans(expand_state_t * state,
 			/* loop on target type */
 			ebitmap_for_each_positive_bit(&ttypes, tnode, j) {
 				/* loop on target class */
-				ebitmap_for_each_positive_bit(&rule->tclasses, cnode, k) {
-					if (exp_rangetr_helper(i + 1,
-							       j + 1,
-							       k + 1,
-							       &rule->trange,
-							       state)) {
+				ebitmap_for_each_positive_bit(&rule->tclasses,
+							      cnode, k) {
+					if (exp_rangetr_helper(
+						    i + 1, j + 1, k + 1,
+						    &rule->trange, state)) {
 						ebitmap_destroy(&stypes);
 						ebitmap_destroy(&ttypes);
 						return -1;
@@ -1775,9 +1817,8 @@ static int expand_range_trans(expand_state_t * state,
  * If the node does not exist, create it and return it; otherwise
  * return the pre-existing one.
 */
-static avtab_ptr_t find_avtab_node(sepol_handle_t * handle,
-				   avtab_t * avtab, avtab_key_t * key,
-				   cond_av_list_t ** cond,
+static avtab_ptr_t find_avtab_node(sepol_handle_t *handle, avtab_t *avtab,
+				   avtab_key_t *key, cond_av_list_t **cond,
 				   av_extended_perms_t *xperms)
 {
 	avtab_ptr_t node;
@@ -1793,12 +1834,15 @@ static avtab_ptr_t find_avtab_node(sepol_handle_t * handle,
 		} else {
 			node = avtab_search_node(avtab, key);
 			while (node) {
-				if ((node->datum.xperms->specified == xperms->specified) &&
-					(node->datum.xperms->driver == xperms->driver)) {
+				if ((node->datum.xperms->specified ==
+				     xperms->specified) &&
+				    (node->datum.xperms->driver ==
+				     xperms->driver)) {
 					match = 1;
 					break;
 				}
-				node = avtab_search_node_next(node, key->specified);
+				node = avtab_search_node_next(node,
+							      key->specified);
 			}
 			if (!match)
 				node = NULL;
@@ -1823,7 +1867,9 @@ static avtab_ptr_t find_avtab_node(sepol_handle_t * handle,
 		 * AUDITDENY, aka DONTAUDIT, are &= assigned, versus |= for
 		 * others. Initialize the data accordingly.
 		 */
-		avdatum.data = key->specified == AVTAB_AUDITDENY ? ~UINT32_C(0) : UINT32_C(0);
+		avdatum.data = key->specified == AVTAB_AUDITDENY ?
+				       ~UINT32_C(0) :
+				       UINT32_C(0);
 		/* this is used to get the node - insertion is actually unique */
 		node = avtab_insert_nonunique(avtab, key, &avdatum);
 		if (!node) {
@@ -1832,7 +1878,7 @@ static avtab_ptr_t find_avtab_node(sepol_handle_t * handle,
 		}
 		if (cond) {
 			node->parse_context = cond;
-			nl = (cond_av_list_t *) malloc(sizeof(cond_av_list_t));
+			nl = (cond_av_list_t *)malloc(sizeof(cond_av_list_t));
 			if (!nl) {
 				ERR(handle, "Memory error");
 				return NULL;
@@ -1849,20 +1895,20 @@ static avtab_ptr_t find_avtab_node(sepol_handle_t * handle,
 
 static uint32_t avrule_to_avtab_spec(uint32_t specification)
 {
-	return (specification == AVRULE_DONTAUDIT) ?
-		AVTAB_AUDITDENY : specification;
+	return (specification == AVRULE_DONTAUDIT) ? AVTAB_AUDITDENY :
+						     specification;
 }
 
-#define EXPAND_RULE_SUCCESS   1
-#define EXPAND_RULE_CONFLICT  0
-#define EXPAND_RULE_ERROR    -1
+#define EXPAND_RULE_SUCCESS 1
+#define EXPAND_RULE_CONFLICT 0
+#define EXPAND_RULE_ERROR -1
 
-static int expand_terule_helper(sepol_handle_t * handle,
-				policydb_t * p, uint32_t * typemap,
-				uint32_t specified, cond_av_list_t ** cond,
-				cond_av_list_t ** other, uint32_t stype,
-				uint32_t ttype, class_perm_node_t * perms,
-				avtab_t * avtab, int enabled)
+static int expand_terule_helper(sepol_handle_t *handle, policydb_t *p,
+				uint32_t *typemap, uint32_t specified,
+				cond_av_list_t **cond, cond_av_list_t **other,
+				uint32_t stype, uint32_t ttype,
+				class_perm_node_t *perms, avtab_t *avtab,
+				int enabled)
 {
 	avtab_key_t avkey;
 	avtab_datum_t *avdatump;
@@ -1871,8 +1917,9 @@ static int expand_terule_helper(sepol_handle_t * handle,
 	int conflict;
 	uint32_t oldtype = 0;
 
-	if (!(specified & (AVRULE_TRANSITION|AVRULE_MEMBER|AVRULE_CHANGE))) {
-		ERR(handle, "Invalid specification: %"PRIu32, specified);
+	if (!(specified &
+	      (AVRULE_TRANSITION | AVRULE_MEMBER | AVRULE_CHANGE))) {
+		ERR(handle, "Invalid specification: %" PRIu32, specified);
 		return EXPAND_RULE_ERROR;
 	}
 
@@ -1882,8 +1929,8 @@ static int expand_terule_helper(sepol_handle_t * handle,
 
 	cur = perms;
 	while (cur) {
-		uint32_t remapped_data =
-		    typemap ? typemap[cur->data - 1] : cur->data;
+		uint32_t remapped_data = typemap ? typemap[cur->data - 1] :
+						   cur->data;
 		avkey.target_class = cur->tclass;
 
 		conflict = 0;
@@ -1913,14 +1960,12 @@ static int expand_terule_helper(sepol_handle_t * handle,
 			if (oldtype == remapped_data) {
 				/* if the duplicate is inside the same scope (eg., unconditional 
 				 * or in same conditional then ignore it */
-				if ((conflict == 1 && cond == NULL)
-				    || node->parse_context == cond)
+				if ((conflict == 1 && cond == NULL) ||
+				    node->parse_context == cond)
 					return EXPAND_RULE_SUCCESS;
 				ERR(handle, "duplicate TE rule for %s %s:%s %s",
-				    p->p_type_val_to_name[avkey.source_type -
-							  1],
-				    p->p_type_val_to_name[avkey.target_type -
-							  1],
+				    p->p_type_val_to_name[avkey.source_type - 1],
+				    p->p_type_val_to_name[avkey.target_type - 1],
 				    p->p_class_val_to_name[avkey.target_class -
 							   1],
 				    p->p_type_val_to_name[oldtype - 1]);
@@ -1955,15 +2000,15 @@ static int expand_terule_helper(sepol_handle_t * handle,
 }
 
 /* 0 for success -1 indicates failure */
-static int allocate_xperms(sepol_handle_t * handle, avtab_datum_t * avdatump,
-			   av_extended_perms_t * extended_perms)
+static int allocate_xperms(sepol_handle_t *handle, avtab_datum_t *avdatump,
+			   av_extended_perms_t *extended_perms)
 {
 	unsigned int i;
 
 	avtab_extended_perms_t *xperms = avdatump->xperms;
 	if (!xperms) {
-		xperms = (avtab_extended_perms_t *)
-			calloc(1, sizeof(avtab_extended_perms_t));
+		xperms = (avtab_extended_perms_t *)calloc(
+			1, sizeof(avtab_extended_perms_t));
 		if (!xperms) {
 			ERR(handle, "Out of memory!");
 			return -1;
@@ -1992,12 +2037,11 @@ static int allocate_xperms(sepol_handle_t * handle, avtab_datum_t * avdatump,
 	return 0;
 }
 
-static int expand_avrule_helper(sepol_handle_t * handle,
-				uint32_t specified,
-				cond_av_list_t ** cond,
-				uint32_t stype, uint32_t ttype,
-				class_perm_node_t * perms, avtab_t * avtab,
-				int enabled, av_extended_perms_t *extended_perms)
+static int expand_avrule_helper(sepol_handle_t *handle, uint32_t specified,
+				cond_av_list_t **cond, uint32_t stype,
+				uint32_t ttype, class_perm_node_t *perms,
+				avtab_t *avtab, int enabled,
+				av_extended_perms_t *extended_perms)
 {
 	avtab_key_t avkey;
 	avtab_datum_t *avdatump;
@@ -2005,9 +2049,9 @@ static int expand_avrule_helper(sepol_handle_t * handle,
 	class_perm_node_t *cur;
 
 	/* bail early if dontaudit's are disabled and it's a dontaudit rule */
-	if ((specified & (AVRULE_DONTAUDIT|AVRULE_XPERMS_DONTAUDIT))
-	     && handle && handle->disable_dontaudit)
-			return EXPAND_RULE_SUCCESS;
+	if ((specified & (AVRULE_DONTAUDIT | AVRULE_XPERMS_DONTAUDIT)) &&
+	    handle && handle->disable_dontaudit)
+		return EXPAND_RULE_SUCCESS;
 
 	avkey.source_type = stype + 1;
 	avkey.target_type = ttype + 1;
@@ -2017,7 +2061,8 @@ static int expand_avrule_helper(sepol_handle_t * handle,
 	while (cur) {
 		avkey.target_class = cur->tclass;
 
-		node = find_avtab_node(handle, avtab, &avkey, cond, extended_perms);
+		node = find_avtab_node(handle, avtab, &avkey, cond,
+				       extended_perms);
 		if (!node)
 			return EXPAND_RULE_ERROR;
 		if (enabled) {
@@ -2054,7 +2099,8 @@ static int expand_avrule_helper(sepol_handle_t * handle,
 				return EXPAND_RULE_ERROR;
 			break;
 		default:
-			ERR(handle, "Unknown specification: %"PRIu32, specified);
+			ERR(handle, "Unknown specification: %" PRIu32,
+			    specified);
 			return EXPAND_RULE_ERROR;
 		}
 
@@ -2063,12 +2109,11 @@ static int expand_avrule_helper(sepol_handle_t * handle,
 	return EXPAND_RULE_SUCCESS;
 }
 
-static int expand_rule_helper(sepol_handle_t * handle,
-			      policydb_t * p, uint32_t * typemap,
-			      avrule_t * source_rule, avtab_t * dest_avtab,
-			      cond_av_list_t ** cond, cond_av_list_t ** other,
-			      int enabled,
-			      ebitmap_t * stypes, ebitmap_t * ttypes)
+static int expand_rule_helper(sepol_handle_t *handle, policydb_t *p,
+			      uint32_t *typemap, avrule_t *source_rule,
+			      avtab_t *dest_avtab, cond_av_list_t **cond,
+			      cond_av_list_t **other, int enabled,
+			      ebitmap_t *stypes, ebitmap_t *ttypes)
 {
 	unsigned int i, j;
 	int retval;
@@ -2076,33 +2121,39 @@ static int expand_rule_helper(sepol_handle_t * handle,
 
 	ebitmap_for_each_positive_bit(stypes, snode, i) {
 		if (source_rule->flags & RULE_SELF) {
-			if (source_rule->specified & (AVRULE_AV | AVRULE_XPERMS)) {
-				retval = expand_avrule_helper(handle, source_rule->specified,
-							      cond, i, i, source_rule->perms,
-							      dest_avtab, enabled, source_rule->xperms);
+			if (source_rule->specified &
+			    (AVRULE_AV | AVRULE_XPERMS)) {
+				retval = expand_avrule_helper(
+					handle, source_rule->specified, cond, i,
+					i, source_rule->perms, dest_avtab,
+					enabled, source_rule->xperms);
 				if (retval != EXPAND_RULE_SUCCESS)
 					return retval;
 			} else {
-				retval = expand_terule_helper(handle, p, typemap,
-							      source_rule->specified, cond,
-							      other, i, i, source_rule->perms,
-							      dest_avtab, enabled);
+				retval = expand_terule_helper(
+					handle, p, typemap,
+					source_rule->specified, cond, other, i,
+					i, source_rule->perms, dest_avtab,
+					enabled);
 				if (retval != EXPAND_RULE_SUCCESS)
 					return retval;
 			}
 		}
 		ebitmap_for_each_positive_bit(ttypes, tnode, j) {
-			if (source_rule->specified & (AVRULE_AV | AVRULE_XPERMS)) {
-				retval = expand_avrule_helper(handle, source_rule->specified,
-							      cond, i, j, source_rule->perms,
-							      dest_avtab, enabled, source_rule->xperms);
+			if (source_rule->specified &
+			    (AVRULE_AV | AVRULE_XPERMS)) {
+				retval = expand_avrule_helper(
+					handle, source_rule->specified, cond, i,
+					j, source_rule->perms, dest_avtab,
+					enabled, source_rule->xperms);
 				if (retval != EXPAND_RULE_SUCCESS)
 					return retval;
 			} else {
-				retval = expand_terule_helper(handle, p, typemap,
-							      source_rule->specified, cond,
-							      other, i, j, source_rule->perms,
-							      dest_avtab, enabled);
+				retval = expand_terule_helper(
+					handle, p, typemap,
+					source_rule->specified, cond, other, i,
+					j, source_rule->perms, dest_avtab,
+					enabled);
 				if (retval != EXPAND_RULE_SUCCESS)
 					return retval;
 			}
@@ -2118,11 +2169,10 @@ static int expand_rule_helper(sepol_handle_t * handle,
  * success, EXPAND_RULE_CONFLICT if the rule conflicts with something
  * (and hence was not added), or EXPAND_RULE_ERROR on error.
  */
-static int convert_and_expand_rule(sepol_handle_t * handle,
-				   policydb_t * dest_pol, uint32_t * typemap,
-				   avrule_t * source_rule, avtab_t * dest_avtab,
-				   cond_av_list_t ** cond,
-				   cond_av_list_t ** other, int enabled,
+static int convert_and_expand_rule(sepol_handle_t *handle, policydb_t *dest_pol,
+				   uint32_t *typemap, avrule_t *source_rule,
+				   avtab_t *dest_avtab, cond_av_list_t **cond,
+				   cond_av_list_t **other, int enabled,
 				   int do_neverallow)
 {
 	int retval;
@@ -2141,34 +2191,33 @@ static int convert_and_expand_rule(sepol_handle_t * handle,
 	alwaysexpand = ((source_rule->specified & AVRULE_TYPE) ||
 			(source_rule->flags & RULE_SELF));
 
-	if (expand_convert_type_set
-	    (dest_pol, typemap, &source_rule->stypes, &stypes, alwaysexpand))
+	if (expand_convert_type_set(dest_pol, typemap, &source_rule->stypes,
+				    &stypes, alwaysexpand))
 		return EXPAND_RULE_ERROR;
-	if (expand_convert_type_set
-	    (dest_pol, typemap, &source_rule->ttypes, &ttypes, alwaysexpand))
+	if (expand_convert_type_set(dest_pol, typemap, &source_rule->ttypes,
+				    &ttypes, alwaysexpand))
 		return EXPAND_RULE_ERROR;
 
-	retval = expand_rule_helper(handle, dest_pol, typemap,
-				    source_rule, dest_avtab,
-				    cond, other, enabled, &stypes, &ttypes);
+	retval = expand_rule_helper(handle, dest_pol, typemap, source_rule,
+				    dest_avtab, cond, other, enabled, &stypes,
+				    &ttypes);
 	ebitmap_destroy(&stypes);
 	ebitmap_destroy(&ttypes);
 	return retval;
 }
 
-static int cond_avrule_list_copy(policydb_t * dest_pol, avrule_t * source_rules,
-				 avtab_t * dest_avtab, cond_av_list_t ** list,
-				 cond_av_list_t ** other, uint32_t * typemap,
-				 int enabled, expand_state_t * state)
+static int cond_avrule_list_copy(policydb_t *dest_pol, avrule_t *source_rules,
+				 avtab_t *dest_avtab, cond_av_list_t **list,
+				 cond_av_list_t **other, uint32_t *typemap,
+				 int enabled, expand_state_t *state)
 {
 	avrule_t *cur;
 
 	cur = source_rules;
 	while (cur) {
-		if (convert_and_expand_rule(state->handle, dest_pol,
-					    typemap, cur, dest_avtab,
-					    list, other, enabled,
-					    0) != EXPAND_RULE_SUCCESS) {
+		if (convert_and_expand_rule(
+			    state->handle, dest_pol, typemap, cur, dest_avtab,
+			    list, other, enabled, 0) != EXPAND_RULE_SUCCESS) {
 			return -1;
 		}
 
@@ -2178,7 +2227,7 @@ static int cond_avrule_list_copy(policydb_t * dest_pol, avrule_t * source_rules,
 	return 0;
 }
 
-static int cond_node_map_bools(expand_state_t * state, cond_node_t * cn)
+static int cond_node_map_bools(expand_state_t *state, cond_node_t *cn)
 {
 	cond_expr_t *cur;
 	unsigned int i;
@@ -2204,7 +2253,7 @@ static int cond_node_map_bools(expand_state_t * state, cond_node_t * cn)
 /* copy the nodes in *reverse* order -- the result is that the last
  * given conditional appears first in the policy, so as to match the
  * behavior of the upstream compiler */
-static int cond_node_copy(expand_state_t * state, cond_node_t * cn)
+static int cond_node_copy(expand_state_t *state, cond_node_t *cn)
 {
 	cond_node_t *new_cond, *tmp;
 
@@ -2251,22 +2300,22 @@ static int cond_node_copy(expand_state_t * state, cond_node_t * cn)
 	cond_node_destroy(tmp);
 	free(tmp);
 
-	if (cond_avrule_list_copy
-	    (state->out, cn->avtrue_list, &state->out->te_cond_avtab,
-	     &new_cond->true_list, &new_cond->false_list, state->typemap,
-	     new_cond->cur_state, state))
+	if (cond_avrule_list_copy(state->out, cn->avtrue_list,
+				  &state->out->te_cond_avtab,
+				  &new_cond->true_list, &new_cond->false_list,
+				  state->typemap, new_cond->cur_state, state))
 		return -1;
-	if (cond_avrule_list_copy
-	    (state->out, cn->avfalse_list, &state->out->te_cond_avtab,
-	     &new_cond->false_list, &new_cond->true_list, state->typemap,
-	     !new_cond->cur_state, state))
+	if (cond_avrule_list_copy(state->out, cn->avfalse_list,
+				  &state->out->te_cond_avtab,
+				  &new_cond->false_list, &new_cond->true_list,
+				  state->typemap, !new_cond->cur_state, state))
 		return -1;
 
 	return 0;
 }
 
-static int context_copy(context_struct_t * dst, context_struct_t * src,
-			expand_state_t * state)
+static int context_copy(context_struct_t *dst, context_struct_t *src,
+			expand_state_t *state)
 {
 	dst->user = state->usermap[src->user - 1];
 	dst->role = state->rolemap[src->role - 1];
@@ -2312,7 +2361,7 @@ static int ocontext_copy_xen(expand_state_t *state)
 					c->u.ioport.high_ioport;
 				break;
 			case OCON_XEN_IOMEM:
-				n->u.iomem.low_iomem  = c->u.iomem.low_iomem;
+				n->u.iomem.low_iomem = c->u.iomem.low_iomem;
 				n->u.iomem.high_iomem = c->u.iomem.high_iomem;
 				break;
 			case OCON_XEN_PCIDEVICE:
@@ -2331,7 +2380,7 @@ static int ocontext_copy_xen(expand_state_t *state)
 				return -1;
 			}
 			if (context_copy(&n->context[0], &c->context[0],
-				state)) {
+					 state)) {
 				ERR(state->handle, "Out of memory!");
 				return -1;
 			}
@@ -2369,27 +2418,29 @@ static int ocontext_copy_selinux(expand_state_t *state)
 			case OCON_ISID:
 				n->sid[0] = c->sid[0];
 				break;
-			case OCON_FS:	/* FALLTHROUGH */
+			case OCON_FS: /* FALLTHROUGH */
 			case OCON_NETIF:
 				n->u.name = strdup(c->u.name);
 				if (!n->u.name) {
 					ERR(state->handle, "Out of memory!");
 					return -1;
 				}
-				if (context_copy
-				    (&n->context[1], &c->context[1], state)) {
+				if (context_copy(&n->context[1], &c->context[1],
+						 state)) {
 					ERR(state->handle, "Out of memory!");
 					return -1;
 				}
 				break;
 			case OCON_IBPKEY:
-				n->u.ibpkey.subnet_prefix = c->u.ibpkey.subnet_prefix;
+				n->u.ibpkey.subnet_prefix =
+					c->u.ibpkey.subnet_prefix;
 
 				n->u.ibpkey.low_pkey = c->u.ibpkey.low_pkey;
 				n->u.ibpkey.high_pkey = c->u.ibpkey.high_pkey;
-			break;
+				break;
 			case OCON_IBENDPORT:
-				n->u.ibendport.dev_name = strdup(c->u.ibendport.dev_name);
+				n->u.ibendport.dev_name =
+					strdup(c->u.ibendport.dev_name);
 				if (!n->u.ibendport.dev_name) {
 					ERR(state->handle, "Out of memory!");
 					return -1;
@@ -2424,7 +2475,8 @@ static int ocontext_copy_selinux(expand_state_t *state)
 				ERR(state->handle, "Unknown ocontext");
 				return -1;
 			}
-			if (context_copy(&n->context[0], &c->context[0], state)) {
+			if (context_copy(&n->context[0], &c->context[0],
+					 state)) {
 				ERR(state->handle, "Out of memory!");
 				return -1;
 			}
@@ -2450,7 +2502,7 @@ static int ocontext_copy(expand_state_t *state, uint32_t target)
 	return rc;
 }
 
-static int genfs_copy(expand_state_t * state)
+static int genfs_copy(expand_state_t *state)
 {
 	ocontext_t *c, *newc, *l;
 	genfs_t *genfs, *newgenfs, *end;
@@ -2501,9 +2553,8 @@ static int genfs_copy(expand_state_t * state)
 	return 0;
 }
 
-static int type_attr_map(hashtab_key_t key
-			 __attribute__ ((unused)), hashtab_datum_t datum,
-			 void *ptr)
+static int type_attr_map(hashtab_key_t key __attribute__((unused)),
+			 hashtab_datum_t datum, void *ptr)
 {
 	type_datum_t *type;
 	expand_state_t *state = ptr;
@@ -2512,27 +2563,31 @@ static int type_attr_map(hashtab_key_t key
 	ebitmap_node_t *tnode;
 	uint32_t value;
 
-	type = (type_datum_t *) datum;
+	type = (type_datum_t *)datum;
 	value = type->s.value;
 
 	if (type->flavor == TYPE_ATTRIB) {
 		if (!(type->flags & TYPE_FLAGS_EXPAND_ATTR_TRUE)) {
-			if (ebitmap_cpy(&p->attr_type_map[value - 1], &type->types)) {
+			if (ebitmap_cpy(&p->attr_type_map[value - 1],
+					&type->types)) {
 				goto oom;
 			}
 			ebitmap_for_each_positive_bit(&type->types, tnode, i) {
-				if (ebitmap_set_bit(&p->type_attr_map[i], value - 1, 1)) {
+				if (ebitmap_set_bit(&p->type_attr_map[i],
+						    value - 1, 1)) {
 					goto oom;
 				}
 			}
 		} else {
 			/* Attribute is being expanded, so remove */
-			if (ebitmap_set_bit(&p->type_attr_map[value - 1], value - 1, 0)) {
+			if (ebitmap_set_bit(&p->type_attr_map[value - 1],
+					    value - 1, 0)) {
 				goto oom;
 			}
 		}
 	} else {
-		if (ebitmap_set_bit(&p->attr_type_map[value - 1], value - 1, 1)) {
+		if (ebitmap_set_bit(&p->attr_type_map[value - 1], value - 1,
+				    1)) {
 			goto oom;
 		}
 	}
@@ -2547,9 +2602,8 @@ oom:
 /* converts typeset using typemap and expands into ebitmap_t types using the attributes in the passed in policy.
  * this should not be called until after all the blocks have been processed and the attributes in target policy
  * are complete. */
-int expand_convert_type_set(policydb_t * p, uint32_t * typemap,
-			    type_set_t * set, ebitmap_t * types,
-			    unsigned char alwaysexpand)
+int expand_convert_type_set(policydb_t *p, uint32_t *typemap, type_set_t *set,
+			    ebitmap_t *types, unsigned char alwaysexpand)
 {
 	type_set_t tmpset;
 
@@ -2574,16 +2628,15 @@ int expand_convert_type_set(policydb_t * p, uint32_t * typemap,
 /* Expand a rule into a given avtab - checking for conflicting type
  * rules.  Return 1 on success, 0 if the rule conflicts with something
  * (and hence was not added), or -1 on error. */
-int expand_rule(sepol_handle_t * handle,
-		policydb_t * source_pol,
-		avrule_t * source_rule, avtab_t * dest_avtab,
-		cond_av_list_t ** cond, cond_av_list_t ** other, int enabled)
+int expand_rule(sepol_handle_t *handle, policydb_t *source_pol,
+		avrule_t *source_rule, avtab_t *dest_avtab,
+		cond_av_list_t **cond, cond_av_list_t **other, int enabled)
 {
 	int retval;
 	ebitmap_t stypes, ttypes;
 
-	if ((source_rule->specified & AVRULE_NEVERALLOW)
-		|| (source_rule->specified & AVRULE_XPERMS_NEVERALLOW))
+	if ((source_rule->specified & AVRULE_NEVERALLOW) ||
+	    (source_rule->specified & AVRULE_XPERMS_NEVERALLOW))
 		return 1;
 
 	ebitmap_init(&stypes);
@@ -2593,9 +2646,9 @@ int expand_rule(sepol_handle_t * handle,
 		return -1;
 	if (type_set_expand(&source_rule->ttypes, &ttypes, source_pol, 1))
 		return -1;
-	retval = expand_rule_helper(handle, source_pol, NULL,
-				    source_rule, dest_avtab,
-				    cond, other, enabled, &stypes, &ttypes);
+	retval = expand_rule_helper(handle, source_pol, NULL, source_rule,
+				    dest_avtab, cond, other, enabled, &stypes,
+				    &ttypes);
 	ebitmap_destroy(&stypes);
 	ebitmap_destroy(&ttypes);
 	return retval;
@@ -2609,7 +2662,8 @@ int expand_rule(sepol_handle_t * handle,
  * the regular role belongs to could be properly handled by
  * copy_role_trans and copy_role_allow.
  */
-int role_set_expand(role_set_t * x, ebitmap_t * r, policydb_t * out, __attribute__ ((unused)) policydb_t * base, uint32_t * rolemap)
+int role_set_expand(role_set_t *x, ebitmap_t *r, policydb_t *out,
+		    __attribute__((unused)) policydb_t *base, uint32_t *rolemap)
 {
 	unsigned int i;
 	ebitmap_node_t *rnode;
@@ -2628,7 +2682,7 @@ int role_set_expand(role_set_t * x, ebitmap_t * r, policydb_t * out, __attribute
 
 	ebitmap_init(&mapped_roles);
 	ebitmap_init(&roles);
-	
+
 	if (rolemap) {
 		if (map_ebitmap(&x->roles, &mapped_roles, rolemap))
 			goto bad;
@@ -2683,15 +2737,16 @@ bad:
  * - if the type set has a negset or flags, then they will be expanded,
  * - otherwise, they will not be expanded.
  */
-int type_set_expand(type_set_t * set, ebitmap_t * t, policydb_t * p,
+int type_set_expand(type_set_t *set, ebitmap_t *t, policydb_t *p,
 		    unsigned char alwaysexpand)
 {
 	unsigned int i;
 	ebitmap_t types, neg_types;
 	ebitmap_node_t *tnode;
-	unsigned char expand = alwaysexpand || !ebitmap_is_empty(&set->negset) || set->flags;
+	unsigned char expand = alwaysexpand ||
+			       !ebitmap_is_empty(&set->negset) || set->flags;
 	type_datum_t *type;
-	int rc =-1;
+	int rc = -1;
 
 	ebitmap_init(&types);
 	ebitmap_init(t);
@@ -2728,9 +2783,8 @@ int type_set_expand(type_set_t * set, ebitmap_t * t, policydb_t * p,
 	ebitmap_for_each_positive_bit(&set->negset, tnode, i) {
 		if (p->type_val_to_struct[i] &&
 		    p->type_val_to_struct[i]->flavor == TYPE_ATTRIB) {
-			if (ebitmap_union
-			    (&neg_types,
-			     &p->type_val_to_struct[i]->types)) {
+			if (ebitmap_union(&neg_types,
+					  &p->type_val_to_struct[i]->types)) {
 				goto err_neg;
 			}
 		} else {
@@ -2777,19 +2831,19 @@ int type_set_expand(type_set_t * set, ebitmap_t * t, policydb_t * p,
 		}
 	}
 
-	  out:
+out:
 	rc = 0;
 
-	  err_neg:
+err_neg:
 	ebitmap_destroy(&neg_types);
-	  err_types:
+err_types:
 	ebitmap_destroy(&types);
 
 	return rc;
 }
 
-static int copy_neverallow(policydb_t * dest_pol, uint32_t * typemap,
-			   avrule_t * source_rule)
+static int copy_neverallow(policydb_t *dest_pol, uint32_t *typemap,
+			   avrule_t *source_rule)
 {
 	ebitmap_t stypes, ttypes;
 	avrule_t *avrule;
@@ -2799,14 +2853,14 @@ static int copy_neverallow(policydb_t * dest_pol, uint32_t * typemap,
 	ebitmap_init(&stypes);
 	ebitmap_init(&ttypes);
 
-	if (expand_convert_type_set
-	    (dest_pol, typemap, &source_rule->stypes, &stypes, 1))
+	if (expand_convert_type_set(dest_pol, typemap, &source_rule->stypes,
+				    &stypes, 1))
 		return -1;
-	if (expand_convert_type_set
-	    (dest_pol, typemap, &source_rule->ttypes, &ttypes, 1))
+	if (expand_convert_type_set(dest_pol, typemap, &source_rule->ttypes,
+				    &ttypes, 1))
 		return -1;
 
-	avrule = (avrule_t *) malloc(sizeof(avrule_t));
+	avrule = (avrule_t *)malloc(sizeof(avrule_t));
 	if (!avrule)
 		return -1;
 
@@ -2831,7 +2885,7 @@ static int copy_neverallow(policydb_t * dest_pol, uint32_t * typemap,
 	tail_perm = NULL;
 	while (cur_perm) {
 		new_perm =
-		    (class_perm_node_t *) malloc(sizeof(class_perm_node_t));
+			(class_perm_node_t *)malloc(sizeof(class_perm_node_t));
 		if (!new_perm)
 			goto err;
 		class_perm_node_init(new_perm);
@@ -2855,7 +2909,8 @@ static int copy_neverallow(policydb_t * dest_pol, uint32_t * typemap,
 		xperms = calloc(1, sizeof(av_extended_perms_t));
 		if (!xperms)
 			goto err;
-		memcpy(xperms, source_rule->xperms, sizeof(av_extended_perms_t));
+		memcpy(xperms, source_rule->xperms,
+		       sizeof(av_extended_perms_t));
 		avrule->xperms = xperms;
 	}
 
@@ -2873,7 +2928,7 @@ static int copy_neverallow(policydb_t * dest_pol, uint32_t * typemap,
 
 	return 0;
 
-      err:
+err:
 	ebitmap_destroy(&stypes);
 	ebitmap_destroy(&ttypes);
 	ebitmap_destroy(&avrule->stypes.types);
@@ -2895,21 +2950,21 @@ static int copy_neverallow(policydb_t * dest_pol, uint32_t * typemap,
  * other AV rules are expanded.  If neverallow rules are expanded, they are not
  * copied, otherwise they are copied for later use by the assertion checker.
  */
-static int copy_and_expand_avrule_block(expand_state_t * state)
+static int copy_and_expand_avrule_block(expand_state_t *state)
 {
 	avrule_block_t *curblock = state->base->global;
 	avrule_block_t *prevblock;
 	int retval = -1;
 
 	if (avtab_alloc(&state->out->te_avtab, MAX_AVTAB_SIZE)) {
- 		ERR(state->handle, "Out of Memory!");
- 		return -1;
- 	}
- 
- 	if (avtab_alloc(&state->out->te_cond_avtab, MAX_AVTAB_SIZE)) {
- 		ERR(state->handle, "Out of Memory!");
- 		return -1;
- 	}
+		ERR(state->handle, "Out of Memory!");
+		return -1;
+	}
+
+	if (avtab_alloc(&state->out->te_cond_avtab, MAX_AVTAB_SIZE)) {
+		ERR(state->handle, "Out of Memory!");
+		return -1;
+	}
 
 	while (curblock) {
 		avrule_decl_t *decl = curblock->enabled;
@@ -2936,21 +2991,25 @@ static int copy_and_expand_avrule_block(expand_state_t * state)
 		/* copy rules */
 		cur_avrule = decl->avrules;
 		while (cur_avrule != NULL) {
-			if (!(state->expand_neverallow)
-			    && cur_avrule->specified & (AVRULE_NEVERALLOW | AVRULE_XPERMS_NEVERALLOW)) {
+			if (!(state->expand_neverallow) &&
+			    cur_avrule->specified &
+				    (AVRULE_NEVERALLOW |
+				     AVRULE_XPERMS_NEVERALLOW)) {
 				/* copy this over directly so that assertions are checked later */
-				if (copy_neverallow
-				    (state->out, state->typemap, cur_avrule))
+				if (copy_neverallow(state->out, state->typemap,
+						    cur_avrule))
 					ERR(state->handle,
 					    "Error while copying neverallow.");
 			} else {
-				if (cur_avrule->specified & (AVRULE_NEVERALLOW | AVRULE_XPERMS_NEVERALLOW))
+				if (cur_avrule->specified &
+				    (AVRULE_NEVERALLOW |
+				     AVRULE_XPERMS_NEVERALLOW))
 					state->out->unsupported_format = 1;
-				if (convert_and_expand_rule
-				    (state->handle, state->out, state->typemap,
-				     cur_avrule, &state->out->te_avtab, NULL,
-				     NULL, 0,
-				     state->expand_neverallow) !=
+				if (convert_and_expand_rule(
+					    state->handle, state->out,
+					    state->typemap, cur_avrule,
+					    &state->out->te_avtab, NULL, NULL,
+					    0, state->expand_neverallow) !=
 				    EXPAND_RULE_SUCCESS) {
 					goto cleanup;
 				}
@@ -2962,7 +3021,7 @@ static int copy_and_expand_avrule_block(expand_state_t * state)
 		if (cond_node_copy(state, decl->cond_list))
 			goto cleanup;
 
-      cont:
+cont:
 		prevblock = curblock;
 		curblock = curblock->next;
 
@@ -2977,7 +3036,7 @@ static int copy_and_expand_avrule_block(expand_state_t * state)
 
 	retval = 0;
 
-      cleanup:
+cleanup:
 	return retval;
 }
 
@@ -2986,10 +3045,9 @@ static int copy_and_expand_avrule_block(expand_state_t * state)
  * expand only the avrules and optionally perform expansion of neverallow rules
  * or expand into the same policy for analysis purposes.
  */
-int expand_module_avrules(sepol_handle_t * handle, policydb_t * base,
-			  policydb_t * out, uint32_t * typemap,
-			  uint32_t * boolmap, uint32_t * rolemap,
-			  uint32_t * usermap, int verbose,
+int expand_module_avrules(sepol_handle_t *handle, policydb_t *base,
+			  policydb_t *out, uint32_t *typemap, uint32_t *boolmap,
+			  uint32_t *rolemap, uint32_t *usermap, int verbose,
 			  int expand_neverallow)
 {
 	expand_state_t state;
@@ -3051,11 +3109,14 @@ static void discard_tunables(sepol_handle_t *sh, policydb_t *pol)
 			     cur_expr = cur_expr->next) {
 				if (cur_expr->expr_type != COND_BOOL)
 					continue;
-				booldatum = pol->bool_val_to_struct[cur_expr->boolean - 1];
-				if (booldatum->flags & COND_BOOL_FLAGS_TUNABLE) {
+				booldatum = pol->bool_val_to_struct
+						    [cur_expr->boolean - 1];
+				if (booldatum->flags &
+				    COND_BOOL_FLAGS_TUNABLE) {
 					tunables++;
 					if (preserve_tunables)
-						booldatum->flags &= ~COND_BOOL_FLAGS_TUNABLE;
+						booldatum->flags &=
+							~COND_BOOL_FLAGS_TUNABLE;
 				} else {
 					booleans++;
 				}
@@ -3072,7 +3133,8 @@ static void discard_tunables(sepol_handle_t *sh, policydb_t *pol)
 				cur_node->flags &= ~COND_NODE_FLAGS_TUNABLE;
 			} else {
 				cur_node->flags |= COND_NODE_FLAGS_TUNABLE;
-				cur_state = cond_evaluate_expr(pol, cur_node->expr);
+				cur_state =
+					cond_evaluate_expr(pol, cur_node->expr);
 				if (cur_state == -1) {
 					printf("Expression result was "
 					       "undefined, skipping all"
@@ -3081,7 +3143,8 @@ static void discard_tunables(sepol_handle_t *sh, policydb_t *pol)
 				}
 
 				to_be_appended = (cur_state == 1) ?
-					cur_node->avtrue_list : cur_node->avfalse_list;
+							 cur_node->avtrue_list :
+							 cur_node->avfalse_list;
 
 				if (tail)
 					tail->next = to_be_appended;
@@ -3109,8 +3172,8 @@ static void discard_tunables(sepol_handle_t *sh, policydb_t *pol)
  * the base passed in should be indexed and avrule blocks should be 
  * enabled.
  */
-int expand_module(sepol_handle_t * handle,
-		  policydb_t * base, policydb_t * out, int verbose, int check)
+int expand_module(sepol_handle_t *handle, policydb_t *base, policydb_t *out,
+		  int verbose, int check)
 {
 	int retval = -1;
 	unsigned int i;
@@ -3163,26 +3226,28 @@ int expand_module(sepol_handle_t * handle,
 		goto cleanup;
 	}
 
-	if ((state.typemap =
-	     (uint32_t *) calloc(state.base->p_types.nprim,
-				 sizeof(uint32_t))) == NULL) {
+	if ((state.typemap = (uint32_t *)calloc(state.base->p_types.nprim,
+						sizeof(uint32_t))) == NULL) {
 		ERR(handle, "Out of memory!");
 		goto cleanup;
 	}
 
-	state.boolmap = (uint32_t *)calloc(state.base->p_bools.nprim, sizeof(uint32_t));
+	state.boolmap =
+		(uint32_t *)calloc(state.base->p_bools.nprim, sizeof(uint32_t));
 	if (!state.boolmap) {
 		ERR(handle, "Out of memory!");
 		goto cleanup;
 	}
 
-	state.rolemap = (uint32_t *)calloc(state.base->p_roles.nprim, sizeof(uint32_t));
+	state.rolemap =
+		(uint32_t *)calloc(state.base->p_roles.nprim, sizeof(uint32_t));
 	if (!state.rolemap) {
 		ERR(handle, "Out of memory!");
 		goto cleanup;
 	}
 
-	state.usermap = (uint32_t *)calloc(state.base->p_users.nprim, sizeof(uint32_t));
+	state.usermap =
+		(uint32_t *)calloc(state.base->p_users.nprim, sizeof(uint32_t));
 	if (!state.usermap) {
 		ERR(handle, "Out of memory!");
 		goto cleanup;
@@ -3198,18 +3263,22 @@ int expand_module(sepol_handle_t * handle,
 		goto cleanup;
 	if (hashtab_map(state.base->p_types.table, alias_copy_callback, &state))
 		goto cleanup;
-	if (hashtab_map(state.base->p_types.table, type_bounds_copy_callback, &state))
+	if (hashtab_map(state.base->p_types.table, type_bounds_copy_callback,
+			&state))
 		goto cleanup;
-	if (hashtab_map(state.base->p_types.table, attr_convert_callback, &state))
+	if (hashtab_map(state.base->p_types.table, attr_convert_callback,
+			&state))
 		goto cleanup;
 	for (curblock = state.base->global; curblock != NULL;
 	     curblock = curblock->next) {
 		avrule_decl_t *decl = curblock->enabled;
 		if (decl == NULL)
 			continue;
-		if (hashtab_map(decl->p_types.table, attr_convert_callback, &state))
+		if (hashtab_map(decl->p_types.table, attr_convert_callback,
+				&state))
 			goto cleanup;
-		if (hashtab_map(decl->p_types.table, type_bounds_copy_callback, &state))
+		if (hashtab_map(decl->p_types.table, type_bounds_copy_callback,
+				&state))
 			goto cleanup;
 	}
 	/* Expand any attributes in each attributes' types ebitmap */
@@ -3218,15 +3287,15 @@ int expand_module(sepol_handle_t * handle,
 	}
 
 	/* copy commons */
-	if (hashtab_map
-	    (state.base->p_commons.table, common_copy_callback, &state)) {
+	if (hashtab_map(state.base->p_commons.table, common_copy_callback,
+			&state)) {
 		goto cleanup;
 	}
 
 	/* copy classes, note, this does not copy constraints, constraints can't be
 	 * copied until after all the blocks have been processed and attributes are complete */
-	if (hashtab_map
-	    (state.base->p_classes.table, class_copy_callback, &state)) {
+	if (hashtab_map(state.base->p_classes.table, class_copy_callback,
+			&state)) {
 		goto cleanup;
 	}
 
@@ -3242,26 +3311,34 @@ int expand_module(sepol_handle_t * handle,
 	/* Needed for evaluating role attributes and the types for each role */
 	if (policydb_index_others(handle, out, verbose))
 		goto cleanup;
-	if (hashtab_map(state.base->p_roles.table, role_bounds_copy_callback, &state))
+	if (hashtab_map(state.base->p_roles.table, role_bounds_copy_callback,
+			&state))
 		goto cleanup;
-	if (hashtab_map(state.base->p_roles.table, role_dominates_copy_callback, &state))
+	if (hashtab_map(state.base->p_roles.table, role_dominates_copy_callback,
+			&state))
 		goto cleanup;
-	if (hashtab_map(state.base->p_roles.table, role_types_copy_callback, &state))
+	if (hashtab_map(state.base->p_roles.table, role_types_copy_callback,
+			&state))
 		goto cleanup;
-	if (hashtab_map(state.base->p_roles.table, role_roles_copy_callback, &state))
+	if (hashtab_map(state.base->p_roles.table, role_roles_copy_callback,
+			&state))
 		goto cleanup;
 	for (curblock = state.base->global; curblock != NULL;
 	     curblock = curblock->next) {
 		avrule_decl_t *decl = curblock->enabled;
 		if (decl == NULL)
 			continue;
-		if (hashtab_map(decl->p_roles.table, role_bounds_copy_callback, &state))
+		if (hashtab_map(decl->p_roles.table, role_bounds_copy_callback,
+				&state))
 			goto cleanup;
-		if (hashtab_map(decl->p_roles.table, role_dominates_copy_callback, &state))
+		if (hashtab_map(decl->p_roles.table,
+				role_dominates_copy_callback, &state))
 			goto cleanup;
-		if (hashtab_map(decl->p_roles.table, role_types_copy_callback, &state))
+		if (hashtab_map(decl->p_roles.table, role_types_copy_callback,
+				&state))
 			goto cleanup;
-		if (hashtab_map(decl->p_roles.table, role_roles_copy_callback, &state))
+		if (hashtab_map(decl->p_roles.table, role_roles_copy_callback,
+				&state))
 			goto cleanup;
 	}
 	/* Expand any role attributes found in the roles ebitmap of each role attribute */
@@ -3296,16 +3373,19 @@ int expand_module(sepol_handle_t * handle,
 	/* copy users */
 	if (hashtab_map(state.base->p_users.table, user_copy_callback, &state))
 		goto cleanup;
-	if (hashtab_map(state.base->p_users.table, user_bounds_copy_callback, &state))
+	if (hashtab_map(state.base->p_users.table, user_bounds_copy_callback,
+			&state))
 		goto cleanup;
 	for (curblock = state.base->global; curblock != NULL;
 	     curblock = curblock->next) {
 		avrule_decl_t *decl = curblock->enabled;
 		if (decl == NULL)
 			continue;
-		if (hashtab_map(decl->p_users.table, user_copy_callback, &state))
+		if (hashtab_map(decl->p_users.table, user_copy_callback,
+				&state))
 			goto cleanup;
-		if (hashtab_map(decl->p_users.table, user_bounds_copy_callback, &state))
+		if (hashtab_map(decl->p_users.table, user_bounds_copy_callback,
+				&state))
 			goto cleanup;
 	}
 
@@ -3328,8 +3408,8 @@ int expand_module(sepol_handle_t * handle,
 	}
 
 	/* copy constraints */
-	if (hashtab_map
-	    (state.base->p_classes.table, constraint_copy_callback, &state)) {
+	if (hashtab_map(state.base->p_classes.table, constraint_copy_callback,
+			&state)) {
 		goto cleanup;
 	}
 
@@ -3346,10 +3426,10 @@ int expand_module(sepol_handle_t * handle,
 		goto cleanup;
 
 	/* Build the type<->attribute maps and remove attributes. */
-	state.out->attr_type_map = calloc(state.out->p_types.nprim,
-					  sizeof(ebitmap_t));
-	state.out->type_attr_map = calloc(state.out->p_types.nprim,
-					  sizeof(ebitmap_t));
+	state.out->attr_type_map =
+		calloc(state.out->p_types.nprim, sizeof(ebitmap_t));
+	state.out->type_attr_map =
+		calloc(state.out->p_types.nprim, sizeof(ebitmap_t));
 	if (!state.out->attr_type_map || !state.out->type_attr_map) {
 		ERR(handle, "Out of memory!");
 		goto cleanup;
@@ -3367,15 +3447,14 @@ int expand_module(sepol_handle_t * handle,
 		if (hierarchy_check_constraints(handle, state.out))
 			goto cleanup;
 
-		if (check_assertions
-		    (handle, state.out,
-		     state.out->global->branch_list->avrules))
-			 goto cleanup;
+		if (check_assertions(handle, state.out,
+				     state.out->global->branch_list->avrules))
+			goto cleanup;
 	}
 
 	retval = 0;
 
-      cleanup:
+cleanup:
 	free(state.typemap);
 	free(state.boolmap);
 	free(state.rolemap);
@@ -3383,7 +3462,7 @@ int expand_module(sepol_handle_t * handle,
 	return retval;
 }
 
-static int expand_avtab_insert(avtab_t * a, avtab_key_t * k, avtab_datum_t * d)
+static int expand_avtab_insert(avtab_t *a, avtab_key_t *k, avtab_datum_t *d)
 {
 	avtab_ptr_t node;
 	avtab_datum_t *avd;
@@ -3398,8 +3477,9 @@ static int expand_avtab_insert(avtab_t * a, avtab_key_t * k, avtab_datum_t * d)
 		 */
 		node = avtab_search_node(a, k);
 		while (node) {
-			if ((node->datum.xperms->specified == d->xperms->specified) &&
-				(node->datum.xperms->driver == d->xperms->driver)) {
+			if ((node->datum.xperms->specified ==
+			     d->xperms->specified) &&
+			    (node->datum.xperms->driver == d->xperms->driver)) {
 				match = 1;
 				break;
 			}
@@ -3412,7 +3492,7 @@ static int expand_avtab_insert(avtab_t * a, avtab_key_t * k, avtab_datum_t * d)
 	}
 
 	if (!node || ((k->specified & AVTAB_ENABLED) !=
-			(node->key.specified & AVTAB_ENABLED))) {
+		      (node->key.specified & AVTAB_ENABLED))) {
 		node = avtab_insert_nonunique(a, k, d);
 		if (!node) {
 			ERR(NULL, "Out of memory!");
@@ -3448,10 +3528,9 @@ static int expand_avtab_insert(avtab_t * a, avtab_key_t * k, avtab_datum_t * d)
 struct expand_avtab_data {
 	avtab_t *expa;
 	policydb_t *p;
-
 };
 
-static int expand_avtab_node(avtab_key_t * k, avtab_datum_t * d, void *args)
+static int expand_avtab_node(avtab_key_t *k, avtab_datum_t *d, void *args)
 {
 	struct expand_avtab_data *ptr = args;
 	avtab_t *expa = ptr->expa;
@@ -3468,7 +3547,8 @@ static int expand_avtab_node(avtab_key_t * k, avtab_datum_t * d, void *args)
 	newkey.target_class = k->target_class;
 	newkey.specified = k->specified;
 
-	if (stype && ttype && stype->flavor != TYPE_ATTRIB && ttype->flavor != TYPE_ATTRIB) {
+	if (stype && ttype && stype->flavor != TYPE_ATTRIB &&
+	    ttype->flavor != TYPE_ATTRIB) {
 		/* Both are individual types, no expansion required. */
 		return expand_avtab_insert(expa, k, d);
 	}
@@ -3511,7 +3591,7 @@ static int expand_avtab_node(avtab_key_t * k, avtab_datum_t * d, void *args)
 	return 0;
 }
 
-int expand_avtab(policydb_t * p, avtab_t * a, avtab_t * expa)
+int expand_avtab(policydb_t *p, avtab_t *a, avtab_t *expa)
 {
 	struct expand_avtab_data data;
 
@@ -3525,25 +3605,23 @@ int expand_avtab(policydb_t * p, avtab_t * a, avtab_t * expa)
 	return avtab_map(a, expand_avtab_node, &data);
 }
 
-static int expand_cond_insert(cond_av_list_t ** l,
-			      avtab_t * expa,
-			      avtab_key_t * k, avtab_datum_t * d)
+static int expand_cond_insert(cond_av_list_t **l, avtab_t *expa, avtab_key_t *k,
+			      avtab_datum_t *d)
 {
 	avtab_ptr_t node;
 	avtab_datum_t *avd;
 	cond_av_list_t *nl;
 
 	node = avtab_search_node(expa, k);
-	if (!node ||
-	    (k->specified & AVTAB_ENABLED) !=
-	    (node->key.specified & AVTAB_ENABLED)) {
+	if (!node || (k->specified & AVTAB_ENABLED) !=
+			     (node->key.specified & AVTAB_ENABLED)) {
 		node = avtab_insert_nonunique(expa, k, d);
 		if (!node) {
 			ERR(NULL, "Out of memory!");
 			return -1;
 		}
 		node->parse_context = (void *)1;
-		nl = (cond_av_list_t *) malloc(sizeof(*nl));
+		nl = (cond_av_list_t *)malloc(sizeof(*nl));
 		if (!nl) {
 			ERR(NULL, "Out of memory!");
 			return -1;
@@ -3572,9 +3650,8 @@ static int expand_cond_insert(cond_av_list_t ** l,
 	return 0;
 }
 
-static int expand_cond_av_node(policydb_t * p,
-			       avtab_ptr_t node,
-			       cond_av_list_t ** newl, avtab_t * expa)
+static int expand_cond_av_node(policydb_t *p, avtab_ptr_t node,
+			       cond_av_list_t **newl, avtab_t *expa)
 {
 	avtab_key_t *k = &node->key;
 	avtab_datum_t *d = &node->datum;
@@ -3590,7 +3667,8 @@ static int expand_cond_av_node(policydb_t * p,
 	newkey.target_class = k->target_class;
 	newkey.specified = k->specified;
 
-	if (stype && ttype && stype->flavor != TYPE_ATTRIB && ttype->flavor != TYPE_ATTRIB) {
+	if (stype && ttype && stype->flavor != TYPE_ATTRIB &&
+	    ttype->flavor != TYPE_ATTRIB) {
 		/* Both are individual types, no expansion required. */
 		return expand_cond_insert(newl, expa, k, d);
 	}
@@ -3633,8 +3711,8 @@ static int expand_cond_av_node(policydb_t * p,
 	return 0;
 }
 
-int expand_cond_av_list(policydb_t * p, cond_av_list_t * l,
-			cond_av_list_t ** newl, avtab_t * expa)
+int expand_cond_av_list(policydb_t *p, cond_av_list_t *l, cond_av_list_t **newl,
+			avtab_t *expa)
 {
 	cond_av_list_t *cur;
 	avtab_ptr_t node;

@@ -60,9 +60,8 @@ static int type_vec_append(struct type_vec *v, uint32_t type)
 {
 	if (v->capacity == v->count) {
 		unsigned int new_capacity = v->capacity * 2;
-		uint32_t *new_types = reallocarray(v->types,
-						   new_capacity,
-						   sizeof(*v->types));
+		uint32_t *new_types =
+			reallocarray(v->types, new_capacity, sizeof(*v->types));
 		if (!new_types)
 			return -1;
 
@@ -109,8 +108,8 @@ static struct type_vec *build_type_map(const policydb_t *p)
 			continue;
 
 		if (p->type_val_to_struct[i]->flavor != TYPE_ATTRIB) {
-			ebitmap_for_each_positive_bit(&p->type_attr_map[i],
-						      n, k) {
+			ebitmap_for_each_positive_bit(&p->type_attr_map[i], n,
+						      k) {
 				if (type_vec_append(&map[i], k))
 					goto err;
 			}
@@ -120,7 +119,9 @@ static struct type_vec *build_type_map(const policydb_t *p)
 			for (k = 0; k < p->p_types.nprim; k++) {
 				const ebitmap_t *types_k;
 
-				if (!p->type_val_to_struct[k] || p->type_val_to_struct[k]->flavor != TYPE_ATTRIB)
+				if (!p->type_val_to_struct[k] ||
+				    p->type_val_to_struct[k]->flavor !=
+					    TYPE_ATTRIB)
 					continue;
 
 				types_k = &p->attr_type_map[k];
@@ -161,8 +162,8 @@ static int process_xperms(uint32_t *p1, const uint32_t *p2)
 	return ret;
 }
 
-static int process_avtab_datum(uint16_t specified,
-			       avtab_datum_t *d1, const avtab_datum_t *d2)
+static int process_avtab_datum(uint16_t specified, avtab_datum_t *d1,
+			       const avtab_datum_t *d2)
 {
 	/* inverse logic needed for AUDITDENY rules */
 	if (specified & AVTAB_AUDITDENY)
@@ -189,8 +190,8 @@ static int process_avtab_datum(uint16_t specified,
 
 			if (x2->specified == AVTAB_XPERMS_IOCTLDRIVER)
 				return process_xperms(x1->perms, x2->perms);
-		} else if (x1->specified == AVTAB_XPERMS_NLMSG
-				&& x2->specified == AVTAB_XPERMS_NLMSG) {
+		} else if (x1->specified == AVTAB_XPERMS_NLMSG &&
+			   x2->specified == AVTAB_XPERMS_NLMSG) {
 			if (x1->driver != x2->driver)
 				return 0;
 			return process_xperms(x1->perms, x2->perms);
@@ -211,14 +212,14 @@ static int is_avrule_redundant(avtab_ptr_t entry, avtab_t *tab,
 	avtab_key_t key;
 
 	/* we only care about AV rules */
-	if (!(entry->key.specified & (AVTAB_AV|AVTAB_XPERMS)))
+	if (!(entry->key.specified & (AVTAB_AV | AVTAB_XPERMS)))
 		return 0;
 
 	s_idx = entry->key.source_type - 1;
 	t_idx = entry->key.target_type - 1;
 
 	key.target_class = entry->key.target_class;
-	key.specified    = entry->key.specified;
+	key.specified = entry->key.specified;
 
 	d1 = &entry->datum;
 
@@ -265,7 +266,7 @@ static int is_cond_rule_redundant(avtab_ptr_t e1, cond_av_list_t *list,
 	unsigned int s1, t1, c1, k1, s2, t2, c2, k2;
 
 	/* we only care about AV rules */
-	if (!(e1->key.specified & (AVTAB_AV|AVTAB_XPERMS)))
+	if (!(e1->key.specified & (AVTAB_AV | AVTAB_XPERMS)))
 		return 0;
 
 	s1 = e1->key.source_type - 1;
@@ -326,7 +327,8 @@ static void optimize_avtab(policydb_t *p, const struct type_vec *type_map)
 
 /* find redundant rules in (*cond) and put them into (*del) */
 static void optimize_cond_av_list(cond_av_list_t **cond, cond_av_list_t **del,
-				  policydb_t *p, const struct type_vec *type_map)
+				  policydb_t *p,
+				  const struct type_vec *type_map)
 {
 	cond_av_list_t **listp = cond;
 	cond_av_list_t *pcov = NULL;
@@ -362,8 +364,10 @@ static void optimize_cond_av_list(cond_av_list_t **cond, cond_av_list_t **del,
 		 * First check if covered by an unconditional rule, then also
 		 * check if covered by another rule in the same list.
 		 */
-		if (is_avrule_redundant((*cond)->node, &p->te_avtab, type_map, 0) ||
-		    is_cond_rule_redundant((*cond)->node, *pcov_cur, type_map)) {
+		if (is_avrule_redundant((*cond)->node, &p->te_avtab, type_map,
+					0) ||
+		    is_cond_rule_redundant((*cond)->node, *pcov_cur,
+					   type_map)) {
 			cond_av_list_t *tmp = *cond;
 
 			*cond = tmp->next;
@@ -386,7 +390,7 @@ static void optimize_cond_avtab(policydb_t *p, const struct type_vec *type_map)
 	/* First go through all conditionals and collect redundant rules. */
 	cond = &p->cond_list;
 	while (*cond) {
-		optimize_cond_av_list(&(*cond)->true_list,  &del, p, type_map);
+		optimize_cond_av_list(&(*cond)->true_list, &del, p, type_map);
 		optimize_cond_av_list(&(*cond)->false_list, &del, p, type_map);
 		/* TODO: maybe also check for rules present in both lists */
 
@@ -449,14 +453,16 @@ int policydb_optimize(policydb_t *p)
 	if (p->policy_type != POLICY_KERN)
 		return -1;
 
-	if (p->policyvers >= POLICYDB_VERSION_AVTAB && p->policyvers <= POLICYDB_VERSION_PERMISSIVE) {
+	if (p->policyvers >= POLICYDB_VERSION_AVTAB &&
+	    p->policyvers <= POLICYDB_VERSION_PERMISSIVE) {
 		/*
 		 * For policy versions between 20 and 23, attributes exist in the policy,
 		 * but only in the type_attr_map. This means that there are gaps in both
 		 * the type_val_to_struct and p_type_val_to_name arrays and policy rules
 		 * can refer to those gaps.
 		 */
-		ERR(NULL, "Optimizing policy versions between 20 and 23 is not supported");
+		ERR(NULL,
+		    "Optimizing policy versions between 20 and 23 is not supported");
 		return -1;
 	}
 

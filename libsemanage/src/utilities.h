@@ -28,10 +28,9 @@
 #include <stdio.h>
 
 #if defined(__GNUC__) && !defined(__STRICT_ANSI__)
-#define WARN_UNUSED \
-	__attribute__ ((__warn_unused_result__))
+#define WARN_UNUSED __attribute__((__warn_unused_result__))
 #else
-# define WARN_UNUSED		/* nothing */
+#define WARN_UNUSED /* nothing */
 #endif
 
 typedef struct list {
@@ -52,7 +51,8 @@ typedef struct list {
  *
  *	   NULL for error (out of memory, etc)
  */
-char *semanage_findval(const char *file, const char *var, const char *delim) WARN_UNUSED;
+char *semanage_findval(const char *file, const char *var,
+		       const char *delim) WARN_UNUSED;
 
 /**
  * @param str   string to test
@@ -88,12 +88,12 @@ char *semanage_split(const char *str, const char *delim) WARN_UNUSED;
  * Functions allocate memory.  Must be free'd with
  * either semanage_list_pop until list == NULL or semanage_list_destroy()
  */
-int semanage_list_push(semanage_list_t ** list, const char *data) WARN_UNUSED;
-char *semanage_list_pop(semanage_list_t ** list);
-void semanage_list_destroy(semanage_list_t ** list);
-semanage_list_t *semanage_list_find(semanage_list_t * l,
+int semanage_list_push(semanage_list_t **list, const char *data) WARN_UNUSED;
+char *semanage_list_pop(semanage_list_t **list);
+void semanage_list_destroy(semanage_list_t **list);
+semanage_list_t *semanage_list_find(semanage_list_t *l,
 				    const char *data) WARN_UNUSED;
-int semanage_list_sort(semanage_list_t ** l) WARN_UNUSED;
+int semanage_list_sort(semanage_list_t **l) WARN_UNUSED;
 /* function to compare 2 semanage_list_t nodes,
  * returns strcmp(x->data, y->data)
  * used internally by semanage_list_sort()
@@ -140,9 +140,8 @@ void semanage_keep_until_space(char *data);
  *          empty strings) in the file order where pred(line)
  *          returns > 0
  */
-semanage_list_t *semanage_slurp_file_filter(FILE * file,
-					    int (*pred) (const char *))
-    WARN_UNUSED;
+semanage_list_t *
+semanage_slurp_file_filter(FILE *file, int (*pred)(const char *)) WARN_UNUSED;
 
 /**
  * Wrapper around write(2), which retries on short writes.

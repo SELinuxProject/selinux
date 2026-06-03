@@ -45,8 +45,10 @@
 
 static const char *const rootpath = "./test-policy";
 static const char *const polpath = "./test-policy/store/";
-static const char *const readlockpath = "./test-policy/store/semanage.read.LOCK";
-static const char *const translockpath = "./test-policy/store/semanage.trans.LOCK";
+static const char *const readlockpath =
+	"./test-policy/store/semanage.read.LOCK";
+static const char *const translockpath =
+	"./test-policy/store/semanage.trans.LOCK";
 static const char *const actpath = "./test-policy/store/active";
 static const char *const modpath = "./test-policy/store/active/modules";
 
@@ -127,9 +129,8 @@ int semanage_store_test_cleanup(void)
  */
 int semanage_store_add_tests(CU_pSuite suite)
 {
-	if (NULL ==
-	    CU_add_test(suite, "semanage_store_access_check",
-			test_semanage_store_access_check)) {
+	if (NULL == CU_add_test(suite, "semanage_store_access_check",
+				test_semanage_store_access_check)) {
 		CU_cleanup_registry();
 		return CU_get_error();
 	}
@@ -318,9 +319,8 @@ void test_semanage_nc_sort(void)
 	}
 	fstat(sourcefd, &sb);
 	source_buf_len = sb.st_size;
-	source_buf =
-	    (char *)mmap(NULL, source_buf_len, PROT_READ, MAP_PRIVATE, sourcefd,
-			 0);
+	source_buf = (char *)mmap(NULL, source_buf_len, PROT_READ, MAP_PRIVATE,
+				  sourcefd, 0);
 
 	/* open good result file */
 	goodfd = open("nc_sort_sorted", O_RDONLY);
@@ -330,8 +330,8 @@ void test_semanage_nc_sort(void)
 	}
 	fstat(goodfd, &sb);
 	good_buf_len = sb.st_size;
-	good_buf =
-	    (char *)mmap(NULL, good_buf_len, PROT_READ, MAP_PRIVATE, goodfd, 0);
+	good_buf = (char *)mmap(NULL, good_buf_len, PROT_READ, MAP_PRIVATE,
+				goodfd, 0);
 
 	/* open malformed source file (missing priorities) */
 	badfd = open("nc_sort_malformed", O_RDONLY);
@@ -341,13 +341,12 @@ void test_semanage_nc_sort(void)
 	}
 	fstat(badfd, &sb);
 	bad_buf_len = sb.st_size;
-	bad_buf =
-	    (char *)mmap(NULL, bad_buf_len, PROT_READ, MAP_PRIVATE, badfd, 0);
+	bad_buf = (char *)mmap(NULL, bad_buf_len, PROT_READ, MAP_PRIVATE, badfd,
+			       0);
 
 	/* sort test file */
-	err =
-	    semanage_nc_sort(sh, source_buf, source_buf_len, &sorted_buf,
-			     &sorted_buf_len);
+	err = semanage_nc_sort(sh, source_buf, source_buf_len, &sorted_buf,
+			       &sorted_buf_len);
 	CU_ASSERT_FALSE(err);
 	CU_ASSERT_STRING_EQUAL(sorted_buf, good_buf);
 
@@ -356,19 +355,18 @@ void test_semanage_nc_sort(void)
 	sorted_buf = NULL;
 
 	/* sort malformed source file */
-	err =
-	    semanage_nc_sort(sh, bad_buf, bad_buf_len, &sorted_buf,
-			     &sorted_buf_len);
+	err = semanage_nc_sort(sh, bad_buf, bad_buf_len, &sorted_buf,
+			       &sorted_buf_len);
 	CU_ASSERT_EQUAL(err, -1);
 
 	free(sorted_buf);
 
 	munmap(bad_buf, bad_buf_len);
 	close(badfd);
-      out1:
+out1:
 	munmap(good_buf, good_buf_len);
 	close(goodfd);
-      out2:
+out2:
 	munmap(source_buf, source_buf_len);
 	close(sourcefd);
 }

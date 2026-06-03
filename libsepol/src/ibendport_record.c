@@ -29,8 +29,7 @@ struct sepol_ibendport_key {
 };
 
 /* Allocates a sufficiently large string (ibdev_name) */
-int sepol_ibendport_alloc_ibdev_name(sepol_handle_t *handle,
-				     char **ibdev_name)
+int sepol_ibendport_alloc_ibdev_name(sepol_handle_t *handle, char **ibdev_name)
 {
 	*ibdev_name = calloc(1, IB_DEVICE_NAME_MAX);
 
@@ -46,13 +45,11 @@ omem:
 }
 
 /* Key */
-int sepol_ibendport_key_create(sepol_handle_t *handle,
-			       const char *ibdev_name,
-			       int port,
-			       sepol_ibendport_key_t **key_ptr)
+int sepol_ibendport_key_create(sepol_handle_t *handle, const char *ibdev_name,
+			       int port, sepol_ibendport_key_t **key_ptr)
 {
 	sepol_ibendport_key_t *tmp_key =
-	    (sepol_ibendport_key_t *)malloc(sizeof(sepol_ibendport_key_t));
+		(sepol_ibendport_key_t *)malloc(sizeof(sepol_ibendport_key_t));
 
 	if (!tmp_key) {
 		ERR(handle, "out of memory, could not create ibendport key");
@@ -78,7 +75,6 @@ err:
 	return STATUS_ERR;
 }
 
-
 void sepol_ibendport_key_unpack(const sepol_ibendport_key_t *key,
 				const char **ibdev_name, int *port)
 {
@@ -86,16 +82,15 @@ void sepol_ibendport_key_unpack(const sepol_ibendport_key_t *key,
 	*port = key->port;
 }
 
-
 int sepol_ibendport_key_extract(sepol_handle_t *handle,
 				const sepol_ibendport_t *ibendport,
 				sepol_ibendport_key_t **key_ptr)
 {
-	if (sepol_ibendport_key_create
-	    (handle, ibendport->ibdev_name, ibendport->port, key_ptr) < 0) {
-		ERR(handle, "could not extract key from ibendport device %s port %d",
-		    ibendport->ibdev_name,
-		    ibendport->port);
+	if (sepol_ibendport_key_create(handle, ibendport->ibdev_name,
+				       ibendport->port, key_ptr) < 0) {
+		ERR(handle,
+		    "could not extract key from ibendport device %s port %d",
+		    ibendport->ibdev_name, ibendport->port);
 
 		return STATUS_ERR;
 	}
@@ -111,7 +106,8 @@ void sepol_ibendport_key_free(sepol_ibendport_key_t *key)
 	free(key);
 }
 
-int sepol_ibendport_compare(const sepol_ibendport_t *ibendport, const sepol_ibendport_key_t *key)
+int sepol_ibendport_compare(const sepol_ibendport_t *ibendport,
+			    const sepol_ibendport_key_t *key)
 {
 	int rc;
 
@@ -128,7 +124,8 @@ int sepol_ibendport_compare(const sepol_ibendport_t *ibendport, const sepol_iben
 		return rc;
 }
 
-int sepol_ibendport_compare2(const sepol_ibendport_t *ibendport, const sepol_ibendport_t *ibendport2)
+int sepol_ibendport_compare2(const sepol_ibendport_t *ibendport,
+			     const sepol_ibendport_t *ibendport2)
 {
 	int rc;
 
@@ -150,12 +147,10 @@ int sepol_ibendport_get_port(const sepol_ibendport_t *ibendport)
 	return ibendport->port;
 }
 
-
 void sepol_ibendport_set_port(sepol_ibendport_t *ibendport, int port)
 {
 	ibendport->port = port;
 }
-
 
 int sepol_ibendport_get_ibdev_name(sepol_handle_t *handle,
 				   const sepol_ibendport_t *ibendport,
@@ -175,7 +170,6 @@ err:
 	ERR(handle, "could not get ibendport ibdev_name");
 	return STATUS_ERR;
 }
-
 
 int sepol_ibendport_set_ibdev_name(sepol_handle_t *handle,
 				   sepol_ibendport_t *ibendport,
@@ -197,11 +191,12 @@ err:
 	return STATUS_ERR;
 }
 
-
 /* Create */
-int sepol_ibendport_create(sepol_handle_t *handle, sepol_ibendport_t **ibendport)
+int sepol_ibendport_create(sepol_handle_t *handle,
+			   sepol_ibendport_t **ibendport)
 {
-	sepol_ibendport_t *tmp_ibendport = (sepol_ibendport_t *)malloc(sizeof(sepol_ibendport_t));
+	sepol_ibendport_t *tmp_ibendport =
+		(sepol_ibendport_t *)malloc(sizeof(sepol_ibendport_t));
 
 	if (!tmp_ibendport) {
 		ERR(handle, "out of memory, could not create ibendport record");
@@ -216,7 +211,6 @@ int sepol_ibendport_create(sepol_handle_t *handle, sepol_ibendport_t **ibendport
 	return STATUS_SUCCESS;
 }
 
-
 /* Deep copy clone */
 int sepol_ibendport_clone(sepol_handle_t *handle,
 			  const sepol_ibendport_t *ibendport,
@@ -227,14 +221,16 @@ int sepol_ibendport_clone(sepol_handle_t *handle,
 	if (sepol_ibendport_create(handle, &new_ibendport) < 0)
 		goto err;
 
-	if (sepol_ibendport_alloc_ibdev_name(handle, &new_ibendport->ibdev_name) < 0)
+	if (sepol_ibendport_alloc_ibdev_name(handle,
+					     &new_ibendport->ibdev_name) < 0)
 		goto omem;
 
-	strncpy(new_ibendport->ibdev_name, ibendport->ibdev_name, IB_DEVICE_NAME_MAX - 1);
+	strncpy(new_ibendport->ibdev_name, ibendport->ibdev_name,
+		IB_DEVICE_NAME_MAX - 1);
 	new_ibendport->port = ibendport->port;
 
-	if (ibendport->con &&
-	    (sepol_context_clone(handle, ibendport->con, &new_ibendport->con) < 0))
+	if (ibendport->con && (sepol_context_clone(handle, ibendport->con,
+						   &new_ibendport->con) < 0))
 		goto err;
 
 	*ibendport_ptr = new_ibendport;
@@ -260,13 +256,11 @@ void sepol_ibendport_free(sepol_ibendport_t *ibendport)
 	free(ibendport);
 }
 
-
 /* Context */
 sepol_context_t *sepol_ibendport_get_con(const sepol_ibendport_t *ibendport)
 {
 	return ibendport->con;
 }
-
 
 int sepol_ibendport_set_con(sepol_handle_t *handle,
 			    sepol_ibendport_t *ibendport, sepol_context_t *con)
@@ -282,4 +276,3 @@ int sepol_ibendport_set_con(sepol_handle_t *handle,
 	ibendport->con = newcon;
 	return STATUS_SUCCESS;
 }
-

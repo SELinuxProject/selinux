@@ -138,12 +138,12 @@ static semanage_node_t *get_node_nth(int idx)
 		return NULL;
 
 	CU_ASSERT_FATAL(semanage_node_list(sh, &records, &count) >= 0);
-	CU_ASSERT_FATAL(count >= (unsigned int) idx + 1);
+	CU_ASSERT_FATAL(count >= (unsigned int)idx + 1);
 
 	node = records[idx];
 
 	for (unsigned int i = 0; i < count; i++)
-		if (i != (unsigned int) idx)
+		if (i != (unsigned int)idx)
 			semanage_node_free(records[i]);
 
 	free(records);
@@ -333,10 +333,10 @@ static void test_node_get_set_addr_bytes(void)
 	CU_ASSERT(semanage_node_create(sh, &node) >= 0);
 
 	/* test */
-	CU_ASSERT(semanage_node_set_addr_bytes(sh, node, addr1,
-					       addr1_size) == 0);
-	CU_ASSERT(semanage_node_get_addr_bytes(sh, node, &addr2,
-					       &addr2_size) >= 0);
+	CU_ASSERT(semanage_node_set_addr_bytes(sh, node, addr1, addr1_size) ==
+		  0);
+	CU_ASSERT(semanage_node_get_addr_bytes(sh, node, &addr2, &addr2_size) >=
+		  0);
 	CU_ASSERT_PTR_NOT_NULL(addr2);
 	assert(addr2);
 
@@ -387,10 +387,10 @@ static void test_node_get_set_mask_bytes(void)
 	CU_ASSERT(semanage_node_create(sh, &node) >= 0);
 
 	/* test */
-	CU_ASSERT(semanage_node_set_mask_bytes(sh, node, mask1,
-					       mask1_size) == 0);
-	CU_ASSERT(semanage_node_get_mask_bytes(sh, node, &mask2,
-					       &mask2_size) >= 0);
+	CU_ASSERT(semanage_node_set_mask_bytes(sh, node, mask1, mask1_size) ==
+		  0);
+	CU_ASSERT(semanage_node_get_mask_bytes(sh, node, &mask2, &mask2_size) >=
+		  0);
 	CU_ASSERT_PTR_NOT_NULL(mask2);
 	assert(mask2);
 
@@ -425,9 +425,9 @@ static void test_node_get_set_proto(void)
 static void test_node_get_proto_str(void)
 {
 	CU_ASSERT_STRING_EQUAL(semanage_node_get_proto_str(SEMANAGE_PROTO_IP4),
-							   "ipv4");
+			       "ipv4");
 	CU_ASSERT_STRING_EQUAL(semanage_node_get_proto_str(SEMANAGE_PROTO_IP6),
-							   "ipv6");
+			       "ipv6");
 }
 
 /* Function semanage_node_get_con, semanage_node_set_con */
@@ -440,8 +440,8 @@ static void test_node_get_set_con(void)
 	/* setup */
 	setup_handle(SH_CONNECT);
 	CU_ASSERT(semanage_node_create(sh, &node) >= 0);
-	CU_ASSERT(semanage_context_from_string(sh,
-			       "my_user_u:my_role_r:my_type_t:s0", &con1) >= 0);
+	CU_ASSERT(semanage_context_from_string(
+			  sh, "my_user_u:my_role_r:my_type_t:s0", &con1) >= 0);
 
 	/* test */
 	CU_ASSERT(semanage_node_set_con(sh, node, con1) == 0);
@@ -495,10 +495,10 @@ static void test_node_clone(void)
 	/* setup */
 	setup_handle(SH_CONNECT);
 	CU_ASSERT(semanage_node_create(sh, &node) >= 0);
-	CU_ASSERT(semanage_node_set_addr(sh, node, SEMANAGE_PROTO_IP4,
-					 addr1) >= 0);
-	CU_ASSERT(semanage_node_set_mask(sh, node, SEMANAGE_PROTO_IP4,
-					 mask1) >= 0);
+	CU_ASSERT(semanage_node_set_addr(sh, node, SEMANAGE_PROTO_IP4, addr1) >=
+		  0);
+	CU_ASSERT(semanage_node_set_mask(sh, node, SEMANAGE_PROTO_IP4, mask1) >=
+		  0);
 	semanage_node_set_proto(node, SEMANAGE_PROTO_IP4);
 	CU_ASSERT(semanage_context_from_string(sh, "user_u:role_r:type_t:s0",
 					       &con) >= 0);
@@ -563,7 +563,7 @@ static void test_node_query(void)
 	free(str_exp);
 
 	CU_ASSERT(semanage_node_get_proto(node) ==
-			  semanage_node_get_proto(node_exp));
+		  semanage_node_get_proto(node_exp));
 
 	con = semanage_node_get_con(node);
 	con_exp = semanage_node_get_con(node_exp);
@@ -620,7 +620,8 @@ static void test_node_count(void)
 /* Function semanage_node_iterate */
 static unsigned int counter_node_iterate = 0;
 
-static int handler_node_iterate(__attribute__((unused)) const semanage_node_t *record,
+static int handler_node_iterate(__attribute__((unused))
+				const semanage_node_t *record,
 				__attribute__((unused)) void *varg)
 {
 	counter_node_iterate++;
@@ -778,7 +779,8 @@ static void test_node_count_local(void)
 /* Function semanage_node_iterate_local */
 static unsigned int counter_node_iterate_local = 0;
 
-static int handler_node_iterate_local(__attribute__((unused)) const semanage_node_t *record,
+static int handler_node_iterate_local(__attribute__((unused))
+				      const semanage_node_t *record,
 				      __attribute__((unused)) void *varg)
 {
 	counter_node_iterate_local++;

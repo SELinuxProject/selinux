@@ -30,52 +30,52 @@ extern "C" {
 struct type_set;
 
 typedef struct constraint_expr {
-#define CEXPR_NOT		1	/* not expr */
-#define CEXPR_AND		2	/* expr and expr */
-#define CEXPR_OR		3	/* expr or expr */
-#define CEXPR_ATTR		4	/* attr op attr */
-#define CEXPR_NAMES		5	/* attr op names */
-	uint32_t expr_type;	/* expression type */
+#define CEXPR_NOT 1 /* not expr */
+#define CEXPR_AND 2 /* expr and expr */
+#define CEXPR_OR 3 /* expr or expr */
+#define CEXPR_ATTR 4 /* attr op attr */
+#define CEXPR_NAMES 5 /* attr op names */
+	uint32_t expr_type; /* expression type */
 
-#define CEXPR_USER 1		/* user */
-#define CEXPR_ROLE 2		/* role */
-#define CEXPR_TYPE 4		/* type */
-#define CEXPR_TARGET 8		/* target if set, source otherwise */
-#define CEXPR_XTARGET 16	/* special 3rd target for validatetrans rule */
-#define CEXPR_L1L2 32		/* low level 1 vs. low level 2 */
-#define CEXPR_L1H2 64		/* low level 1 vs. high level 2 */
-#define CEXPR_H1L2 128		/* high level 1 vs. low level 2 */
-#define CEXPR_H1H2 256		/* high level 1 vs. high level 2 */
-#define CEXPR_L1H1 512		/* low level 1 vs. high level 1 */
-#define CEXPR_L2H2 1024		/* low level 2 vs. high level 2 */
-	uint32_t attr;		/* attribute */
+#define CEXPR_USER 1 /* user */
+#define CEXPR_ROLE 2 /* role */
+#define CEXPR_TYPE 4 /* type */
+#define CEXPR_TARGET 8 /* target if set, source otherwise */
+#define CEXPR_XTARGET 16 /* special 3rd target for validatetrans rule */
+#define CEXPR_L1L2 32 /* low level 1 vs. low level 2 */
+#define CEXPR_L1H2 64 /* low level 1 vs. high level 2 */
+#define CEXPR_H1L2 128 /* high level 1 vs. low level 2 */
+#define CEXPR_H1H2 256 /* high level 1 vs. high level 2 */
+#define CEXPR_L1H1 512 /* low level 1 vs. high level 1 */
+#define CEXPR_L2H2 1024 /* low level 2 vs. high level 2 */
+	uint32_t attr; /* attribute */
 
-#define CEXPR_EQ     1		/* == or eq */
-#define CEXPR_NEQ    2		/* != */
-#define CEXPR_DOM    3		/* dom */
-#define CEXPR_DOMBY  4		/* domby  */
-#define CEXPR_INCOMP 5		/* incomp */
-	uint32_t op;		/* operator */
+#define CEXPR_EQ 1 /* == or eq */
+#define CEXPR_NEQ 2 /* != */
+#define CEXPR_DOM 3 /* dom */
+#define CEXPR_DOMBY 4 /* domby  */
+#define CEXPR_INCOMP 5 /* incomp */
+	uint32_t op; /* operator */
 
-	ebitmap_t names;	/* names */
+	ebitmap_t names; /* names */
 	struct type_set *type_names;
 
-	struct constraint_expr *next;	/* next expression */
+	struct constraint_expr *next; /* next expression */
 } constraint_expr_t;
 
 typedef struct constraint_node {
-	sepol_access_vector_t permissions;	/* constrained permissions */
-	constraint_expr_t *expr;	/* constraint on permissions */
-	struct constraint_node *next;	/* next constraint */
+	sepol_access_vector_t permissions; /* constrained permissions */
+	constraint_expr_t *expr; /* constraint on permissions */
+	struct constraint_node *next; /* next constraint */
 } constraint_node_t;
 
-extern int constraint_expr_init(constraint_expr_t * expr);
-extern void constraint_expr_destroy(constraint_expr_t * expr);
+extern int constraint_expr_init(constraint_expr_t *expr);
+extern void constraint_expr_destroy(constraint_expr_t *expr);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif				/* _CONSTRAINT_H_ */
+#endif /* _CONSTRAINT_H_ */
 
 /* FLASK */

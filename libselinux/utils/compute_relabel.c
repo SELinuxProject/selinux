@@ -19,12 +19,14 @@ int main(int argc, char **argv)
 	}
 
 	if (security_check_context(argv[1])) {
-		fprintf(stderr, "%s:  invalid source context '%s'\n", argv[0], argv[1]);
+		fprintf(stderr, "%s:  invalid source context '%s'\n", argv[0],
+			argv[1]);
 		exit(4);
 	}
 
 	if (security_check_context(argv[2])) {
-		fprintf(stderr, "%s:  invalid target context '%s'\n", argv[0], argv[2]);
+		fprintf(stderr, "%s:  invalid target context '%s'\n", argv[0],
+			argv[2]);
 		exit(5);
 	}
 

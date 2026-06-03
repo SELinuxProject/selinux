@@ -20,9 +20,9 @@
 
 /* A context specification. */
 typedef struct spec {
-	struct selabel_lookup_rec lr;	/* holds contexts for lookup result */
-	char *key;		/* key string */
-	int matches;		/* number of matches made during operation */
+	struct selabel_lookup_rec lr; /* holds contexts for lookup result */
+	char *key; /* key string */
+	int matches; /* number of matches made during operation */
 } spec_t;
 
 struct saved_data {
@@ -47,8 +47,8 @@ static int process_line(const char *path, const char *line_buf, int pass,
 	items = sscanf(line_buf, "%ms %ms ", &key, &context);
 	if (items < 2) {
 		selinux_log(SELINUX_WARNING,
-			  "%s:  line %u is missing fields, skipping\n", path,
-			  lineno);
+			    "%s:  line %u is missing fields, skipping\n", path,
+			    lineno);
 		if (items == 1)
 			free(key);
 		return 0;
@@ -82,7 +82,7 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 	/* Process arguments */
 	while (n) {
 		n--;
-		switch(opts[n].type) {
+		switch (opts[n].type) {
 		case SELABEL_OPT_PATH:
 			path = opts[n].value;
 			break;
@@ -94,7 +94,7 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 			errno = EINVAL;
 			return -1;
 		}
-}
+	}
 
 	/* Open the specification file. */
 	if (!path)
@@ -184,7 +184,7 @@ static void close(struct selabel_handle *rec)
 	}
 
 	if (spec_arr)
-	    free(spec_arr);
+		free(spec_arr);
 
 	free(data);
 	rec->data = NULL;
@@ -223,13 +223,12 @@ static void stats(struct selabel_handle *rec)
 	for (i = 0; i < data->nspec; i++)
 		total += data->spec_arr[i].matches;
 
-	selinux_log(SELINUX_INFO, "%u entries, %u matches made\n",
-		  data->nspec, total);
+	selinux_log(SELINUX_INFO, "%u entries, %u matches made\n", data->nspec,
+		    total);
 }
 
 int selabel_media_init(struct selabel_handle *rec,
-				    const struct selinux_opt *opts,
-				    unsigned nopts)
+		       const struct selinux_opt *opts, unsigned nopts)
 {
 	struct saved_data *data;
 

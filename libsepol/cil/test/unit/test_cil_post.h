@@ -76,4 +76,3 @@ void test_cil_post_fsuse_compare_fsstr_b_greater_a(CuTest *tc);
 void test_cil_post_fsuse_compare_equal(CuTest *tc);
 
 #endif
-

@@ -19,7 +19,6 @@ typedef struct dbase_activedb dbase_t;
 
 /* ACTIVEDB dbase */
 struct dbase_activedb {
-
 	/* Parent object - must always be
 	 * the first field - here we are using
 	 * a linked list to store the records */
@@ -29,10 +28,9 @@ struct dbase_activedb {
 	const record_activedb_table_t *ratable;
 };
 
-static int dbase_activedb_cache(semanage_handle_t * handle,
-				dbase_activedb_t * dbase)
+static int dbase_activedb_cache(semanage_handle_t *handle,
+				dbase_activedb_t *dbase)
 {
-
 	const record_table_t *rtable = dbase_llist_get_rtable(&dbase->llist);
 	const record_activedb_table_t *ratable = dbase->ratable;
 
@@ -55,8 +53,8 @@ static int dbase_activedb_cache(semanage_handle_t * handle,
 
 	/* Add records one by one */
 	for (; i < rcount; i++) {
-		if (dbase_llist_cache_prepend(handle, &dbase->llist, records[i])
-		    < 0)
+		if (dbase_llist_cache_prepend(handle, &dbase->llist,
+					      records[i]) < 0)
 			goto err;
 		rtable->free(records[i]);
 	}
@@ -64,7 +62,7 @@ static int dbase_activedb_cache(semanage_handle_t * handle,
 	free(records);
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	ERR(handle, "could not cache active database");
 	for (; i < rcount; i++)
 		rtable->free(records[i]);
@@ -73,10 +71,9 @@ static int dbase_activedb_cache(semanage_handle_t * handle,
 	return STATUS_ERR;
 }
 
-static int dbase_activedb_flush(semanage_handle_t * handle,
-				dbase_activedb_t * dbase)
+static int dbase_activedb_flush(semanage_handle_t *handle,
+				dbase_activedb_t *dbase)
 {
-
 	const record_table_t *rtable = dbase_llist_get_rtable(&dbase->llist);
 	const record_activedb_table_t *ratable = dbase->ratable;
 
@@ -102,7 +99,7 @@ static int dbase_activedb_flush(semanage_handle_t * handle,
 	dbase_llist_set_modified(&dbase->llist, 0);
 	return STATUS_SUCCESS;
 
-      err:
+err:
 	for (i = 0; i < rcount; i++)
 		rtable->free(records[i]);
 	free(records);
@@ -110,14 +107,12 @@ static int dbase_activedb_flush(semanage_handle_t * handle,
 	return STATUS_ERR;
 }
 
-int dbase_activedb_init(semanage_handle_t * handle,
-			const record_table_t * rtable,
-			const record_activedb_table_t * ratable,
-			dbase_activedb_t ** dbase)
+int dbase_activedb_init(semanage_handle_t *handle, const record_table_t *rtable,
+			const record_activedb_table_t *ratable,
+			dbase_activedb_t **dbase)
 {
-
 	dbase_activedb_t *tmp_dbase =
-	    (dbase_activedb_t *) malloc(sizeof(dbase_activedb_t));
+		(dbase_activedb_t *)malloc(sizeof(dbase_activedb_t));
 
 	if (!tmp_dbase)
 		goto omem;
@@ -129,16 +124,15 @@ int dbase_activedb_init(semanage_handle_t * handle,
 
 	return STATUS_SUCCESS;
 
-      omem:
+omem:
 	ERR(handle, "out of memory, could not initialize active database");
 	free(tmp_dbase);
 	return STATUS_ERR;
 }
 
 /* Release dbase resources */
-void dbase_activedb_release(dbase_activedb_t * dbase)
+void dbase_activedb_release(dbase_activedb_t *dbase)
 {
-
 	if (!dbase)
 		return;
 
