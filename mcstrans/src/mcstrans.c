@@ -37,6 +37,7 @@
 #include "mcstrans.h"
 
 #define N_BUCKETS 1453
+#define CACHE_MAX_ENTRIES 65536
 
 #define log_error(fmt, ...) fprintf(stderr, fmt, __VA_ARGS__)
 
@@ -108,6 +109,7 @@ typedef struct base_classification {
 typedef struct domain {
 	char *name;
 
+	unsigned int cache_entries;
 	context_map_node_t *raw_to_trans[N_BUCKETS];
 	context_map_node_t *trans_to_raw[N_BUCKETS];
 
@@ -661,7 +663,12 @@ static int add_base_classification(domain_t *domain, char *raw, char *trans)
 
 static int add_cache(domain_t *domain, char *raw, char *trans)
 {
-	context_map_t *map = calloc(1, sizeof(context_map_t));
+	context_map_t *map;
+
+	if (domain->cache_entries >= CACHE_MAX_ENTRIES)
+		return 0;
+
+	map = calloc(1, sizeof(context_map_t));
 	if (!map)
 		goto err;
 
@@ -688,6 +695,7 @@ static int add_cache(domain_t *domain, char *raw, char *trans)
 	if (add_to_hashtable(domain->trans_to_raw, map->trans, map) < 0)
 		goto err;
 
+	domain->cache_entries++;
 	return 0;
 err:
 	log_error("%s: allocation error", "add_cache");
