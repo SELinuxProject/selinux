@@ -394,7 +394,8 @@ void selabel_close(struct selabel_handle *rec)
 {
 	if (rec->digest)
 		selabel_digest_fini(rec->digest);
-	rec->func_close(rec);
+	if (rec->func_close)
+		rec->func_close(rec);
 	free(rec->spec_file);
 	free(rec);
 }
