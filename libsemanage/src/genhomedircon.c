@@ -1276,9 +1276,11 @@ static genhomedircon_user_entry_t *get_users(genhomedircon_settings_t *s,
 
 		/* %groupname syntax */
 		if (name[0] == '%') {
-			retval = get_group_users(s, &head, *u, seuname, name);
+			retval = get_group_users(s, &head, u ? *u : NULL,
+						 seuname, name);
 		} else {
-			retval = add_user(s, &head, *u, name, seuname, name);
+			retval = add_user(s, &head, u ? *u : NULL, name,
+					  seuname, name);
 		}
 
 		if (retval != 0) {
