@@ -210,10 +210,11 @@ static void init_selinux_config(void)
 
 			if (isdigit((unsigned char)*value))
 				*intptr = atoi(value);
-			else if (strncasecmp(value, "true", sizeof("true") - 1))
+			else if (!strncasecmp(value, "true",
+					      sizeof("true") - 1))
 				*intptr = 1;
-			else if (strncasecmp(value, "false",
-					     sizeof("false") - 1))
+			else if (!strncasecmp(value, "false",
+					      sizeof("false") - 1))
 				*intptr = 0;
 		}
 		free(line_buf);
