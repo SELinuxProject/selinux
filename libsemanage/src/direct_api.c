@@ -2006,12 +2006,11 @@ static int semanage_direct_list(semanage_handle_t *sh,
 
 cleanup:
 	if (retval < 0) {
-		for (i = 0; i < *num_modules; i++) {
-			semanage_module_info_destroy(sh, &(*modinfo[i]));
-			modinfo[i] = NULL;
-		}
+		for (i = 0; i < *num_modules; i++)
+			semanage_module_info_destroy(sh, &(*modinfo)[i]);
 		free(*modinfo);
 		*modinfo = NULL;
+		*num_modules = 0;
 	}
 
 	if (!sh->is_in_transaction) {
