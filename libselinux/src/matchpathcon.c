@@ -43,11 +43,30 @@ int compat_validate(const struct selabel_handle *rec,
 	int rc;
 	char **ctx = &contexts->ctx_raw;
 
-	if (myinvalidcon)
-		rc = myinvalidcon(path, lineno, *ctx);
-	else if (mycanoncon)
-		rc = mycanoncon(path, lineno, ctx);
-	else if (rec->validating) {
+	if (myinvalidcon || mycanoncon) {
+		bool validated =
+			__atomic_load_n(&contexts->validated, __ATOMIC_ACQUIRE);
+		if (validated)
+			return 0;
+
+		__pthread_mutex_lock(&contexts->lock);
+		validated =
+			__atomic_load_n(&contexts->validated, __ATOMIC_ACQUIRE);
+		if (validated) {
+			__pthread_mutex_unlock(&contexts->lock);
+			return 0;
+		}
+
+		if (myinvalidcon)
+			rc = myinvalidcon(path, lineno, *ctx);
+		else
+			rc = mycanoncon(path, lineno, ctx);
+
+		if (rc == 0)
+			__atomic_store_n(&contexts->validated, true,
+					 __ATOMIC_RELEASE);
+		__pthread_mutex_unlock(&contexts->lock);
+	} else if (rec->validating) {
 		rc = selabel_validate(contexts);
 		if (rc < 0) {
 			if (lineno) {
