@@ -749,6 +749,11 @@ err:
 	return -1;
 }
 
+static domain_t *parser_domain;
+static word_group_t *group;
+static int base_classification;
+static int lineno = 0;
+
 static int read_translations(const char *filename);
 
 /* Process line from translation file.
@@ -757,10 +762,6 @@ static int read_translations(const char *filename);
  */
 static int process_trans(char *buffer)
 {
-	static domain_t *domain;
-	static word_group_t *group;
-	static int base_classification;
-	static int lineno = 0;
 	char op = '\0';
 
 	lineno++;
@@ -814,16 +815,16 @@ static int process_trans(char *buffer)
 	}
 
 	if (!strcmp(raw, "Domain")) {
-		domain = create_domain(tok);
-		if (!domain)
+		parser_domain = create_domain(tok);
+		if (!parser_domain)
 			return -1;
 		group = NULL;
 		return 0;
 	}
 
-	if (!domain) {
-		domain = create_domain("Default");
-		if (!domain)
+	if (!parser_domain) {
+		parser_domain = create_domain("Default");
+		if (!parser_domain)
 			return -1;
 		group = NULL;
 	}
@@ -855,7 +856,7 @@ static int process_trans(char *buffer)
 	} else if (!strcmp(raw, "Base")) {
 		base_classification = 1;
 	} else if (!strcmp(raw, "ModifierGroup")) {
-		group = create_group(&domain->groups, tok);
+		group = create_group(&parser_domain->groups, tok);
 		if (!group)
 			return -1;
 		base_classification = 0;
@@ -887,14 +888,15 @@ static int process_trans(char *buffer)
 		}
 	} else {
 		if (base_classification) {
-			if (add_base_classification(domain, raw, tok) < 0) {
+			if (add_base_classification(parser_domain, raw, tok) <
+			    0) {
 				syslog(LOG_ERR,
 				       "unable to add base_classification on line %d",
 				       lineno);
 				return -1;
 			}
 		}
-		if (add_cache(domain, raw, tok) < 0)
+		if (add_cache(parser_domain, raw, tok) < 0)
 			return -1;
 	}
 	return 0;
@@ -2169,6 +2171,11 @@ int untrans_context(const char *incon, char **rcon)
 
 void finish_context_translations(void)
 {
+	parser_domain = NULL;
+	group = NULL;
+	base_classification = 0;
+	lineno = 0;
+
 	while (domains) {
 		domain_t *next = domains->next;
 		destroy_domain(domains);
