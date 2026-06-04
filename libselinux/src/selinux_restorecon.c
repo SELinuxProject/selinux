@@ -2021,17 +2021,17 @@ cleanup:
 	(void)fts_close(fts);
 	errno = rc;
 
-	if (dir_xattr_list) {
-		/* Free any used memory */
-		current = dir_xattr_list;
-		while (current) {
-			next = current->next;
-			free(current->directory);
-			free(current->digest);
-			free(current);
-			current = next;
-		}
+	/* Free any used memory */
+	current = dir_xattr_list;
+	while (current) {
+		next = current->next;
+		free(current->directory);
+		free(current->digest);
+		free(current);
+		current = next;
 	}
+	dir_xattr_list = NULL;
+	dir_xattr_last = NULL;
 	return -1;
 }
 
