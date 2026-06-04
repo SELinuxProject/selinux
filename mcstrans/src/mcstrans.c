@@ -374,6 +374,10 @@ static void destroy_domain(domain_t *domain)
 {
 	int i;
 	unsigned int rt = 0, tr = 0;
+
+	if (!domain)
+		return;
+
 	for (i = 0; i < N_BUCKETS; i++) {
 		context_map_node_t *ptr;
 		for (ptr = domain->trans_to_raw[i]; ptr;) {
