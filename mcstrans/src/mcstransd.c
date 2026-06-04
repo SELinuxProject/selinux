@@ -37,6 +37,7 @@
 #define RAW_CONTEXT_TO_COLOR 4
 #define MAX_DATA_BUF 4096
 #define MAX_DESCRIPTORS 8192
+#define MAX_CLIENTS (MAX_DESCRIPTORS - 32)
 
 #ifdef DEBUG
 //#define log_debug(fmt, ...) syslog(LOG_DEBUG, fmt, __VA_ARGS__)
@@ -293,6 +294,7 @@ static void adj_pollfds(struct pollfd **ufds, int *nfds)
 
 static int process_events(struct pollfd **ufds, int *nfds)
 {
+	static int last_accept_err;
 	int ii = 0;
 	int ret = 0;
 
@@ -304,7 +306,17 @@ static int process_events(struct pollfd **ufds, int *nfds)
 			if (connfd == sockfd) {
 				/* Probably received a connection */
 				if ((connfd = accept(sockfd, NULL, NULL)) < 0) {
-					syslog(LOG_ERR, "accept() failed: %m");
+					if (errno != last_accept_err) {
+						syslog(LOG_ERR,
+						       "accept() failed: %m");
+						last_accept_err = errno;
+					}
+					continue;
+				}
+				last_accept_err = 0;
+
+				if (*nfds > MAX_CLIENTS) {
+					close(connfd);
 					continue;
 				}
 
