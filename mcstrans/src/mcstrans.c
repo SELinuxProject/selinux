@@ -854,7 +854,7 @@ static int process_trans(char *buffer)
 		unsigned int n;
 		glob_t g;
 		g.gl_offs = 0;
-		if (glob(tok, GLOB_ERR, NULL, &g) < 0) {
+		if (glob(tok, GLOB_ERR, NULL, &g) != 0) {
 			globfree(&g);
 			return -1;
 		}
