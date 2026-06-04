@@ -3,26 +3,17 @@
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
-#include <fts.h>
 #include <errno.h>
 #include <string.h>
 #include <stdio.h>
 #include <syslog.h>
 #include <sys/stat.h>
-#include <sepol/sepol.h>
 #include <selinux/selinux.h>
 #include <selinux/label.h>
 #include <selinux/restorecon.h>
 #include <stdlib.h>
 #include <limits.h>
 #include <stdint.h>
-
-/*
- * STAR_COUNT is also defined in libselinux/src/selinux_restorecon.c where it
- * is used to output "*" for each number of files processed. Defined here for
- * inclusion in man pages.
-*/
-#define STAR_COUNT 1000
 
 /* Things that need to be init'd */
 struct restore_opts {
@@ -54,9 +45,6 @@ struct restore_opts {
 };
 
 void restore_init(struct restore_opts *opts);
-void restore_finish(void);
-void add_exclude(const char *directory);
-int process_glob(char *name, struct restore_opts *opts);
 extern char **exclude_list;
 
 #endif
