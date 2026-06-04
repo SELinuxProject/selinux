@@ -193,7 +193,7 @@ void watch_list_add(int fd, const char *path)
 	globbuf.gl_lstat = nofollow_lstat;
 	globbuf.gl_stat = nofollow_lstat; /* never follow symlinks */
 	if (glob(path, GLOB_TILDE | GLOB_PERIOD | GLOB_ALTDIRFUNC, NULL,
-		 &globbuf) >= 0) {
+		 &globbuf) == 0) {
 		for (i = 0; i < globbuf.gl_pathc; i++) {
 			const char *p = globbuf.gl_pathv[i];
 
