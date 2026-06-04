@@ -275,14 +275,15 @@ static int __policy_init(const char *init_path)
 	return 0;
 
 err:
-	if (boollist)
-		free(boollist);
+	free(boollist);
+	boollist = NULL;
 	if (avc) {
 		if (avc->handle)
 			sepol_handle_destroy(avc->handle);
 		if (avc->policydb)
 			sepol_policydb_free(avc->policydb);
 		free(avc);
+		avc = NULL;
 	}
 	if (pf)
 		sepol_policy_file_free(pf);
