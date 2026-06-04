@@ -1498,6 +1498,7 @@ static int copy_range_trans_list(range_trans_rule_t *rules,
 {
 	range_trans_rule_t *rule, *new_rule = NULL;
 
+	*dst = NULL;
 	for (rule = rules; rule; rule = rule->next) {
 		new_rule = (range_trans_rule_t *)malloc(
 			sizeof(range_trans_rule_t));
@@ -1528,6 +1529,7 @@ static int copy_range_trans_list(range_trans_rule_t *rules,
 cleanup:
 	ERR(state->handle, "Out of memory!");
 	range_trans_rule_list_destroy(new_rule);
+	*dst = NULL;
 	return -1;
 }
 
