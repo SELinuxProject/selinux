@@ -139,6 +139,11 @@ extern int selinux_restorecon_parallel(const char *pathname,
  */
 #define SELINUX_RESTORECON_COUNT_RELABELED 0x80000
 
+/*
+ * Do not relabel non-directories that have more than one hard link.
+ */
+#define SELINUX_RESTORECON_SKIP_MULTILINK 0x100000
+
 /**
  * selinux_restorecon_set_sehandle - Set the global fc handle.
  * @hndl: specifies handle to set as the global fc handle.

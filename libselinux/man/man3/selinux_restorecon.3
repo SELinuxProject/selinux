@@ -182,6 +182,19 @@ completes with success. In case any errors were skipped during the file tree
 walk, the specfile entries SHA1 digest will not have been written to the
 .IR security.sehash
 extended attribute.
+.sp
+.B SELINUX_RESTORECON_SET_USER_ROLE
+Set the user and role component of the security context too.
+.sp
+.B SELINUX_RESTORECON_COUNT_RELABELED
+Count the number of relabeled files or the number that would be relabeled if
+.B SELINUX_RESTORECON_NOCHANGE
+was not set.
+.sp
+.B SELINUX_RESTORECON_SKIP_MULTILINK
+Skip any non-directory files that have more than one hard link.
+Use this option when relabeling untrusted directories that might
+contain hard links to files owned by others.
 .RE
 .sp
 The behavior regarding the checking and updating of the SHA1 digest described

@@ -91,6 +91,7 @@ struct rest_flags {
 	bool conflicterror;
 	bool count_errors;
 	bool count_relabeled;
+	bool skip_multilink;
 };
 
 static bool have_proc;
@@ -710,6 +711,13 @@ static int restorecon_sb(int fd, const char *pathname, const struct stat *sb,
 	int rc;
 	bool updated = false;
 	const char *lookup_path = pathname;
+
+	if (flags->skip_multilink && !S_ISDIR(sb->st_mode) &&
+	    sb->st_nlink > 1) {
+		selinux_log(SELINUX_INFO,
+			    "Skipping %s: file has multiple links\n", pathname);
+		return 0;
+	}
 
 	if (rootpath) {
 		if (strncmp(rootpath, lookup_path, rootpathlen) != 0) {
@@ -1530,6 +1538,9 @@ static int selinux_restorecon_common(const char *pathname_orig,
 	state.flags.count_relabeled =
 		(restorecon_flags & SELINUX_RESTORECON_COUNT_RELABELED) ? true :
 									  false;
+	state.flags.skip_multilink =
+		(restorecon_flags & SELINUX_RESTORECON_SKIP_MULTILINK) ? true :
+									 false;
 	state.setrestorecondigest = true;
 
 	state.abort = false;
