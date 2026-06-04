@@ -120,6 +120,11 @@ int selinux_status_updated(void)
 	if (last_seqno == curr_seqno)
 		return 0;
 
+	if (selinux_status == MAP_FAILED) {
+		last_seqno = curr_seqno;
+		return 1;
+	}
+
 	/* sequence must not be changed during references */
 	do {
 		enforcing = selinux_status->enforcing;
