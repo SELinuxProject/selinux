@@ -220,7 +220,7 @@ int main(int argc, char *argv[])
 	}
 
 exit:
-	if (file != NULL && file != stdin) {
+	if (file != NULL && file != stdout) {
 		fclose(file);
 	}
 	free(buffer);
