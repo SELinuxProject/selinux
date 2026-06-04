@@ -313,8 +313,6 @@ int watch(int fd, const char *watch_file)
 {
 	char buf[BUF_LEN];
 	int len, i = 0;
-	if (firstDir == NULL)
-		return 0;
 
 	len = read(fd, buf, BUF_LEN);
 	if (len < 0) {
