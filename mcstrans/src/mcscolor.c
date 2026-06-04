@@ -90,6 +90,9 @@ static int check_dominance(const char *pattern, const char *raw)
 	access_vector_t context_contains_perm =
 		string_to_av_perm(context_class, "contains");
 
+	if (!my_context)
+		return -1;
+
 	con = context_new(raw);
 	if (!con)
 		return -1;
@@ -257,7 +260,8 @@ int init_colors(void)
 	char *buffer = NULL;
 	int line = 0;
 
-	getcon(&my_context);
+	if (getcon(&my_context) < 0)
+		return 1;
 
 	cfg = fopen(selinux_colors_path(), "r");
 	if (!cfg)
