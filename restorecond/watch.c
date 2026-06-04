@@ -168,6 +168,9 @@ static int nofollow_lstat(const char *path, struct stat *sb)
 
 void watch_list_add(int fd, const char *path)
 {
+	char procfd[32];
+	struct stat sb;
+	int dirfd;
 	struct watchList *ptr = NULL;
 	size_t i = 0;
 	struct watchList *prev = NULL;
@@ -217,13 +220,28 @@ void watch_list_add(int fd, const char *path)
 	if (!ptr)
 		exitApp("Out of Memory");
 
-	ptr->wd = inotify_add_watch(fd, dir,
-				    IN_CREATE | IN_MOVED_TO | IN_DONT_FOLLOW);
+	dirfd = safe_open(dir, &sb);
+	if (dirfd < 0 || !S_ISDIR(sb.st_mode)) {
+		if (dirfd >= 0) {
+			close(dirfd);
+			errno = ENOTDIR;
+		}
+		ptr->wd = -1;
+	} else {
+		snprintf(procfd, sizeof(procfd), "/proc/self/fd/%d", dirfd);
+		ptr->wd =
+			inotify_add_watch(fd, procfd, IN_CREATE | IN_MOVED_TO);
+		close(dirfd);
+	}
+
 	if (ptr->wd == -1) {
 		free(ptr);
 		if (!run_as_user)
 			syslog(LOG_ERR, "Unable to watch (%s) %s\n", path,
 			       strerror(errno));
+		else
+			fprintf(stderr, "Unable to watch (%s) %s\n", path,
+				strerror(errno));
 		goto end;
 	}
 
