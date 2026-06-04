@@ -384,7 +384,8 @@ static void process_config(int fd, FILE *cfg)
 		int l = strlen(buffer) - 1;
 		if (l <= 0)
 			continue;
-		buffer[l] = 0;
+		if (buffer[l] == '\n')
+			buffer[l] = 0;
 		if (buffer[0] == '~') {
 			if (run_as_user) {
 				char *ptr = NULL;
