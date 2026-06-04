@@ -70,7 +70,7 @@ selabel_is_digest_set(const struct selinux_opt *opts, unsigned n)
 				goto err;
 
 			digest->specfile_list =
-				calloc(DIGEST_FILES_MAX, sizeof(char *));
+				calloc(DIGEST_FILES_MAX + 1, sizeof(char *));
 			if (!digest->specfile_list)
 				goto err;
 
