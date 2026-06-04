@@ -298,6 +298,7 @@ int main(int argc, char *argv[])
 	if (violation == 1) {
 		fprintf(stderr, "There was a neverallow violation\n");
 		rc = SEPOL_ERR;
+		goto exit;
 	}
 
 	rc = SEPOL_OK;
