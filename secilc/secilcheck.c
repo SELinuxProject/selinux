@@ -78,7 +78,6 @@ static int get_binary_policy_db(const char *filename, sepol_policydb_t *pdb)
 
 	if (sepol_policydb_read(pdb, pf) < 0) {
 		fprintf(stderr, "Error reading binary policy: %s\n", filename);
-		sepol_policydb_free(pdb);
 		rc = SEPOL_ERR;
 		goto exit;
 	}
