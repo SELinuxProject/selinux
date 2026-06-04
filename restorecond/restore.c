@@ -34,7 +34,8 @@ void restore_init(struct restore_opts *opts)
 		opts->set_specctx | opts->add_assoc | opts->ignore_digest |
 		opts->recurse | opts->userealpath | opts->xdev |
 		opts->abort_on_error | opts->syslog_changes |
-		opts->log_matches | opts->ignore_noent | opts->ignore_mounts;
+		opts->log_matches | opts->ignore_noent | opts->ignore_mounts |
+		opts->skip_multilink;
 
 	/* Use setfiles, restorecon and restorecond own handles */
 	selinux_restorecon_set_sehandle(opts->hnd);

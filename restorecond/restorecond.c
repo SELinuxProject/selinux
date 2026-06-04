@@ -154,10 +154,11 @@ int main(int argc, char **argv)
 
 	watch_file = server_watch_file;
 
-	/* Set all options to zero/NULL except for ignore_noent & digest. */
+	/* Set all options to zero/NULL except for ignore_noent, digest, and skip_multilink. */
 	memset(&r_opts, 0, sizeof(r_opts));
 	r_opts.ignore_noent = SELINUX_RESTORECON_IGNORE_NOENTRY;
 	r_opts.ignore_digest = SELINUX_RESTORECON_IGNORE_DIGEST;
+	r_opts.skip_multilink = SELINUX_RESTORECON_SKIP_MULTILINK;
 
 	/* As r_opts.selabel_opt_digest = NULL, no digest will be requested. */
 	restore_init(&r_opts);

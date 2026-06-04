@@ -192,16 +192,12 @@ void watch_list_add(int fd, const char *path)
 	if (glob(path, GLOB_TILDE | GLOB_PERIOD | GLOB_ALTDIRFUNC, NULL,
 		 &globbuf) >= 0) {
 		for (i = 0; i < globbuf.gl_pathc; i++) {
-			struct stat sb;
 			const char *p = globbuf.gl_pathv[i];
 
 			len = strlen(p) - 2;
 			if (len > 0 && strcmp(&p[len--], "/.") == 0)
 				continue;
 			if (len > 0 && strcmp(&p[len], "/..") == 0)
-				continue;
-			if (lstat(p, &sb) == 0 && S_ISREG(sb.st_mode) &&
-			    sb.st_nlink > 1)
 				continue;
 			selinux_restorecon(p, r_opts.restorecon_flags);
 		}
