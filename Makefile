@@ -4,6 +4,8 @@ SUBDIRS=libsepol libselinux libsemanage checkpolicy secilc policycoreutils $(OPT
 PYSUBDIRS=libselinux libsemanage
 DISTCLEANSUBDIRS=libselinux libsemanage
 
+CLANG_FORMAT ?= clang-format
+
 ifeq ($(DEBUG),1)
 	export CFLAGS = -g3 -O0 -gdwarf-2 -fno-strict-aliasing -Wall -Wshadow -Werror
 	export LDFLAGS = -g
@@ -55,7 +57,7 @@ distclean:
 FORMAT_SOURCE_FILES := $(shell find $(SUBDIRS) -type f \( -name '*.c' -o -name '*.h' \))
 
 format:
-	clang-format -i $(FORMAT_SOURCE_FILES)
+	$(CLANG_FORMAT) -i $(FORMAT_SOURCE_FILES)
 
 check-format:
-	clang-format --dry-run -Werror $(FORMAT_SOURCE_FILES)
+	$(CLANG_FORMAT) --dry-run -Werror $(FORMAT_SOURCE_FILES)
