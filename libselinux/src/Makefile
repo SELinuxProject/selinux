@@ -151,7 +151,6 @@ all: $(LIBSO)
 endif
 
 pywrap: all selinuxswig_python_exception.i
-	$(PYTHON) -m pip install build wheel
 	CFLAGS="$(CPPFLAGS) $(CFLAGS) $(SWIG_CFLAGS)" $(PYTHON) -m build --no-isolation --wheel .
 
 rubywrap: all $(SWIGRUBYSO)

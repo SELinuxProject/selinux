@@ -64,6 +64,7 @@ dnf install \
 
 # For Python and Ruby bindings
 dnf install \
+    python3-build \
     python3-devel \
     python3-pip \
     python3-setuptools \
@@ -97,6 +98,7 @@ apt-get install --no-install-recommends --no-install-suggests \
 
 # For Python and Ruby bindings
 apt-get install --no-install-recommends --no-install-suggests \
+    python3-build \
     python3-dev \
     python3-pip \
     python3-setuptools \
