@@ -48,7 +48,7 @@ struct context_color_t {
 	char *range_bg;
 };
 
-struct {
+static struct {
 	unsigned int disp_user : 1;
 	unsigned int disp_role : 1;
 	unsigned int disp_type : 1;

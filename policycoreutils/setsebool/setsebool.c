@@ -17,9 +17,9 @@
 #include <semanage/boolean_record.h>
 #include <errno.h>
 
-int permanent = 0;
-int no_reload = 0;
-int verbose = 0;
+static int permanent = 0;
+static int no_reload = 0;
+static int verbose = 0;
 
 int setbool(char **list, size_t start, size_t end);
 

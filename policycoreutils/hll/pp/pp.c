@@ -30,7 +30,7 @@
 #include <sepol/module_to_cil.h>
 #include <sepol/policydb/module.h>
 
-char *progname;
+static const char *progname;
 
 __attribute__((format(printf, 1, 2))) static void log_err(const char *fmt, ...)
 {

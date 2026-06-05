@@ -65,7 +65,7 @@ static int priority_set = 0;
 static semanage_handle_t *sh = NULL;
 static char *store;
 static char *store_root;
-int extract_cil = 0;
+static int extract_cil = 0;
 static int checksum = 0;
 
 extern char *optarg;
