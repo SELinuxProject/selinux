@@ -618,6 +618,8 @@ static int load_mmap_literal_spec(struct mmap_area *mmap_area, bool validating,
 	rc = next_entry(&data_u8, mmap_area, sizeof(uint8_t));
 	if (rc < 0)
 		return -1;
+	if (data_u8 > LABEL_FILE_KIND_REG)
+		return -1;
 	lspec->file_kind = data_u8;
 
 	return 0;
@@ -705,6 +707,8 @@ static int load_mmap_regex_spec(struct mmap_area *mmap_area, bool validating,
 	 */
 	rc = next_entry(&data_u8, mmap_area, sizeof(uint8_t));
 	if (rc < 0)
+		return -1;
+	if (data_u8 > LABEL_FILE_KIND_REG)
 		return -1;
 	rspec->file_kind = data_u8;
 
