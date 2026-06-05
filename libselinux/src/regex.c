@@ -137,6 +137,9 @@ int regex_load_mmap(struct mmap_area *mmap_area, struct regex_data **regex,
 
 	entry_len = be32toh(data_u32);
 
+	if (entry_len > mmap_area->next_len)
+		return -1;
+
 	if (entry_len && do_load_precompregex) {
 		/*
 		 * this should yield exactly one because we store one pattern at
