@@ -563,7 +563,7 @@ static int USER_CONTEXT_PRED(const char *string)
 
 static int STR_COMPARATOR(const void *a, const void *b)
 {
-	return strcmp((const char *)a, (const char *)b);
+	return strcmp((const char *)a, *(const char *const *)b);
 }
 
 /* make_template
