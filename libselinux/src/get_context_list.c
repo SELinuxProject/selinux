@@ -307,7 +307,7 @@ static int get_failsafe_context(const char *user, char **newcon)
 	if (!ptr)
 		return -1;
 	plen = strlen(ptr);
-	if (buf[plen - 1] == '\n')
+	if (plen && buf[plen - 1] == '\n')
 		buf[plen - 1] = 0;
 
 	nlen = strlen(user) + 1 + plen + 1;
