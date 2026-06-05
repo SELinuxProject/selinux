@@ -45,6 +45,5 @@ struct restore_opts {
 };
 
 void restore_init(struct restore_opts *opts);
-extern char **exclude_list;
 
 #endif

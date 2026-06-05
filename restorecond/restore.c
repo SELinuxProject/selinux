@@ -1,16 +1,4 @@
 #include "restore.h"
-#include <glob.h>
-
-#ifndef GLOB_TILDE
-#define GLOB_TILDE 0
-#endif
-
-#ifndef GLOB_BRACE
-#define GLOB_BRACE 0
-#endif
-
-char **exclude_list;
-static int exclude_count;
 
 void restore_init(struct restore_opts *opts)
 {
@@ -49,8 +37,4 @@ void restore_init(struct restore_opts *opts)
 			exit(-1);
 		}
 	}
-
-	if (exclude_list)
-		selinux_restorecon_set_exclude_list(
-			(const char **)exclude_list);
 }
