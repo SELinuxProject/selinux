@@ -33,6 +33,7 @@ runs:
     - name: Install dependencies
       shell: bash
       run: |
+        echo "::group::Install dependencies"
         sudo apt-get update -q
         sudo apt-get install -qy --no-install-recommends \
             bison \
@@ -51,15 +52,20 @@ runs:
             xmlto
 
         pip install flake8 setuptools build wheel
+        echo "::endgroup::"
 
     - name: Install Clang
       if: ${{ inputs.compiler == 'clang' }}
       shell: bash
-      run: sudo apt-get install -qqy clang
+      run: |
+        echo "::group::Install Clang"
+        sudo apt-get install -qqy clang
+        echo "::endgroup::"
 
     - name: Configure the environment
       shell: bash
       run: |
+        echo "::group::Configure the environment"
         DESTDIR=/tmp/destdir
         echo "PYTHON=python" >> $GITHUB_ENV
         echo "RUBY=ruby" >> $GITHUB_ENV
@@ -113,6 +119,7 @@ runs:
 
         # Display the final environment file, for debugging purpose
         cat $GITHUB_ENV
+        echo "::endgroup::"
 
     - name: Display versions
       shell: bash
