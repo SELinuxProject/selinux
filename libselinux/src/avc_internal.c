@@ -204,7 +204,15 @@ static int avc_netlink_process(void *buf)
 
 	switch (nlh->nlmsg_type) {
 	case NLMSG_ERROR: {
-		struct nlmsgerr *err = NLMSG_DATA(nlh);
+		struct nlmsgerr *err;
+
+		if (nlh->nlmsg_len < NLMSG_LENGTH(sizeof(*err))) {
+			avc_log(SELINUX_WARNING,
+				"%s:  warning: truncated netlink message\n",
+				avc_prefix);
+			return -1;
+		}
+		err = NLMSG_DATA(nlh);
 
 		/* Netlink ack */
 		if (err->error == 0)
@@ -217,7 +225,15 @@ static int avc_netlink_process(void *buf)
 	}
 
 	case SELNL_MSG_SETENFORCE: {
-		struct selnl_msg_setenforce *msg = NLMSG_DATA(nlh);
+		struct selnl_msg_setenforce *msg;
+
+		if (nlh->nlmsg_len < NLMSG_LENGTH(sizeof(*msg))) {
+			avc_log(SELINUX_WARNING,
+				"%s:  warning: truncated netlink message\n",
+				avc_prefix);
+			return -1;
+		}
+		msg = NLMSG_DATA(nlh);
 		rc = avc_process_setenforce(!!msg->val);
 		if (rc < 0)
 			return rc;
@@ -225,7 +241,15 @@ static int avc_netlink_process(void *buf)
 	}
 
 	case SELNL_MSG_POLICYLOAD: {
-		struct selnl_msg_policyload *msg = NLMSG_DATA(nlh);
+		struct selnl_msg_policyload *msg;
+
+		if (nlh->nlmsg_len < NLMSG_LENGTH(sizeof(*msg))) {
+			avc_log(SELINUX_WARNING,
+				"%s:  warning: truncated netlink message\n",
+				avc_prefix);
+			return -1;
+		}
+		msg = NLMSG_DATA(nlh);
 		rc = avc_process_policyload(msg->seqno);
 		if (rc < 0)
 			return rc;
