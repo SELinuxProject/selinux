@@ -71,7 +71,7 @@ jobs:
             swig \
             xmlto
 
-        pip install flake8 setuptools
+        pip install flake8 setuptools build wheel
 
     - name: Install Clang
       if: ${{ matrix.compiler == 'clang' }}
