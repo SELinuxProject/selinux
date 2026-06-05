@@ -202,7 +202,19 @@ void watch_list_add(int fd, const char *path)
 				continue;
 			if (len > 0 && strcmp(&p[len], "/..") == 0)
 				continue;
-			selinux_restorecon(p, r_opts.restorecon_flags);
+			if (selinux_restorecon(p, r_opts.restorecon_flags) <
+			    0) {
+				if (errno != ENOENT) {
+					if (!run_as_user)
+						syslog(LOG_ERR,
+						       "Unable to relabel (%s) %s\n",
+						       p, strerror(errno));
+					else
+						fprintf(stderr,
+							"Unable to relabel (%s) %s\n",
+							p, strerror(errno));
+				}
+			}
 		}
 		globfree(&globbuf);
 	}
@@ -286,8 +298,24 @@ int watch_list_find(int wd, const char *file)
 				    0)
 					exitApp("Error allocating memory.");
 
-				selinux_restorecon(path,
-						   r_opts.restorecon_flags);
+				if (selinux_restorecon(
+					    path, r_opts.restorecon_flags) <
+				    0) {
+					if (errno != ENOENT) {
+						if (!run_as_user)
+							syslog(LOG_ERR,
+							       "Unable to relabel (%s) %s\n",
+							       path,
+							       strerror(errno));
+						else
+							fprintf(stderr,
+								"Unable to relabel (%s) %s\n",
+								path,
+								strerror(
+									errno));
+					}
+				}
+
 				free(path);
 				return 0;
 			}
