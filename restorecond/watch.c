@@ -40,7 +40,7 @@ struct watchList {
 	char *dir;
 	struct stringsList *files;
 };
-struct watchList *firstDir = NULL;
+static struct watchList *firstDir = NULL;
 
 int watch_list_isempty(void)
 {

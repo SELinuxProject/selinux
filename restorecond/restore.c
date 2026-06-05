@@ -10,7 +10,7 @@
 #endif
 
 char **exclude_list;
-int exclude_count;
+static int exclude_count;
 
 void restore_init(struct restore_opts *opts)
 {
