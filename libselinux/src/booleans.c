@@ -329,9 +329,9 @@ int security_commit_booleans(void)
 		return -1;
 }
 
-static void rollback(SELboolean *boollist, int end)
+static void rollback(SELboolean *boollist, size_t end)
 {
-	int i;
+	size_t i;
 
 	for (i = 0; i < end; i++)
 		security_set_boolean(
