@@ -1,0 +1,139 @@
+name: Build SELinux userspace
+description: Set up Python, Ruby, install dependencies, and configure the build environment
+
+inputs:
+  python-version:
+    description: Python version to set up
+    required: true
+  ruby-version:
+    description: Ruby version to set up
+    required: true
+  compiler:
+    description: Compiler to use (gcc or clang)
+    required: true
+  other:
+    description: Additional build variant (test-flags-override, test-debug, linker-bfd, linker-gold, sanitizers)
+    required: false
+    default: ''
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Python ${{ inputs.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+
+    - name: Set up Ruby ${{ inputs.ruby-version }}
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ inputs.ruby-version }}
+        bundler-cache: true
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update -q
+        sudo apt-get install -qy --no-install-recommends \
+            bison \
+            flex \
+            gawk \
+            gettext \
+            libaudit-dev \
+            libbz2-dev \
+            libcap-dev \
+            libcap-ng-dev \
+            libcunit1-dev \
+            libdbus-glib-1-dev \
+            libpcre2-dev \
+            ruby-dev \
+            swig \
+            xmlto
+
+        pip install flake8 setuptools build wheel
+
+    - name: Install Clang
+      if: ${{ inputs.compiler == 'clang' }}
+      run: sudo apt-get install -qqy clang
+
+    - name: Configure the environment
+      run: |
+        DESTDIR=/tmp/destdir
+        echo "PYTHON=python" >> $GITHUB_ENV
+        echo "RUBY=ruby" >> $GITHUB_ENV
+        echo "DESTDIR=$DESTDIR" >> $GITHUB_ENV
+
+        CC=${{ matrix.compiler }}
+        if [ "${{ matrix.python-ruby-version.other }}" = "linker-bfd" ] ; then
+            CC="$CC -fuse-ld=bfd"
+        elif [ "${{ matrix.python-ruby-version.other }}" = "linker-gold" ] ; then
+            CC="$CC -fuse-ld=gold"
+        fi
+        # https://bugs.ruby-lang.org/issues/18616
+        # https://github.com/llvm/llvm-project/issues/49958
+        if [ "${{ matrix.compiler }}" = "clang" ] && [[ "${{ matrix.python-ruby-version.ruby }}" = 3* ]] ; then
+            CC="$CC -fdeclspec"
+        fi
+        echo "CC=$CC" >> $GITHUB_ENV
+
+        EXPLICIT_MAKE_VARS=
+        if [ "${{ matrix.python-ruby-version.other }}" = "test-flags-override" ] ; then
+            # Test that overriding CFLAGS, LDFLAGS and other variables works fine
+            EXPLICIT_MAKE_VARS="CFLAGS=-I$DESTDIR/usr/include LDFLAGS=-L$DESTDIR/usr/lib LDLIBS= CPPFLAGS="
+        elif [ "${{ matrix.python-ruby-version.other }}" = "test-debug" ] ; then
+            # Test hat debug build works fine
+            EXPLICIT_MAKE_VARS="DEBUG=1"
+        elif [ "${{ matrix.python-ruby-version.other }}" = "sanitizers" ] ; then
+            sanitizers='-fsanitize=address,undefined'
+            EXPLICIT_MAKE_VARS="CFLAGS='-g -I$DESTDIR/usr/include $sanitizers' LDFLAGS='-L$DESTDIR/usr/lib $sanitizers' LDLIBS= CPPFLAGS= OPT_SUBDIRS="
+            echo "ASAN_OPTIONS=strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1" >> $GITHUB_ENV
+            echo "UBSAN_OPTIONS=print_stacktrace=1:print_summary=1:halt_on_error=1" >> $GITHUB_ENV
+        else
+            EXPLICIT_MAKE_VARS=
+        fi
+        echo "EXPLICIT_MAKE_VARS=${EXPLICIT_MAKE_VARS}" >> $GITHUB_ENV
+
+        # Find files in order of pkgconf to be able to find Python.h
+        # For example with Python 3.5:
+        # * python is located at /opt/hostedtoolcache/Python/3.5.10/x64/bin/python
+        # * sys.prefix is /opt/hostedtoolcache/Python/3.5.10/x64
+        # * Python.h is located at /opt/hostedtoolcache/Python/3.5.10/x64/include/python3.5m/Python.h
+        # * python-3.5.pc is located at /opt/hostedtoolcache/Python/3.5.10/x64/lib/pkgconfig/python-3.5.pc
+        PYTHON_SYS_PREFIX="$(python -c 'import sys;print(sys.prefix)')"
+        echo "PKG_CONFIG_PATH=${PYTHON_SYS_PREFIX}/lib/pkgconfig" >> $GITHUB_ENV
+
+        if [[ "${{ matrix.python-ruby-version.python }}" == pypy* ]] ; then
+            # PyPy does not provide a config file for pkg-config
+            # libpypy-c.so is provided in bin/libpypy-c.so for PyPy and bin/libpypy3-c.so for PyPy3
+            echo "PYINC=-I${PYTHON_SYS_PREFIX}/include" >> $GITHUB_ENV
+            echo "PYLIBS=-L${PYTHON_SYS_PREFIX}/bin -lpypy3-c" >> $GITHUB_ENV
+        fi
+
+        # Display the final environment file, for debugging purpose
+        cat $GITHUB_ENV
+
+    - name: Display versions
+      run: |
+        echo "::group::Compiler ($CC):"
+        $CC --version
+        echo "::endgroup::"
+        echo "::group::Python ($(which "$PYTHON")):"
+        $PYTHON --version
+        echo "::endgroup::"
+        echo "::group::Ruby ($(which "$RUBY")):"
+        $RUBY --version
+        echo "::endgroup::"
+
+    - name: Build SELinux userspace
+      run: |
+        echo "::group::make install"
+        eval make -j$(nproc) install $EXPLICIT_MAKE_VARS -k
+        echo "::endgroup::"
+        echo "::group::make install"
+        eval make -j$(nproc) install $EXPLICIT_MAKE_VARS -k
+        echo "::endgroup::"
+        echo "::group::make install-pywrap"
+        eval make -j$(nproc) install-pywrap $EXPLICIT_MAKE_VARS -k
+        echo "::endgroup::"
+        echo "::group::make install-rubywrap"
+        eval make -j$(nproc) install-rubywrap $EXPLICIT_MAKE_VARS -k
+        echo "::endgroup::"
