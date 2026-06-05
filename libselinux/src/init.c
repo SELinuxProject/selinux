@@ -129,7 +129,6 @@ out:
 	free(buf);
 	if (fp)
 		fclose(fp);
-	return;
 }
 
 void fini_selinuxmnt(void)

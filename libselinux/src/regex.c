@@ -653,5 +653,4 @@ truncated:
 	default:
 		break;
 	}
-	return;
 }
