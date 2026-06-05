@@ -31,6 +31,7 @@ runs:
         bundler-cache: true
 
     - name: Install dependencies
+      shell: bash
       run: |
         sudo apt-get update -q
         sudo apt-get install -qy --no-install-recommends \
@@ -53,9 +54,11 @@ runs:
 
     - name: Install Clang
       if: ${{ inputs.compiler == 'clang' }}
+      shell: bash
       run: sudo apt-get install -qqy clang
 
     - name: Configure the environment
+      shell: bash
       run: |
         DESTDIR=/tmp/destdir
         echo "PYTHON=python" >> $GITHUB_ENV
@@ -112,6 +115,7 @@ runs:
         cat $GITHUB_ENV
 
     - name: Display versions
+      shell: bash
       run: |
         echo "::group::Compiler ($CC):"
         $CC --version
@@ -124,6 +128,7 @@ runs:
         echo "::endgroup::"
 
     - name: Build SELinux userspace
+      shell: bash
       run: |
         echo "::group::make install"
         eval make -j$(nproc) install $EXPLICIT_MAKE_VARS -k
