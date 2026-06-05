@@ -384,7 +384,7 @@ static size_t __cil_cons_leaf_operand_len(struct cil_db *db,
 		cil_list_for_each(i1, (struct cil_list *)operand->data) {
 			struct cil_tree_node *node = NODE(i1->data);
 			if (node->flavor == CIL_USERATTRIBUTE) {
-				len = __cil_userattribute_len(db, node->data);
+				len += __cil_userattribute_len(db, node->data);
 			} else {
 				len += strlen(DATUM(node->data)->fqn);
 				len++; /* " " or "}" */
