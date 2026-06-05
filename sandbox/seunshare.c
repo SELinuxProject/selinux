@@ -52,7 +52,6 @@
 	"policycoreutils" /* the name of this package lang translation */
 #endif
 
-#define BUF_SIZE 1024
 #define DEFAULT_PATH "/usr/bin:/bin"
 #define USAGE_STRING \
 	_("USAGE: seunshare [ -v ] [ -C ] [ -k ] [ -t tmpdir ] [ -h homedir ] \
