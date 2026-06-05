@@ -21,8 +21,6 @@ static int null_terminated;
 static int request_digest;
 static struct restore_opts r_opts;
 
-#define STAT_BLOCK_SIZE 1
-
 #define SETFILES "setfiles"
 #define RESTORECON "restorecon"
 static int iamrestorecon;

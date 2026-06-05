@@ -235,7 +235,6 @@ static int authenticate_via_shadow_passwd(const struct passwd *p_passwd_line)
  */
 static int authenticate_user(void)
 {
-#define INITLEN 255
 	struct passwd *p_passwd_line; /* struct derived from passwd file line */
 	uid_t uid;
 
