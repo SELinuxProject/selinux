@@ -211,8 +211,6 @@ domby |
 DOMBY				{ return(DOMBY);}
 INCOMP |
 incomp				{ return(INCOMP);}
-fscon |
-FSCON                           { return(FSCON);}
 ibpkeycon |
 IBPKEYCON			{ return(IBPKEYCON);}
 ibendportcon |

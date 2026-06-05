@@ -132,7 +132,7 @@ typedef int (* require_func_t)(int pass);
 %token SOURCE
 %token TARGET
 %token SAMEUSER
-%token FSCON PORTCON NETIFCON NODECON 
+%token PORTCON NETIFCON NODECON
 %token IBPKEYCON
 %token IBENDPORTCON
 %token PIRQCON IOMEMCON IOPORTCON PCIDEVICECON DEVICETREECON
@@ -175,7 +175,7 @@ base_policy             : { if (define_policy(pass, 0) == -1) YYABORT; }
 			  opt_default_rules opt_mls te_rbac users opt_constraints 
                          { if (pass == 1) { if (policydb_index_bools(policydbp)) YYABORT; }
 			   else if (pass == 2) { if (policydb_index_others(NULL, policydbp, 0)) YYABORT; }}
-			  initial_sid_contexts opt_fs_contexts opt_fs_uses opt_genfs_contexts net_contexts opt_dev_contexts opt_ibpkey_contexts opt_ibendport_contexts
+			  initial_sid_contexts opt_fs_uses opt_genfs_contexts net_contexts opt_dev_contexts opt_ibpkey_contexts opt_ibendport_contexts
 			;
 classes			: class_def 
 			| classes class_def
@@ -703,15 +703,6 @@ pci_context_def  	: PCIDEVICECON number security_context_def
 dtree_context_def	: DEVICETREECON path security_context_def
 		        {if (define_devicetree_context()) YYABORT;}
 		        ;
-opt_fs_contexts         : fs_contexts 
-                        |
-                        ;
-fs_contexts		: fs_context_def
-			| fs_contexts fs_context_def
-			;
-fs_context_def		: FSCON number number security_context_def security_context_def
-			{if (define_fs_context($2,$3)) YYABORT;}
-			;
 net_contexts		: opt_port_contexts opt_netif_contexts opt_node_contexts
 			;
 opt_port_contexts       : port_contexts

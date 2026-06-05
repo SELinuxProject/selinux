@@ -4871,66 +4871,6 @@ int define_initial_sid_context(void)
 	return 0;
 }
 
-int define_fs_context(unsigned int major, unsigned int minor)
-{
-	ocontext_t *newc, *c, *head;
-
-	if (policydbp->target_platform != SEPOL_TARGET_SELINUX) {
-		yyerror("fscon not supported for target");
-		return -1;
-	}
-
-	if (pass == 1) {
-		parse_security_context(NULL);
-		parse_security_context(NULL);
-		return 0;
-	}
-
-	newc = calloc(1, sizeof(ocontext_t));
-	if (!newc) {
-		yyerror("out of memory");
-		return -1;
-	}
-
-	newc->u.name = malloc(6);
-	if (!newc->u.name) {
-		yyerror("out of memory");
-		free(newc);
-		return -1;
-	}
-	sprintf(newc->u.name, "%02x:%02x", major, minor);
-
-	if (parse_security_context(&newc->context[0])) {
-		free(newc->u.name);
-		free(newc);
-		return -1;
-	}
-	if (parse_security_context(&newc->context[1])) {
-		context_destroy(&newc->context[0]);
-		free(newc->u.name);
-		free(newc);
-		return -1;
-	}
-	head = policydbp->ocontexts[OCON_FS];
-
-	for (c = head; c; c = c->next) {
-		if (!strcmp(newc->u.name, c->u.name)) {
-			yyerror2("duplicate entry for file system %s",
-				 newc->u.name);
-			context_destroy(&newc->context[0]);
-			context_destroy(&newc->context[1]);
-			free(newc->u.name);
-			free(newc);
-			return -1;
-		}
-	}
-
-	newc->next = head;
-	policydbp->ocontexts[OCON_FS] = newc;
-
-	return 0;
-}
-
 int define_pirq_context(unsigned int pirq)
 {
 	ocontext_t *newc, *c, *l, *head;

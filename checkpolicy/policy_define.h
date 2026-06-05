@@ -33,7 +33,6 @@ int define_compute_type(int which);
 int define_conditional(cond_expr_t *expr, avrule_t *t_list, avrule_t *f_list);
 int define_constraint(constraint_expr_t *expr);
 int define_dominance(void);
-int define_fs_context(unsigned int major, unsigned int minor);
 int define_fs_use(int behavior);
 int define_genfs_context(int has_type);
 int define_initial_sid_context(void);
