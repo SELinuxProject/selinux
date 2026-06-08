@@ -1042,6 +1042,9 @@ end_arch_check:
 		goto err;
 	num_specs = be64toh(data_u64);
 
+	if (__builtin_add_overflow(data->num_specs, num_specs, &data_u64))
+		goto err;
+
 	rc = load_mmap_ctxarray(mmap_area, path, &ctx_array, rec->validating);
 	if (rc)
 		goto err;
