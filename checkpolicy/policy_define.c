@@ -4892,13 +4892,14 @@ int define_fs_context(unsigned int major, unsigned int minor)
 		return -1;
 	}
 
-	newc->u.name = malloc(6);
+	newc->u.name = malloc(sizeof("ffffffff:ffffffff"));
 	if (!newc->u.name) {
 		yyerror("out of memory");
 		free(newc);
 		return -1;
 	}
-	sprintf(newc->u.name, "%02x:%02x", major, minor);
+	snprintf(newc->u.name, sizeof("ffffffff:ffffffff"), "%02x:%02x", major,
+		 minor);
 
 	if (parse_security_context(&newc->context[0])) {
 		free(newc->u.name);
