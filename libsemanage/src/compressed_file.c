@@ -20,6 +20,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#include <limits.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
@@ -140,7 +141,15 @@ static ssize_t bunzip(semanage_handle_t *sh, FILE *f, void **data)
 	while (bzerror == BZ_OK) {
 		nBuf = BZ2_bzRead(&bzerror, b, buf, bufsize);
 		if ((bzerror == BZ_OK) || (bzerror == BZ_STREAM_END)) {
+			if (nBuf > (size_t)SSIZE_MAX - total) {
+				ERR(sh, "Decompressed data too large.");
+				goto exit;
+			}
 			if (total + nBuf > size) {
+				if (size > SIZE_MAX / 2) {
+					ERR(sh, "Decompressed data too large.");
+					goto exit;
+				}
 				size *= 2;
 				tmpalloc = realloc(uncompress, size);
 				if (tmpalloc == NULL) {
