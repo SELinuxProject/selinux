@@ -4,6 +4,7 @@
  */
 
 #include <stdarg.h>
+#include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
 #include <errno.h>
@@ -32,11 +33,11 @@ struct saved_data {
 static int cmp(const void *A, const void *B)
 {
 	const struct spec *sp1 = A, *sp2 = B;
+	bool wild1 = (sp1->property_key[0] == '*');
+	bool wild2 = (sp2->property_key[0] == '*');
 
-	if (strncmp(sp1->property_key, "*", 1) == 0)
-		return 1;
-	if (strncmp(sp2->property_key, "*", 1) == 0)
-		return -1;
+	if (wild1 != wild2)
+		return wild1 - wild2;
 
 	size_t L1 = strlen(sp1->property_key);
 	size_t L2 = strlen(sp2->property_key);
