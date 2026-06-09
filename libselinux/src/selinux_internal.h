@@ -147,4 +147,13 @@ static inline void fclose_errno_safe(FILE *stream)
 
 #define spaceship_cmp(a, b) (((a) > (b)) - ((a) < (b)))
 
+static inline void selinux_reset_errno(int *saved_errno)
+{
+	errno = *saved_errno;
+}
+
+#define SELINUX_PROTECT_ERRNO                             \
+	__attribute__((__cleanup__(selinux_reset_errno))) \
+	__attribute__((__unused__)) int _saved_errno = errno
+
 #endif /* SELINUX_INTERNAL_H_ */
