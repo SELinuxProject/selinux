@@ -32,11 +32,11 @@ context_t context_new(const char *str)
 		result->ptr = n;
 	else
 		free(n);
-	if (n == 0 || result == 0) {
+	if (n == NULL || result == NULL) {
 		goto err;
 	}
 	n->current_str = n->component[0] = n->component[1] = n->component[2] =
-		n->component[3] = 0;
+		n->component[3] = NULL;
 	for (count = 0, p = str; *p; p++) {
 		switch (*p) {
 		case ':':
@@ -59,7 +59,7 @@ context_t context_new(const char *str)
 		goto err;
 	}
 
-	n->component[3] = 0;
+	n->component[3] = NULL;
 	for (i = 0, tok = str; *tok; i++) {
 		if (i < 3)
 			for (p = tok; *p && *p != ':'; p++) { /* empty */
@@ -70,7 +70,7 @@ context_t context_new(const char *str)
 			}
 		}
 		n->component[i] = strndup(tok, p - tok);
-		if (n->component[i] == 0)
+		if (n->component[i] == NULL)
 			goto err;
 		tok = *p ? p + 1 : p;
 	}
@@ -79,7 +79,7 @@ err:
 	if (errno == 0)
 		errno = EINVAL;
 	context_free(result);
-	return 0;
+	return NULL;
 }
 
 static void conditional_free(char **v)
@@ -87,7 +87,7 @@ static void conditional_free(char **v)
 	if (*v) {
 		free(*v);
 	}
-	*v = 0;
+	*v = NULL;
 }
 
 /*
@@ -126,7 +126,7 @@ const char *context_str(context_t context)
 		}
 	}
 	n->current_str = malloc(total);
-	if (n->current_str != 0) {
+	if (n->current_str != NULL) {
 		char *cp = n->current_str;
 
 		cp = stpcpy(cp, n->component[0]);

@@ -81,13 +81,13 @@ int main(int argc, char *argv[])
 	int opt_index = 0;
 	enum cil_log_level log_level = CIL_ERR;
 	static struct option long_opts[] = {
-		{ "help", no_argument, 0, 'h' },
-		{ "verbose", no_argument, 0, 'v' },
-		{ "preserve-tunables", no_argument, 0, 'P' },
-		{ "qualified-names", no_argument, 0, 'Q' },
-		{ "output", required_argument, 0, 'o' },
-		{ "ast-phase", required_argument, 0, 'A' },
-		{ 0, 0, 0, 0 }
+		{ "help", no_argument, NULL, 'h' },
+		{ "verbose", no_argument, NULL, 'v' },
+		{ "preserve-tunables", no_argument, NULL, 'P' },
+		{ "qualified-names", no_argument, NULL, 'Q' },
+		{ "output", required_argument, NULL, 'o' },
+		{ "ast-phase", required_argument, NULL, 'A' },
+		{ NULL, 0, NULL, 0 }
 	};
 	int i;
 

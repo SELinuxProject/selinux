@@ -63,7 +63,7 @@ __attribute__((format(printf, 1, 2))) extern void yyerror2(const char *fmt,
 							   ...);
 
 policydb_t *policydbp;
-queue_t id_queue = 0;
+queue_t id_queue = NULL;
 unsigned int pass;
 int mlspol = 0;
 
@@ -112,9 +112,9 @@ int insert_separator(int push)
 	int error;
 
 	if (push)
-		error = queue_push(id_queue, 0);
+		error = queue_push(id_queue, NULL);
 	else
-		error = queue_insert(id_queue, 0);
+		error = queue_insert(id_queue, NULL);
 
 	if (error) {
 		yyerror("queue overflow");
@@ -125,7 +125,7 @@ int insert_separator(int push)
 
 int insert_id(const char *id, int push)
 {
-	char *newid = 0;
+	char *newid = NULL;
 	int error;
 
 	newid = strdup(id);
@@ -300,7 +300,7 @@ out:
 
 int define_polcap(void)
 {
-	char *id = 0;
+	char *id = NULL;
 	int capnum;
 
 	if (pass == 2) {
@@ -338,8 +338,8 @@ bad:
 
 int define_initial_sid(void)
 {
-	char *id = 0;
-	ocontext_t *newc = 0, *c, *head;
+	char *id = NULL;
+	ocontext_t *newc = NULL, *c, *head;
 
 	if (pass == 2) {
 		id = queue_remove(id_queue);
@@ -561,9 +561,9 @@ int define_default_range(int which)
 
 int define_common_perms(void)
 {
-	char *id = 0, *perm = 0;
-	common_datum_t *comdatum = 0;
-	perm_datum_t *perdatum = 0;
+	char *id = NULL, *perm = NULL;
+	common_datum_t *comdatum = NULL;
+	perm_datum_t *perdatum = NULL;
 	int ret;
 
 	if (pass == 2) {
@@ -653,7 +653,7 @@ int define_av_perms(int inherits)
 	char *id;
 	class_datum_t *cladatum;
 	common_datum_t *comdatum;
-	perm_datum_t *perdatum = 0, *perdatum2 = 0;
+	perm_datum_t *perdatum = NULL, *perdatum2 = NULL;
 	int ret;
 
 	if (pass == 2) {
@@ -767,8 +767,8 @@ bad:
 int define_sens(void)
 {
 	char *id;
-	mls_level_t *level = 0;
-	level_datum_t *datum = 0, *aliasdatum = 0;
+	mls_level_t *level = NULL;
+	level_datum_t *datum = NULL, *aliasdatum = NULL;
 	int ret;
 	uint32_t value; /* dummy variable -- its value is never used */
 
@@ -961,7 +961,7 @@ int define_dominance(void)
 int define_category(void)
 {
 	char *id;
-	cat_datum_t *datum = 0, *aliasdatum = 0;
+	cat_datum_t *datum = NULL, *aliasdatum = NULL;
 	int ret;
 	uint32_t value;
 
@@ -3408,7 +3408,7 @@ bad:
 int define_role_allow(void)
 {
 	char *id;
-	struct role_allow_rule *ra = 0;
+	struct role_allow_rule *ra = NULL;
 
 	if (pass == 1) {
 		while ((id = queue_remove(id_queue)))
@@ -4122,7 +4122,7 @@ int define_conditional(cond_expr_t *expr, avrule_t *t_list, avrule_t *f_list)
 		/* Invert */
 		t_list = f_list;
 		f_list = NULL;
-		expr = define_cond_expr(COND_NOT, expr, 0);
+		expr = define_cond_expr(COND_NOT, expr, NULL);
 		if (!expr) {
 			yyerror("unable to invert conditional expression");
 			return -1;
@@ -6143,7 +6143,7 @@ int define_genfs_context(int has_type)
 int define_range_trans(int class_specified)
 {
 	char *id;
-	level_datum_t *levdatum = 0;
+	level_datum_t *levdatum = NULL;
 	class_datum_t *cladatum;
 	range_trans_rule_t *rule;
 	int l, add = 1;

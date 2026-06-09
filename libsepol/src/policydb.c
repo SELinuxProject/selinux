@@ -817,7 +817,7 @@ void avrule_list_destroy(avrule_t *x)
  */
 static int roles_init(policydb_t *p)
 {
-	char *key = 0;
+	char *key = NULL;
 	int rc;
 	role_datum_t *role;
 
@@ -1368,7 +1368,7 @@ static int common_destroy(hashtab_key_t key, hashtab_datum_t datum,
 	if (key)
 		free(key);
 	comdatum = (common_datum_t *)datum;
-	(void)hashtab_map(comdatum->permissions.table, perm_destroy, 0);
+	(void)hashtab_map(comdatum->permissions.table, perm_destroy, NULL);
 	hashtab_destroy(comdatum->permissions.table);
 	free(datum);
 	return 0;
@@ -1386,7 +1386,7 @@ static int class_destroy(hashtab_key_t key, hashtab_datum_t datum,
 	if (cladatum == NULL) {
 		return 0;
 	}
-	(void)hashtab_map(cladatum->permissions.table, perm_destroy, 0);
+	(void)hashtab_map(cladatum->permissions.table, perm_destroy, NULL);
 	hashtab_destroy(cladatum->permissions.table);
 	constraint = cladatum->constraints;
 	while (constraint) {
@@ -1577,7 +1577,7 @@ void policydb_destroy(policydb_t *p)
 	free(p->decl_val_to_struct);
 
 	for (i = 0; i < SYM_NUM; i++) {
-		(void)hashtab_map(p->scope[i].table, scope_destroy, 0);
+		(void)hashtab_map(p->scope[i].table, scope_destroy, NULL);
 		hashtab_destroy(p->scope[i].table);
 	}
 	avrule_block_list_destroy(p->global);
@@ -1651,7 +1651,7 @@ void symtabs_destroy(symtab_t *symtab)
 {
 	int i;
 	for (i = 0; i < SYM_NUM; i++) {
-		(void)hashtab_map(symtab[i].table, destroy_f[i], 0);
+		(void)hashtab_map(symtab[i].table, destroy_f[i], NULL);
 		hashtab_destroy(symtab[i].table);
 	}
 }
@@ -2115,7 +2115,7 @@ static int context_read_and_validate(context_struct_t *c, policydb_t *p,
 static int perm_read(policydb_t *p __attribute__((unused)), hashtab_t h,
 		     struct policy_file *fp, uint32_t nprim)
 {
-	char *key = 0;
+	char *key = NULL;
 	perm_datum_t *perdatum;
 	uint32_t buf[2];
 	size_t len;
@@ -2149,7 +2149,7 @@ bad:
 
 static int common_read(policydb_t *p, hashtab_t h, struct policy_file *fp)
 {
-	char *key = 0;
+	char *key = NULL;
 	common_datum_t *comdatum;
 	uint32_t buf[4];
 	size_t len, nel;
@@ -2292,7 +2292,7 @@ static int read_cons_helper(policydb_t *p, constraint_node_t **nodep,
 
 static int class_read(policydb_t *p, hashtab_t h, struct policy_file *fp)
 {
-	char *key = 0;
+	char *key = NULL;
 	class_datum_t *cladatum;
 	uint32_t buf[6];
 	size_t len, len2, ncons, nel;
@@ -2394,7 +2394,7 @@ bad:
 
 static int role_read(policydb_t *p, hashtab_t h, struct policy_file *fp)
 {
-	char *key = 0;
+	char *key = NULL;
 	role_datum_t *role;
 	uint32_t buf[3];
 	size_t len;
@@ -2466,7 +2466,7 @@ bad:
 
 static int type_read(policydb_t *p, hashtab_t h, struct policy_file *fp)
 {
-	char *key = 0;
+	char *key = NULL;
 	type_datum_t *typdatum;
 	uint32_t buf[5];
 	size_t len;
@@ -3326,7 +3326,7 @@ bad:
 
 static int user_read(policydb_t *p, hashtab_t h, struct policy_file *fp)
 {
-	char *key = 0;
+	char *key = NULL;
 	user_datum_t *usrdatum;
 	uint32_t buf[3];
 	size_t len;
@@ -3407,7 +3407,7 @@ bad:
 static int sens_read(policydb_t *p __attribute__((unused)), hashtab_t h,
 		     struct policy_file *fp)
 {
-	char *key = 0;
+	char *key = NULL;
 	level_datum_t *levdatum;
 	uint32_t buf[2], len;
 	int rc;
@@ -3445,7 +3445,7 @@ bad:
 static int cat_read(policydb_t *p __attribute__((unused)), hashtab_t h,
 		    struct policy_file *fp)
 {
-	char *key = 0;
+	char *key = NULL;
 	cat_datum_t *catdatum;
 	uint32_t buf[3], len;
 	int rc;

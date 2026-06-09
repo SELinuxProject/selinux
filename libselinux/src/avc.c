@@ -166,7 +166,7 @@ static int avc_init_internal(const char *prefix,
 	memset(&cache_stats, 0, sizeof(cache_stats));
 
 	for (i = 0; i < AVC_CACHE_SLOTS; i++)
-		avc_cache.slots[i] = 0;
+		avc_cache.slots[i] = NULL;
 	avc_cache.lru_hint = 0;
 	avc_cache.active_nodes = 0;
 	avc_cache.latest_notif = 0;
@@ -514,7 +514,7 @@ int avc_reset(void)
 			avc_node_freelist = tmp;
 			avc_cache.active_nodes--;
 		}
-		avc_cache.slots[i] = 0;
+		avc_cache.slots[i] = NULL;
 	}
 	avc_cache.lru_hint = 0;
 
@@ -524,7 +524,8 @@ int avc_reset(void)
 
 	for (c = avc_callbacks; c; c = c->next) {
 		if (c->events & AVC_CALLBACK_RESET) {
-			ret = c->callback(AVC_CALLBACK_RESET, 0, 0, 0, 0, 0);
+			ret = c->callback(AVC_CALLBACK_RESET, NULL, NULL, 0, 0,
+					  NULL);
 			if (ret && !rc) {
 				rc = ret;
 				errsave = errno;
@@ -766,7 +767,7 @@ int avc_has_perm_noaudit(security_id_t ssid, security_id_t tsid,
 			ae->used = 1;
 		} else {
 			avc_cache_stats_incr(entry_discards);
-			ae = 0;
+			ae = NULL;
 		}
 	}
 
@@ -977,7 +978,7 @@ static int avc_update_cache(uint32_t event, security_id_t ssid,
 		}
 	} else {
 		/* apply to one node */
-		node = avc_search_node(ssid, tsid, tclass, 0);
+		node = avc_search_node(ssid, tsid, tclass, NULL);
 		if (node) {
 			avc_update_node(event, node, perms);
 		}
@@ -1055,7 +1056,7 @@ int avc_ss_grant(security_id_t ssid, security_id_t tsid,
 		 security_class_t tclass, access_vector_t perms, uint32_t seqno)
 {
 	return avc_control(AVC_CALLBACK_GRANT, ssid, tsid, tclass, perms, seqno,
-			   0);
+			   NULL);
 }
 
 /**
@@ -1095,7 +1096,7 @@ int avc_ss_revoke(security_id_t ssid, security_id_t tsid,
 		  uint32_t seqno)
 {
 	return avc_control(AVC_CALLBACK_REVOKE, ssid, tsid, tclass, perms,
-			   seqno, 0);
+			   seqno, NULL);
 }
 
 /**
@@ -1131,10 +1132,10 @@ int avc_ss_set_auditallow(security_id_t ssid, security_id_t tsid,
 {
 	if (enable)
 		return avc_control(AVC_CALLBACK_AUDITALLOW_ENABLE, ssid, tsid,
-				   tclass, perms, seqno, 0);
+				   tclass, perms, seqno, NULL);
 	else
 		return avc_control(AVC_CALLBACK_AUDITALLOW_DISABLE, ssid, tsid,
-				   tclass, perms, seqno, 0);
+				   tclass, perms, seqno, NULL);
 }
 
 /**
@@ -1152,8 +1153,8 @@ int avc_ss_set_auditdeny(security_id_t ssid, security_id_t tsid,
 {
 	if (enable)
 		return avc_control(AVC_CALLBACK_AUDITDENY_ENABLE, ssid, tsid,
-				   tclass, perms, seqno, 0);
+				   tclass, perms, seqno, NULL);
 	else
 		return avc_control(AVC_CALLBACK_AUDITDENY_DISABLE, ssid, tsid,
-				   tclass, perms, seqno, 0);
+				   tclass, perms, seqno, NULL);
 }

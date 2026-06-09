@@ -378,7 +378,7 @@ int ebitmap_set_bit(ebitmap_t *e, unsigned int bit, int value)
 		return -EINVAL;
 	}
 
-	prev = 0;
+	prev = NULL;
 	n = e->node;
 	while (n && n->startbit <= bit) {
 		if ((n->startbit + MAPSIZE) > bit) {
@@ -527,7 +527,7 @@ void ebitmap_destroy(ebitmap_t *e)
 	}
 
 	e->highbit = 0;
-	e->node = 0;
+	e->node = NULL;
 	return;
 }
 

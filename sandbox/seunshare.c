@@ -775,11 +775,11 @@ int main(int argc, char **argv)
 	int fd;
 
 	const struct option long_options[] = {
-		{ "homedir", 1, 0, 'h' },      { "tmpdir", 1, 0, 't' },
-		{ "runuserdir", 1, 0, 'r' },   { "kill", 0, 0, 'k' },
-		{ "verbose", 0, 0, 'v' },      { "context", 1, 0, 'Z' },
-		{ "capabilities", 0, 0, 'C' }, { "wayland", 1, 0, 'W' },
-		{ "pipewire", 1, 0, 'P' },     { NULL, 0, 0, 0 }
+		{ "homedir", 1, NULL, 'h' },	  { "tmpdir", 1, NULL, 't' },
+		{ "runuserdir", 1, NULL, 'r' },	  { "kill", 0, NULL, 'k' },
+		{ "verbose", 0, NULL, 'v' },	  { "context", 1, NULL, 'Z' },
+		{ "capabilities", 0, NULL, 'C' }, { "wayland", 1, NULL, 'W' },
+		{ "pipewire", 1, NULL, 'P' },	  { NULL, 0, NULL, 0 }
 	};
 
 	uid_t uid = getuid();

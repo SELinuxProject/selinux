@@ -379,28 +379,28 @@ cond_else		: ELSE '{' cond_pol_list '}'
 cond_expr               : '(' cond_expr ')'
 			{ $$ = $2;}
 			| NOT cond_expr
-			{ $$ = define_cond_expr(COND_NOT, $2, 0);
-			  if ($$ == 0) YYABORT; }
+			{ $$ = define_cond_expr(COND_NOT, $2, NULL);
+			  if ($$ == NULL) YYABORT; }
 			| cond_expr AND cond_expr
 			{ $$ = define_cond_expr(COND_AND, $1, $3);
-			  if ($$ == 0) YYABORT; }
+			  if ($$ == NULL) YYABORT; }
 			| cond_expr OR cond_expr
 			{ $$ = define_cond_expr(COND_OR, $1, $3);
-			  if ($$ == 0) YYABORT; }
+			  if ($$ == NULL) YYABORT; }
 			| cond_expr XOR cond_expr
 			{ $$ = define_cond_expr(COND_XOR, $1, $3);
-			  if ($$ == 0) YYABORT; }
+			  if ($$ == NULL) YYABORT; }
 			| cond_expr EQUALS cond_expr
 			{ $$ = define_cond_expr(COND_EQ, $1, $3);
-			  if ($$ == 0) YYABORT; }
+			  if ($$ == NULL) YYABORT; }
 			| cond_expr NOTEQUAL cond_expr
 			{ $$ = define_cond_expr(COND_NEQ, $1, $3);
-			  if ($$ == 0) YYABORT; }
+			  if ($$ == NULL) YYABORT; }
 			| cond_expr_prim
 			{ $$ = $1; }
 			;
 cond_expr_prim          : identifier
-                        { $$ = define_cond_expr(COND_BOOL,0, 0);
+                        { $$ = define_cond_expr(COND_BOOL, NULL, NULL);
 			  if ($$ == COND_ERR) YYABORT; }
                         ;
 cond_pol_list           : cond_pol_list cond_rule_def 

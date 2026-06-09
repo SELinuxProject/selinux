@@ -64,7 +64,7 @@ static int bzip(semanage_handle_t *sh, const char *filename, void *data,
 
 	b = BZ2_bzWriteOpen(&bzerror, f, sh->conf->bzip_blocksize, 0, 0);
 	if (bzerror != BZ_OK) {
-		BZ2_bzWriteClose(&bzerror, b, 1, 0, 0);
+		BZ2_bzWriteClose(&bzerror, b, 1, NULL, NULL);
 		fclose(f);
 		return -1;
 	}
@@ -77,14 +77,14 @@ static int bzip(semanage_handle_t *sh, const char *filename, void *data,
 		}
 		BZ2_bzWrite(&bzerror, b, (uint8_t *)data + total, len);
 		if (bzerror == BZ_IO_ERROR) {
-			BZ2_bzWriteClose(&bzerror, b, 1, 0, 0);
+			BZ2_bzWriteClose(&bzerror, b, 1, NULL, NULL);
 			fclose(f);
 			return -1;
 		}
 		total += len;
 	}
 
-	BZ2_bzWriteClose(&bzerror, b, 0, 0, 0);
+	BZ2_bzWriteClose(&bzerror, b, 0, NULL, NULL);
 	fclose(f);
 	if (bzerror == BZ_IO_ERROR) {
 		return -1;

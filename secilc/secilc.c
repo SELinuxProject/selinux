@@ -110,23 +110,23 @@ int main(int argc, char *argv[])
 	size_t fc_size;
 	enum cil_log_level log_level = CIL_ERR;
 	static struct option long_opts[] = {
-		{ "help", no_argument, 0, 'h' },
-		{ "verbose", no_argument, 0, 'v' },
-		{ "target", required_argument, 0, 't' },
-		{ "mls", required_argument, 0, 'M' },
-		{ "policyversion", required_argument, 0, 'c' },
-		{ "handle-unknown", required_argument, 0, 'U' },
-		{ "disable-dontaudit", no_argument, 0, 'D' },
-		{ "multiple-decls", no_argument, 0, 'm' },
-		{ "disable-neverallow", no_argument, 0, 'N' },
-		{ "preserve-tunables", no_argument, 0, 'P' },
-		{ "qualified-names", no_argument, 0, 'Q' },
-		{ "output", required_argument, 0, 'o' },
-		{ "filecontexts", required_argument, 0, 'f' },
-		{ "expand-generated", no_argument, 0, 'G' },
-		{ "expand-size", required_argument, 0, 'X' },
-		{ "optimize", no_argument, 0, 'O' },
-		{ 0, 0, 0, 0 }
+		{ "help", no_argument, NULL, 'h' },
+		{ "verbose", no_argument, NULL, 'v' },
+		{ "target", required_argument, NULL, 't' },
+		{ "mls", required_argument, NULL, 'M' },
+		{ "policyversion", required_argument, NULL, 'c' },
+		{ "handle-unknown", required_argument, NULL, 'U' },
+		{ "disable-dontaudit", no_argument, NULL, 'D' },
+		{ "multiple-decls", no_argument, NULL, 'm' },
+		{ "disable-neverallow", no_argument, NULL, 'N' },
+		{ "preserve-tunables", no_argument, NULL, 'P' },
+		{ "qualified-names", no_argument, NULL, 'Q' },
+		{ "output", required_argument, NULL, 'o' },
+		{ "filecontexts", required_argument, NULL, 'f' },
+		{ "expand-generated", no_argument, NULL, 'G' },
+		{ "expand-size", required_argument, NULL, 'X' },
+		{ "optimize", no_argument, NULL, 'O' },
+		{ NULL, 0, NULL, 0 }
 	};
 	int i;
 

@@ -1790,8 +1790,8 @@ int __cil_verify_helper(struct cil_tree_node *node, uint32_t *finished,
 	int rc = SEPOL_ERR;
 	int *handleunknown;
 	int *mls;
-	int *nseuserdflt = 0;
-	int *pass = 0;
+	int *nseuserdflt = NULL;
+	int *pass = NULL;
 	struct cil_args_verify *args = extra_args;
 	struct cil_complex_symtab *csymtab = NULL;
 	struct cil_db *db = NULL;

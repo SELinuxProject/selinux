@@ -66,7 +66,7 @@ int main(int argc, char **argv)
 	/* Check to see which way we are being called. If a '=' is passed,
 	   we'll enforce the list syntax. If not we'll enforce the original
 	   syntax for backward compatibility. */
-	if (strchr(argv[optind], '=') == 0) {
+	if (strchr(argv[optind], '=') == NULL) {
 		int len;
 		char *bool_list[1];
 

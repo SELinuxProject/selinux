@@ -249,7 +249,7 @@ int selinux_init_load_policy(int *enforce)
 	selinux_getenforcemode(&seconfig);
 
 	/* Check for an override of the mode via the kernel command line. */
-	rc = mount("proc", "/proc", "proc", 0, 0);
+	rc = mount("proc", "/proc", "proc", 0, NULL);
 	cfg = fopen("/proc/cmdline", "re");
 	if (cfg) {
 		buf = malloc(selinux_page_size);
@@ -300,16 +300,16 @@ int selinux_init_load_policy(int *enforce)
 	 */
 	const char *mntpoint = NULL;
 	/* First make sure /sys is mounted */
-	(void)mount("sysfs", "/sys", "sysfs", 0, 0);
+	(void)mount("sysfs", "/sys", "sysfs", 0, NULL);
 
 	/* MS_NODEV can't be set because of /sys/fs/selinux/null device, used by Android */
-	if (mount(SELINUXFS, SELINUXMNT, SELINUXFS, MS_NOEXEC | MS_NOSUID, 0) ==
-		    0 ||
+	if (mount(SELINUXFS, SELINUXMNT, SELINUXFS, MS_NOEXEC | MS_NOSUID,
+		  NULL) == 0 ||
 	    errno == EBUSY) {
 		mntpoint = SELINUXMNT;
 	} else {
 		/* check old mountpoint */
-		if (mount(SELINUXFS, OLDSELINUXMNT, SELINUXFS, 0, 0) == 0 ||
+		if (mount(SELINUXFS, OLDSELINUXMNT, SELINUXFS, 0, NULL) == 0 ||
 		    errno == EBUSY) {
 			mntpoint = OLDSELINUXMNT;
 		}

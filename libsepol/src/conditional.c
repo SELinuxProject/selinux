@@ -568,7 +568,7 @@ static int bool_isvalid(cond_bool_datum_t *b)
 
 int cond_read_bool(policydb_t *p, hashtab_t h, struct policy_file *fp)
 {
-	char *key = 0;
+	char *key = NULL;
 	cond_bool_datum_t *booldatum;
 	uint32_t buf[3], len;
 	int rc;
@@ -605,7 +605,7 @@ int cond_read_bool(policydb_t *p, hashtab_t h, struct policy_file *fp)
 
 	return 0;
 err:
-	cond_destroy_bool(key, booldatum, 0);
+	cond_destroy_bool(key, booldatum, NULL);
 	return -1;
 }
 

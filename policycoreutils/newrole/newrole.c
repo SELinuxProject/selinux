@@ -847,9 +847,12 @@ static int parse_command_line_arguments(int argc, char **argv, char *ttyn,
 	char *tty_con = NULL;
 	context_t context = NULL; /* manipulatable form of new_context */
 	const struct option long_options[] = {
-		{ "role", 1, 0, 'r' },	  { "type", 1, 0, 't' },
-		{ "level", 1, 0, 'l' },	  { "preserve-environment", 0, 0, 'p' },
-		{ "version", 0, 0, 'V' }, { NULL, 0, 0, 0 }
+		{ "role", 1, NULL, 'r' },
+		{ "type", 1, NULL, 't' },
+		{ "level", 1, NULL, 'l' },
+		{ "preserve-environment", 0, NULL, 'p' },
+		{ "version", 0, NULL, 'V' },
+		{ NULL, 0, NULL, 0 }
 	};
 
 	*preserve_environment = 0;

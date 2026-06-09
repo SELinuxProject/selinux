@@ -956,7 +956,7 @@ menu:
 			}
 			break;
 		case '6':
-			sepol_sidtab_map(&sidtab, print_sid, 0);
+			sepol_sidtab_map(&sidtab, print_sid, NULL);
 			break;
 		case '7':
 			printf("pathname?  ");

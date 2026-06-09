@@ -213,11 +213,11 @@ int main(int argc, char *argv[])
 	int opt_index = 0;
 	enum cil_log_level log_level = CIL_ERR;
 	static struct option long_opts[] = {
-		{ "help", no_argument, 0, 'h' },
-		{ "verbose", no_argument, 0, 'v' },
-		{ "multiple-decls", no_argument, 0, 'm' },
-		{ "qualified-names", no_argument, 0, 'Q' },
-		{ 0, 0, 0, 0 }
+		{ "help", no_argument, NULL, 'h' },
+		{ "verbose", no_argument, NULL, 'v' },
+		{ "multiple-decls", no_argument, NULL, 'm' },
+		{ "qualified-names", no_argument, NULL, 'Q' },
+		{ NULL, 0, NULL, 0 }
 	};
 
 	while (1) {

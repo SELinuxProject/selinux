@@ -190,7 +190,7 @@ int is_perm_existent(const class_datum_t *cladatum, const char *perm_id)
 	const perm_datum_t *perm;
 
 	perm = hashtab_search(cladatum->permissions.table, perm_id);
-	if (perm == NULL && cladatum->comdatum != 0) {
+	if (perm == NULL && cladatum->comdatum != NULL) {
 		/* permission was not in this class.  before giving
 		 * up, check the class's parent */
 		perm = hashtab_search(cladatum->comdatum->permissions.table,

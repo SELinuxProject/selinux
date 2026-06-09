@@ -96,13 +96,13 @@ static int write_pid_file(void)
 	len = snprintf(val, sizeof(val), "%u\n", getpid());
 	if (len < 0) {
 		syslog(LOG_ERR, "Pid error (%s)", strerror(errno));
-		pidfile = 0;
+		pidfile = NULL;
 		return 1;
 	}
 	pidfd = open(pidfile, O_CREAT | O_TRUNC | O_NOFOLLOW | O_WRONLY, 0644);
 	if (pidfd < 0) {
 		syslog(LOG_ERR, "Unable to set pidfile (%s)", strerror(errno));
-		pidfile = 0;
+		pidfile = NULL;
 		return 1;
 	}
 	if (write(pidfd, val, (unsigned int)len) != len) {
@@ -222,7 +222,7 @@ int main(int argc, char **argv)
 			exitApp("daemon");
 		write_pid_file();
 	} else {
-		pidfile = 0;
+		pidfile = NULL;
 	}
 
 	while (watch(master_fd, watch_file) == 0) {

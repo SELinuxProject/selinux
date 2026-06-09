@@ -298,7 +298,7 @@ static char *get_class_info(sepol_security_class_t tclass,
 				     "mlsconstrain ", /* 1 */
 				     "validatetrans ", /* 2 */
 				     "mlsvalidatetrans ", /* 3 */
-				     0 };
+				     NULL };
 	size_t class_buf_len = 0;
 	size_t new_class_buf_len;
 	size_t buf_used;
@@ -830,7 +830,7 @@ mls_ops:
 		* These contain the constraint components that are added to the
 		* callers reason buffer.
 		*/
-		const char *buffers[] = { class_buf, a, "); ", tmp_buf, 0 };
+		const char *buffers[] = { class_buf, a, "); ", tmp_buf, NULL };
 
 		for (x = 0; buffers[x] != NULL; x++) {
 			while (1) {
@@ -1127,7 +1127,7 @@ int sepol_compute_av_reason(sepol_security_id_t ssid, sepol_security_id_t tsid,
 			    sepol_access_vector_t requested,
 			    struct sepol_av_decision *avd, unsigned int *reason)
 {
-	context_struct_t *scontext = 0, *tcontext = 0;
+	context_struct_t *scontext = NULL, *tcontext = NULL;
 	int rc = 0;
 
 	scontext = sepol_sidtab_search(sidtab, ssid);
@@ -1162,7 +1162,7 @@ int sepol_compute_av_reason_buffer(sepol_security_id_t ssid,
 				   unsigned int *reason, char **reason_buf,
 				   unsigned int flags)
 {
-	context_struct_t *scontext = 0, *tcontext = 0;
+	context_struct_t *scontext = NULL, *tcontext = NULL;
 	int rc = 0;
 
 	scontext = sepol_sidtab_search(sidtab, ssid);
@@ -1371,8 +1371,8 @@ static int sepol_compute_sid(sepol_security_id_t ssid, sepol_security_id_t tsid,
 			     sepol_security_id_t *out_sid)
 {
 	struct class_datum *cladatum = NULL;
-	context_struct_t *scontext = 0, *tcontext = 0, newcontext;
-	struct role_trans *roletr = 0;
+	context_struct_t *scontext = NULL, *tcontext = NULL, newcontext;
+	struct role_trans *roletr = NULL;
 	avtab_key_t avkey;
 	avtab_datum_t *avdatum;
 	avtab_ptr_t node;

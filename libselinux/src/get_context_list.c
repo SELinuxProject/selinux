@@ -276,7 +276,7 @@ static int get_context_user(FILE *fp, context_t fromcon, const char *user,
 			*reachable = new_reachable;
 			new_reachable[*nreachable] = usercon_str2;
 			usercon_str2 = NULL;
-			new_reachable[*nreachable + 1] = 0;
+			new_reachable[*nreachable + 1] = NULL;
 			*nreachable += 1;
 		}
 		free(usercon_str2);
@@ -317,7 +317,7 @@ static int get_failsafe_context(const char *user, char **newcon)
 	rc = snprintf(*newcon, nlen, "%s:%s", user, ptr);
 	if (rc < 0 || (size_t)rc >= nlen) {
 		free(*newcon);
-		*newcon = 0;
+		*newcon = NULL;
 		return -1;
 	}
 
@@ -328,7 +328,7 @@ static int get_failsafe_context(const char *user, char **newcon)
 	   selinuxfs isn't mounted. */
 	if (security_check_context(*newcon) && errno != ENOENT) {
 		free(*newcon);
-		*newcon = 0;
+		*newcon = NULL;
 		return -1;
 	}
 
