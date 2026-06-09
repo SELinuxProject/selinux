@@ -85,7 +85,7 @@ static void get_field(const char *fieldstr, char *newfield, int newfieldlen)
 		if (fgets(newfield, newfieldlen, stdin) == NULL)
 			continue;
 		fflush(stdin);
-		if (newfield[strlen(newfield) - 1] == '\n')
+		if (newfield[0] && newfield[strlen(newfield) - 1] == '\n')
 			newfield[strlen(newfield) - 1] = '\0';
 
 		if (strlen(newfield) == 0) {
