@@ -126,10 +126,6 @@ def savefile(new, orig, X_ind):
         if rc == Gtk.ResponseType.YES:
             copy = True
     else:
-        try:
-            input = raw_input
-        except NameError:
-            pass
         ans = input(_("Do you want to save changes to '%s' (y/N): ") % orig)
         if re.match(_("[yY]"), ans):
             copy = True
