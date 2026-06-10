@@ -135,22 +135,24 @@ static void load_checks(char *pc[], int *npc, char *fc[], int *nfc)
 				case 0:
 					if (*npc >= MAX_CHECK)
 						break;
-					pc[*npc] = (char *)malloc((buf_len) *
+					pc[*npc] = (char *)malloc((buf_len + 1) *
 								  sizeof(char));
 					if (!pc[*npc])
 						break;
 					memcpy(pc[*npc], bufp, buf_len);
+					pc[*npc][buf_len] = '\0';
 					(*npc)++;
 					bufp = NULL;
 					break;
 				case 1:
 					if (*nfc >= MAX_CHECK)
 						break;
-					fc[*nfc] = (char *)malloc((buf_len) *
+					fc[*nfc] = (char *)malloc((buf_len + 1) *
 								  sizeof(char));
 					if (!fc[*nfc])
 						break;
 					memcpy(fc[*nfc], bufp, buf_len);
+					fc[*nfc][buf_len] = '\0';
 					(*nfc)++;
 					bufp = NULL;
 					break;
