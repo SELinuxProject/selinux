@@ -27,7 +27,7 @@ int matchmediacon(const char *media, char **con)
 			return -1;
 		}
 		if (current_line[0] && current_line[strlen(current_line) - 1])
-			current_line[strlen(current_line) - 1] = 0;
+			current_line[strlen(current_line) - 1] = '\0';
 		/* Skip leading whitespace before the partial context. */
 		ptr = current_line;
 		while (*ptr && isspace((unsigned char)*ptr))

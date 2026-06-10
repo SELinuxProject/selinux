@@ -152,7 +152,7 @@ static int get_context_user(FILE *fp, context_t fromcon, const char *user,
 
 	while ((len = getline(&line, &line_len, fp)) > 0) {
 		if (line[len - 1] == '\n')
-			line[len - 1] = 0;
+			line[len - 1] = '\0';
 
 		/* Skip leading whitespace. */
 		start = line;
@@ -175,14 +175,14 @@ static int get_context_user(FILE *fp, context_t fromcon, const char *user,
 			start++;
 		if (*start != ':')
 			continue;
-		*start = 0;
+		*start = '\0';
 		linetype = ++start;
 		while (*start && !isspace((unsigned char)*start) &&
 		       *start != ':')
 			start++;
 		if (!(*start))
 			continue;
-		*start = 0;
+		*start = '\0';
 		if (!strcmp(fromrole, linerole) &&
 		    !strcmp(fromtype, linetype)) {
 			found = 1;
@@ -209,7 +209,7 @@ static int get_context_user(FILE *fp, context_t fromcon, const char *user,
 		while (*end && !isspace((unsigned char)*end))
 			end++;
 		if (*end)
-			*end++ = 0;
+			*end++ = '\0';
 
 		/* Check whether a new context is valid */
 		if (SIZE_MAX - user_len < strlen(start) + 2) {
@@ -308,7 +308,7 @@ static int get_failsafe_context(const char *user, char **newcon)
 		return -1;
 	plen = strlen(ptr);
 	if (plen && buf[plen - 1] == '\n')
-		buf[plen - 1] = 0;
+		buf[plen - 1] = '\0';
 
 	nlen = strlen(user) + 1 + plen + 1;
 	*newcon = malloc(nlen);
