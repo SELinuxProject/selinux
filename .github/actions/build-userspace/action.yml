@@ -16,6 +16,11 @@ inputs:
     required: false
     default: ''
 
+outputs:
+  DESTDIR:
+    description: The destination directory for the build
+    value: ${{ steps.config-env.outputs.DESTDIR }}
+
 runs:
   using: composite
   steps:
@@ -64,12 +69,14 @@ runs:
 
     - name: Configure the environment
       shell: bash
+      id: config-env
       run: |
         echo "::group::Configure the environment"
         DESTDIR=/tmp/destdir
         echo "PYTHON=python" >> $GITHUB_ENV
         echo "RUBY=ruby" >> $GITHUB_ENV
         echo "DESTDIR=$DESTDIR" >> $GITHUB_ENV
+        echo "DESTDIR=$DESTDIR" >> $GITHUB_OUTPUT
 
         CC=${{ inputs.compiler }}
         if [ "${{ inputs.other }}" = "linker-bfd" ] ; then
