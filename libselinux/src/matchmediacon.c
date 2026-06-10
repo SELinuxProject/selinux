@@ -26,7 +26,7 @@ int matchmediacon(const char *media, char **con)
 			fclose(infile);
 			return -1;
 		}
-		if (current_line[strlen(current_line) - 1])
+		if (current_line[0] && current_line[strlen(current_line) - 1])
 			current_line[strlen(current_line) - 1] = 0;
 		/* Skip leading whitespace before the partial context. */
 		ptr = current_line;

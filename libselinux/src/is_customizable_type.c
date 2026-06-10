@@ -44,7 +44,8 @@ static void customizable_init(void)
 			i = 0;
 			while (fgets_unlocked(buf, selinux_page_size, fp) &&
 			       i < ctr) {
-				buf[strlen(buf) - 1] = 0;
+				if (buf[0])
+					buf[strlen(buf) - 1] = 0;
 				list[i] = strdup(buf);
 				if (!list[i]) {
 					unsigned int j;
