@@ -150,7 +150,7 @@ int main(int argc, char **argv)
 	const char *base;
 	int errors = 0;
 	const char *ropts = "e:f:hiIDlmno:pqrsvFRW0xT:";
-	const char *sopts = "c:de:f:hiIDlmno:pqr:svCEFR:W0T:";
+	const char *sopts = "c:de:f:hiIDlmno:pqr:svCEFR:W0T:y";
 	const char *opts;
 	union selinux_callback cb;
 	long unsigned skipped_errors;
@@ -264,6 +264,13 @@ int main(int argc, char **argv)
 		case 'f':
 			use_input_file = 1;
 			input_filename = optarg;
+			break;
+		case 'y':
+			r_opts.userealpath = SELINUX_RESTORECON_REALPATH;
+			r_opts.add_assoc = 0;
+			r_opts.xdev = 0;
+			r_opts.ignore_mounts = 0;
+			ctx_validate = 0;
 			break;
 		case 'd':
 			r_opts.debug = 1;
