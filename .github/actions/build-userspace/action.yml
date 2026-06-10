@@ -71,27 +71,27 @@ runs:
         echo "RUBY=ruby" >> $GITHUB_ENV
         echo "DESTDIR=$DESTDIR" >> $GITHUB_ENV
 
-        CC=${{ matrix.compiler }}
-        if [ "${{ matrix.python-ruby-version.other }}" = "linker-bfd" ] ; then
+        CC=${{ inputs.compiler }}
+        if [ "${{ inputs.other }}" = "linker-bfd" ] ; then
             CC="$CC -fuse-ld=bfd"
-        elif [ "${{ matrix.python-ruby-version.other }}" = "linker-gold" ] ; then
+        elif [ "${{ inputs.other }}" = "linker-gold" ] ; then
             CC="$CC -fuse-ld=gold"
         fi
         # https://bugs.ruby-lang.org/issues/18616
         # https://github.com/llvm/llvm-project/issues/49958
-        if [ "${{ matrix.compiler }}" = "clang" ] && [[ "${{ matrix.python-ruby-version.ruby }}" = 3* ]] ; then
+        if [ "${{ inputs.compiler }}" = "clang" ] && [[ "${{ inputs.ruby-version }}" = 3* ]] ; then
             CC="$CC -fdeclspec"
         fi
         echo "CC=$CC" >> $GITHUB_ENV
 
         EXPLICIT_MAKE_VARS=
-        if [ "${{ matrix.python-ruby-version.other }}" = "test-flags-override" ] ; then
+        if [ "${{ inputs.other }}" = "test-flags-override" ] ; then
             # Test that overriding CFLAGS, LDFLAGS and other variables works fine
             EXPLICIT_MAKE_VARS="CFLAGS=-I$DESTDIR/usr/include LDFLAGS=-L$DESTDIR/usr/lib LDLIBS= CPPFLAGS="
-        elif [ "${{ matrix.python-ruby-version.other }}" = "test-debug" ] ; then
+        elif [ "${{ inputs.other }}" = "test-debug" ] ; then
             # Test hat debug build works fine
             EXPLICIT_MAKE_VARS="DEBUG=1"
-        elif [ "${{ matrix.python-ruby-version.other }}" = "sanitizers" ] ; then
+        elif [ "${{ inputs.other }}" = "sanitizers" ] ; then
             sanitizers='-fsanitize=address,undefined'
             EXPLICIT_MAKE_VARS="CFLAGS='-g -I$DESTDIR/usr/include $sanitizers' LDFLAGS='-L$DESTDIR/usr/lib $sanitizers' LDLIBS= CPPFLAGS= OPT_SUBDIRS="
             echo "ASAN_OPTIONS=strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1" >> $GITHUB_ENV
@@ -110,7 +110,7 @@ runs:
         PYTHON_SYS_PREFIX="$(python -c 'import sys;print(sys.prefix)')"
         echo "PKG_CONFIG_PATH=${PYTHON_SYS_PREFIX}/lib/pkgconfig" >> $GITHUB_ENV
 
-        if [[ "${{ matrix.python-ruby-version.python }}" == pypy* ]] ; then
+        if [[ "${{ inputs.python-version }}" == pypy* ]] ; then
             # PyPy does not provide a config file for pkg-config
             # libpypy-c.so is provided in bin/libpypy-c.so for PyPy and bin/libpypy3-c.so for PyPy3
             echo "PYINC=-I${PYTHON_SYS_PREFIX}/include" >> $GITHUB_ENV
