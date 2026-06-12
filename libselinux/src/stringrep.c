@@ -19,6 +19,8 @@
 
 #define MAXVECTORS 8*sizeof(access_vector_t)
 
+pthread_mutex_t cache_mutex = PTHREAD_MUTEX_INITIALIZER;
+
 struct discover_class_node {
 	char *name;
 	security_class_t value;
@@ -31,19 +33,23 @@ static struct discover_class_node *discover_class_cache = NULL;
 
 static struct discover_class_node * get_class_cache_entry_name(const char *s)
 {
+	__pthread_mutex_lock(&cache_mutex);
 	struct discover_class_node *node = discover_class_cache;
 
 	for (; node != NULL && strcmp(s,node->name) != 0; node = node->next);
 
+	__pthread_mutex_unlock(&cache_mutex);
 	return node;
 }
 
 static struct discover_class_node * get_class_cache_entry_value(security_class_t c)
 {
+	__pthread_mutex_lock(&cache_mutex);
 	struct discover_class_node *node = discover_class_cache;
 
 	for (; node != NULL && c != node->value; node = node->next);
 
+	__pthread_mutex_unlock(&cache_mutex);
 	return node;
 }
 
@@ -152,9 +158,10 @@ static struct discover_class_node * discover_class(const char *s)
 	}
 	closedir(dir);
 
+	__pthread_mutex_lock(&cache_mutex);
 	node->next = discover_class_cache;
 	discover_class_cache = node;
-
+	__pthread_mutex_unlock(&cache_mutex);
 	return node;
 
 err4:
@@ -172,6 +179,7 @@ err1:
 
 void selinux_flush_class_cache(void)
 {
+	__pthread_mutex_lock(&cache_mutex);
 	struct discover_class_node *cur = discover_class_cache, *prev = NULL;
 	size_t i;
 
@@ -190,6 +198,7 @@ void selinux_flush_class_cache(void)
 	}
 
 	discover_class_cache = NULL;
+	__pthread_mutex_unlock(&cache_mutex);
 }
 
 
