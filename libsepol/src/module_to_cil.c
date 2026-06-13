@@ -118,7 +118,7 @@ static int get_line(char **start, char *end, char **line)
 
 	*line = NULL;
 
-	for (p = *start; p < end && isspace(*p); p++)
+	for (p = *start; p < end && isspace((unsigned char)*p); p++)
 		;
 
 	*start = p;
@@ -3534,7 +3534,7 @@ static int seusers_to_cil(struct sepol_module_package *mod_pkg)
 
 	while ((rc = get_line(&cur, end, &line)) > 0) {
 		tmp = line;
-		while (isspace(*tmp)) {
+		while (isspace((unsigned char)*tmp)) {
 			tmp++;
 		}
 
@@ -3627,7 +3627,7 @@ static int user_extra_to_cil(struct sepol_module_package *mod_pkg)
 
 	while ((rc = get_line(&cur, end, &line)) > 0) {
 		tmp = line;
-		while (isspace(*tmp)) {
+		while (isspace((unsigned char)*tmp)) {
 			tmp++;
 		}
 
@@ -3699,7 +3699,7 @@ static int file_contexts_to_cil(struct sepol_module_package *mod_pkg)
 
 	while ((rc = get_line(&cur, end, &line)) > 0) {
 		tmp = line;
-		while (isspace(*tmp)) {
+		while (isspace((unsigned char)*tmp)) {
 			tmp++;
 		}
 
@@ -4411,7 +4411,7 @@ static int fix_module_name(struct policydb *pdb)
 	// CIL is more restrictive in module names than checkmodule. Convert bad
 	// characters to underscores
 	for (letter = pdb->name; *letter != '\0'; letter++) {
-		if (isalnum(*letter)) {
+		if (isalnum((unsigned char)*letter)) {
 			continue;
 		}
 

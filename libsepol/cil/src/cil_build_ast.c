@@ -4507,7 +4507,7 @@ int cil_gen_nodecon(struct cil_db *db, struct cil_tree_node *parse_current,
 	} else {
 		char *addr = parse_current->next->data;
 		if (strchr(addr, ':') ||
-		    (strchr(addr, '.') && isdigit(addr[0]))) {
+		    (strchr(addr, '.') && isdigit((unsigned char)addr[0]))) {
 			cil_ipaddr_init(&nodecon->addr);
 			rc = cil_fill_ipaddr(parse_current->next,
 					     nodecon->addr);
@@ -4529,7 +4529,7 @@ int cil_gen_nodecon(struct cil_db *db, struct cil_tree_node *parse_current,
 	} else {
 		char *mask = parse_current->next->next->data;
 		if (strchr(mask, ':') ||
-		    (strchr(mask, '.') && isdigit(mask[0]))) {
+		    (strchr(mask, '.') && isdigit((unsigned char)mask[0]))) {
 			cil_ipaddr_init(&nodecon->mask);
 			rc = cil_fill_ipaddr(parse_current->next->next,
 					     nodecon->mask);
@@ -5749,7 +5749,8 @@ int cil_fill_ipaddr(struct cil_tree_node *addr_node, struct cil_ipaddr *addr)
 	addr_str = addr_node->data;
 	if (strchr(addr_str, ':')) {
 		addr->family = AF_INET6;
-	} else if (strchr(addr_str, '.') && isdigit(addr_str[0])) {
+	} else if (strchr(addr_str, '.') &&
+		   isdigit((unsigned char)addr_str[0])) {
 		addr->family = AF_INET;
 	} else {
 		goto exit;
