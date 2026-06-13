@@ -248,10 +248,11 @@ static inline int tokenize_str(char delim, char **str, const char **ptr,
 	*str = NULL;
 
 	while (**ptr != '\0') {
-		if (isspace(delim) && isspace(**ptr)) {
+		if (isspace((unsigned char)delim) &&
+		    isspace((unsigned char)**ptr)) {
 			(*ptr)++;
 			break;
-		} else if (!isspace(delim) && **ptr == delim) {
+		} else if (!isspace((unsigned char)delim) && **ptr == delim) {
 			(*ptr)++;
 			break;
 		}
@@ -273,7 +274,8 @@ static inline int tokenize_str(char delim, char **str, const char **ptr,
 	}
 
 	/* Squash spaces if the delimiter is a whitespace character */
-	while (**ptr != '\0' && isspace(delim) && isspace(**ptr)) {
+	while (**ptr != '\0' && isspace((unsigned char)delim) &&
+	       isspace((unsigned char)**ptr)) {
 		(*ptr)++;
 	}
 
