@@ -212,7 +212,8 @@ static policydb_t *load_policy(const char *filename)
 	ret = policydb_read(policydb, &pf, 1);
 	if (ret) {
 		fprintf(stderr,
-			"error(s) encountered while parsing configuration\n");
+			"error(s) encountered while parsing configuration %s\n",
+			filename);
 		free(policydb);
 		fclose(fp);
 		return NULL;
