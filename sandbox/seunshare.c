@@ -241,15 +241,15 @@ static int pin_dir(const char *dir, struct stat *st_out)
 
 /**
  * This function checks to see if the shell is known in /etc/shells.
- * If so, it returns 0. On error or illegal shell, it returns -1.
+ * If so, it returns true. On error or illegal shell, it returns false.
  */
-static int verify_shell(const char *shell_name)
+static bool verify_shell(const char *shell_name)
 {
-	int rc = -1;
+	bool found = false;
 	const char *buf;
 
 	if (!(shell_name && shell_name[0]))
-		return rc;
+		return found;
 
 	while ((buf = getusershell()) != NULL) {
 		/* ignore comments */
@@ -258,12 +258,12 @@ static int verify_shell(const char *shell_name)
 
 		/* check the shell skipping newline char */
 		if (!strcmp(shell_name, buf)) {
-			rc = 0;
+			found = true;
 			break;
 		}
 	}
 	endusershell();
-	return rc;
+	return found;
 }
 
 /**
@@ -802,7 +802,7 @@ int main(int argc, char **argv)
 		return -1;
 	}
 
-	if (verify_shell(pwd->pw_shell) < 0) {
+	if (!verify_shell(pwd->pw_shell)) {
 		fprintf(stderr, _("Error: User shell is not valid\n"));
 		return -1;
 	}
