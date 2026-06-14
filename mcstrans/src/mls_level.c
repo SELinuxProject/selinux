@@ -22,8 +22,8 @@ mls_level_t *mls_level_from_string(char *mls_context)
 		p++;
 
 	delim = *p;
-	if (delim != 0)
-		*p++ = 0;
+	if (delim != '\0')
+		*p++ = '\0';
 
 	if (*scontextp != 's')
 		goto err;
@@ -36,13 +36,13 @@ mls_level_t *mls_level_from_string(char *mls_context)
 			while (*p && *p != ',' && *p != '-')
 				p++;
 			delim = *p;
-			if (delim != 0)
-				*p++ = 0;
+			if (delim != '\0')
+				*p++ = '\0';
 
 			/* Separate into level if exists */
 			if ((lptr = strchr(scontextp, '.')) != NULL) {
 				/* Remove '.' */
-				*lptr++ = 0;
+				*lptr++ = '\0';
 			}
 
 			if (*scontextp != 'c')
@@ -170,6 +170,6 @@ char *mls_level_to_string(mls_level_t *l)
 		p += sprintf(p, "c%d", i - 1);
 	}
 
-	*(result + len) = 0;
+	*(result + len) = '\0';
 	return result;
 }
