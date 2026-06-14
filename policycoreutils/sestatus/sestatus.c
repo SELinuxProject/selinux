@@ -110,7 +110,7 @@ static void load_checks(char *pc[], int *npc, char *fc[], int *nfc)
 
 		buf_len = strlen(buf);
 		if (buf[buf_len - 1] == '\n')
-			buf[buf_len - 1] = 0;
+			buf[buf_len - 1] = '\0';
 
 		bufp = buf;
 		while (*bufp && isspace(*bufp)) {
