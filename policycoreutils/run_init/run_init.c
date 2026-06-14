@@ -317,7 +317,7 @@ static int get_init_context(char **context)
 
 		buf_len = strlen(buf);
 		if (buf[buf_len - 1] == '\n')
-			buf[buf_len - 1] = 0;
+			buf[buf_len - 1] = '\0';
 
 		bufp = buf;
 		while (*bufp && isspace(*bufp))
