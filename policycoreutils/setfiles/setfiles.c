@@ -1,4 +1,5 @@
 #include "restore.h"
+#include <stdbool.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -23,7 +24,7 @@ static struct restore_opts r_opts;
 
 #define SETFILES "setfiles"
 #define RESTORECON "restorecon"
-static int iamrestorecon;
+static bool iamrestorecon;
 
 /* Behavior flags determined based on setfiles vs. restorecon */
 static int ctx_validate; /* Validate contexts */
@@ -181,7 +182,7 @@ int main(int argc, char **argv)
 		 * Does not follow mounts (sets SELINUX_RESTORECON_XDEV),
 		 * Validates all file contexts at init time.
 		 */
-		iamrestorecon = 0;
+		iamrestorecon = false;
 		r_opts.recurse = SELINUX_RESTORECON_RECURSE;
 		r_opts.userealpath = 0; /* SELINUX_RESTORECON_REALPATH */
 		r_opts.add_assoc = SELINUX_RESTORECON_ADD_ASSOC;
@@ -204,7 +205,7 @@ int main(int argc, char **argv)
 				"Executed with unrecognized name (%s), defaulting to %s behavior.\n",
 				base, RESTORECON);
 
-		iamrestorecon = 1;
+		iamrestorecon = true;
 		r_opts.recurse = 0;
 		r_opts.userealpath = SELINUX_RESTORECON_REALPATH;
 		r_opts.add_assoc = 0;
