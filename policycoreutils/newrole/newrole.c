@@ -55,6 +55,7 @@
 #error NAMESPACE_PRIV needs the USE_PAM option
 #endif
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h> /* for malloc(), realloc(), free() */
 #include <pwd.h> /* for getpwuid() */
@@ -390,11 +391,11 @@ static int authenticate_via_shadow_passwd(const char *uname)
 
 /**
  * This function checks to see if the shell is known in /etc/shells.
- * If so, it returns 1. On error or illegal shell, it returns 0.
+ * If so, it returns true. On error or illegal shell, it returns false.
  */
-static int verify_shell(const char *shell_name)
+static bool verify_shell(const char *shell_name)
 {
-	int found = 0;
+	bool found = false;
 	const char *buf;
 
 	if (!(shell_name && shell_name[0]))
@@ -407,7 +408,7 @@ static int verify_shell(const char *shell_name)
 
 		/* check the shell skipping newline char */
 		if (!strcmp(shell_name, buf)) {
-			found = 1;
+			found = true;
 			break;
 		}
 	}
@@ -457,7 +458,7 @@ static int extract_pw_data(struct passwd *pw_copy)
 		goto out_free;
 	}
 
-	if (verify_shell(pw->pw_shell) == 0) {
+	if (!verify_shell(pw->pw_shell)) {
 		fprintf(stderr, _("Error!  Shell is not valid.\n"));
 		goto out_free;
 	}
