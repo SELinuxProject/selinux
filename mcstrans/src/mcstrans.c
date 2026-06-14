@@ -717,7 +717,7 @@ static char *trim(char *str, const char *whitespace)
 	char *p = str + strlen(str);
 
 	while (p > str && strchr(whitespace, *(p - 1)) != NULL)
-		*--p = 0;
+		*--p = '\0';
 	return str;
 }
 
@@ -793,7 +793,7 @@ static int process_trans(char *buffer)
 	/* zap trailing whitespace */
 	buffer = trim(buffer, "\t \r\n");
 
-	if (*buffer == 0)
+	if (*buffer == '\0')
 		return 0;
 
 	char *delim = strpbrk(buffer, "=!>");
