@@ -373,7 +373,7 @@ static int my_getXcon_raw(pid_t pid, char **con, const char *val)
 		char *tmp = strchr(ptr, '\n');
 
 		if (tmp)
-			*tmp = 0;
+			*tmp = '\0';
 
 		if (*ptr && !(*con = strdup(ptr)))
 			return (-1);
@@ -422,7 +422,7 @@ static char *get_scon(void)
 				    " Couldn't read security context");
 
 			ptr += strspn(ptr, " \n\t");
-			ptr[strcspn(ptr, " \n\t")] = 0;
+			ptr[strcspn(ptr, " \n\t")] = '\0';
 		}
 
 		if (!(con_tmp = strdup(ptr)))
