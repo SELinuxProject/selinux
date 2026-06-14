@@ -516,8 +516,11 @@ static char *get_scon(void)
 			    " Couldn't get security context for pid %lu",
 			    (unsigned long)opts->f.pid);
 
-		if (!con)
+		if (!con) {
 			con = strdup(dummy_NIL);
+			if (!con)
+				err(EXIT_FAILURE, "Out of memory");
+		}
 		break;
 
 	case OPTS_FROM_FILE:
