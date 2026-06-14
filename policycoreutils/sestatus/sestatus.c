@@ -100,7 +100,7 @@ static void load_checks(char *pc[], int *npc, char *fc[], int *nfc)
 	int filelen = strlen(FILES);
 
 	if (fp == NULL) {
-		printf("\nUnable to open %s.\n", CONF);
+		fprintf(stderr, "\nUnable to open %s.\n", CONF);
 		return;
 	}
 
@@ -158,8 +158,9 @@ static void load_checks(char *pc[], int *npc, char *fc[], int *nfc)
 					break;
 				default:
 					/* ignore lines before a section */
-					printf("Line not in a section: %s.\n",
-					       buf);
+					fprintf(stderr,
+						"Line not in a section: %s.\n",
+						buf);
 					break;
 				}
 			}
@@ -234,7 +235,7 @@ int main(int argc, char **argv)
 		return 0;
 		break;
 	default:
-		printf("unknown (%s)\n", strerror(errno));
+		fprintf(stderr, "unknown (%s)\n", strerror(errno));
 		return 0;
 		break;
 	}
@@ -251,13 +252,13 @@ int main(int argc, char **argv)
 	printf_tab("SELinux root directory:");
 	root_dir = selinux_path();
 	if (root_dir == NULL) {
-		printf("error (%s)\n", strerror(errno));
+		fprintf(stderr, "error (%s)\n", strerror(errno));
 		return -1;
 	}
 	/* The path has a trailing '/' so duplicate to edit */
 	root_path = strdup(root_dir);
 	if (!root_path) {
-		printf("malloc error (%s)\n", strerror(errno));
+		fprintf(stderr, "malloc error (%s)\n", strerror(errno));
 		return -1;
 	}
 	/* actually blank the '/' */
@@ -273,7 +274,7 @@ int main(int argc, char **argv)
 		puts(pol_name);
 		free(pol_path);
 	} else {
-		printf("error (%s)\n", strerror(errno));
+		fprintf(stderr, "error (%s)\n", strerror(errno));
 	}
 
 	printf_tab("Current mode:");
@@ -286,7 +287,7 @@ int main(int argc, char **argv)
 		printf("permissive\n");
 		break;
 	default:
-		printf("unknown (%s)\n", strerror(errno));
+		fprintf(stderr, "unknown (%s)\n", strerror(errno));
 		break;
 	}
 
@@ -304,7 +305,7 @@ int main(int argc, char **argv)
 			break;
 		}
 	} else {
-		printf("error (%s)\n", strerror(errno));
+		fprintf(stderr, "error (%s)\n", strerror(errno));
 	}
 
 	printf_tab("Policy MLS status:");
@@ -317,7 +318,7 @@ int main(int argc, char **argv)
 		printf("enabled\n");
 		break;
 	default:
-		printf("error (%s)\n", strerror(errno));
+		fprintf(stderr, "error (%s)\n", strerror(errno));
 		break;
 	}
 
@@ -331,7 +332,7 @@ int main(int argc, char **argv)
 		printf("denied\n");
 		break;
 	default:
-		printf("error (%s)\n", strerror(errno));
+		fprintf(stderr, "error (%s)\n", strerror(errno));
 		break;
 	}
 
@@ -345,14 +346,14 @@ int main(int argc, char **argv)
 		printf("requested (insecure)\n");
 		break;
 	default:
-		printf("error (%s)\n", strerror(errno));
+		fprintf(stderr, "error (%s)\n", strerror(errno));
 		break;
 	}
 
 	rc = security_policyvers();
 	printf_tab("Max kernel policy version:");
 	if (rc < 0)
-		printf("unknown (%s)\n", strerror(errno));
+		fprintf(stderr, "unknown (%s)\n", strerror(errno));
 	else
 		printf("%d\n", rc);
 
@@ -377,7 +378,8 @@ int main(int argc, char **argv)
 					printf("off");
 					break;
 				default:
-					printf("unknown (%s)", strerror(errno));
+					fprintf(stderr, "unknown (%s)",
+						strerror(errno));
 					break;
 				}
 				c = security_get_boolean_pending(bools[i]);
@@ -390,8 +392,9 @@ int main(int argc, char **argv)
 						printf(" (inactivate pending)");
 						break;
 					default:
-						printf(" (pending error: %s)",
-						       strerror(errno));
+						fprintf(stderr,
+							" (pending error: %s)",
+							strerror(errno));
 						break;
 					}
 				printf("\n");
@@ -415,14 +418,14 @@ int main(int argc, char **argv)
 		printf("%s\n", context);
 		freecon(context);
 	} else
-		printf("unknown (%s)\n", strerror(errno));
+		fprintf(stderr, "unknown (%s)\n", strerror(errno));
 
 	printf_tab("Init context:");
 	if (getpidcon(1, &context) >= 0) {
 		printf("%s\n", context);
 		freecon(context);
 	} else
-		printf("unknown (%s)\n", strerror(errno));
+		fprintf(stderr, "unknown (%s)\n", strerror(errno));
 
 	for (i = 0; i < npc; i++) {
 		rc = pidof(pc[i]);
@@ -445,7 +448,7 @@ int main(int argc, char **argv)
 		printf("%s\n", context);
 		freecon(context);
 	} else {
-		printf("unknown (%s)\n", strerror(errno));
+		fprintf(stderr, "unknown (%s)\n", strerror(errno));
 	}
 
 	for (i = 0; i < nfc; i++) {
@@ -454,8 +457,9 @@ int main(int argc, char **argv)
 
 			/* check if this is a symlink */
 			if (lstat(fc[i], &m)) {
-				printf("%s (could not check link status (%s)!)\n",
-				       context, strerror(errno));
+				fprintf(stderr,
+					"%s (could not check link status (%s)!)\n",
+					context, strerror(errno));
 				freecon(context);
 				free(fc[i]);
 				continue;
@@ -469,8 +473,8 @@ int main(int argc, char **argv)
 					printf("%s\n", context);
 					freecon(context);
 				} else {
-					printf("unknown (%s)\n",
-					       strerror(errno));
+					fprintf(stderr, "unknown (%s)\n",
+						strerror(errno));
 				}
 			} else {
 				printf("%s\n", context);
