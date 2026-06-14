@@ -454,7 +454,7 @@ int main(int argc, char **argv)
 
 		delim = (null_terminated != 0) ? '\0' : '\n';
 		while ((len = getdelim(&buf, &buf_len, delim, f)) > 0) {
-			buf[len - 1] = 0;
+			buf[len - 1] = '\0';
 			if (!strcmp(buf, "/"))
 				r_opts.mass_relabel =
 					SELINUX_RESTORECON_MASS_RELABEL;
