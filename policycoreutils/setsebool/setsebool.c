@@ -1,4 +1,5 @@
 #include <unistd.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -17,9 +18,9 @@
 #include <semanage/boolean_record.h>
 #include <errno.h>
 
-static int permanent = 0;
-static int no_reload = 0;
-static int verbose = 0;
+static bool permanent = false;
+static bool no_reload = false;
+static bool verbose = false;
 
 int setbool(char **list, size_t start, size_t end);
 
@@ -44,13 +45,13 @@ int main(int argc, char **argv)
 
 		switch (clflag) {
 		case 'P':
-			permanent = 1;
+			permanent = true;
 			break;
 		case 'N':
-			no_reload = 1;
+			no_reload = true;
 			break;
 		case 'V':
-			verbose = 1;
+			verbose = true;
 			break;
 		default:
 			usage();
