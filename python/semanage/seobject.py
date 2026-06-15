@@ -106,9 +106,12 @@ try:
     audit.audit_close(audit.audit_open())
 
     class logger:
+        audit_fd = None
 
         def __init__(self):
-            self.audit_fd = audit.audit_open()
+            if logger.audit_fd is None:
+                logger.audit_fd = audit.audit_open()
+
             self.log_list = []
             self.log_change_list = []
 
