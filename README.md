@@ -151,6 +151,10 @@ set when overriding are:
 - -fno-semantic-interposition for gcc or compilers that do not do this. clang does this by default. clang-10 and up
    will support passing this flag, but ignore it. Previous clang versions fail.
 
+## Setting EXTRA_LD_FLAGS
+
+Build with EXTRA_LD_FLAGS=--undefined-version to fix linking against
+musl with llvm.
 
 macOS
 -----
