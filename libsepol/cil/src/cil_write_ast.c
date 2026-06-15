@@ -1708,7 +1708,7 @@ static int __write_parse_ast_node_helper(struct cil_tree_node *node,
 		size_t i;
 
 		for (i = 0; i < len; i++) {
-			if (isspace(str[i])) {
+			if (isspace((unsigned char)str[i])) {
 				fprintf(args->out, "\"%s\"\n", str);
 				return SEPOL_OK;
 			}
