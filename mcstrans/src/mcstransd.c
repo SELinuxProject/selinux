@@ -2,6 +2,7 @@
 #include <errno.h>
 #include <poll.h>
 #include <signal.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -56,7 +57,7 @@
 
 static int sockfd = -1; /* socket we are listening on */
 
-static volatile int restart_daemon = 0;
+static volatile sig_atomic_t restart_daemon = false;
 static void cleanup_exit(int ret) __attribute__((noreturn));
 static void cleanup_exit(int ret)
 {
@@ -421,7 +422,7 @@ static void process_connections(void)
 				syslog(LOG_ERR,
 				       "No color information will be available");
 			}
-			restart_daemon = 0;
+			restart_daemon = false;
 		}
 
 		ret = poll(ufds, nfds, -1);
@@ -450,7 +451,7 @@ static void sigterm_handler(int UNUSED(sig))
 
 static void sighup_handler(int UNUSED(sig))
 {
-	restart_daemon = 1;
+	restart_daemon = true;
 }
 
 static void initialize(void)
@@ -551,11 +552,11 @@ static void usage(char *program)
 int main(int argc, char *argv[])
 {
 	int opt;
-	int do_fork = 1;
+	bool do_fork = true;
 	while ((opt = getopt(argc, argv, "hf")) > 0) {
 		switch (opt) {
 		case 'f':
-			do_fork = 0;
+			do_fork = false;
 			break;
 		case 'h':
 			usage(argv[0]);
