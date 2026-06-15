@@ -377,9 +377,11 @@ static int typealias_list_create(struct policydb *pdb)
 	uint32_t rc = -1;
 
 	for (block = pdb->global; block != NULL; block = block->next) {
-		decl = block->branch_list;
-		if (decl != NULL && decl->decl_id > max_decl_id) {
-			max_decl_id = decl->decl_id;
+		for (decl = block->branch_list; decl != NULL;
+		     decl = decl->next) {
+			if (decl->decl_id > max_decl_id) {
+				max_decl_id = decl->decl_id;
+			}
 		}
 	}
 
