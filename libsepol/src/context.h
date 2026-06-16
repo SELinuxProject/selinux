@@ -13,6 +13,7 @@ extern int context_from_record(sepol_handle_t *handle,
 			       context_struct_t **cptr,
 			       const sepol_context_t *data);
 
+/* Create a high level representation from a context structure */
 extern int context_to_record(sepol_handle_t *handle, const policydb_t *policydb,
 			     const context_struct_t *context,
 			     sepol_context_t **record);
