@@ -148,7 +148,7 @@ static int add_cil_file(const char *filename, struct cil_db *cdb)
 		fprintf(stderr, "Could not open file: %s\n", filename);
 		goto exit;
 	}
-	if (stat(filename, &filedata) < 0) {
+	if (fstat(fileno(file), &filedata) < 0) {
 		fprintf(stderr, "Could not stat file: %s\n", filename);
 		goto exit;
 	}

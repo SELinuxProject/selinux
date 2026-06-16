@@ -147,7 +147,7 @@ int main(int argc, char *argv[])
 			rc = SEPOL_ERR;
 			goto exit;
 		}
-		rc = stat(argv[i], &filedata);
+		rc = fstat(fileno(file), &filedata);
 		if (rc == -1) {
 			fprintf(stderr, "Could not stat file: %s\n", argv[i]);
 			goto exit;
