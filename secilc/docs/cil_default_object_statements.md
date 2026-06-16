@@ -195,7 +195,7 @@ Allows the default level or range to be taken from the source, target, or both c
 When creating a new `file` object, the appropriate `range` component of the new security context will be taken from the `target` context:
 
 ```secil
-    (defaultrange file target low_high)
+    (defaultrange file target low-high)
 ```
 
 MLS userspace object managers may need to compute the common parts of a range such that the object is created with the range common to the subject and containing object:

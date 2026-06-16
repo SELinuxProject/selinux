@@ -168,7 +168,7 @@ This example will not compile as `type_3` is not allowed to be a source type for
         (type type_2)
         (type type_3)
         (typeattribute all_types)
-        (typeattributeset all_types ((all)))
+        (typeattributeset all_types (all))
 
         (neverallow type_3 all_types (property_service (set)))
         ; This rule will fail compilation:
@@ -313,7 +313,7 @@ This example will not compile as `type_3` is not allowed to be a source type and
 		(type type_2)
 		(type type_3)
 		(typeattribute all_types)
-		(typeattributeset all_types ((all)))
+		(typeattributeset all_types (all))
 		(neverallowx type_3 all_types (ioctl property_service (range 0x2000 0x20FF)))
 		; This rule will fail compilation:
 		(allowx type_3 self (ioctl property_service (0x20A0)))
