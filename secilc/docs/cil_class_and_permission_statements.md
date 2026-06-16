@@ -529,7 +529,11 @@ Defines a named extended permission, which can be used in the [`allowx`](cil_acc
 <tbody>
 <tr class="odd">
 <td align="left"><p>ioctl</p></td>
-<td align="left"><p>Permissions define a whitelist of ioctl values. Permission values must range from <code>0x0000</code> to <code>0xFFFF</code>, inclusive.</p></td>
+<td align="left"><p>Permissions define a whitelist of ioctl command values. Permission values must range from <code>0x0000</code> to <code>0xFFFF</code>, inclusive.</p></td>
+</tr>
+<tr class="even">
+<td align="left"><p>nlmsg</p></td>
+<td align="left"><p>Permissions define a whitelist of netlink message type values. Permission values must range from <code>0x0000</code> to <code>0xFFFF</code>, inclusive.</p></td>
 </tr>
 </tbody>
 </table></td>
@@ -561,4 +565,5 @@ Defines a named extended permission, which can be used in the [`allowx`](cil_acc
     (permissionx ioctl_1 (ioctl tcp_socket (0x2000 0x3000 0x4000)))
     (permissionx ioctl_2 (ioctl tcp_socket (range 0x6000 0x60FF)))
     (permissionx ioctl_3 (ioctl tcp_socket (and (range 0x8000 0x90FF) (not (range 0x8100 0x82FF)))))
+    (permissionx nlmsg_1 (nlmsg netlink_route_socket (range 0x0010 0x0018)))
 ```
