@@ -34,10 +34,26 @@ static int node_from_record(sepol_handle_t *handle, const policydb_t *policydb,
 
 	switch (proto) {
 	case SEPOL_PROTO_IP4:
+		if (addr_bsize != sizeof(tmp_node->u.node.addr)) {
+			ERR(handle, "Wrong address size for IPv4 address");
+			goto err;
+		}
+		if (mask_bsize != sizeof(tmp_node->u.node.mask)) {
+			ERR(handle, "Wrong address size for IPv4 mask");
+			goto err;
+		}
 		memcpy(&tmp_node->u.node.addr, addr_buf, addr_bsize);
 		memcpy(&tmp_node->u.node.mask, mask_buf, mask_bsize);
 		break;
 	case SEPOL_PROTO_IP6:
+		if (addr_bsize != sizeof(tmp_node->u.node6.addr)) {
+			ERR(handle, "Wrong address size for IPv6 address");
+			goto err;
+		}
+		if (mask_bsize != sizeof(tmp_node->u.node6.mask)) {
+			ERR(handle, "Wrong address size for IPv6 mask");
+			goto err;
+		}
 		memcpy(tmp_node->u.node6.addr, addr_buf, addr_bsize);
 		memcpy(tmp_node->u.node6.mask, mask_buf, mask_bsize);
 		break;
