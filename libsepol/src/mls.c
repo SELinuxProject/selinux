@@ -50,6 +50,7 @@ int mls_to_string(sepol_handle_t *handle, const policydb_t *policydb,
 	ptr = (char *)malloc(len);
 	if (ptr == NULL)
 		goto omem;
+	ptr[len - 1] = '\0';
 
 	/* Final string w/ ':' cut off */
 	ptr2 = (char *)malloc(len - 1);
