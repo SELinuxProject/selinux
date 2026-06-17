@@ -2530,6 +2530,8 @@ static void semanage_fc_find_meta(semanage_file_context_node_t *fc_node)
 			/* If an escape character is found,
 			 *  skip the next character. */
 			c++;
+			if (fc_node->path[c] == '\0')
+				return;
 			escape_chars++;
 			break;
 		}
