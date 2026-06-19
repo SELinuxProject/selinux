@@ -2092,48 +2092,59 @@ error:
 /* flip to included ranges */
 static int avrule_omit_xperms(struct av_xperm_range_list **rangehead)
 {
-	struct av_xperm_range_list *rnew, *r, *newhead, *r2;
+	struct av_xperm_range_list *rnew, *r, *newhead = NULL, *tail = NULL;
+	uint32_t next_low = 0;
 
-	rnew = calloc(1, sizeof(struct av_xperm_range_list));
-	if (!rnew)
-		goto error;
-
-	newhead = rnew;
-
-	r = *rangehead;
-	r2 = newhead;
-
-	if (r->range.low == 0) {
-		r2->range.low = r->range.high + 1;
-		r = r->next;
-	} else {
-		r2->range.low = 0;
+	/*
+	 * The input ranges are sorted and merged. Emit the gaps between them
+	 * as the complement. next_low is the first value not yet covered by an
+	 * emitted (allowed) range; promote it to uint32_t so that high + 1 does
+	 * not wrap when a range ends at 0xffff.
+	 */
+	for (r = *rangehead; r != NULL; r = r->next) {
+		if (r->range.low > next_low) {
+			rnew = calloc(1, sizeof(struct av_xperm_range_list));
+			if (!rnew)
+				goto error;
+			rnew->range.low = next_low;
+			rnew->range.high = r->range.low - 1;
+			if (tail)
+				tail->next = rnew;
+			else
+				newhead = rnew;
+			tail = rnew;
+		}
+		next_low = (uint32_t)r->range.high + 1;
 	}
 
-	while (r) {
-		r2->range.high = r->range.low - 1;
+	if (next_low <= UINT16_MAX) {
 		rnew = calloc(1, sizeof(struct av_xperm_range_list));
 		if (!rnew)
 			goto error;
-		r2->next = rnew;
-		r2 = r2->next;
-
-		r2->range.low = r->range.high + 1;
-		if (!r->next)
-			r2->range.high = 0xffff;
-		r = r->next;
+		rnew->range.low = next_low;
+		rnew->range.high = UINT16_MAX;
+		if (tail)
+			tail->next = rnew;
+		else
+			newhead = rnew;
+		tail = rnew;
 	}
 
 	r = *rangehead;
 	while (r != NULL) {
-		r2 = r;
+		rnew = r;
 		r = r->next;
-		free(r2);
+		free(rnew);
 	}
 	*rangehead = newhead;
 	return 0;
 
 error:
+	while (newhead != NULL) {
+		rnew = newhead;
+		newhead = newhead->next;
+		free(rnew);
+	}
 	yyerror("out of memory");
 	return -1;
 }
