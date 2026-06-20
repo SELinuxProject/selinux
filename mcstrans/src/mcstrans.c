@@ -173,41 +173,35 @@ err:
 	return -1;
 }
 
-static int numdigits(unsigned int n)
-{
-	int count = 1;
-	while ((n = n / 10))
-		count++;
-	return count;
-}
-
 static int parse_category(ebitmap_t *e, const char *raw, bool allowinverse,
 			  bool fromconfig)
 {
 	int inverse = 0;
 	unsigned int low, high;
 	while (*raw) {
+		int n = 0;
 		if (allowinverse && *raw == '~') {
 			inverse = !inverse;
 			raw++;
 			continue;
 		}
-		if (sscanf(raw, "c%u", &low) != 1)
+		if (sscanf(raw, "c%u%n", &low, &n) != 1)
 			return -1;
 		if (low >= MAX_CATS)
 			return -1;
 		if (!fromconfig && low >= maxbit)
 			return -1;
-		raw += numdigits(low) + 1;
+		raw += n;
 		if (*raw == '.') {
 			raw++;
-			if (sscanf(raw, "c%u", &high) != 1)
+			n = 0;
+			if (sscanf(raw, "c%u%n", &high, &n) != 1)
 				return -1;
 			if (high >= MAX_CATS)
 				return -1;
 			if (!fromconfig && high >= maxbit)
 				return -1;
-			raw += numdigits(high) + 1;
+			raw += n;
 		} else {
 			high = low;
 		}
@@ -242,11 +236,12 @@ static int parse_ebitmap(ebitmap_t *e, ebitmap_t *def, const char *raw)
 static mls_level_t *parse_raw(const char *raw, bool fromconfig)
 {
 	mls_level_t *mls = calloc(1, sizeof(mls_level_t));
+	int n = 0;
 	if (!mls)
 		return NULL;
-	if (sscanf(raw, "s%u", &mls->sens) != 1)
+	if (sscanf(raw, "s%u%n", &mls->sens, &n) != 1)
 		goto err;
-	raw += numdigits(mls->sens) + 1;
+	raw += n;
 	if (*raw == ':') {
 		raw++;
 		if (parse_category(&mls->cat, raw, false, fromconfig) < 0)
