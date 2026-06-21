@@ -611,18 +611,13 @@ int cil_typepermissive_to_policydb(policydb_t *pdb,
 	rc = __cil_get_sepol_type_datum(pdb, DATUM(cil_typeperm->type),
 					&sepol_type);
 	if (rc != SEPOL_OK)
-		goto exit;
+		return rc;
 
 	if (ebitmap_set_bit(&pdb->permissive_map, sepol_type->s.value, 1)) {
-		goto exit;
+		return rc;
 	}
 
 	return SEPOL_OK;
-
-exit:
-	type_datum_destroy(sepol_type);
-	free(sepol_type);
-	return rc;
 }
 
 int cil_typeneveraudit_to_policydb(policydb_t *pdb,
@@ -634,18 +629,13 @@ int cil_typeneveraudit_to_policydb(policydb_t *pdb,
 	rc = __cil_get_sepol_type_datum(pdb, DATUM(cil_typeperm->type),
 					&sepol_type);
 	if (rc != SEPOL_OK)
-		goto exit;
+		return rc;
 
 	if (ebitmap_set_bit(&pdb->neveraudit_map, sepol_type->s.value, 1)) {
-		goto exit;
+		return rc;
 	}
 
 	return SEPOL_OK;
-
-exit:
-	type_datum_destroy(sepol_type);
-	free(sepol_type);
-	return rc;
 }
 
 int cil_typeattribute_to_policydb(policydb_t *pdb,
