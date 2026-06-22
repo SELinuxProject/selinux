@@ -44,6 +44,7 @@
 #include <sepol/policydb/conditional.h>
 #include <limits.h>
 #include <stdlib.h>
+#include <string.h>
 
 policydb_t role_expanded;
 policydb_t user_expanded;
@@ -222,6 +223,44 @@ static void test_expander_alias(void)
 			 1, 0);
 }
 
+/*
+ * A role's negset ebitmap is read straight from the policy file and is not
+ * bounded against the declared type count, so type_set_expand() must reject a
+ * bit that falls outside the type_val_to_struct mapping rather than read past
+ * its end.
+ */
+static void test_expander_negset_bounds(void)
+{
+	policydb_t p;
+	type_datum_t type0;
+	type_set_t set;
+	ebitmap_t result;
+	int rc;
+
+	memset(&p, 0, sizeof(p));
+	p.p_types.nprim = 1;
+	p.type_val_to_struct =
+		calloc(p.p_types.nprim, sizeof(*p.type_val_to_struct));
+	CU_ASSERT_PTR_NOT_NULL_FATAL(p.type_val_to_struct);
+
+	type_datum_init(&type0);
+	type0.flavor = TYPE_TYPE;
+	p.type_val_to_struct[0] = &type0;
+
+	type_set_init(&set);
+	/* one past the last valid type value */
+	rc = ebitmap_set_bit(&set.negset, p.p_types.nprim, 1);
+	CU_ASSERT_FATAL(rc == 0);
+
+	/* must fail cleanly instead of indexing type_val_to_struct OOB */
+	rc = type_set_expand(&set, &result, &p, 1);
+	CU_ASSERT(rc < 0);
+
+	ebitmap_destroy(&result);
+	type_set_destroy(&set);
+	free(p.type_val_to_struct);
+}
+
 int expander_add_tests(CU_pSuite suite)
 {
 	if (NULL ==
@@ -247,6 +286,11 @@ int expander_add_tests(CU_pSuite suite)
 		return CU_get_error();
 	}
 	if (NULL == CU_add_test(suite, "expander_alias", test_expander_alias)) {
+		CU_cleanup_registry();
+		return CU_get_error();
+	}
+	if (NULL == CU_add_test(suite, "expander_negset_bounds",
+				test_expander_negset_bounds)) {
 		CU_cleanup_registry();
 		return CU_get_error();
 	}
