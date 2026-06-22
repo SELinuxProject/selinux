@@ -2783,6 +2783,13 @@ int type_set_expand(type_set_t *set, ebitmap_t *t, policydb_t *p,
 	/* Now do the same thing for negset */
 	ebitmap_init(&neg_types);
 	ebitmap_for_each_positive_bit(&set->negset, tnode, i) {
+		/*
+		 * invalid policies might have more types set in the ebitmap than
+		 * what's available in the type_val_to_struct mapping
+		 */
+		if (i >= p->p_types.nprim)
+			goto err_neg;
+
 		if (p->type_val_to_struct[i] &&
 		    p->type_val_to_struct[i]->flavor == TYPE_ATTRIB) {
 			if (ebitmap_union(&neg_types,
