@@ -2035,6 +2035,20 @@ static void avrule_merge_xperms(struct av_xperm_range_list **rangehead)
 	}
 }
 
+static int avrule_read_xperm_value(const char *id, uint16_t *value)
+{
+	unsigned long val = strtoul(id, NULL, 0);
+
+	if (val > UINT16_MAX) {
+		yyerror2(
+			"extended permission value 0x%lx exceeds the maximum of 0x%x",
+			val, UINT16_MAX);
+		return -1;
+	}
+	*value = (uint16_t)val;
+	return 0;
+}
+
 static int avrule_read_xperm_ranges(struct av_xperm_range_list **rangehead)
 {
 	char *id;
@@ -2053,7 +2067,10 @@ static int avrule_read_xperm_ranges(struct av_xperm_range_list **rangehead)
 			/* high value of range */
 			free(id);
 			id = queue_remove(id_queue);
-			r->range.high = (uint16_t)strtoul(id, NULL, 0);
+			if (avrule_read_xperm_value(id, &r->range.high)) {
+				free(id);
+				return -1;
+			}
 			if (r->range.high < r->range.low) {
 				yyerror2(
 					"extended permission range %#x-%#x must be in ascending order.",
@@ -2074,7 +2091,10 @@ static int avrule_read_xperm_ranges(struct av_xperm_range_list **rangehead)
 				r->next = rnew;
 				r = r->next;
 			}
-			rnew->range.low = (uint16_t)strtoul(id, NULL, 0);
+			if (avrule_read_xperm_value(id, &rnew->range.low)) {
+				free(id);
+				return -1;
+			}
 			rnew->range.high = rnew->range.low;
 			free(id);
 		}
