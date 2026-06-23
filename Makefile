@@ -29,7 +29,7 @@ endif
 
 # check for fts_* availability
 H := \#
-ifneq (yes,$(shell printf '${H}include <fts.h>\nint main(void){return fts_close(0);}' | $(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -Werror=implicit-function-declaration -x c -o /dev/null - >/dev/null 2>&1 && echo yes))
+ifneq (yes,$(shell printf '${H}include <fts.h>\nint main(void){return fts_close((void*)0);}' | $(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -Werror=implicit-function-declaration -x c -o /dev/null - >/dev/null 2>&1 && echo yes))
 export FTS_LDLIBS := -lfts
 endif
 
