@@ -1271,13 +1271,15 @@ static int walk_next(struct rest_state *state, int *ent_fd, int *rd_fd,
 
 		/*
 		 * Skip fstat() when d_type already gives the file type and
-		 * neither xdev (st_dev) nor add_assoc (st_ino) is needed.
+		 * none of xdev (st_dev), add_assoc (st_ino), or
+		 * skip_multilink (st_nlink) are needed.
 		 * Directories always fstat for cycle detection and walk_push().
 		 */
 		mode_t mode_from_dtype = d_type_to_mode(de->d_type);
 		bool need_fstat =
 			mode_from_dtype == 0 || S_ISDIR(mode_from_dtype) ||
-			state->flags.set_xdev || state->flags.add_assoc;
+			state->flags.set_xdev || state->flags.add_assoc ||
+			state->flags.skip_multilink;
 
 		if (need_fstat) {
 			if (fstat(fd, ent_sb) < 0) {
