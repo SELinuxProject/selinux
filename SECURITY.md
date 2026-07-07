@@ -40,6 +40,8 @@ the issue as quickly as possible and shorten the disclosure window.
 * Steve Lawrence, slawrence@tresys.com
 * William Roberts, bill.c.roberts@gmail.com
 * Ondrej Mosnacek, omosnace@redhat.com
+* Johannes Segitz, jsegitz@suse.de
+  *  (GPG fingerprint) 250F 43F5 F7CE 6F1E 9C59  4F95 BC27 DD9D 2CC4 FD66
 
 ### Resolving Sensitive Security Issues
 
