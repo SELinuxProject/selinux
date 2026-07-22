@@ -127,3 +127,16 @@ if_admin_rules="""
 	files_search_tmp($1)
 	admin_pattern($1, TEMPLATETYPE_tmp_t)
 """
+
+########################### File Context ##################################
+fc_file="""\
+FILENAME		--	gen_context(system_u:object_r:TEMPLATETYPE_tmp_t,s0)
+"""
+
+fc_sock_file="""\
+FILENAME		-s	gen_context(system_u:object_r:TEMPLATETYPE_tmp_t,s0)
+"""
+
+fc_dir="""\
+FILENAME(/.*)?		gen_context(system_u:object_r:TEMPLATETYPE_tmp_t,s0)
+"""

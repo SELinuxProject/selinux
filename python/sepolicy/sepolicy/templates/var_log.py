@@ -106,8 +106,16 @@ if_admin_rules="""
 """
 
 ########################### File Context ##################################
+te_stream_rules = ""
+
+if_stream_rules = ""
+
 fc_file="""\
 FILENAME		--	gen_context(system_u:object_r:TEMPLATETYPE_log_t,s0)
+"""
+
+fc_sock_file="""\
+FILENAME		-s	gen_context(system_u:object_r:TEMPLATETYPE_log_t,s0)
 """
 
 fc_dir="""\

@@ -66,9 +66,15 @@ if_admin_rules="""
 	allow $1 TEMPLATETYPE_unit_file_t:service all_service_perms;
 """
 
+te_stream_rules = ""
+
+if_stream_rules = ""
+
 ########################### File Context ##################################
 fc_file="""\
 FILENAME		--	gen_context(system_u:object_r:TEMPLATETYPE_unit_file_t,s0)
 """
+
+fc_sock_file = fc_file
 
 fc_dir=""

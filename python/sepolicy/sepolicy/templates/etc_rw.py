@@ -134,6 +134,10 @@ fc_file="""\
 FILENAME		--	gen_context(system_u:object_r:TEMPLATETYPE_etc_rw_t,s0)
 """
 
+fc_sock_file="""\
+FILENAME		-s	gen_context(system_u:object_r:TEMPLATETYPE_etc_rw_t,s0)
+"""
+
 fc_dir="""\
 FILENAME(/.*)?		gen_context(system_u:object_r:TEMPLATETYPE_etc_rw_t,s0)
 """
