@@ -102,9 +102,46 @@
 %apply int *OUTPUT { unsigned int * };
 %apply int *OUTPUT { uint16_t * };
 
-%include <cstring.i>
-/* This is needed to properly mmap binary data in SWIG */
-%cstring_output_allocate_size(void **mapped_data, size_t *data_len, munmap(*$1, *$2));
+/*
+ * semanage_module_extract(): the (void **mapped_data, size_t *data_len) pair
+ * is an opaque module blob (.pp / bzip2 / CIL / HLL).  Return it to Python
+ * as a bytes object; %cstring_output_allocate_size would UTF-8-decode it
+ * into a str, which corrupts binary modules.
+ */
+%typemap(in, numinputs=0) (void **mapped_data, size_t *data_len)
+	(void *temp_data = NULL, size_t temp_len = 0) {
+	$1 = &temp_data;
+	$2 = &temp_len;
+}
+%typemap(argout) (void **mapped_data, size_t *data_len) {
+	if (*$1) {
+		$result = SWIG_AppendOutput(
+			$result,
+			PyBytes_FromStringAndSize((const char *)*$1, *$2));
+		munmap(*$1, *$2);
+	} else {
+		$result = SWIG_AppendOutput($result, SWIG_Py_Void());
+	}
+}
+
+/*
+ * semanage_module_install() and semanage_module_install_info() take a
+ * (char *data, size_t data_len) pair that is an opaque module blob
+ * (.pp / bzip2 / CIL / HLL), not a NUL-terminated C string.  Accept any
+ * Python object exposing the buffer protocol (bytes, bytearray, mmap, ...)
+ * as a single argument and derive the length from it.
+ */
+%typemap(in) (char *module_data, size_t data_len) (Py_buffer view) {
+	view.obj = NULL;
+	if (PyObject_GetBuffer($input, &view, PyBUF_SIMPLE) < 0)
+		SWIG_fail;
+	$1 = (char *)view.buf;
+	$2 = (size_t)view.len;
+}
+%typemap(freearg) (char *module_data, size_t data_len) {
+	PyBuffer_Release(&view$argnum);
+}
+%apply (char *module_data, size_t data_len) { (char *data, size_t data_len) };
 
 %typemap(in, numinputs=0) char **(char *temp=NULL) {
 	$1 = &temp;
