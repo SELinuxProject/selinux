@@ -25,8 +25,6 @@ the issue before it is made public, but we will make every effort to address
 the issue as quickly as possible and shorten the disclosure window.
 
 * Petr Lautrbach, plautrba@redhat.com
-* Jeffrey Vander Stoep, jeffv@google.com
-* Joshua Brindle, brindle@gmail.com
 * James Carter, jwcart2@gmail.com
   *  (GPG fingerprint) 4568 1128 449B 65F8 80C6  1797 3A84 A946 B4BA 62AE
 * Paul Moore, paul@paul-moore.com
@@ -35,7 +33,6 @@ the issue as quickly as possible and shorten the disclosure window.
   *  (GPG fingerprint) 578C 4211 832F 0A7E A2C5  A7C2 21A4 6E60 3F74 4ECF
 * Jason Zaman, perfinion@gentoo.org
   *  (GPG fingerprint) 6319 1CE9 4183 0986 89CA  B8DB 7EF1 37EC 935B 0EAF
-* Steve Lawrence, slawrence@tresys.com
 * Ondrej Mosnacek, omosnace@redhat.com
 
 ### Resolving Sensitive Security Issues
