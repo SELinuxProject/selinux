@@ -347,7 +347,7 @@ int sepol_link_packages(sepol_handle_t *handle, sepol_module_package_t *base,
 #define _read_helper_bufsize BUFSIZ
 static int read_helper(char *buf, struct policy_file *file, uint32_t bytes)
 {
-	uint32_t offset, nel, read_len;
+	size_t offset, nel, read_len;
 	int rc;
 
 	offset = 0;
@@ -844,7 +844,7 @@ cleanup:
 
 static int write_helper(char *data, size_t len, struct policy_file *file)
 {
-	int idx = 0;
+	size_t idx = 0;
 	size_t len2;
 
 	while (len) {
