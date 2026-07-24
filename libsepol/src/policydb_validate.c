@@ -12,9 +12,15 @@
 
 #define bool_xor(a, b) (!(a) != !(b))
 #define bool_xnor(a, b) (!bool_xor(a, b))
+
+/*
+ * Check that at least one permission bit is valid.
+ * Older compilers might set invalid bits for the wildcard permission.
+ */
 #define PERMISSION_MASK(nprim)                          \
 	((nprim) == PERM_SYMTAB_SIZE ? (~UINT32_C(0)) : \
 				       ((UINT32_C(1) << (nprim)) - 1))
+#define NO_VALID_PERMS(av, nprim) (!((av) & PERMISSION_MASK(nprim)))
 
 typedef struct validate {
 	uint32_t nprim;
@@ -283,10 +289,8 @@ static int validate_constraint_nodes(sepol_handle_t *handle, uint32_t nperms,
 	for (; cons; cons = cons->next) {
 		if (is_validatetrans && cons->permissions != 0)
 			goto bad;
-		if (!is_validatetrans && cons->permissions == 0)
-			goto bad;
-		if (!is_validatetrans && nperms != PERM_SYMTAB_SIZE &&
-		    cons->permissions >= (UINT32_C(1) << nperms))
+		if (!is_validatetrans &&
+		    NO_VALID_PERMS(cons->permissions, nperms))
 			goto bad;
 
 		if (!cons->expr)
@@ -1109,11 +1113,7 @@ static int validate_access_vector(sepol_handle_t *handle, const policydb_t *p,
 {
 	const class_datum_t *cladatum = p->class_val_to_struct[tclass - 1];
 
-	/*
-	 * Check that at least one permission bit is valid.
-	 * Older compilers might set invalid bits for the wildcard permission.
-	 */
-	if (!(av & PERMISSION_MASK(cladatum->permissions.nprim)))
+	if (NO_VALID_PERMS(av, cladatum->permissions.nprim))
 		goto bad;
 
 	return 0;
@@ -1232,12 +1232,24 @@ static int validate_avrules(sepol_handle_t *handle, const avrule_t *avrule,
 
 		for (classperm = avrule->perms; classperm;
 		     classperm = classperm->next) {
+			class_datum_t *cladatum;
 			if (validate_value(classperm->tclass,
 					   &flavors[SYM_CLASSES]))
 				goto bad;
-			if ((avrule->specified & AVRULE_TYPE) &&
-			    validate_simpletype(classperm->data, p, flavors))
-				goto bad;
+			cladatum =
+				p->class_val_to_struct[classperm->tclass - 1];
+			if (avrule->specified & AVRULE_AV) {
+				if (NO_VALID_PERMS(
+					    classperm->data,
+					    cladatum->permissions.nprim)) {
+					goto bad;
+				}
+			} else if (avrule->specified & AVRULE_TYPE) {
+				if (validate_simpletype(classperm->data, p,
+							flavors)) {
+					goto bad;
+				}
+			}
 		}
 
 		if (avrule->specified & AVRULE_XPERMS) {
