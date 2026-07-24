@@ -870,7 +870,6 @@ static int cil_create_and_insert_attribute_and_set(struct cil_db *db,
 	struct cil_tree_node *attr_node = NULL;
 	char *name;
 	struct cil_typeattribute *attr = NULL;
-	struct cil_tree_node *attrset_node = NULL;
 	struct cil_typeattributeset *attrset = NULL;
 	symtab_t *symtab = NULL;
 	int rc = SEPOL_ERR;
@@ -880,12 +879,25 @@ static int cil_create_and_insert_attribute_and_set(struct cil_db *db,
 		goto exit;
 	}
 
+	rc = cil_get_symtab(prev->parent, &symtab, CIL_SYM_TYPES);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+
+	cil_typeattribute_init(&attr);
+	attr_node = cil_create_and_insert_node(prev, CIL_TYPEATTRIBUTE, attr);
+
+	rc = cil_symtab_insert(symtab, name, &attr->datum, attr_node);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+
 	cil_typeattributeset_init(&attrset);
 	attrset->attr_str = name;
 	attrset->str_expr = str_expr;
 	attrset->datum_expr = datum_expr;
+	cil_create_and_insert_node(attr_node, CIL_TYPEATTRIBUTESET, attrset);
 
-	cil_typeattribute_init(&attr);
 	cil_list_init(&attr->expr_list, CIL_TYPE);
 	cil_list_append(attr->expr_list, CIL_LIST, datum_expr);
 	attr->types = types;
@@ -894,20 +906,6 @@ static int cil_create_and_insert_attribute_and_set(struct cil_db *db,
 			     CIL_FALSE :
 			     CIL_TRUE;
 
-	attr_node = cil_create_and_insert_node(prev, CIL_TYPEATTRIBUTE, attr);
-	attrset_node = cil_create_and_insert_node(
-		attr_node, CIL_TYPEATTRIBUTESET, attrset);
-
-	rc = cil_get_symtab(prev->parent, &symtab, CIL_SYM_TYPES);
-	if (rc != SEPOL_OK) {
-		goto exit;
-	}
-
-	rc = cil_symtab_insert(symtab, name, &attr->datum, attr_node);
-	if (rc != SEPOL_OK) {
-		goto exit;
-	}
-
 	db->num_types_and_attrs++;
 
 	*d = &attr->datum;
@@ -915,14 +913,13 @@ static int cil_create_and_insert_attribute_and_set(struct cil_db *db,
 	return SEPOL_OK;
 
 exit:
-	if (attr_node) {
-		cil_destroy_typeattribute(
-			attr_node->data); // This will not destroy datum_expr
-		free(attr_node);
+	if (attr) {
+		cil_symtab_datum_destroy(&attr->datum);
+		free(attr);
 	}
-	if (attrset_node) {
-		prev->next = attrset_node->next;
-		free(attrset_node);
+	if (attr_node) {
+		prev->next = attr_node->next;
+		free(attr_node);
 	}
 	return rc;
 }
@@ -1038,6 +1035,7 @@ static int cil_create_attribute_all_and_not_d(struct cil_db *db,
 exit:
 	cil_list_destroy(&str_expr, CIL_FALSE);
 	cil_list_destroy(&datum_expr, CIL_FALSE);
+	ebitmap_destroy(types);
 	free(types);
 	return rc;
 }
@@ -1103,6 +1101,7 @@ static int cil_create_attribute_d1_and_not_d2(struct cil_db *db,
 exit:
 	cil_list_destroy(&str_expr, CIL_FALSE);
 	cil_list_destroy(&datum_expr, CIL_FALSE);
+	ebitmap_destroy(types);
 	free(types);
 	return rc;
 }
@@ -1168,6 +1167,7 @@ static int cil_create_attribute_d1_and_d2(struct cil_db *db,
 exit:
 	cil_list_destroy(&str_expr, CIL_FALSE);
 	cil_list_destroy(&datum_expr, CIL_FALSE);
+	ebitmap_destroy(types);
 	free(types);
 	return rc;
 }
