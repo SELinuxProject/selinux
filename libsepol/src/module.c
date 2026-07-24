@@ -249,7 +249,8 @@ static int link_file_contexts(sepol_module_package_t *base,
 
 	fc_len = base->file_contexts_len;
 	for (i = 0; i < num_modules; i++) {
-		if (__builtin_add_overflow(fc_len, modules[i]->file_contexts_len, &fc_len))
+		if (__builtin_add_overflow(
+			    fc_len, modules[i]->file_contexts_len, &fc_len))
 			return -1;
 	}
 
@@ -282,7 +283,9 @@ static int link_netfilter_contexts(sepol_module_package_t *base,
 
 	base_nc_len = base->netfilter_contexts_len;
 	for (i = 0; i < num_modules; i++) {
-		if (__builtin_add_overflow(base_nc_len, modules[i]->netfilter_contexts_len, &base_nc_len))
+		if (__builtin_add_overflow(base_nc_len,
+					   modules[i]->netfilter_contexts_len,
+					   &base_nc_len))
 			return -1;
 	}
 
