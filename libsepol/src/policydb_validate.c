@@ -1713,10 +1713,8 @@ bad:
 
 static int validate_scope_index(sepol_handle_t *handle,
 				const scope_index_t *scope_index,
-				validate_t flavors[])
+				const policydb_t *p, validate_t flavors[])
 {
-	uint32_t i;
-
 	if (!ebitmap_is_empty(&scope_index->scope[SYM_COMMONS]))
 		goto bad;
 	if (validate_ebitmap(&scope_index->p_classes_scope,
@@ -1735,9 +1733,42 @@ static int validate_scope_index(sepol_handle_t *handle,
 	if (validate_ebitmap(&scope_index->p_cat_scope, &flavors[SYM_CATS]))
 		goto bad;
 
-	for (i = 0; i < scope_index->class_perms_len; i++)
-		if (validate_value(i + 1, &flavors[SYM_CLASSES]))
+	if (scope_index->class_perms_map != NULL) {
+		uint32_t i;
+		if (scope_index->class_perms_len == 0)
 			goto bad;
+		if (ebitmap_highest_set_bit(&scope_index->p_classes_scope) >=
+		    scope_index->class_perms_len)
+			goto bad;
+		for (i = 0; i < scope_index->class_perms_len; i++) {
+			const ebitmap_t *map;
+			class_datum_t *class;
+			ebitmap_node_t *node;
+			unsigned int bit = 0;
+			if (validate_value(i + 1, &flavors[SYM_CLASSES]))
+				goto bad;
+			map = &scope_index->class_perms_map[i];
+			class = p->class_val_to_struct[i];
+			/* Either there are no perms */
+			if (ebitmap_is_empty(map))
+				continue;
+			/* Or at least one valid perm */
+			ebitmap_for_each_positive_bit(map, node, bit) {
+				if (bit < class->permissions.nprim)
+					break;
+			}
+			if (bit >= class->permissions.nprim)
+				goto bad;
+		}
+	} else {
+		/* This is the normal branch for declared blocks.
+		 * Base module required blocks should never be in this branch.
+		 * Module required blocks can be if neither its nor the module's
+		 * require block has a class in it.
+		 */
+		if (scope_index->class_perms_len != 0)
+			goto bad;
+	}
 
 	return 0;
 
@@ -1811,10 +1842,10 @@ static int validate_avrule_blocks(sepol_handle_t *handle,
 			if (validate_range_trans_rules(
 				    handle, decl->range_tr_rules, flavors))
 				goto bad;
-			if (validate_scope_index(handle, &decl->required,
+			if (validate_scope_index(handle, &decl->required, p,
 						 flavors))
 				goto bad;
-			if (validate_scope_index(handle, &decl->declared,
+			if (validate_scope_index(handle, &decl->declared, p,
 						 flavors))
 				goto bad;
 			if (validate_filename_trans_rules(
