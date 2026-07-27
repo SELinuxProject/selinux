@@ -1565,9 +1565,13 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 		goto finish;
 	}
 
-	rec->spec_file = strdup(path);
-	if (!rec->spec_file)
+	rec->spec_files = calloc(1, sizeof(*rec->spec_files));
+	if (!rec->spec_files)
 		goto finish;
+	rec->spec_files[0] = strdup(path);
+	if (!rec->spec_files[0])
+		goto finish;
+	rec->spec_files_len = 1;
 
 	/*
 	 * The do detailed validation of the input and fill the spec array

@@ -162,7 +162,7 @@ static int selabel_fini(const struct selabel_handle *rec,
 	char *ctx_trans;
 	int rc;
 
-	if (compat_validate(rec, lr, rec->spec_file, lr->lineno))
+	if (compat_validate(rec, lr, rec->spec_files[0], lr->lineno))
 		return -1;
 
 	if (!translating)
@@ -398,11 +398,17 @@ int selabel_digest(struct selabel_handle *rec, unsigned char **digest,
 
 void selabel_close(struct selabel_handle *rec)
 {
+	size_t i;
+
 	if (rec->digest)
 		selabel_digest_fini(rec->digest);
 	if (rec->func_close)
 		rec->func_close(rec);
-	free(rec->spec_file);
+	if (rec->spec_files) {
+		for (i = 0; i < rec->spec_files_len; i++)
+			free(rec->spec_files[i]);
+		free(rec->spec_files);
+	}
 	free(rec);
 }
 

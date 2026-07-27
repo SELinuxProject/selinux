@@ -302,12 +302,19 @@ static catalog_t *db_init(const struct selinux_opt *opts, unsigned nopts,
 		errno = EINVAL;
 		return NULL;
 	}
-	rec->spec_file = strdup(path);
-	if (!rec->spec_file) {
+	rec->spec_files = calloc(1, sizeof(*rec->spec_files));
+	if (!rec->spec_files) {
 		free(catalog);
 		fclose(filp);
 		return NULL;
 	}
+	rec->spec_files[0] = strdup(path);
+	if (!rec->spec_files[0]) {
+		free(catalog);
+		fclose(filp);
+		return NULL;
+	}
+	rec->spec_files_len = 1;
 
 	/*
 	 * Parse for each lines
