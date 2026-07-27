@@ -2291,10 +2291,13 @@ exit:
 }
 
 static int __evaluate_classperms_list(struct cil_list *classperms,
-				      struct cil_db *db)
+				      struct cil_db *db, int depth)
 {
 	int rc = SEPOL_ERR;
 	struct cil_list_item *curr;
+
+	if (depth > 32)
+		return SEPOL_ERR;
 
 	cil_list_for_each(curr, classperms) {
 		if (curr->flavor == CIL_CLASSPERMS) {
@@ -2313,7 +2316,7 @@ static int __evaluate_classperms_list(struct cil_list *classperms,
 				cil_list_for_each(i, cp->perms) {
 					struct cil_perm *cmp = i->data;
 					rc = __evaluate_classperms_list(
-						cmp->classperms, db);
+						cmp->classperms, db, depth + 1);
 					if (rc != SEPOL_OK) {
 						goto exit;
 					}
@@ -2322,7 +2325,8 @@ static int __evaluate_classperms_list(struct cil_list *classperms,
 		} else { /* SET */
 			struct cil_classperms_set *cp_set = curr->data;
 			struct cil_classpermission *cp = cp_set->set;
-			rc = __evaluate_classperms_list(cp->classperms, db);
+			rc = __evaluate_classperms_list(cp->classperms, db,
+							depth + 1);
 			if (rc != SEPOL_OK) {
 				goto exit;
 			}
@@ -2347,7 +2351,7 @@ __evaluate_map_perm_classperms(__attribute__((unused)) hashtab_key_t k,
 	struct class_map_args *map_args = args;
 	struct cil_perm *cmp = (struct cil_perm *)d;
 
-	int rc = __evaluate_classperms_list(cmp->classperms, map_args->db);
+	int rc = __evaluate_classperms_list(cmp->classperms, map_args->db, 0);
 
 	if (rc != SEPOL_OK) {
 		map_args->rc = rc;
@@ -2393,7 +2397,7 @@ static int __cil_post_db_classperms_helper(struct cil_tree_node *node,
 	}
 	case CIL_CLASSPERMISSION: {
 		struct cil_classpermission *cp = node->data;
-		rc = __evaluate_classperms_list(cp->classperms, db);
+		rc = __evaluate_classperms_list(cp->classperms, db, 0);
 		if (rc != SEPOL_OK) {
 			goto exit;
 		}
@@ -2401,7 +2405,8 @@ static int __cil_post_db_classperms_helper(struct cil_tree_node *node,
 	}
 	case CIL_AVRULE: {
 		struct cil_avrule *avrule = node->data;
-		rc = __evaluate_classperms_list(avrule->perms.classperms, db);
+		rc = __evaluate_classperms_list(avrule->perms.classperms, db,
+						0);
 		if (rc != SEPOL_OK) {
 			goto exit;
 		}
@@ -2409,7 +2414,7 @@ static int __cil_post_db_classperms_helper(struct cil_tree_node *node,
 	}
 	case CIL_DENY_RULE: {
 		struct cil_deny_rule *deny = node->data;
-		rc = __evaluate_classperms_list(deny->classperms, db);
+		rc = __evaluate_classperms_list(deny->classperms, db, 0);
 		if (rc != SEPOL_OK) {
 			goto exit;
 		}
@@ -2418,7 +2423,7 @@ static int __cil_post_db_classperms_helper(struct cil_tree_node *node,
 	case CIL_CONSTRAIN:
 	case CIL_MLSCONSTRAIN: {
 		struct cil_constrain *constrain = node->data;
-		rc = __evaluate_classperms_list(constrain->classperms, db);
+		rc = __evaluate_classperms_list(constrain->classperms, db, 0);
 		if (rc != SEPOL_OK) {
 			goto exit;
 		}
