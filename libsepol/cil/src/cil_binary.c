@@ -614,7 +614,7 @@ int cil_typepermissive_to_policydb(policydb_t *pdb,
 		return rc;
 
 	if (ebitmap_set_bit(&pdb->permissive_map, sepol_type->s.value, 1)) {
-		return rc;
+		return SEPOL_ERR;
 	}
 
 	return SEPOL_OK;
@@ -632,7 +632,7 @@ int cil_typeneveraudit_to_policydb(policydb_t *pdb,
 		return rc;
 
 	if (ebitmap_set_bit(&pdb->neveraudit_map, sepol_type->s.value, 1)) {
-		return rc;
+		return SEPOL_ERR;
 	}
 
 	return SEPOL_OK;
