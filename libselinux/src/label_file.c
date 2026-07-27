@@ -106,7 +106,8 @@ void sort_spec_node(struct spec_node *node, struct spec_node *parent)
 /*
  * Warn about duplicate specifications.
  */
-static int nodups_spec_node(const struct spec_node *node, const char *path)
+static int nodups_spec_node(const struct selabel_handle *rec,
+			    const struct spec_node *node)
 {
 	int rc = 0;
 
@@ -126,13 +127,16 @@ static int nodups_spec_node(const struct spec_node *node, const char *path)
 			    node1->file_kind != node2->file_kind)
 				continue;
 
+			if (node1->inputno != node2->inputno)
+				continue;
+
 			rc = -1;
 			errno = EINVAL;
 			if (strcmp(node1->lr.ctx_raw, node2->lr.ctx_raw) != 0) {
 				COMPAT_LOG(
 					SELINUX_ERROR,
 					"%s: Multiple different specifications for %s %s  (%s and %s).\n",
-					path,
+					rec->spec_files[node1->inputno],
 					file_kind_to_string(node1->file_kind),
 					node1->literal_match, node1->lr.ctx_raw,
 					node2->lr.ctx_raw);
@@ -140,7 +144,7 @@ static int nodups_spec_node(const struct spec_node *node, const char *path)
 				COMPAT_LOG(
 					SELINUX_ERROR,
 					"%s: Multiple same specifications for %s %s.\n",
-					path,
+					rec->spec_files[node1->inputno],
 					file_kind_to_string(node1->file_kind),
 					node1->literal_match);
 			}
@@ -168,6 +172,9 @@ static int nodups_spec_node(const struct spec_node *node, const char *path)
 				    node1->file_kind != node2->file_kind)
 					continue;
 
+				if (node1->inputno != node2->inputno)
+					continue;
+
 				rc = -1;
 				errno = EINVAL;
 				if (strcmp(node1->lr.ctx_raw,
@@ -175,7 +182,7 @@ static int nodups_spec_node(const struct spec_node *node, const char *path)
 					COMPAT_LOG(
 						SELINUX_ERROR,
 						"%s: Multiple different specifications for %s %s  (%s and %s).\n",
-						path,
+						rec->spec_files[node1->inputno],
 						file_kind_to_string(
 							node1->file_kind),
 						node1->regex_str,
@@ -185,7 +192,7 @@ static int nodups_spec_node(const struct spec_node *node, const char *path)
 					COMPAT_LOG(
 						SELINUX_ERROR,
 						"%s: Multiple same specifications for %s %s.\n",
-						path,
+						rec->spec_files[node1->inputno],
 						file_kind_to_string(
 							node1->file_kind),
 						node1->regex_str);
@@ -197,7 +204,7 @@ static int nodups_spec_node(const struct spec_node *node, const char *path)
 	for (uint32_t i = 0; i < node->children_num; i++) {
 		int rc2;
 
-		rc2 = nodups_spec_node(&node->children[i], path);
+		rc2 = nodups_spec_node(rec, &node->children[i]);
 		if (rc2)
 			rc = rc2;
 	}
@@ -1496,26 +1503,37 @@ static char *selabel_sub_key(const struct saved_data *data, const char *key,
 
 static void closef(struct selabel_handle *rec);
 
+static const char *const opt_suffixes[] = { "homedirs", "local" };
+
 static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 		unsigned n)
 {
 	struct saved_data *data = rec->data;
-	const char *path = NULL;
+	uint8_t num_required_paths = 0, num_optional_paths = 0, i, j;
+	size_t total_paths;
 	const char *prefix = NULL;
-	int status = -1, baseonly = 0;
+	int status = -1;
+	bool baseonly = false, path_provided = false;
+
+	if (n > UINT8_MAX) {
+		errno = EINVAL;
+		return -1;
+	}
 
 	/* Process arguments */
-	while (n) {
-		n--;
-		switch (opts[n].type) {
+	for (i = 0; i < n; i++) {
+		switch (opts[i].type) {
 		case SELABEL_OPT_PATH:
-			path = opts[n].value;
+			if (opts[i].value) {
+				num_required_paths++;
+				path_provided = true;
+			}
 			break;
 		case SELABEL_OPT_SUBSET:
-			prefix = opts[n].value;
+			prefix = opts[i].value;
 			break;
 		case SELABEL_OPT_BASEONLY:
-			baseonly = !!opts[n].value;
+			baseonly = !!opts[i].value;
 			break;
 		case SELABEL_OPT_UNUSED:
 		case SELABEL_OPT_VALIDATE:
@@ -1527,10 +1545,56 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 		}
 	}
 
+	/* If no paths were provided, we will use the default path or fail,
+	 * depending on the target. */
+	if (!path_provided) {
+#if !defined(BUILD_HOST) && !defined(ANDROID)
+		num_required_paths = 1;
+#else
+		selinux_log(SELINUX_ERROR,
+			    "No path given to file labeling backend\n");
+		errno = EINVAL;
+		return -1;
+#endif
+	}
+
+	if (!baseonly)
+		num_optional_paths = ARRAY_SIZE(opt_suffixes);
+
+	total_paths = num_required_paths + num_optional_paths;
+
+	/* Make sure total input files do not exceed the 256 indices supported
+	 * by uint8_t inputno */
+	if (total_paths > UINT8_MAX + 1) {
+		errno = EINVAL;
+		return -1;
+	}
+
+	/* Allocate the paths. */
+	rec->spec_files = calloc(total_paths, sizeof(*rec->spec_files));
+	if (rec->spec_files == NULL)
+		goto finish;
+	rec->spec_files_len = total_paths;
+
+	/* Copy all the paths given. */
+	if (path_provided) {
+		for (i = 0, j = 0; i < n; i++) {
+			if (opts[i].type == SELABEL_OPT_PATH && opts[i].value) {
+				rec->spec_files[j] = strdup(opts[i].value);
+				if (rec->spec_files[j] == NULL)
+					goto finish;
+				j++;
+			}
+		}
+	}
+
 #if !defined(BUILD_HOST) && !defined(ANDROID)
 	char subs_file[PATH_MAX + 1];
 	/* Process local and distribution substitution files */
-	if (!path) {
+	if (!path_provided) {
+		rec->spec_files[0] = strdup(selinux_file_context_path());
+		if (rec->spec_files[0] == NULL)
+			goto finish;
 		status = selabel_subs_init(
 			selinux_file_context_subs_dist_path(), rec->digest,
 			&data->dist_subs, &data->dist_subs_num,
@@ -1542,66 +1606,60 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 					   &data->subs_num, &data->subs_alloc);
 		if (status)
 			goto finish;
-		path = selinux_file_context_path();
 	} else {
-		snprintf(subs_file, sizeof(subs_file), "%s.subs_dist", path);
+		snprintf(subs_file, sizeof(subs_file), "%s.subs_dist",
+			 rec->spec_files[0]);
 		status = selabel_subs_init(subs_file, rec->digest,
 					   &data->dist_subs,
 					   &data->dist_subs_num,
 					   &data->dist_subs_alloc);
 		if (status)
 			goto finish;
-		snprintf(subs_file, sizeof(subs_file), "%s.subs", path);
+		snprintf(subs_file, sizeof(subs_file), "%s.subs",
+			 rec->spec_files[0]);
 		status = selabel_subs_init(subs_file, rec->digest, &data->subs,
 					   &data->subs_num, &data->subs_alloc);
 		if (status)
 			goto finish;
 	}
-
 #endif
 
-	if (!path) {
-		errno = EINVAL;
-		goto finish;
+	for (i = 0; i < num_optional_paths; i++) {
+		if (asprintf(&rec->spec_files[num_required_paths + i], "%s.%s",
+			     rec->spec_files[0], opt_suffixes[i]) < 0) {
+			rec->spec_files[num_required_paths + i] = NULL;
+			goto finish;
+		}
 	}
 
-	rec->spec_files = calloc(1, sizeof(*rec->spec_files));
-	if (!rec->spec_files)
-		goto finish;
-	rec->spec_files[0] = strdup(path);
-	if (!rec->spec_files[0])
-		goto finish;
-	rec->spec_files_len = 1;
-
 	/*
-	 * The do detailed validation of the input and fill the spec array
+	 * Process each main input file.
 	 */
-	status = process_file(path, NULL, rec, prefix, rec->digest, 0);
-	if (status)
-		goto finish;
-
-	if (rec->validating) {
-		sort_specs(data);
-
-		status = nodups_spec_node(data->root, path);
+	for (i = 0; i < num_required_paths; i++) {
+		status = process_file(rec->spec_files[i], NULL, rec, prefix,
+				      rec->digest, i);
 		if (status)
 			goto finish;
 	}
 
-	if (!baseonly) {
-		status = process_file(path, "homedirs", rec, prefix,
-				      rec->digest, 1);
-		if (status && errno != ENOENT)
-			goto finish;
-
-		status = process_file(path, "local", rec, prefix, rec->digest,
-				      2);
+	/*
+	 * Process each optional input file.
+	 */
+	for (i = 0; i < num_optional_paths; i++) {
+		status = process_file(rec->spec_files[num_required_paths + i],
+				      NULL, rec, prefix, rec->digest,
+				      num_required_paths + i);
 		if (status && errno != ENOENT)
 			goto finish;
 	}
 
-	if (!rec->validating || !baseonly)
-		sort_specs(data);
+	sort_specs(data);
+
+	if (rec->validating) {
+		status = nodups_spec_node(rec, data->root);
+		if (status)
+			goto finish;
+	}
 
 	digest_gen_hash(rec->digest);
 

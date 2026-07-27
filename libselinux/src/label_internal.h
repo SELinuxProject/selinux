@@ -96,8 +96,7 @@ struct selabel_handle {
 	void *data;
 
 	/*
-	 * The spec files used. Note for file contexts the local and/or
-	 * homedirs could also have been used to resolve a context.
+	 * The specification files used.
 	 */
 	size_t spec_files_len;
 	char **spec_files;
