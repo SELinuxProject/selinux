@@ -159,7 +159,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 	/*
 	 * Take the first byte whether to generate a SELinux or Xen policy,
 	 * the second byte whether to parse as MLS policy,
-	 * and the second byte as policy version.
+	 * and the third byte as policy version.
 	 */
 	if (size < 3)
 		return 0;
@@ -188,6 +188,10 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 	policyvers = data[2] - 'A';
 	if (policyvers < POLICYDB_VERSION_MIN ||
 	    policyvers > POLICYDB_VERSION_MAX)
+		return 0;
+	if (platform == SEPOL_TARGET_XEN &&
+	    policyvers != POLICYDB_VERSION_XEN_DEVICETREE &&
+	    policyvers != POLICYDB_VERSION_BOUNDARY)
 		return 0;
 	data += 3;
 	size -= 3;
