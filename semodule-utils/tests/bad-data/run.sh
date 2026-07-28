@@ -1,9 +1,10 @@
 #!/bin/sh
 #
-# Bad-data tests for semodule_package in the modular policy packaging pipeline.
-# Covers packaging path edge cases (-m/-f) and documents deferred rejection of bad
-# .mod.fc content (enforced later by sefcontext_compile).
-# Unreadable -m/-f cases skip when run as root; CI runs this script as non-root.
+# Bad-data tests for semodule_package and sefcontext_compile in the modular
+# policy packaging pipeline. Covers packaging path edge cases (-m/-f), documents
+# deferred rejection of bad .mod.fc content at packaging time, and validates
+# labeling through sefcontext_compile. Unreadable -m/-f cases skip when run as
+# root; CI runs this script as non-root.
 #
 
 set -u
@@ -29,6 +30,8 @@ CHECKMODULE=${CHECKMODULE:-checkmodule}
 # Modular TE for MCS/MLS builds (checkmodule -M -m).
 CHECKMODULE_MOD_FLAGS=${CHECKMODULE_MOD_FLAGS:--M -m}
 SEMODULE_PACKAGE=${SEMODULE_PACKAGE:-semodule_package}
+SEMODULE_UNPACKAGE=${SEMODULE_UNPACKAGE:-semodule_unpackage}
+SEFCONTEXT_COMPILE=${SEFCONTEXT_COMPILE:-sefcontext_compile}
 
 GOOD_TE="${FIXTURES}/modules/good.te"
 GOOD_MOD="${OUTDIR}/test_good.mod"
@@ -250,6 +253,161 @@ expect_package_fail_unreadable_fc() {
 	pass "${desc} (rejected as expected, rc=${rc})"
 }
 
+find_policy_file() {
+	if [ -n "${POLICY_FILE:-}" ] && [ -f "${POLICY_FILE}" ]; then
+		echo "${POLICY_FILE}"
+		return 0
+	fi
+
+	# Prefer the active policy store (SELINUXTYPE); fall back to targeted, then any
+	# installed policy.* (POLICY_FILE overrides all of this).
+	selinuxtype=targeted
+	if [ -r /etc/selinux/config ]; then
+		selinuxtype=$(grep -E '^[[:space:]]*SELINUXTYPE=' /etc/selinux/config 2>/dev/null \
+			| tail -1 | cut -d= -f2- | tr -d ' "')
+		[ -n "${selinuxtype}" ] || selinuxtype=targeted
+	fi
+
+	# shellcheck disable=SC2086
+	set -- /etc/selinux/"${selinuxtype}"/policy/policy.*
+	if [ -f "$1" ]; then
+		echo "$1"
+		return 0
+	fi
+
+	for policy in /etc/selinux/*/policy/policy.*; do
+		[ -f "${policy}" ] || continue
+		echo "${policy}"
+		return 0
+	done
+
+	return 1
+}
+
+expect_sefcontext_pass() {
+	desc="$1"
+	outname="$2"
+	fc="$3"
+	policy="${4:-}"
+
+	outbin="${OUTDIR}/${outname}.bin"
+	stderr="${OUTDIR}/${outname}.err"
+
+	echo "==== POSITIVE (expect sefcontext_compile success): ${desc}"
+	rm -f "${outbin}"
+
+	set +e
+	if [ -n "${policy}" ]; then
+		"${SEFCONTEXT_COMPILE}" -p "${policy}" -o "${outbin}" "${fc}" \
+			2>"${stderr}"
+	else
+		"${SEFCONTEXT_COMPILE}" -o "${outbin}" "${fc}" 2>"${stderr}"
+	fi
+	rc=$?
+	set -e
+
+	if [ "${rc}" -ne 0 ]; then
+		cat "${stderr}" >&2
+		die "${desc}: expected exit 0, got rc=${rc}"
+		return 0
+	fi
+	if [ ! -s "${outbin}" ]; then
+		die "${desc}: expected non-empty ${outbin}"
+		return 0
+	fi
+
+	pass "${desc} (sefcontext_compile succeeded)"
+}
+
+expect_sefcontext_fail() {
+	desc="$1"
+	pattern="$2"
+	outname="$3"
+	fc="$4"
+	policy="${5:-}"
+
+	outbin="${OUTDIR}/${outname}.bin"
+	stderr="${OUTDIR}/${outname}.err"
+
+	echo "==== NEGATIVE (expect sefcontext_compile failure): ${desc}"
+	rm -f "${outbin}"
+
+	set +e
+	if [ -n "${policy}" ]; then
+		"${SEFCONTEXT_COMPILE}" -p "${policy}" -o "${outbin}" "${fc}" \
+			2>"${stderr}"
+	else
+		"${SEFCONTEXT_COMPILE}" -o "${outbin}" "${fc}" 2>"${stderr}"
+	fi
+	rc=$?
+	set -e
+
+	if [ "${rc}" -eq 0 ]; then
+		die "${desc}: expected non-zero exit, got rc=0"
+		return 0
+	fi
+	if [ -f "${outbin}" ] && [ -s "${outbin}" ]; then
+		die "${desc}: did not expect successful ${outbin}"
+		return 0
+	fi
+	if ! grep -Eq "${pattern}" "${stderr}"; then
+		echo "FAIL: stderr did not match /${pattern}/" >&2
+		cat "${stderr}" >&2
+		FAIL=$((FAIL + 1))
+		return 0
+	fi
+
+	pass "${desc} (rejected as expected, rc=${rc})"
+}
+
+expect_sefcontext_fail_or_skip_no_policy() {
+	desc="$1"
+	pattern="$2"
+	outname="$3"
+	fc="$4"
+
+	policy=$(find_policy_file) || policy=
+	if [ -z "${policy}" ]; then
+		echo "==== SKIP (no binary policy for -p validation): ${desc}"
+		echo "Set POLICY_FILE= to enable this check."
+		PASS=$((PASS + 1))
+		echo ""
+		return 0
+	fi
+
+	expect_sefcontext_fail "${desc}" "${pattern}" "${outname}" "${fc}" \
+		"${policy}"
+}
+
+expect_sefcontext_pass_deferred() {
+	desc="$1"
+	outname="$2"
+	fc="$3"
+
+	outbin="${OUTDIR}/${outname}.bin"
+	stderr="${OUTDIR}/${outname}.err"
+
+	echo "==== DOCUMENT (sefcontext_compile accepts input; complements packaging deferral): ${desc}"
+	rm -f "${outbin}"
+
+	set +e
+	"${SEFCONTEXT_COMPILE}" -o "${outbin}" "${fc}" 2>"${stderr}"
+	rc=$?
+	set -e
+
+	if [ "${rc}" -ne 0 ]; then
+		cat "${stderr}" >&2
+		die "${desc}: expected exit 0 at compile stage, got rc=${rc}"
+		return 0
+	fi
+	if [ ! -s "${outbin}" ]; then
+		die "${desc}: expected non-empty ${outbin} at compile stage"
+		return 0
+	fi
+
+	pass "${desc} (sefcontext_compile exit 0; complements packaging deferral)"
+}
+
 build_good_mod
 
 # Ephemeral path fixtures for packaging path tests.
@@ -258,7 +416,7 @@ ln -sf /nonexistent/test_good.mod.fc "${OUTDIR}/broken_symlink.mod.fc"
 printf '' > "${OUTDIR}/empty.mod.fc"
 
 # NUL byte inside path column (packaging accepts; sefcontext_compile rejects).
-printf '/bin/foo\x00bar\t--\tsystem_u:object_r:test_good_exec_t:s0\n' \
+printf '/bin/foo\000bar\t--\tsystem_u:object_r:test_good_exec_t:s0\n' \
 	> "${OUTDIR}/nul_bytes.mod.fc"
 
 GOOD_FC="${FIXTURES}/file_contexts/good.mod.fc"
@@ -346,6 +504,65 @@ expect_package_pass_deferred \
 	"empty .mod.fc file" \
 	empty_fc \
 	-m "${GOOD_MOD}" -f "${OUTDIR}/empty.mod.fc"
+
+# --- sefcontext_compile / unpackage validation ---
+expect_sefcontext_pass \
+	"control good .mod.fc through sefcontext_compile" \
+	good_fc \
+	"${GOOD_FC}"
+
+expect_sefcontext_fail \
+	"wrong field count in .mod.fc (after packaging)" \
+	"missing fields|process_file failed" \
+	sefcontext_bad_fields \
+	"${FIXTURES}/file_contexts/bad_fields.mod.fc"
+
+expect_sefcontext_fail \
+	"NUL byte in .mod.fc path field (after packaging)" \
+	"missing fields|process_file failed" \
+	sefcontext_nul_bytes \
+	"${OUTDIR}/nul_bytes.mod.fc"
+
+expect_sefcontext_fail_or_skip_no_policy \
+	"invalid SELinux context requires policy validation (-p)" \
+	"invalid context|malformed context|process_file failed" \
+	sefcontext_bad_context \
+	"${FIXTURES}/file_contexts/bad_context.mod.fc"
+
+expect_sefcontext_pass_deferred \
+	"empty .mod.fc file through sefcontext_compile" \
+	sefcontext_empty_fc \
+	"${OUTDIR}/empty.mod.fc"
+
+expect_sefcontext_fail_or_skip_no_policy \
+	"invalid MLS context requires policy validation (-p)" \
+	"invalid context|malformed context|process_file failed" \
+	sefcontext_bad_mls \
+	"${FIXTURES}/file_contexts/bad_mls.mod.fc"
+
+BAD_PP="${OUTDIR}/bad_context.pp"
+EXTRACTED_MOD="${OUTDIR}/extracted.mod"
+EXTRACTED_FC="${OUTDIR}/extracted.fc"
+
+echo "==== Setup: extract file contexts from packaged module with invalid context"
+rm -f "${EXTRACTED_MOD}" "${EXTRACTED_FC}"
+set +e
+"${SEMODULE_UNPACKAGE}" "${BAD_PP}" "${EXTRACTED_MOD}" "${EXTRACTED_FC}" \
+	2>"${OUTDIR}/unpackage.err"
+rc=$?
+set -e
+if [ "${rc}" -ne 0 ] || [ ! -s "${EXTRACTED_FC}" ]; then
+	die "unpackage setup: could not extract .fc from ${BAD_PP}"
+	cat "${OUTDIR}/unpackage.err" >&2
+else
+	echo "==== unpackage setup succeeded"
+	echo ""
+	expect_sefcontext_fail_or_skip_no_policy \
+		"invalid context from unpackage'd .pp file contexts" \
+		"invalid context|malformed context|process_file failed" \
+		unpackaged_bad_context \
+		"${EXTRACTED_FC}"
+fi
 
 echo "========================================"
 echo "Results: ${PASS} passed, ${FAIL} failed"

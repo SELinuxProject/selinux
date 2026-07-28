@@ -1,0 +1,1 @@
+/usr/bin/bad_mls	--	system_u:object_r:test_good_exec_t:s0:c999
