@@ -1393,15 +1393,13 @@ static void *selinux_restorecon_thread(void *arg)
 		if (is_dir) {
 			if (descend && walk_is_cycle(state, ent_sb.st_dev,
 						     ent_sb.st_ino)) {
-				selinux_log(SELINUX_ERROR,
+				selinux_log(SELINUX_WARNING,
 					    "Directory cycle on %s.\n",
 					    ent_path);
 				close(ent_fd);
 				close(rd_fd);
-				errno = ELOOP;
-				state->error = -1;
-				state->abort = true;
-				goto finish;
+				prune_pathbuf(state);
+				continue;
 			}
 
 			if (state->sfsb.f_type == SYSFS_MAGIC &&
