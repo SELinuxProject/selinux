@@ -307,6 +307,20 @@ and provided the
 .B \-n
 option is NOT set, files will be relabeled as required with the digests then
 being updated provided there are no errors.
+.IP "4." 4
+.B setfiles
+detects directory cycles while descending directories, for example a bind
+mount of an ancestor directory or nested BTRFS subvolumes. A cycle is reported
+as a warning and the offending directory is not descended into, the remaining
+entries are still relabeled. A directory cycle is not counted as a relabeling
+error, so it does not affect the exit status and does not stop the file tree
+walk. Up to and including version 3.11 a directory cycle was instead treated
+as a fatal
+.B ELOOP
+error, terminating
+.B setfiles
+with exit status
+.BR 255 .
 
 .SH EXAMPLE
 .nf

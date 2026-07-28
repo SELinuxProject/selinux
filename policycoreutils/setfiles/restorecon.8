@@ -145,6 +145,9 @@ options are mutually exclusive.
 .TP
 .B \-R, \-r
 change files and directories file labels recursively (descend directories).
+Directory cycles are skipped, see the
+.B NOTES
+section for details.
 .br
 .TP
 .B \-v
@@ -240,6 +243,23 @@ and provided the
 .B \-n
 option is NOT set and recursive mode is set, files will be relabeled as
 required with the digests then being updated provided there are no errors.
+.IP "4." 4
+When descending directories (i.e. the
+.B \-R
+or
+.B \-r
+option is set)
+.B restorecon
+detects directory cycles, for example a bind mount of an ancestor directory or
+nested BTRFS subvolumes. A cycle is reported as a warning and the offending
+directory is not descended into, the remaining entries are still relabeled.
+A directory cycle is not counted as a relabeling error, so it does not affect
+the exit status and does not stop the file tree walk. Up to and including
+version 3.11 a directory cycle was instead treated as a fatal
+.B ELOOP
+error, terminating
+.B restorecon
+with a non-zero exit status.
 
 .SH EXAMPLE
 .nf
