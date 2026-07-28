@@ -25,8 +25,6 @@ the issue before it is made public, but we will make every effort to address
 the issue as quickly as possible and shorten the disclosure window.
 
 * Petr Lautrbach, plautrba@redhat.com
-* Nicolas Iooss, nicolas.iooss@m4x.org
-  *  (GPG fingerprint) E25E 254C 8EE4 D303 554B  F5AF EC70 1A1D A494 C5EB
 * Jeffrey Vander Stoep, jeffv@google.com
 * Joshua Brindle, brindle@gmail.com
 * James Carter, jwcart2@gmail.com
