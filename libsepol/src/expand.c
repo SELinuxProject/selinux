@@ -1128,18 +1128,27 @@ int mls_semantic_level_expand(mls_semantic_level_t *sl, mls_level_t *l,
 		return -1;
 	}
 	for (cat = sl->cat; cat; cat = cat->next) {
-		if (!cat->low || cat->low > cat->high ||
-		    cat->high > p->p_cats.nprim) {
-			ERR(h, "Category range is not valid %s.%s",
-			    (cat->low && cat->low <= p->p_cats.nprim) ?
-				    p->p_cat_val_to_name[cat->low - 1] :
-				    "Invalid",
-			    (cat->high && cat->high <= p->p_cats.nprim) ?
-				    p->p_cat_val_to_name[cat->high - 1] :
-				    "Invalid");
+		if (!cat->low || cat->low > p->p_cats.nprim ||
+		    !p->p_cat_val_to_name[cat->low - 1]) {
+			ERR(h, "Low category is invalid");
+			return -1;
+		}
+		if (!cat->high || cat->high > p->p_cats.nprim ||
+		    !p->p_cat_val_to_name[cat->high - 1]) {
+			ERR(h, "High category is invalid");
+			return -1;
+		}
+		if (cat->low > cat->high) {
+			ERR(h, "Category range \"%s.%s\" is not valid",
+			    p->p_cat_val_to_name[cat->low - 1],
+			    p->p_cat_val_to_name[cat->high - 1]);
 			return -1;
 		}
 		for (i = cat->low - 1; i < cat->high; i++) {
+			if (!p->p_cat_val_to_name[i]) {
+				ERR(h, "Invalid category in range");
+				return -1;
+			}
 			if (!ebitmap_get_bit(&levdatum->level->cat, i)) {
 				ERR(h,
 				    "Category %s can not be associated with "
