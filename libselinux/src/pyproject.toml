@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "selinux"
+version = "3.11"
+description = "Python bindings for libselinux (SELinux userspace library)"
+readme = "../README.md"
+license = "libselinux-1.0"
+authors = [
+    { name = "SELinux Project", email = "selinux@vger.kernel.org" }
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: POSIX :: Linux",
+    "Topic :: Security",
+]
+
+[project.urls]
+Homepage = "https://github.com/SELinuxProject/selinux"
+
+# The actual .so is produced by a custom build_ext (SWIG + libselinux.so),
+# driven from setup.py.
