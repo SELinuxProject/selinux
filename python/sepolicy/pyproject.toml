@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sepolicy"
+version = "3.11"
+description = "Python tools for SELinux policy analysis (sepolicy, sepolgen)"
+license = "GPL-2.0-or-later"
+authors = [
+    { name = "SELinux Project", email = "selinux@vger.kernel.org" }
+]
