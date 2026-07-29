@@ -1936,10 +1936,12 @@ lookup_check_node(struct spec_node *node, const char *key, uint8_t file_kind,
 
 						if (strcmp(lspec->lr.ctx_raw,
 							   "<<none>>") == 0) {
-							if (partial)
-								continue;
-
 							errno = ENOENT;
+							if (partial) {
+								literal_idx++;
+								continue;
+							}
+
 							goto fail;
 						}
 
@@ -2025,10 +2027,10 @@ lookup_check_node(struct spec_node *node, const char *key, uint8_t file_kind,
 
 				if (strcmp(rspec->lr.ctx_raw, "<<none>>") ==
 				    0) {
+					errno = ENOENT;
 					if (partial)
 						continue;
 
-					errno = ENOENT;
 					goto fail;
 				}
 
