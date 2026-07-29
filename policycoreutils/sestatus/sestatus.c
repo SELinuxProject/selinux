@@ -99,32 +99,26 @@ static int pidof(const char *command)
 #ifdef VENDORDIR
 #include <libeconf.h>
 
-static void load_checks_with_vendor_settings(char *pc[], int *npc, char *fc[], int *nfc)
+static void load_checks_with_vendor_settings(char *pc[], int *npc, char *fc[],
+					     int *nfc)
 {
 	econf_file *key_file = NULL;
 	econf_err error;
 	char **keys;
 	size_t key_number;
 
-	error = econf_readDirs (&key_file,
-				VENDORDIR,
-				CONFDIR,
-				CONFNAME,
-				CONFPOST,
-				"", "#");
+	error = econf_readDirs(&key_file, VENDORDIR, CONFDIR, CONFNAME,
+			       CONFPOST, "", "#");
 	if (error != ECONF_SUCCESS) {
-		printf("\nCannot read settings %s.%s: %s\n",
-		       CONFNAME,
-		       CONFPOST,
-		       econf_errString( error ));
+		printf("\nCannot read settings %s.%s: %s\n", CONFNAME, CONFPOST,
+		       econf_errString(error));
 		return;
 	}
 
 	error = econf_getKeys(key_file, SECTIONPROCS, &key_number, &keys);
 	if (error != ECONF_SUCCESS) {
-		printf("\nCannot read group %s: %s\n",
-		       SECTIONPROCS,
-		       econf_errString( error ));
+		printf("\nCannot read group %s: %s\n", SECTIONPROCS,
+		       econf_errString(error));
 	} else {
 		for (size_t i = 0; i < key_number; i++) {
 			if (*npc >= MAX_CHECK)
@@ -134,14 +128,13 @@ static void load_checks_with_vendor_settings(char *pc[], int *npc, char *fc[], i
 				break;
 			(*npc)++;
 		}
-		econf_free (keys);
+		econf_free(keys);
 	}
 
 	error = econf_getKeys(key_file, SECTIONFILES, &key_number, &keys);
 	if (error != ECONF_SUCCESS) {
-		printf("\nCannot read group %s: %s\n",
-		       SECTIONFILES,
-		       econf_errString( error ));
+		printf("\nCannot read group %s: %s\n", SECTIONFILES,
+		       econf_errString(error));
 	} else {
 		for (size_t i = 0; i < key_number; i++) {
 			if (*nfc >= MAX_CHECK)
@@ -151,10 +144,10 @@ static void load_checks_with_vendor_settings(char *pc[], int *npc, char *fc[], i
 				break;
 			(*nfc)++;
 		}
-		econf_free (keys);
+		econf_free(keys);
 	}
 
-	econf_free (key_file);
+	econf_free(key_file);
 	return;
 }
 #endif
