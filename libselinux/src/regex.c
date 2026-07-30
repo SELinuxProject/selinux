@@ -41,7 +41,16 @@ static pthread_once_t match_data_key_once = PTHREAD_ONCE_INIT;
 static int match_data_key_alloc_failed = 0;
 static int match_data_key_created = 0;
 static pthread_once_t once = PTHREAD_ONCE_INIT;
+static pcre2_match_context *match_context;
 static char arch_string_buffer[32];
+
+/*
+ * Limit the number of backtrack steps to prevent catastrophic backtracking
+ * (ReDoS) from crafted file context patterns or lookup keys. 10 million steps
+ * is generous for legitimate file context patterns while bounding worst-case
+ * matching time to milliseconds.
+ */
+#define REGEX_MATCH_LIMIT 10000000U
 
 static void regex_arch_string_init(void)
 {
@@ -93,6 +102,12 @@ int regex_prepare_data(struct regex_data **regex, char const *pattern_string,
 	if (!(*regex)->regex) {
 		goto err;
 	}
+
+	/* JIT-compile for complete and partial matching. pcre2_match() uses the
+	 * JIT automatically when available, avoiding the interpreter's
+	 * susceptibility to catastrophic backtracking. Failures are non-fatal. */
+	(void)pcre2_jit_compile((*regex)->regex,
+				PCRE2_JIT_COMPLETE | PCRE2_JIT_PARTIAL_SOFT);
 
 	return 0;
 
@@ -147,6 +162,10 @@ int regex_load_mmap(struct mmap_area *mmap_area, struct regex_data **regex,
 					    NULL);
 		if (rc != 1)
 			goto err;
+
+		(void)pcre2_jit_compile((*regex)->regex,
+					PCRE2_JIT_COMPLETE |
+						PCRE2_JIT_PARTIAL_SOFT);
 
 		*regex_compiled = true;
 	}
@@ -212,10 +231,18 @@ static void match_data_thread_free(void *ptr)
 
 static void match_data_key_init(void)
 {
+	pcre2_match_context *mctx;
+
 	if (__selinux_key_create(&match_data_key, match_data_thread_free) == 0)
 		match_data_key_created = 1;
 	else
 		match_data_key_alloc_failed = 1;
+
+	mctx = pcre2_match_context_create(NULL);
+	if (mctx) {
+		pcre2_set_match_limit(mctx, REGEX_MATCH_LIMIT);
+		match_context = mctx;
+	}
 }
 
 static void __attribute__((destructor)) match_data_key_destroy(void)
@@ -262,9 +289,14 @@ int regex_match(struct regex_data *regex, char const *subject, int partial)
 			return REGEX_ERROR;
 	}
 
+	/* Use pcre2_match() rather than pcre2_jit_match(): pcre2_match()
+	 * automatically uses the JIT when the code has been compiled with
+	 * pcre2_jit_compile(), while pcre2_jit_match() is known to produce
+	 * incorrect results on some platforms (e.g. aarch64). */
 	rc = pcre2_match(regex->regex, (PCRE2_SPTR)subject,
 			 PCRE2_ZERO_TERMINATED, 0,
-			 partial ? PCRE2_PARTIAL_SOFT : 0, match_data, NULL);
+			 partial ? PCRE2_PARTIAL_SOFT : 0, match_data,
+			 match_context);
 
 	if (slow)
 		pcre2_match_data_free(match_data);
@@ -275,6 +307,7 @@ int regex_match(struct regex_data *regex, char const *subject, int partial)
 	case PCRE2_ERROR_PARTIAL:
 		return REGEX_MATCH_PARTIAL;
 	case PCRE2_ERROR_NOMATCH:
+	case PCRE2_ERROR_MATCHLIMIT:
 		return REGEX_NO_MATCH;
 	default:
 		return REGEX_ERROR;
