@@ -2836,7 +2836,8 @@ int type_set_expand(type_set_t *set, ebitmap_t *t, policydb_t *p,
 		for (i = 0; i < p->p_types.nprim; i++) {
 			if (p->type_val_to_struct[i] &&
 			    p->type_val_to_struct[i]->flavor == TYPE_ATTRIB) {
-				assert(!ebitmap_get_bit(t, i));
+				if (ebitmap_get_bit(t, i))
+					goto err_neg;
 				continue;
 			}
 			if (ebitmap_get_bit(t, i)) {
