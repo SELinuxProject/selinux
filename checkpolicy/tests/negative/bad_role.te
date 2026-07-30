@@ -1,0 +1,13 @@
+module bad_role 1.0;
+
+require {
+	type foo_t;
+	class file { read };
+}
+
+# Empty type list after "types" (fails at ';').
+role bad_role_r types ;
+
+type foo_t;
+
+allow foo_t foo_t:file read;

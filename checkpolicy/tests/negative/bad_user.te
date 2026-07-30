@@ -1,0 +1,15 @@
+module bad_user 1.0;
+
+# Modular .te needs require before decls like user/role; without it
+# checkmodule fails at "user" instead of the garbage_token below.
+require {
+	type foo_t;
+	class file { read };
+}
+
+# Junk where "roles { ... }" should be.
+user bad_user_u garbage_token;
+
+type foo_t;
+
+allow foo_t foo_t:file read;

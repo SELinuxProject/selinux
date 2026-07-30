@@ -1,0 +1,9 @@
+module invalid_type_name 1.0;
+
+require {
+	class file { read };
+}
+
+type 1bad;
+
+allow 1bad 1bad:file read;

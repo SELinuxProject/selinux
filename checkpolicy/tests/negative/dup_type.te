@@ -1,0 +1,11 @@
+module dup_type 1.0;
+
+require {
+	type foo_t;
+	class file { read };
+}
+
+type foo_t;
+type foo_t;
+
+allow foo_t foo_t:file read;

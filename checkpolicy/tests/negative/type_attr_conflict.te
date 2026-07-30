@@ -1,0 +1,10 @@
+module type_attr_conflict 1.0;
+
+require {
+	class file { read };
+}
+
+type shared_id;
+attribute shared_id;
+
+allow shared_id shared_id:file read;

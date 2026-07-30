@@ -1,0 +1,13 @@
+module dup_attribute 1.0;
+
+require {
+	type foo_t;
+	class file { read };
+}
+
+attribute bar_attr;
+attribute bar_attr;
+
+type foo_t;
+
+allow foo_t foo_t:file read;

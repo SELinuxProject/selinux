@@ -6,8 +6,19 @@
 
 set -eu
 
-BASEDIR=$(CDPATH= cd -- "$(dirname "$0")" && pwd)
+# Prefer an absolute script dir, but keep a relative dirname when cd fails.
+# Non-root CI inherits the repo as CWD; absolute cd under /home/runner/work
+# can fail for bad-data-test even when relative paths work.
+BASEDIR=$(dirname -- "$0")
+ABS_BASEDIR=$(CDPATH= cd -- "${BASEDIR}" 2>/dev/null && pwd) || ABS_BASEDIR=
+if [ -n "${ABS_BASEDIR}" ]; then
+	BASEDIR="${ABS_BASEDIR}"
+fi
 NEGDIR="${BASEDIR}/negative"
+if [ ! -d "${NEGDIR}" ]; then
+	echo "FAIL: cannot resolve negative fixtures (\$0=$0 BASEDIR=${BASEDIR})" >&2
+	exit 1
+fi
 CHECKMODULE="${BASEDIR}/../checkmodule"
 OUTDIR=$(mktemp -d "${TMPDIR:-/tmp}/checkmodule-negative.XXXXXX")
 PASS=0
@@ -159,6 +170,15 @@ expect_fail "bad_module_line.te" "syntax error" "bad_module_line" "${NEGDIR}/bad
 expect_fail "bad_require.te" "syntax error" "bad_require" "${NEGDIR}/bad_require.te"
 expect_fail "invalid_module_version.te" "syntax error" "invalid_module_version" "${NEGDIR}/invalid_module_version.te"
 expect_fail "dup_module.te" "syntax error" "dup_module" "${NEGDIR}/dup_module.te"
+expect_fail "dup_type.te" "Duplicate declaration of type" "dup_type" "${NEGDIR}/dup_type.te"
+expect_fail "dup_attribute.te" "Duplicate declaration of type" "dup_attribute" \
+	"${NEGDIR}/dup_attribute.te"
+expect_fail "type_attr_conflict.te" "Duplicate declaration of type" "type_attr_conflict" \
+	"${NEGDIR}/type_attr_conflict.te"
+expect_fail "invalid_type_name.te" "syntax error" "invalid_type_name" \
+	"${NEGDIR}/invalid_type_name.te"
+expect_fail "bad_role.te" "syntax error" "bad_role" "${NEGDIR}/bad_role.te"
+expect_fail "bad_user.te" "garbage_token" "bad_user" "${NEGDIR}/bad_user.te"
 
 # Missing / bad-path .te inputs (PDF #1).
 expect_fail "missing .te path" "unable to open" "missing_path" "${OUTDIR}/does_not_exist.te"
