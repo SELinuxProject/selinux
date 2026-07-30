@@ -1,0 +1,9 @@
+module neverallow_xperm_violator 1.0;
+
+require {
+	type base_t;
+	class file { read write ioctl };
+}
+
+allow base_t base_t : file ioctl;
+allowxperm base_t base_t : file ioctl 0x1000;

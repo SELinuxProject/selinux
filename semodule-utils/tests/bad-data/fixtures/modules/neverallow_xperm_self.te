@@ -1,0 +1,11 @@
+module neverallow_xperm_self 1.0;
+
+require {
+	class file { read write ioctl };
+}
+
+type foo_t;
+
+allow foo_t foo_t : file ioctl;
+allowxperm foo_t foo_t : file ioctl 0x2000;
+neverallowxperm foo_t foo_t : file ioctl 0x2000;

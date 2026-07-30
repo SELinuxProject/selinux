@@ -1,0 +1,8 @@
+module neverallow_violator 1.0;
+
+require {
+	type base_t;
+	class file { read write };
+}
+
+allow base_t base_t : file write;

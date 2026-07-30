@@ -1,0 +1,8 @@
+module module_a 1.0;
+
+require {
+	type other_t;
+	class file { read };
+}
+
+allow other_t other_t : file read;

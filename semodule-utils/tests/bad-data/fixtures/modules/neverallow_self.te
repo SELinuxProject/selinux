@@ -1,0 +1,10 @@
+module neverallow_self 1.0;
+
+require {
+	class file { read write };
+}
+
+type foo_t;
+
+allow foo_t foo_t : file { read write };
+neverallow foo_t foo_t : file write;
