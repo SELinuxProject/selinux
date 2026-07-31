@@ -1,6 +1,7 @@
 #include <sepol/debug.h>
 #include <sepol/kernel_to_cil.h>
 #include <sepol/kernel_to_conf.h>
+#include <sepol/module_to_cil.h>
 #include <sepol/policydb/expand.h>
 #include <sepol/policydb/hierarchy.h>
 #include <sepol/policydb/link.h>
@@ -72,30 +73,34 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 
 		if (sepol_kernel_policydb_to_cil(devnull, &policydb))
 			abort();
-
-	} else if (policydb.policy_type == POLICY_BASE) {
-		if (link_modules(NULL, &policydb, NULL, 0, VERBOSE))
-			goto exit;
-
-		if (policydb_init(&out))
-			goto exit;
-
-		if (expand_module(NULL, &policydb, &out, VERBOSE,
-				  /*check_assertions=*/0))
-			goto exit;
-
-		(void)check_assertions(NULL, &out,
-				       out.global->branch_list->avrules);
-		(void)hierarchy_check_constraints(NULL, &out);
-
-		if (write_binary_policy(&out, devnull))
+	} else {
+		if (sepol_module_policydb_to_cil(devnull, &policydb, 0))
 			abort();
 
-		if (sepol_kernel_policydb_to_conf(devnull, &out))
-			abort();
+		if (policydb.policy_type == POLICY_BASE) {
+			if (link_modules(NULL, &policydb, NULL, 0, VERBOSE))
+				goto exit;
 
-		if (sepol_kernel_policydb_to_cil(devnull, &out))
-			abort();
+			if (policydb_init(&out))
+				goto exit;
+
+			if (expand_module(NULL, &policydb, &out, VERBOSE,
+					  /*check_assertions=*/0))
+				goto exit;
+
+			(void)check_assertions(
+				NULL, &out, out.global->branch_list->avrules);
+			(void)hierarchy_check_constraints(NULL, &out);
+
+			if (write_binary_policy(&out, devnull))
+				abort();
+
+			if (sepol_kernel_policydb_to_conf(devnull, &out))
+				abort();
+
+			if (sepol_kernel_policydb_to_cil(devnull, &out))
+				abort();
+		}
 	}
 
 exit:
