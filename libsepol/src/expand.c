@@ -646,6 +646,10 @@ static int type_bounds_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		return 0;
 
 	bounds_val = state->typemap[type->bounds - 1];
+	if (!bounds_val) {
+		ERR(state->handle, "No type mapping for %s", (char *)key);
+		return -1;
+	}
 
 	dest = hashtab_search(state->out->p_types.table, (char *)key);
 	if (!dest) {
@@ -676,6 +680,10 @@ static int role_bounds_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		return 0;
 
 	bounds_val = state->rolemap[role->bounds - 1];
+	if (!bounds_val) {
+		ERR(state->handle, "No role mapping for %s", (char *)key);
+		return -1;
+	}
 
 	dest = hashtab_search(state->out->p_roles.table, (char *)key);
 	if (!dest) {
@@ -706,6 +714,10 @@ static int user_bounds_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		return 0;
 
 	bounds_val = state->usermap[user->bounds - 1];
+	if (!bounds_val) {
+		ERR(state->handle, "No user mapping for %s", (char *)key);
+		return -1;
+	}
 
 	dest = hashtab_search(state->out->p_users.table, (char *)key);
 	if (!dest) {
@@ -781,6 +793,13 @@ static int alias_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		new_alias->s.value = state->typemap[alias->primary - 1];
 	else
 		assert(0); /* unreachable */
+
+	if (!new_alias->s.value) {
+		ERR(state->handle, "No type mapping for %s", new_id);
+		free(new_alias);
+		free(new_id);
+		return -1;
+	}
 
 	new_alias->flags = alias->flags;
 
@@ -1559,6 +1578,11 @@ static int copy_role_trans(expand_state_t *state, role_trans_rule_t *rules)
 							state->rolemap
 								[cur->new_role -
 								 1];
+						if (!mapped_role) {
+							ERR(state->handle,
+							    "No role mapping");
+							return -1;
+						}
 
 						if ((cur_trans->role ==
 						     i + 1) &&
@@ -1607,6 +1631,11 @@ static int copy_role_trans(expand_state_t *state, role_trans_rule_t *rules)
 					n->new_role =
 						state->rolemap[cur->new_role -
 							       1];
+					if (!n->new_role) {
+						ERR(state->handle,
+						    "No role mapping");
+						return -1;
+					}
 					if (l)
 						l->next = n;
 					else
@@ -1633,6 +1662,10 @@ static int expand_filename_trans_helper(expand_state_t *state,
 	int rc;
 
 	mapped_otype = state->typemap[rule->otype - 1];
+	if (!mapped_otype) {
+		ERR(state->handle, "No type mapping");
+		return -1;
+	}
 
 	rc = policydb_filetrans_insert(state->out, s + 1, t + 1, rule->tclass,
 				       rule->name, NULL, mapped_otype,
@@ -1940,8 +1973,18 @@ static int expand_terule_helper(sepol_handle_t *handle, policydb_t *p,
 
 	cur = perms;
 	while (cur) {
-		uint32_t remapped_data = typemap ? typemap[cur->data - 1] :
-						   cur->data;
+		uint32_t remapped_data;
+
+		if (typemap) {
+			remapped_data = typemap[cur->data - 1];
+			if (!remapped_data) {
+				ERR(handle, "No type mapping");
+				return -1;
+			}
+		} else {
+			remapped_data = cur->data;
+		}
+
 		avkey.target_class = cur->tclass;
 
 		conflict = 0;
@@ -2245,13 +2288,23 @@ static int cond_node_map_bools(expand_state_t *state, cond_node_t *cn)
 
 	cur = cn->expr;
 	while (cur) {
-		if (cur->boolean)
+		if (cur->boolean) {
 			cur->boolean = state->boolmap[cur->boolean - 1];
+			if (!cur->boolean) {
+				ERR(state->handle, "No bool mapping");
+				return -1;
+			}
+		}
 		cur = cur->next;
 	}
 
-	for (i = 0; i < min(cn->nbools, COND_MAX_BOOLS); i++)
+	for (i = 0; i < min(cn->nbools, COND_MAX_BOOLS); i++) {
 		cn->bool_ids[i] = state->boolmap[cn->bool_ids[i] - 1];
+		if (!cn->bool_ids[i]) {
+			ERR(state->handle, "No bool mapping");
+			return -1;
+		}
+	}
 
 	if (cond_normalize_expr(state->out, cn)) {
 		ERR(state->handle, "Error while normalizing conditional");
@@ -2329,8 +2382,23 @@ static int context_copy(context_struct_t *dst, context_struct_t *src,
 			expand_state_t *state)
 {
 	dst->user = state->usermap[src->user - 1];
+	if (!dst->user) {
+		ERR(state->handle, "No user mapping");
+		return -1;
+	}
+
 	dst->role = state->rolemap[src->role - 1];
+	if (!dst->role) {
+		ERR(state->handle, "No role mapping");
+		return -1;
+	}
+
 	dst->type = state->typemap[src->type - 1];
+	if (!dst->type) {
+		ERR(state->handle, "No type mapping");
+		return -1;
+	}
+
 	return mls_context_cpy(dst, src);
 }
 
