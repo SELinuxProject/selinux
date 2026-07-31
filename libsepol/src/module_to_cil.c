@@ -3680,6 +3680,8 @@ exit:
 	free(line);
 	free(user);
 	free(prefix);
+	free(user_str);
+	free(prefix_str);
 
 	return rc;
 }
