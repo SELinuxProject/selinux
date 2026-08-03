@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
 	FILE *file = NULL;
 	char *buffer = NULL;
 	struct stat filedata;
-	uint32_t file_size;
+	size_t file_size;
 	char *output = NULL;
 	struct cil_db *db = NULL;
 	int preserve_tunables = 0;

@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
 	FILE *file = NULL;
 	char *buffer = NULL;
 	struct stat filedata;
-	uint32_t file_size;
+	size_t file_size;
 	char *output = NULL;
 	char *filecontexts = NULL;
 	struct cil_db *db = NULL;
