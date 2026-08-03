@@ -41,6 +41,9 @@
 #include "cil_parser.h"
 #include "cil_strpool.h"
 
+#define MAX_DEPTH (256)
+#define MAX_NODES (1U << 20)
+
 struct cil_tree_node *cil_tree_get_next_path(struct cil_tree_node *node,
 					     char **info_kind,
 					     uint32_t *hll_line, char **path)
@@ -311,18 +314,33 @@ void cil_tree_node_remove(struct cil_tree_node *node)
    extra_args:               any additional data to be passed to the helper functions
 */
 
+static int cil_tree_walk_helper(
+	struct cil_tree_node *node,
+	int (*process_node)(struct cil_tree_node *node, uint32_t *finished,
+			    void *extra_args),
+	int (*first_child)(struct cil_tree_node *node, void *extra_args),
+	int (*last_child)(struct cil_tree_node *node, void *extra_args),
+	void *extra_args, unsigned depth, unsigned *processed);
+
 static int cil_tree_walk_core(
 	struct cil_tree_node *node,
 	int (*process_node)(struct cil_tree_node *node, uint32_t *finished,
 			    void *extra_args),
 	int (*first_child)(struct cil_tree_node *node, void *extra_args),
 	int (*last_child)(struct cil_tree_node *node, void *extra_args),
-	void *extra_args)
+	void *extra_args, unsigned depth, unsigned *processed)
 {
 	int rc = SEPOL_ERR;
 
 	while (node) {
 		uint32_t finished = CIL_TREE_SKIP_NOTHING;
+
+		if (*processed >= MAX_NODES) {
+			cil_tree_log(node, CIL_ERR,
+				     "Exceeded max tree processed nodes (%u)",
+				     MAX_NODES);
+			return SEPOL_ERR;
+		}
 
 		if (process_node != NULL) {
 			rc = (*process_node)(node, &finished, extra_args);
@@ -330,6 +348,7 @@ static int cil_tree_walk_core(
 				cil_tree_log(node, CIL_INFO, "Problem");
 				return rc;
 			}
+			(*processed)++;
 		}
 
 		if (finished & CIL_TREE_SKIP_NEXT) {
@@ -337,8 +356,10 @@ static int cil_tree_walk_core(
 		}
 
 		if (node->cl_head != NULL && !(finished & CIL_TREE_SKIP_HEAD)) {
-			rc = cil_tree_walk(node, process_node, first_child,
-					   last_child, extra_args);
+			rc = cil_tree_walk_helper(node, process_node,
+						  first_child, last_child,
+						  extra_args, depth + 1,
+						  processed);
 			if (rc != SEPOL_OK) {
 				return rc;
 			}
@@ -350,16 +371,21 @@ static int cil_tree_walk_core(
 	return SEPOL_OK;
 }
 
-int cil_tree_walk(struct cil_tree_node *node,
-		  int (*process_node)(struct cil_tree_node *node,
-				      uint32_t *finished, void *extra_args),
-		  int (*first_child)(struct cil_tree_node *node,
-				     void *extra_args),
-		  int (*last_child)(struct cil_tree_node *node,
-				    void *extra_args),
-		  void *extra_args)
+static int cil_tree_walk_helper(
+	struct cil_tree_node *node,
+	int (*process_node)(struct cil_tree_node *node, uint32_t *finished,
+			    void *extra_args),
+	int (*first_child)(struct cil_tree_node *node, void *extra_args),
+	int (*last_child)(struct cil_tree_node *node, void *extra_args),
+	void *extra_args, unsigned depth, unsigned *processed)
 {
 	int rc = SEPOL_ERR;
+
+	if (depth >= MAX_DEPTH) {
+		cil_tree_log(node, CIL_ERR, "Exceeded max tree depth (%u)",
+			     MAX_DEPTH);
+		return SEPOL_ERR;
+	}
 
 	if (!node || !node->cl_head) {
 		return SEPOL_OK;
@@ -374,7 +400,7 @@ int cil_tree_walk(struct cil_tree_node *node,
 	}
 
 	rc = cil_tree_walk_core(node->cl_head, process_node, first_child,
-				last_child, extra_args);
+				last_child, extra_args, depth, processed);
 	if (rc != SEPOL_OK) {
 		return rc;
 	}
@@ -388,4 +414,19 @@ int cil_tree_walk(struct cil_tree_node *node,
 	}
 
 	return SEPOL_OK;
+}
+
+int cil_tree_walk(struct cil_tree_node *node,
+		  int (*process_node)(struct cil_tree_node *node,
+				      uint32_t *finished, void *extra_args),
+		  int (*first_child)(struct cil_tree_node *node,
+				     void *extra_args),
+		  int (*last_child)(struct cil_tree_node *node,
+				    void *extra_args),
+		  void *extra_args)
+{
+	unsigned processed = 0;
+
+	return cil_tree_walk_helper(node, process_node, first_child, last_child,
+				    extra_args, 0, &processed);
 }
