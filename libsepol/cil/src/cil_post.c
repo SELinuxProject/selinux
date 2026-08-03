@@ -49,6 +49,8 @@
 #include "cil_symtab.h"
 #include "cil_deny.h"
 
+#define MAX_CLASSPERMS_DEPTH (32)
+
 #define GEN_REQUIRE_ATTR \
 	"cil_gen_require" /* Also in libsepol/src/module_to_cil.c */
 #define TYPEATTR_INFIX "_typeattr_" /* Also in libsepol/src/module_to_cil.c */
@@ -2296,8 +2298,11 @@ static int __evaluate_classperms_list(struct cil_list *classperms,
 	int rc = SEPOL_ERR;
 	struct cil_list_item *curr;
 
-	if (depth > 32)
+	if (depth >= MAX_CLASSPERMS_DEPTH) {
+		cil_log(CIL_ERR, "Exceeded max classperms depth (%u)\n",
+			MAX_CLASSPERMS_DEPTH);
 		return SEPOL_ERR;
+	}
 
 	cil_list_for_each(curr, classperms) {
 		if (curr->flavor == CIL_CLASSPERMS) {
