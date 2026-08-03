@@ -13,16 +13,23 @@ involved.
 
 ### Reporting Problems
 
+Note that issues that depend on attacker-controlled policy can be
+reported as regular bugs to the public selinux@vger.kernel.org mailing
+list and do not need to follow this process.
+
 For serious problems or security vulnerabilities in the SELinux kernel code
 please refer to the SELinux Kernel Subsystem Security Policy in the link below:
 
 * https://github.com/SELinuxProject/selinux-kernel/blob/main/SECURITY.md
 
-Problems with the SELinux userspace that are not suitable for immediate public
-disclosure should be emailed to the current SELinux userspace maintainers, the
-list is below. We typically request at most a 90 day time period to address
-the issue before it is made public, but we will make every effort to address
-the issue as quickly as possible and shorten the disclosure window.
+Problems with the SELinux userspace that are not suitable for
+immediate public disclosure should be reported using
+[GitHub private vulnerability reporting](https://github.com/SELinuxProject/selinux/security)
+or emailed to the current SELinux userspace maintainers - the list is
+below. We typically request at most a 90 day time period to address
+the issue before it is made public, but we will make every effort to
+address the issue as quickly as possible and shorten the disclosure
+window.
 
 * Petr Lautrbach, plautrba@redhat.com
 * James Carter, jwcart2@gmail.com
@@ -34,6 +41,10 @@ the issue as quickly as possible and shorten the disclosure window.
 * Jason Zaman, perfinion@gentoo.org
   *  (GPG fingerprint) 6319 1CE9 4183 0986 89CA  B8DB 7EF1 37EC 935B 0EAF
 * Ondrej Mosnacek, omosnace@redhat.com
+
+If unsure about whether an issue is in kernel or userspace, feel free
+to send it to both the kernel and userspace maintainers and the
+maintainers will handle it internally.
 
 ### Resolving Sensitive Security Issues
 
@@ -57,3 +68,26 @@ lists.
 
 * https://oss-security.openwall.org/wiki/mailing-lists/distros
 * https://oss-security.openwall.org/wiki/mailing-lists/oss-security
+
+### Maintainer Process
+
+This is the process maintainers will follow upon receiving a security notification.
+
+1. Make sure all appropriate SELinux maintainers are notified. Regardless of
+   which maintainer was initially contacted, others should be looped in. This
+   may also include the kernel maintainers if relevant to the issue.
+2. After an initial review of the issue, maintainers will agree on one person
+   to be main point of contact. The response to the initial mail may come from a
+   different maintainer. If the initial mail was PGP signed/encrypted, the
+   replies will also be PGP signed/encrypted with one of the above keys.
+3. Maintainers will work together in private to verify and fix the issue. For
+   larger fixes, this might involve a github private fork within a draft github
+   security advisory.
+4. Maintainers will prepare the fix as soon as reasonable. Maintainers may
+   invite the reporter to the draft security advisory or private fork to help
+   verifying the fix.
+5. We will aim to release the fix publicly quickly, but may request an embargo
+   period up to 90 days if the complexity of the issue requires it or if
+   severity of the issue requires coordinated rollout amongst distros.
+6. Public disclosure will involve pushing the fix to the public repo and
+   publishing the security advisory on Github and to the mailing list.
