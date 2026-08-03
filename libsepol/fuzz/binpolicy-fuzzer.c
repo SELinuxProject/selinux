@@ -88,6 +88,9 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 					  /*check_assertions=*/0))
 				goto exit;
 
+			if (policydb_validate(NULL, &out))
+				goto exit;
+
 			(void)check_assertions(
 				NULL, &out, out.global->branch_list->avrules);
 			(void)hierarchy_check_constraints(NULL, &out);
