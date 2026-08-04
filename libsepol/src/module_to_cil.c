@@ -2711,6 +2711,9 @@ static int sens_to_cil(int indent, struct policydb *pdb,
 {
 	level_datum_t *level = datum;
 
+	if (!pdb->mls)
+		return 0;
+
 	if (scope == SCOPE_DECL) {
 		if (!level->isalias) {
 			cil_println(indent, "(sensitivity %s)", key);
@@ -2738,6 +2741,9 @@ static int sens_order_to_cil(int indent, struct policydb *pdb,
 	struct ebitmap_node *node;
 	uint32_t i;
 
+	if (!pdb->mls)
+		return 0;
+
 	if (ebitmap_is_empty(&order)) {
 		return 0;
 	}
@@ -2761,6 +2767,9 @@ static int cat_to_cil(int indent, struct policydb *pdb,
 {
 	struct cat_datum *cat = datum;
 
+	if (!pdb->mls)
+		return 0;
+
 	if (scope == SCOPE_REQ) {
 		return 0;
 	}
@@ -2782,6 +2791,9 @@ static int cat_order_to_cil(int indent, struct policydb *pdb,
 	int rc = -1;
 	struct ebitmap_node *node;
 	uint32_t i;
+
+	if (!pdb->mls)
+		return 0;
 
 	if (ebitmap_is_empty(&order)) {
 		rc = 0;
