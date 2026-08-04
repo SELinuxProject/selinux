@@ -6,6 +6,7 @@ SELinux Userspace
 [![Run SELinux testsuite in Testing Farm](https://github.com/SELinuxProject/selinux/actions/workflows/tf_testsuite.yml/badge.svg)](https://github.com/SELinuxProject/selinux/actions/workflows/tf_testsuite.yml)
 [![OSS-Fuzz Status](https://oss-fuzz-build-logs.storage.googleapis.com/badges/selinux.svg)](https://oss-fuzz-build-logs.storage.googleapis.com/index.html#selinux)
 [![CIFuzz Status](https://github.com/SELinuxProject/selinux/actions/workflows/cifuzz.yml/badge.svg)](https://github.com/SELinuxProject/selinux/actions/workflows/cifuzz.yml)
+[![Check Format](https://github.com/SELinuxProject/selinux/actions/workflows/check_format.yml/badge.svg)](https://github.com/SELinuxProject/selinux/actions/workflows/check_format.yml)
 
 SELinux is a flexible Mandatory Access Control (MAC) system built into the
 Linux Kernel. SELinux provides administrators with a comprehensive access
