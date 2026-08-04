@@ -1,12 +1,6 @@
 name: Check format
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+on: [push, pull_request]
 
 jobs:
   check-format:
