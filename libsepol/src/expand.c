@@ -3494,6 +3494,11 @@ int expand_module(sepol_handle_t *handle, policydb_t *base, policydb_t *out,
 		goto cleanup;
 	}
 
+	if (out->te_avtab.nel == 0) {
+		ERR(handle, "avtab must contain at least one entry");
+		goto cleanup;
+	}
+
 	/* copy constraints */
 	if (hashtab_map(state.base->p_classes.table, constraint_copy_callback,
 			&state)) {
