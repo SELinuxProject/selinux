@@ -1109,9 +1109,10 @@ static int type_index(hashtab_key_t key, hashtab_datum_t datum, void *datap)
 	typdatum = (type_datum_t *)datum;
 	p = (policydb_t *)datap;
 
+	if (!value_isvalid(typdatum->s.value, p->p_types.nprim))
+		return -EINVAL;
+
 	if (typdatum->primary) {
-		if (!value_isvalid(typdatum->s.value, p->p_types.nprim))
-			return -EINVAL;
 		if (p->p_type_val_to_name[typdatum->s.value - 1] != NULL)
 			return -EINVAL;
 		p->p_type_val_to_name[typdatum->s.value - 1] = (char *)key;
