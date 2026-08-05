@@ -634,6 +634,8 @@ int bounds_check_users(sepol_handle_t *handle, policydb_t *p)
 				p->p_##prefix##_val_to_name[datum->s.value -     \
 							    1];                  \
                                                                                  \
+			if (!datum_name)                                         \
+				return 0;                                        \
 			tmp = strrchr(datum_name, '.');                          \
 			/* no '.' means it has no parent */                      \
 			if (!tmp)                                                \
