@@ -77,21 +77,9 @@ static int validate_array_init(const policydb_t *p, validate_t flavors[])
 	if (validate_init(&flavors[SYM_ROLES], p->p_role_val_to_name,
 			  p->p_roles.nprim))
 		goto bad;
-	if (p->policy_type != POLICY_KERN ||
-	    p->policyvers < POLICYDB_VERSION_AVTAB ||
-	    p->policyvers > POLICYDB_VERSION_PERMISSIVE) {
-		if (validate_init(&flavors[SYM_TYPES], p->p_type_val_to_name,
-				  p->p_types.nprim))
-			goto bad;
-	} else {
-		/*
-		 * For policy versions between 20 and 23, attributes exist in the policy,
-		 * but they only exist in the type_attr_map, so there will be references
-		 * to gaps and we just have to treat this case as if there were no gaps.
-		 */
-		flavors[SYM_TYPES].nprim = p->p_types.nprim;
-		ebitmap_init(&flavors[SYM_TYPES].gaps);
-	}
+	if (validate_init(&flavors[SYM_TYPES], p->p_type_val_to_name,
+			  p->p_types.nprim))
+		goto bad;
 	if (validate_init(&flavors[SYM_USERS], p->p_user_val_to_name,
 			  p->p_users.nprim))
 		goto bad;
@@ -954,19 +942,10 @@ static int validate_datum_array_gaps(sepol_handle_t *handle,
 			goto bad;
 	}
 
-	/*
-	 * For policy versions between 20 and 23, attributes exist in the policy,
-	 * but only in the type_attr_map, so all gaps must be assumed to be valid.
-	 */
-	if (p->policy_type != POLICY_KERN ||
-	    p->policyvers < POLICYDB_VERSION_AVTAB ||
-	    p->policyvers > POLICYDB_VERSION_PERMISSIVE) {
-		for (i = 0; i < p->p_types.nprim; i++) {
-			if (bool_xnor(p->type_val_to_struct[i],
-				      ebitmap_get_bit(&flavors[SYM_TYPES].gaps,
-						      i)))
-				goto bad;
-		}
+	for (i = 0; i < p->p_types.nprim; i++) {
+		if (bool_xnor(p->type_val_to_struct[i],
+			      ebitmap_get_bit(&flavors[SYM_TYPES].gaps, i)))
+			goto bad;
 	}
 
 	for (i = 0; i < p->p_users.nprim; i++) {
@@ -1994,8 +1973,6 @@ static int validate_properties(sepol_handle_t *handle, const policydb_t *p)
 		if (p->policyvers < POLICYDB_VERSION_MIN ||
 		    p->policyvers > POLICYDB_VERSION_MAX)
 			goto bad;
-		if (p->mls && p->policyvers < POLICYDB_VERSION_MLS)
-			goto bad;
 		break;
 	case POLICY_BASE:
 	case POLICY_MOD:
@@ -2086,10 +2063,8 @@ int policydb_validate(sepol_handle_t *handle, const policydb_t *p)
 	if (p->policy_type == POLICY_KERN) {
 		if (validate_avtab(handle, &p->te_avtab, p, flavors))
 			goto bad;
-		if (p->policyvers >= POLICYDB_VERSION_BOOL)
-			if (validate_cond_list(handle, p->cond_list, p,
-					       flavors))
-				goto bad;
+		if (validate_cond_list(handle, p->cond_list, p, flavors))
+			goto bad;
 		if (validate_role_transes(handle, p->role_tr, flavors))
 			goto bad;
 		if (validate_role_allows(handle, p->role_allow, flavors))

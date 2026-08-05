@@ -605,18 +605,8 @@ int main(int argc, char **argv)
 			}
 		}
 
-		if (policydbp->policyvers <= POLICYDB_VERSION_PERMISSIVE) {
-			if (policyvers > policydbp->policyvers) {
-				fprintf(stderr,
-					"Binary policies with version <= %u cannot be upgraded\n",
-					POLICYDB_VERSION_PERMISSIVE);
-			} else if (policyvers) {
-				policydbp->policyvers = policyvers;
-			}
-		} else {
-			policydbp->policyvers =
-				policyvers ? policyvers : POLICYDB_VERSION_MAX;
-		}
+		policydbp->policyvers = policyvers ? policyvers :
+						     POLICYDB_VERSION_MAX;
 	} else {
 		if (conf) {
 			fprintf(stderr,

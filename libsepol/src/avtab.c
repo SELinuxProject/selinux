@@ -417,23 +417,14 @@ void avtab_hash_eval(avtab_t *h, char *tag)
 	       tag, h->nel, slots_used, h->nslot, max_chain_len);
 }
 
-/* Ordering of datums in the original avtab format in the policy file. */
-static const uint16_t spec_order[] = {
-	AVTAB_ALLOWED,	       AVTAB_AUDITDENY,
-	AVTAB_AUDITALLOW,      AVTAB_TRANSITION,
-	AVTAB_CHANGE,	       AVTAB_MEMBER,
-	AVTAB_XPERMS_ALLOWED,  AVTAB_XPERMS_AUDITALLOW,
-	AVTAB_XPERMS_DONTAUDIT
-};
-
 int avtab_read_item(struct policy_file *fp, uint32_t vers, avtab_t *a,
 		    int (*insertf)(avtab_t *a, avtab_key_t *k, avtab_datum_t *d,
 				   void *p),
 		    void *p)
 {
 	uint8_t buf8;
-	uint16_t buf16[4], enabled;
-	uint32_t buf32[8], items, items2, val;
+	uint16_t buf16[4];
+	uint32_t buf32[8], items;
 	avtab_key_t key;
 	avtab_datum_t datum;
 	avtab_extended_perms_t xperms;
@@ -443,85 +434,6 @@ int avtab_read_item(struct policy_file *fp, uint32_t vers, avtab_t *a,
 	memset(&key, 0, sizeof(avtab_key_t));
 	memset(&datum, 0, sizeof(avtab_datum_t));
 	memset(&xperms, 0, sizeof(avtab_extended_perms_t));
-
-	if (vers < POLICYDB_VERSION_AVTAB) {
-		rc = next_entry(buf32, fp, sizeof(uint32_t));
-		if (rc < 0) {
-			ERR(fp->handle, "truncated entry");
-			return -1;
-		}
-		items2 = le32_to_cpu(buf32[0]);
-
-		if (items2 < 5 || items2 > ARRAY_SIZE(buf32)) {
-			ERR(fp->handle, "invalid item count");
-			return -1;
-		}
-
-		rc = next_entry(buf32, fp, sizeof(uint32_t) * items2);
-		if (rc < 0) {
-			ERR(fp->handle, "truncated entry");
-			return -1;
-		}
-
-		items = 0;
-		val = le32_to_cpu(buf32[items++]);
-		key.source_type = (uint16_t)val;
-		if (key.source_type != val) {
-			ERR(fp->handle, "truncated source type");
-			return -1;
-		}
-		val = le32_to_cpu(buf32[items++]);
-		key.target_type = (uint16_t)val;
-		if (key.target_type != val) {
-			ERR(fp->handle, "truncated target type");
-			return -1;
-		}
-		val = le32_to_cpu(buf32[items++]);
-		key.target_class = (uint16_t)val;
-		if (key.target_class != val) {
-			ERR(fp->handle, "truncated target class");
-			return -1;
-		}
-
-		val = le32_to_cpu(buf32[items++]);
-		enabled = (val & AVTAB_ENABLED_OLD) ? AVTAB_ENABLED : 0;
-
-		if (!(val & (AVTAB_AV | AVTAB_TYPE))) {
-			ERR(fp->handle, "null entry");
-			return -1;
-		}
-		if ((val & AVTAB_AV) && (val & AVTAB_TYPE)) {
-			ERR(fp->handle, "entry has both access "
-					"vectors and types");
-			return -1;
-		}
-
-		for (i = 0; i < ARRAY_SIZE(spec_order); i++) {
-			if (val & spec_order[i]) {
-				if (items >=
-				    items2) { /* items is index, items2 is total number */
-					ERR(fp->handle,
-					    "entry has too many items (%d/%d)",
-					    items + 1, items2);
-					return -1;
-				}
-				key.specified = spec_order[i] | enabled;
-				datum.data = le32_to_cpu(buf32[items++]);
-				rc = insertf(a, &key, &datum, p);
-				if (rc)
-					return rc;
-			}
-		}
-
-		if (items != items2) {
-			ERR(fp->handle,
-			    "entry only had %d items, "
-			    "expected %d",
-			    items2, items);
-			return -1;
-		}
-		return 0;
-	}
 
 	rc = next_entry(buf16, fp, sizeof(uint16_t) * 4);
 	if (rc < 0) {

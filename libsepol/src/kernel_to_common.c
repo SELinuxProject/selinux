@@ -795,18 +795,5 @@ int check_for_supported_policy(struct policydb *pdb)
 		return -1;
 	}
 
-	if (pdb->policyvers >= POLICYDB_VERSION_AVTAB &&
-	    pdb->policyvers <= POLICYDB_VERSION_PERMISSIVE) {
-		/*
-		 * For policy versions between 20 and 23, attributes exist in the policy,
-		 * but only in the type_attr_map. This means that there are gaps in both
-		 * the type_val_to_struct and p_type_val_to_name arrays and policy rules
-		 * can refer to those gaps.
-		 */
-		ERR(NULL,
-		    "Writing out CIL or policy.conf from policy versions between 20 and 23 is not supported");
-		return -1;
-	}
-
 	return 0;
 }

@@ -750,16 +750,6 @@ extern int policydb_set_target_platform(policydb_t *p, int platform);
 #define PERM_SYMTAB_SIZE 32
 
 /* Identify specific policy version changes */
-#define POLICYDB_VERSION_BASE 15
-#define POLICYDB_VERSION_BOOL 16
-#define POLICYDB_VERSION_IPV6 17
-#define POLICYDB_VERSION_NLCLASS 18
-#define POLICYDB_VERSION_VALIDATETRANS 19
-#define POLICYDB_VERSION_MLS 19
-#define POLICYDB_VERSION_AVTAB 20
-#define POLICYDB_VERSION_RANGETRANS 21
-#define POLICYDB_VERSION_POLCAP 22
-#define POLICYDB_VERSION_PERMISSIVE 23
 #define POLICYDB_VERSION_BOUNDARY 24
 #define POLICYDB_VERSION_FILENAME_TRANS 25
 #define POLICYDB_VERSION_ROLETRANS 26
@@ -776,7 +766,7 @@ extern int policydb_set_target_platform(policydb_t *p, int platform);
 #define POLICYDB_VERSION_NEVERAUDIT 35 /* neveraudit domains */
 
 /* Range of policy versions we understand*/
-#define POLICYDB_VERSION_MIN POLICYDB_VERSION_BASE
+#define POLICYDB_VERSION_MIN POLICYDB_VERSION_BOUNDARY
 #define POLICYDB_VERSION_MAX POLICYDB_VERSION_NEVERAUDIT
 
 /* Module versions and specific changes*/

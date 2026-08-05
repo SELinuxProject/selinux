@@ -78,69 +78,6 @@ static const struct policydb_compat_info policydb_compat[] = {
 	},
 	{
 		.type = POLICY_KERN,
-		.version = POLICYDB_VERSION_BASE,
-		.sym_num = SYM_NUM - 3,
-		.ocon_num = OCON_FSUSE + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_KERN,
-		.version = POLICYDB_VERSION_BOOL,
-		.sym_num = SYM_NUM - 2,
-		.ocon_num = OCON_FSUSE + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_KERN,
-		.version = POLICYDB_VERSION_IPV6,
-		.sym_num = SYM_NUM - 2,
-		.ocon_num = OCON_NODE6 + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_KERN,
-		.version = POLICYDB_VERSION_NLCLASS,
-		.sym_num = SYM_NUM - 2,
-		.ocon_num = OCON_NODE6 + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_KERN,
-		.version = POLICYDB_VERSION_MLS,
-		.sym_num = SYM_NUM,
-		.ocon_num = OCON_NODE6 + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_KERN,
-		.version = POLICYDB_VERSION_AVTAB,
-		.sym_num = SYM_NUM,
-		.ocon_num = OCON_NODE6 + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_KERN,
-		.version = POLICYDB_VERSION_RANGETRANS,
-		.sym_num = SYM_NUM,
-		.ocon_num = OCON_NODE6 + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_KERN,
-		.version = POLICYDB_VERSION_POLCAP,
-		.sym_num = SYM_NUM,
-		.ocon_num = OCON_NODE6 + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_KERN,
-		.version = POLICYDB_VERSION_PERMISSIVE,
-		.sym_num = SYM_NUM,
-		.ocon_num = OCON_NODE6 + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_KERN,
 		.version = POLICYDB_VERSION_BOUNDARY,
 		.sym_num = SYM_NUM,
 		.ocon_num = OCON_NODE6 + 1,
@@ -2088,8 +2025,7 @@ static int context_read_and_validate(context_struct_t *c, policydb_t *p,
 	c->user = le32_to_cpu(buf[0]);
 	c->role = le32_to_cpu(buf[1]);
 	c->type = le32_to_cpu(buf[2]);
-	if ((p->policy_type == POLICY_KERN &&
-	     p->policyvers >= POLICYDB_VERSION_MLS) ||
+	if ((p->policy_type == POLICY_KERN) ||
 	    (p->policy_type == POLICY_BASE &&
 	     p->policyvers >= MOD_POLICYDB_VERSION_MLS)) {
 		if (mls_read_range_helper(&c->range, fp)) {
@@ -2348,8 +2284,7 @@ static int class_read(policydb_t *p, hashtab_t h, struct policy_file *fp)
 	if (read_cons_helper(p, &cladatum->constraints, ncons, 0, fp))
 		goto bad;
 
-	if ((p->policy_type == POLICY_KERN &&
-	     p->policyvers >= POLICYDB_VERSION_VALIDATETRANS) ||
+	if ((p->policy_type == POLICY_KERN) ||
 	    (p->policy_type == POLICY_BASE &&
 	     p->policyvers >= MOD_POLICYDB_VERSION_VALIDATETRANS)) {
 		/* grab the validatetrans rules */
@@ -3365,8 +3300,7 @@ static int user_read(policydb_t *p, hashtab_t h, struct policy_file *fp)
 	 * MOD_POLICYDB_VERSION_MLS_USERS, but they could have been
 	 * required - the mls fields will be empty.  user declarations in
 	 * non-mls modules will also have empty mls fields */
-	if ((p->policy_type == POLICY_KERN &&
-	     p->policyvers >= POLICYDB_VERSION_MLS) ||
+	if ((p->policy_type == POLICY_KERN) ||
 	    (p->policy_type == POLICY_MOD &&
 	     p->policyvers >= MOD_POLICYDB_VERSION_MLS &&
 	     p->policyvers < MOD_POLICYDB_VERSION_MLS_USERS) ||
@@ -3603,8 +3537,7 @@ static int range_read(policydb_t *p, struct policy_file *fp)
 	struct mls_range *r = NULL;
 	range_trans_rule_t *rtr = NULL, *lrtr = NULL;
 	unsigned int i;
-	int new_rangetr = (p->policy_type == POLICY_KERN &&
-			   p->policyvers >= POLICYDB_VERSION_RANGETRANS);
+	int new_rangetr = (p->policy_type == POLICY_KERN);
 	int rc;
 
 	rc = next_entry(buf, fp, sizeof(uint32_t));
@@ -4361,8 +4294,7 @@ int policydb_read(policydb_t *p, struct policy_file *fp, unsigned verbose)
 			goto bad;
 	}
 
-	if ((p->policyvers >= POLICYDB_VERSION_POLCAP &&
-	     p->policy_type == POLICY_KERN) ||
+	if ((p->policy_type == POLICY_KERN) ||
 	    (p->policyvers >= MOD_POLICYDB_VERSION_POLCAP &&
 	     p->policy_type == POLICY_BASE) ||
 	    (p->policyvers >= MOD_POLICYDB_VERSION_POLCAP &&
@@ -4371,8 +4303,7 @@ int policydb_read(policydb_t *p, struct policy_file *fp, unsigned verbose)
 			goto bad;
 	}
 
-	if (p->policyvers >= POLICYDB_VERSION_PERMISSIVE &&
-	    p->policy_type == POLICY_KERN) {
+	if (p->policy_type == POLICY_KERN) {
 		if (ebitmap_read(&p->permissive_map, fp))
 			goto bad;
 	}
@@ -4422,9 +4353,8 @@ int policydb_read(policydb_t *p, struct policy_file *fp, unsigned verbose)
 	if (policy_type == POLICY_KERN) {
 		if (avtab_read(&p->te_avtab, fp, r_policyvers))
 			goto bad;
-		if (r_policyvers >= POLICYDB_VERSION_BOOL)
-			if (cond_read_list(p, &p->cond_list, fp))
-				goto bad;
+		if (cond_read_list(p, &p->cond_list, fp))
+			goto bad;
 		if (role_trans_read(p, fp))
 			goto bad;
 		if (role_allow_read(&p->role_allow, fp))
@@ -4487,8 +4417,7 @@ int policydb_read(policydb_t *p, struct policy_file *fp, unsigned verbose)
 		goto bad;
 	}
 
-	if ((p->policy_type == POLICY_KERN &&
-	     p->policyvers >= POLICYDB_VERSION_MLS) ||
+	if ((p->policy_type == POLICY_KERN) ||
 	    (p->policy_type == POLICY_BASE &&
 	     p->policyvers >= MOD_POLICYDB_VERSION_MLS &&
 	     p->policyvers < MOD_POLICYDB_VERSION_RANGETRANS)) {
@@ -4503,30 +4432,28 @@ int policydb_read(policydb_t *p, struct policy_file *fp, unsigned verbose)
 		if (!p->type_attr_map || !p->attr_type_map)
 			goto bad;
 		for (i = 0; i < p->p_types.nprim; i++) {
-			if (r_policyvers >= POLICYDB_VERSION_AVTAB) {
-				if (ebitmap_read(&p->type_attr_map[i], fp))
+			if (ebitmap_read(&p->type_attr_map[i], fp))
+				goto bad;
+			ebitmap_for_each_positive_bit(&p->type_attr_map[i],
+						      tnode, j) {
+				if (i == j)
+					continue;
+
+				if (j >= p->p_types.nprim)
 					goto bad;
-				ebitmap_for_each_positive_bit(
-					&p->type_attr_map[i], tnode, j) {
-					if (i == j)
-						continue;
 
-					if (j >= p->p_types.nprim)
-						goto bad;
-
-					if (p->type_val_to_struct[i] &&
-					    p->type_val_to_struct[i]->flavor ==
-						    TYPE_ATTRIB) {
-						ERR(fp->handle,
-						    "Invalid to have type attributes associated with an attribute for a kernel policy");
-						goto bad;
-					}
-
-					if (ebitmap_set_bit(
-						    &p->attr_type_map[j], i, 1))
-						goto bad;
+				if (p->type_val_to_struct[i] &&
+				    p->type_val_to_struct[i]->flavor ==
+					    TYPE_ATTRIB) {
+					ERR(fp->handle,
+					    "Invalid to have type attributes associated with an attribute for a kernel policy");
+					goto bad;
 				}
+
+				if (ebitmap_set_bit(&p->attr_type_map[j], i, 1))
+					goto bad;
 			}
+
 			/* add the type itself as the degenerate case */
 			if (p->type_val_to_struct[i] &&
 			    ebitmap_set_bit(&p->type_attr_map[i], i, 1))

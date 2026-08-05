@@ -155,13 +155,6 @@ int do_downgrade_test(int mls)
 			/* Write out modified binary policy */
 			if (write_binary_policy(POLICY_BIN_LO, &policydb) !=
 			    0) {
-				/*
-				 * Error from MLS to pre-MLS is expected due
-				 * to MLS re-implementation in version 19.
-				 */
-				if (mls && lo < POLICYDB_VERSION_MLS)
-					continue;
-
 				fprintf(stderr,
 					"error writing %spolicy binary, version %d (downgraded from %d)\n",
 					mls ? "mls " : "", lo, hi);
