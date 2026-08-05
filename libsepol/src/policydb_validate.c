@@ -1024,8 +1024,8 @@ static int validate_datum_array_entries(sepol_handle_t *handle,
 			&margs))
 		goto bad;
 
-	if (p->mls && hashtab_map(symtabs[SYM_LEVELS].table,
-				  validate_level_datum_wrapper, &margs))
+	if (hashtab_map(symtabs[SYM_LEVELS].table, validate_level_datum_wrapper,
+			&margs))
 		goto bad;
 
 	if (hashtab_map(symtabs[SYM_CATS].table, validate_datum,
