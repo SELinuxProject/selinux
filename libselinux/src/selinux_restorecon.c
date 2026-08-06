@@ -1968,6 +1968,18 @@ int selinux_restorecon_xattr(const char *pathname, unsigned int xattr_flags,
 	if (!fc_sehandle)
 		return -1;
 
+	/*
+	 * The API contract requires the caller to have already freed any
+	 * xattr_list returned by a previous call before calling again.
+	 * Forget our own head/tail pointers to that now caller-owned memory
+	 * here instead of carrying them over: leaving them set would make
+	 * the next add_xattr_entry() append a new entry through
+	 * dir_xattr_last, which would be dangling once the caller has freed
+	 * it, resulting in a use-after-free.
+	 */
+	dir_xattr_list = NULL;
+	dir_xattr_last = NULL;
+
 	if (lstat(pathname, &sb) < 0) {
 		if (errno == ENOENT)
 			return 0;
