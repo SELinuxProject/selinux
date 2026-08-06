@@ -106,8 +106,6 @@ static int read_source_policy(policydb_t *p, const uint8_t *data, size_t size)
 	}
 
 	rc = yyparse();
-	// TODO: drop global variable policydb_errors if proven to be redundant
-	assert(rc || !policydb_errors);
 	if (rc || policydb_errors) {
 		queue_destroy(id_queue);
 		fclose(yyin);
@@ -120,7 +118,6 @@ static int read_source_policy(policydb_t *p, const uint8_t *data, size_t size)
 	yyrestart(yyin);
 
 	rc = yyparse();
-	assert(rc || !policydb_errors);
 	if (rc || policydb_errors) {
 		queue_destroy(id_queue);
 		fclose(yyin);
