@@ -69,7 +69,7 @@ def install(src, dest):
 	PyObject* list = PyList_New(*$2);
 	int i;
 	for (i = 0; i < *$2; i++) {
-		PyList_SetItem(list, i, PyString_FromString((*$1)[i]));
+		PyList_SetItem(list, i, PyUnicode_FromString((*$1)[i]));
 	}
 	$result = SWIG_AppendOutput($result, list);
 }
@@ -123,7 +123,7 @@ def install(src, dest):
 			len++;
 		plist = PyList_New(len);
 		for (i = 0; i < len; i++) {
-			PyList_SetItem(plist, i, PyString_FromString((*$1)[i]));
+			PyList_SetItem(plist, i, PyUnicode_FromString((*$1)[i]));
 		}
 	} else {
 		plist = PyList_New(0);
@@ -140,7 +140,7 @@ def install(src, dest):
 	if (*$1) {
 		plist = PyList_New(result);
 		for (i = 0; i < result; i++) {
-			PyList_SetItem(plist, i, PyString_FromString((*$1)[i]));
+			PyList_SetItem(plist, i, PyUnicode_FromString((*$1)[i]));
 		}
 	} else {
 		plist = PyList_New(0);
