@@ -549,7 +549,7 @@ int cil_add_file(cil_db_t *db, const char *name, const char *data, size_t size)
 
 	cil_log(CIL_INFO, "Parsing %s\n", name);
 
-	if (size > SIZE_MAX - 2) {
+	if (size > UINT32_MAX - 2) {
 		cil_log(CIL_ERR, "File size is too large\n");
 		return SEPOL_ERR;
 	}
