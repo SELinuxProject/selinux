@@ -96,7 +96,7 @@ runs:
             # Test that overriding CFLAGS, LDFLAGS and other variables works fine
             EXPLICIT_MAKE_VARS="CFLAGS=-I$DESTDIR/usr/include LDFLAGS=-L$DESTDIR/usr/lib LDLIBS= CPPFLAGS="
         elif [ "${{ inputs.other }}" = "test-debug" ] ; then
-            # Test hat debug build works fine
+            # Test that debug build works fine
             EXPLICIT_MAKE_VARS="DEBUG=1"
         elif [ "${{ inputs.other }}" = "sanitizers" ] ; then
             sanitizers='-fsanitize=address,undefined'
@@ -144,9 +144,6 @@ runs:
     - name: Build SELinux userspace
       shell: bash
       run: |
-        echo "::group::make install"
-        eval make -j$(nproc) install $EXPLICIT_MAKE_VARS -k
-        echo "::endgroup::"
         echo "::group::make install"
         eval make -j$(nproc) install $EXPLICIT_MAKE_VARS -k
         echo "::endgroup::"
