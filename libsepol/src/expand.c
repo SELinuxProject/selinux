@@ -49,6 +49,7 @@ typedef struct expand_state {
 	policydb_t *out;
 	sepol_handle_t *handle;
 	int expand_neverallow;
+	int aliases_skipped;
 } expand_state_t;
 
 static void expand_state_init(expand_state_t *state)
@@ -771,6 +772,19 @@ static int alias_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		return 0;
 	}
 
+	if (state->typemap[prival - 1] == 0) {
+		/* The primary is another alias that has yet to be copied.
+		 * Skip this alias for now and come back to it later. */
+		state->aliases_skipped++;
+		return 0;
+	}
+
+	new_alias = hashtab_search(state->out->p_types.table, key);
+	if (new_alias) {
+		/* This alias has already been copied */
+		return 0;
+	}
+
 	if (state->verbose)
 		INFO(state->handle, "copying alias %s", id);
 
@@ -787,20 +801,7 @@ static int alias_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		return SEPOL_ENOMEM;
 	}
 	memset(new_alias, 0, sizeof(type_datum_t));
-	if (alias->flavor == TYPE_TYPE)
-		new_alias->s.value = state->typemap[alias->s.value - 1];
-	else if (alias->flavor == TYPE_ALIAS)
-		new_alias->s.value = state->typemap[alias->primary - 1];
-	else
-		assert(0); /* unreachable */
-
-	if (!new_alias->s.value) {
-		ERR(state->handle, "No type mapping for %s", new_id);
-		free(new_alias);
-		free(new_id);
-		return -1;
-	}
-
+	new_alias->s.value = state->typemap[prival - 1];
 	new_alias->flags = alias->flags;
 
 	ret = hashtab_insert(state->out->p_types.table, (hashtab_key_t)new_id,
@@ -3266,6 +3267,7 @@ int expand_module(sepol_handle_t *handle, policydb_t *base, policydb_t *out,
 	unsigned int i;
 	expand_state_t state;
 	avrule_block_t *curblock;
+	int repeats = 0;
 
 	/* Append tunable's avtrue_list or avfalse_list to the avrules list
 	 * of its home decl depending on its state value, so that the effect
@@ -3348,8 +3350,19 @@ int expand_module(sepol_handle_t *handle, policydb_t *base, policydb_t *out,
 	/* Needed for processing aliases */
 	if (policydb_index_others(handle, out, verbose))
 		goto cleanup;
-	if (hashtab_map(state.base->p_types.table, alias_copy_callback, &state))
-		goto cleanup;
+
+	do {
+		if (repeats >= MAX_ALIAS_REPEATS) {
+			ERR(handle, "Failed to resolve alias references");
+			goto cleanup;
+		}
+		state.aliases_skipped = 0;
+		if (hashtab_map(state.base->p_types.table, alias_copy_callback,
+				&state))
+			goto cleanup;
+		repeats++;
+	} while (state.aliases_skipped > 0);
+
 	if (hashtab_map(state.base->p_types.table, type_bounds_copy_callback,
 			&state))
 		goto cleanup;

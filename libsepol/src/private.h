@@ -43,6 +43,8 @@
 
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
 
+#define MAX_ALIAS_REPEATS 32
+
 static inline int exceeds_available_bytes(const struct policy_file *fp,
 					  size_t x, size_t req_elem_size)
 {
