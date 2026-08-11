@@ -7,6 +7,7 @@
 #include <sepol/policydb/services.h>
 
 #include "debug.h"
+#include "private.h"
 #include "kernel_to_common.h"
 #include "policydb_validate.h"
 
@@ -660,33 +661,6 @@ static int validate_type_datum(sepol_handle_t *handle, const type_datum_t *type,
 {
 	if (validate_value(type->s.value, &flavors[SYM_TYPES]))
 		goto bad;
-	if (type->primary && validate_value(type->primary, &flavors[SYM_TYPES]))
-		goto bad;
-
-	switch (type->flavor) {
-	case TYPE_TYPE:
-	case TYPE_ALIAS:
-		if (!ebitmap_is_empty(&type->types))
-			goto bad;
-		if (type->bounds &&
-		    validate_simpletype(type->bounds, p, flavors))
-			goto bad;
-		break;
-	case TYPE_ATTRIB:
-		if (p->policy_type == POLICY_KERN) {
-			if (!ebitmap_is_empty(&type->types))
-				goto bad;
-		} else {
-			if (validate_types_in_attribute(&type->types, p,
-							flavors))
-				goto bad;
-		}
-		if (type->bounds)
-			goto bad;
-		break;
-	default:
-		goto bad;
-	}
 
 	switch (type->flags) {
 	case 0:
@@ -698,6 +672,53 @@ static int validate_type_datum(sepol_handle_t *handle, const type_datum_t *type,
 	case TYPE_FLAGS_EXPAND_ATTR:
 		break;
 	default:
+		goto bad;
+	}
+
+	if (type->flavor == TYPE_ATTRIB) {
+		if (type->primary != 1)
+			goto bad;
+		if (p->policy_type == POLICY_KERN) {
+			if (!ebitmap_is_empty(&type->types))
+				goto bad;
+		} else {
+			if (validate_types_in_attribute(&type->types, p,
+							flavors))
+				goto bad;
+		}
+		if (type->bounds)
+			goto bad;
+	} else if ((type->flavor == TYPE_TYPE) ||
+		   (type->flavor == TYPE_ALIAS)) {
+		if (!ebitmap_is_empty(&type->types))
+			goto bad;
+		if (type->bounds &&
+		    validate_simpletype(type->bounds, p, flavors))
+			goto bad;
+		if ((type->flavor == TYPE_TYPE) && type->primary) {
+			if (type->primary > 1)
+				goto bad;
+		} else {
+			const type_datum_t *t = type;
+			uint32_t v;
+			int repeats = 0;
+			while ((t->flavor == TYPE_ALIAS) || (t->primary == 0)) {
+				if (repeats >= MAX_ALIAS_REPEATS)
+					break;
+				v = (t->primary) ? t->primary : t->s.value;
+				if (validate_value(v, &flavors[SYM_TYPES]))
+					break;
+				t = p->type_val_to_struct[v - 1];
+				if (t == type)
+					break;
+				repeats++;
+			}
+			if ((t->flavor != TYPE_TYPE) || (t->primary != 1)) {
+				ERR(handle, "Alias validation failed");
+				goto bad;
+			}
+		}
+	} else {
 		goto bad;
 	}
 
