@@ -728,9 +728,7 @@ static int context_write(struct policydb *p, context_struct_t *c,
 	items2 = put_entry(buf, sizeof(uint32_t), items, fp);
 	if (items2 != items)
 		return POLICYDB_ERROR;
-	if ((p->policy_type == POLICY_KERN) ||
-	    (p->policyvers >= MOD_POLICYDB_VERSION_MLS &&
-	     p->policy_type == POLICY_BASE))
+	if ((p->policy_type == POLICY_KERN) || (p->policy_type == POLICY_BASE))
 		if (mls_write_range_helper(&c->range, fp))
 			return POLICYDB_ERROR;
 
@@ -902,8 +900,7 @@ static int class_write(hashtab_key_t key, hashtab_datum_t datum, void *ptr)
 		return POLICYDB_ERROR;
 
 	if ((p->policy_type == POLICY_KERN) ||
-	    (p->policy_type == POLICY_BASE &&
-	     p->policyvers >= MOD_POLICYDB_VERSION_VALIDATETRANS)) {
+	    (p->policy_type == POLICY_BASE)) {
 		/* write out the validatetrans rule */
 		ncons = 0;
 		for (c = cladatum->validatetrans; c; c = c->next) {
@@ -983,8 +980,7 @@ static int role_write(hashtab_key_t key, hashtab_datum_t datum, void *ptr)
 	items = 0;
 	buf[items++] = cpu_to_le32(len);
 	buf[items++] = cpu_to_le32(role->s.value);
-	if (policydb_has_boundary_feature(p))
-		buf[items++] = cpu_to_le32(role->bounds);
+	buf[items++] = cpu_to_le32(role->bounds);
 	items2 = put_entry(buf, sizeof(uint32_t), items, fp);
 	if (items != items2)
 		return POLICYDB_ERROR;
@@ -1059,52 +1055,32 @@ static int type_write(hashtab_key_t key, hashtab_datum_t datum, void *ptr)
 		     "types, but one was defined",
 		     p->policyvers);
 
-	if (policydb_has_boundary_feature(p)) {
-		uint32_t properties = 0;
+	uint32_t properties = 0;
 
-		if (p->policy_type != POLICY_KERN &&
-		    p->policyvers >= MOD_POLICYDB_VERSION_BOUNDARY_ALIAS) {
-			buf[items++] = cpu_to_le32(typdatum->primary);
-		}
-
-		if (typdatum->primary)
-			properties |= TYPEDATUM_PROPERTY_PRIMARY;
-
-		if (typdatum->flavor == TYPE_ATTRIB) {
-			properties |= TYPEDATUM_PROPERTY_ATTRIBUTE;
-		} else if (typdatum->flavor == TYPE_ALIAS &&
-			   p->policy_type != POLICY_KERN)
-			properties |= TYPEDATUM_PROPERTY_ALIAS;
-
-		if (typdatum->flags & TYPE_FLAGS_PERMISSIVE &&
-		    p->policy_type != POLICY_KERN)
-			properties |= TYPEDATUM_PROPERTY_PERMISSIVE;
-
-		if (typdatum->flags & TYPE_FLAGS_NEVERAUDIT &&
-		    p->policy_type != POLICY_KERN &&
-		    p->policyvers >= MOD_POLICYDB_VERSION_NEVERAUDIT)
-			properties |= TYPEDATUM_PROPERTY_NEVERAUDIT;
-
-		buf[items++] = cpu_to_le32(properties);
-		buf[items++] = cpu_to_le32(typdatum->bounds);
-	} else {
+	if (p->policy_type != POLICY_KERN)
 		buf[items++] = cpu_to_le32(typdatum->primary);
 
-		if (p->policy_type != POLICY_KERN) {
-			buf[items++] = cpu_to_le32(typdatum->flavor);
+	if (typdatum->primary)
+		properties |= TYPEDATUM_PROPERTY_PRIMARY;
 
-			if (p->policyvers >= MOD_POLICYDB_VERSION_PERMISSIVE)
-				buf[items++] =
-					cpu_to_le32(typdatum->flags &
-						    ~TYPE_FLAGS_NEVERAUDIT);
-			else if (typdatum->flags & TYPE_FLAGS_PERMISSIVE)
-				WARN(fp->handle,
-				     "Warning! Module policy "
-				     "version %d cannot support permissive "
-				     "types, but one was defined",
-				     p->policyvers);
-		}
-	}
+	if (typdatum->flavor == TYPE_ATTRIB) {
+		properties |= TYPEDATUM_PROPERTY_ATTRIBUTE;
+	} else if (typdatum->flavor == TYPE_ALIAS &&
+		   p->policy_type != POLICY_KERN)
+		properties |= TYPEDATUM_PROPERTY_ALIAS;
+
+	if (typdatum->flags & TYPE_FLAGS_PERMISSIVE &&
+	    p->policy_type != POLICY_KERN)
+		properties |= TYPEDATUM_PROPERTY_PERMISSIVE;
+
+	if (typdatum->flags & TYPE_FLAGS_NEVERAUDIT &&
+	    p->policy_type != POLICY_KERN &&
+	    p->policyvers >= MOD_POLICYDB_VERSION_NEVERAUDIT)
+		properties |= TYPEDATUM_PROPERTY_NEVERAUDIT;
+
+	buf[items++] = cpu_to_le32(properties);
+	buf[items++] = cpu_to_le32(typdatum->bounds);
+
 	items2 = put_entry(buf, sizeof(uint32_t), items, fp);
 	if (items != items2)
 		return POLICYDB_ERROR;
@@ -1136,8 +1112,7 @@ static int user_write(hashtab_key_t key, hashtab_datum_t datum, void *ptr)
 	items = 0;
 	buf[items++] = cpu_to_le32(len);
 	buf[items++] = cpu_to_le32(usrdatum->s.value);
-	if (policydb_has_boundary_feature(p))
-		buf[items++] = cpu_to_le32(usrdatum->bounds);
+	buf[items++] = cpu_to_le32(usrdatum->bounds);
 	items2 = put_entry(buf, sizeof(uint32_t), items, fp);
 	if (items != items2)
 		return POLICYDB_ERROR;
@@ -1154,21 +1129,12 @@ static int user_write(hashtab_key_t key, hashtab_datum_t datum, void *ptr)
 			return POLICYDB_ERROR;
 	}
 
-	if ((p->policy_type == POLICY_KERN) ||
-	    (p->policyvers >= MOD_POLICYDB_VERSION_MLS &&
-	     p->policyvers < MOD_POLICYDB_VERSION_MLS_USERS &&
-	     p->policy_type == POLICY_MOD) ||
-	    (p->policyvers >= MOD_POLICYDB_VERSION_MLS &&
-	     p->policyvers < MOD_POLICYDB_VERSION_MLS_USERS &&
-	     p->policy_type == POLICY_BASE)) {
+	if (p->policy_type == POLICY_KERN) {
 		if (mls_write_range_helper(&usrdatum->exp_range, fp))
 			return POLICYDB_ERROR;
 		if (mls_write_level(&usrdatum->exp_dfltlevel, fp))
 			return POLICYDB_ERROR;
-	} else if ((p->policyvers >= MOD_POLICYDB_VERSION_MLS_USERS &&
-		    p->policy_type == POLICY_MOD) ||
-		   (p->policyvers >= MOD_POLICYDB_VERSION_MLS_USERS &&
-		    p->policy_type == POLICY_BASE)) {
+	} else {
 		if (mls_write_semantic_range_helper(&usrdatum->range, fp))
 			return -1;
 		if (mls_write_semantic_level_helper(&usrdatum->dfltlevel, fp))
@@ -1916,8 +1882,7 @@ static int avrule_decl_write(avrule_decl_t *decl, int num_scope_syms,
 	    filename_trans_rule_write(p, decl->filename_trans_rules, fp))
 		return POLICYDB_ERROR;
 
-	if (p->policyvers >= MOD_POLICYDB_VERSION_RANGETRANS &&
-	    range_trans_rule_write(decl->range_tr_rules, fp) == -1) {
+	if (range_trans_rule_write(decl->range_tr_rules, fp) == -1) {
 		return POLICYDB_ERROR;
 	}
 	if (scope_index_write(&decl->required, num_scope_syms, fp) == -1 ||
@@ -2051,19 +2016,8 @@ int policydb_write(policydb_t *p, struct policy_file *fp)
 	pd.p = p;
 
 	config = 0;
-	if (p->mls) {
-		if ((p->policyvers < MOD_POLICYDB_VERSION_MLS &&
-		     p->policy_type == POLICY_BASE) ||
-		    (p->policyvers < MOD_POLICYDB_VERSION_MLS &&
-		     p->policy_type == POLICY_MOD)) {
-			ERR(fp->handle,
-			    "%spolicy version %d cannot support MLS",
-			    p->policy_type == POLICY_KERN ? "" : "module ",
-			    p->policyvers);
-			return POLICYDB_ERROR;
-		}
+	if (p->mls)
 		config |= POLICYDB_CONFIG_MLS;
-	}
 
 	config |= (POLICYDB_CONFIG_UNKNOWN_MASK & p->handle_unknown);
 
@@ -2132,14 +2086,8 @@ int policydb_write(policydb_t *p, struct policy_file *fp)
 			return POLICYDB_ERROR;
 	}
 
-	if ((p->policy_type == POLICY_KERN) ||
-	    (p->policyvers >= MOD_POLICYDB_VERSION_POLCAP &&
-	     p->policy_type == POLICY_BASE) ||
-	    (p->policyvers >= MOD_POLICYDB_VERSION_POLCAP &&
-	     p->policy_type == POLICY_MOD)) {
-		if (ebitmap_write(&p->policycaps, fp) == -1)
-			return POLICYDB_ERROR;
-	}
+	if (ebitmap_write(&p->policycaps, fp) == -1)
+		return POLICYDB_ERROR;
 
 	if (p->policy_type == POLICY_KERN) {
 		if (ebitmap_write(&p->permissive_map, fp) == -1)
@@ -2222,10 +2170,7 @@ int policydb_write(policydb_t *p, struct policy_file *fp)
 		return POLICYDB_ERROR;
 	}
 
-	if ((p->policy_type == POLICY_KERN) ||
-	    (p->policyvers >= MOD_POLICYDB_VERSION_MLS &&
-	     p->policyvers < MOD_POLICYDB_VERSION_RANGETRANS &&
-	     p->policy_type == POLICY_BASE)) {
+	if (p->policy_type == POLICY_KERN) {
 		if (range_write(p, fp)) {
 			return POLICYDB_ERROR;
 		}

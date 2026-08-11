@@ -772,14 +772,6 @@ extern int policydb_set_target_platform(policydb_t *p, int platform);
 #define POLICYDB_VERSION_MAX POLICYDB_VERSION_NEVERAUDIT
 
 /* Module versions and specific changes*/
-#define MOD_POLICYDB_VERSION_BASE 4
-#define MOD_POLICYDB_VERSION_VALIDATETRANS 5
-#define MOD_POLICYDB_VERSION_MLS 5
-#define MOD_POLICYDB_VERSION_RANGETRANS 6
-#define MOD_POLICYDB_VERSION_MLS_USERS 6
-#define MOD_POLICYDB_VERSION_POLCAP 7
-#define MOD_POLICYDB_VERSION_PERMISSIVE 8
-#define MOD_POLICYDB_VERSION_BOUNDARY 9
 #define MOD_POLICYDB_VERSION_BOUNDARY_ALIAS 10
 #define MOD_POLICYDB_VERSION_FILENAME_TRANS 11
 #define MOD_POLICYDB_VERSION_ROLETRANS 12
@@ -796,7 +788,7 @@ extern int policydb_set_target_platform(policydb_t *p, int platform);
 #define MOD_POLICYDB_VERSION_NEVERAUDIT 23
 #define MOD_POLICYDB_VERSION_TYPE_ATTR_ATTRS 24
 
-#define MOD_POLICYDB_VERSION_MIN MOD_POLICYDB_VERSION_BASE
+#define MOD_POLICYDB_VERSION_MIN MOD_POLICYDB_VERSION_BOUNDARY_ALIAS
 #define MOD_POLICYDB_VERSION_MAX MOD_POLICYDB_VERSION_TYPE_ATTR_ATTRS
 
 #define POLICYDB_CONFIG_MLS 1
@@ -804,12 +796,6 @@ extern int policydb_set_target_platform(policydb_t *p, int platform);
 /* macros to check policy feature */
 
 /* TODO: add other features here */
-
-#define policydb_has_boundary_feature(p)                   \
-	(((p)->policy_type == POLICY_KERN &&               \
-	  (p)->policyvers >= POLICYDB_VERSION_BOUNDARY) || \
-	 ((p)->policy_type != POLICY_KERN &&               \
-	  (p)->policyvers >= MOD_POLICYDB_VERSION_BOUNDARY))
 
 #define policydb_has_cond_xperms_feature(p)                   \
 	(((p)->policy_type == POLICY_KERN &&                  \

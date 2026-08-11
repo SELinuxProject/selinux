@@ -162,48 +162,6 @@ static const struct policydb_compat_info policydb_compat[] = {
 	},
 	{
 		.type = POLICY_BASE,
-		.version = MOD_POLICYDB_VERSION_BASE,
-		.sym_num = SYM_NUM,
-		.ocon_num = OCON_NODE6 + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_BASE,
-		.version = MOD_POLICYDB_VERSION_MLS,
-		.sym_num = SYM_NUM,
-		.ocon_num = OCON_NODE6 + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_BASE,
-		.version = MOD_POLICYDB_VERSION_MLS_USERS,
-		.sym_num = SYM_NUM,
-		.ocon_num = OCON_NODE6 + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_BASE,
-		.version = MOD_POLICYDB_VERSION_POLCAP,
-		.sym_num = SYM_NUM,
-		.ocon_num = OCON_NODE6 + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_BASE,
-		.version = MOD_POLICYDB_VERSION_PERMISSIVE,
-		.sym_num = SYM_NUM,
-		.ocon_num = OCON_NODE6 + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_BASE,
-		.version = MOD_POLICYDB_VERSION_BOUNDARY,
-		.sym_num = SYM_NUM,
-		.ocon_num = OCON_NODE6 + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_BASE,
 		.version = MOD_POLICYDB_VERSION_BOUNDARY_ALIAS,
 		.sym_num = SYM_NUM,
 		.ocon_num = OCON_NODE6 + 1,
@@ -305,48 +263,6 @@ static const struct policydb_compat_info policydb_compat[] = {
 		.version = MOD_POLICYDB_VERSION_TYPE_ATTR_ATTRS,
 		.sym_num = SYM_NUM,
 		.ocon_num = OCON_IBENDPORT + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_MOD,
-		.version = MOD_POLICYDB_VERSION_BASE,
-		.sym_num = SYM_NUM,
-		.ocon_num = 0,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_MOD,
-		.version = MOD_POLICYDB_VERSION_MLS,
-		.sym_num = SYM_NUM,
-		.ocon_num = 0,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_MOD,
-		.version = MOD_POLICYDB_VERSION_MLS_USERS,
-		.sym_num = SYM_NUM,
-		.ocon_num = 0,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_MOD,
-		.version = MOD_POLICYDB_VERSION_POLCAP,
-		.sym_num = SYM_NUM,
-		.ocon_num = 0,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_MOD,
-		.version = MOD_POLICYDB_VERSION_PERMISSIVE,
-		.sym_num = SYM_NUM,
-		.ocon_num = 0,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_MOD,
-		.version = MOD_POLICYDB_VERSION_BOUNDARY,
-		.sym_num = SYM_NUM,
-		.ocon_num = 0,
 		.target_platform = SEPOL_TARGET_SELINUX,
 	},
 	{
@@ -2026,8 +1942,7 @@ static int context_read_and_validate(context_struct_t *c, policydb_t *p,
 	c->role = le32_to_cpu(buf[1]);
 	c->type = le32_to_cpu(buf[2]);
 	if ((p->policy_type == POLICY_KERN) ||
-	    (p->policy_type == POLICY_BASE &&
-	     p->policyvers >= MOD_POLICYDB_VERSION_MLS)) {
+	    (p->policy_type == POLICY_BASE)) {
 		if (mls_read_range_helper(&c->range, fp)) {
 			ERR(fp->handle, "error reading MLS range "
 					"of context");
@@ -2285,8 +2200,7 @@ static int class_read(policydb_t *p, hashtab_t h, struct policy_file *fp)
 		goto bad;
 
 	if ((p->policy_type == POLICY_KERN) ||
-	    (p->policy_type == POLICY_BASE &&
-	     p->policyvers >= MOD_POLICYDB_VERSION_VALIDATETRANS)) {
+	    (p->policy_type == POLICY_BASE)) {
 		/* grab the validatetrans rules */
 		rc = next_entry(buf, fp, sizeof(uint32_t));
 		if (rc < 0)
@@ -2334,16 +2248,13 @@ static int role_read(policydb_t *p, hashtab_t h, struct policy_file *fp)
 	role_datum_t *role;
 	uint32_t buf[3];
 	size_t len;
-	int rc, to_read = 2;
+	int rc;
 
 	role = calloc(1, sizeof(role_datum_t));
 	if (!role)
 		return -1;
 
-	if (policydb_has_boundary_feature(p))
-		to_read = 3;
-
-	rc = next_entry(buf, fp, sizeof(uint32_t) * to_read);
+	rc = next_entry(buf, fp, sizeof(uint32_t) * 3);
 	if (rc < 0)
 		goto bad;
 
@@ -2353,8 +2264,7 @@ static int role_read(policydb_t *p, hashtab_t h, struct policy_file *fp)
 		goto bad;
 
 	role->s.value = le32_to_cpu(buf[1]);
-	if (policydb_has_boundary_feature(p))
-		role->bounds = le32_to_cpu(buf[2]);
+	role->bounds = le32_to_cpu(buf[2]);
 
 	if (ebitmap_read(&role->dominates, fp))
 		goto bad;
@@ -2413,15 +2323,7 @@ static int type_read(policydb_t *p, hashtab_t h, struct policy_file *fp)
 	if (!typdatum)
 		return -1;
 
-	if (policydb_has_boundary_feature(p)) {
-		if (p->policy_type != POLICY_KERN &&
-		    p->policyvers >= MOD_POLICYDB_VERSION_BOUNDARY_ALIAS)
-			to_read = 5;
-		else
-			to_read = 4;
-	} else if (p->policy_type == POLICY_KERN)
-		to_read = 3;
-	else if (p->policyvers >= MOD_POLICYDB_VERSION_PERMISSIVE)
+	if (p->policy_type != POLICY_KERN)
 		to_read = 5;
 	else
 		to_read = 4;
@@ -2432,41 +2334,31 @@ static int type_read(policydb_t *p, hashtab_t h, struct policy_file *fp)
 
 	len = le32_to_cpu(buf[pos]);
 	typdatum->s.value = le32_to_cpu(buf[++pos]);
-	if (policydb_has_boundary_feature(p)) {
-		uint32_t properties;
+	uint32_t properties;
 
-		if (p->policy_type != POLICY_KERN &&
-		    p->policyvers >= MOD_POLICYDB_VERSION_BOUNDARY_ALIAS) {
-			typdatum->primary = le32_to_cpu(buf[++pos]);
-			properties = le32_to_cpu(buf[++pos]);
-		} else {
-			properties = le32_to_cpu(buf[++pos]);
-
-			if (properties & TYPEDATUM_PROPERTY_PRIMARY)
-				typdatum->primary = 1;
-		}
-
-		if (properties & TYPEDATUM_PROPERTY_ATTRIBUTE)
-			typdatum->flavor = TYPE_ATTRIB;
-		if (properties & TYPEDATUM_PROPERTY_ALIAS &&
-		    p->policy_type != POLICY_KERN)
-			typdatum->flavor = TYPE_ALIAS;
-		if (properties & TYPEDATUM_PROPERTY_PERMISSIVE &&
-		    p->policy_type != POLICY_KERN)
-			typdatum->flags |= TYPE_FLAGS_PERMISSIVE;
-		if (properties & TYPEDATUM_PROPERTY_NEVERAUDIT &&
-		    p->policy_type != POLICY_KERN)
-			typdatum->flags |= TYPE_FLAGS_NEVERAUDIT;
-
-		typdatum->bounds = le32_to_cpu(buf[++pos]);
-	} else {
+	if (p->policy_type != POLICY_KERN) {
 		typdatum->primary = le32_to_cpu(buf[++pos]);
-		if (p->policy_type != POLICY_KERN) {
-			typdatum->flavor = le32_to_cpu(buf[++pos]);
-			if (p->policyvers >= MOD_POLICYDB_VERSION_PERMISSIVE)
-				typdatum->flags = le32_to_cpu(buf[++pos]);
-		}
+		properties = le32_to_cpu(buf[++pos]);
+	} else {
+		properties = le32_to_cpu(buf[++pos]);
+
+		if (properties & TYPEDATUM_PROPERTY_PRIMARY)
+			typdatum->primary = 1;
 	}
+
+	if (properties & TYPEDATUM_PROPERTY_ATTRIBUTE)
+		typdatum->flavor = TYPE_ATTRIB;
+	if (properties & TYPEDATUM_PROPERTY_ALIAS &&
+	    p->policy_type != POLICY_KERN)
+		typdatum->flavor = TYPE_ALIAS;
+	if (properties & TYPEDATUM_PROPERTY_PERMISSIVE &&
+	    p->policy_type != POLICY_KERN)
+		typdatum->flags |= TYPE_FLAGS_PERMISSIVE;
+	if (properties & TYPEDATUM_PROPERTY_NEVERAUDIT &&
+	    p->policy_type != POLICY_KERN)
+		typdatum->flags |= TYPE_FLAGS_NEVERAUDIT;
+
+	typdatum->bounds = le32_to_cpu(buf[++pos]);
 
 	if (p->policy_type != POLICY_KERN) {
 		if (ebitmap_read(&typdatum->types, fp))
@@ -3266,16 +3158,13 @@ static int user_read(policydb_t *p, hashtab_t h, struct policy_file *fp)
 	user_datum_t *usrdatum;
 	uint32_t buf[3];
 	size_t len;
-	int rc, to_read = 2;
+	int rc;
 
 	usrdatum = calloc(1, sizeof(user_datum_t));
 	if (!usrdatum)
 		return -1;
 
-	if (policydb_has_boundary_feature(p))
-		to_read = 3;
-
-	rc = next_entry(buf, fp, sizeof(uint32_t) * to_read);
+	rc = next_entry(buf, fp, sizeof(uint32_t) * 3);
 	if (rc < 0)
 		goto bad;
 
@@ -3285,8 +3174,7 @@ static int user_read(policydb_t *p, hashtab_t h, struct policy_file *fp)
 		goto bad;
 
 	usrdatum->s.value = le32_to_cpu(buf[1]);
-	if (policydb_has_boundary_feature(p))
-		usrdatum->bounds = le32_to_cpu(buf[2]);
+	usrdatum->bounds = le32_to_cpu(buf[2]);
 
 	if (p->policy_type == POLICY_KERN) {
 		if (ebitmap_read(&usrdatum->roles.roles, fp))
@@ -3296,17 +3184,7 @@ static int user_read(policydb_t *p, hashtab_t h, struct policy_file *fp)
 			goto bad;
 	}
 
-	/* users were not allowed in mls modules before version
-	 * MOD_POLICYDB_VERSION_MLS_USERS, but they could have been
-	 * required - the mls fields will be empty.  user declarations in
-	 * non-mls modules will also have empty mls fields */
-	if ((p->policy_type == POLICY_KERN) ||
-	    (p->policy_type == POLICY_MOD &&
-	     p->policyvers >= MOD_POLICYDB_VERSION_MLS &&
-	     p->policyvers < MOD_POLICYDB_VERSION_MLS_USERS) ||
-	    (p->policy_type == POLICY_BASE &&
-	     p->policyvers >= MOD_POLICYDB_VERSION_MLS &&
-	     p->policyvers < MOD_POLICYDB_VERSION_MLS_USERS)) {
+	if (p->policy_type == POLICY_KERN) {
 		if (mls_read_range_helper(&usrdatum->exp_range, fp))
 			goto bad;
 		if (mls_read_level(&usrdatum->exp_dfltlevel, fp))
@@ -3319,10 +3197,7 @@ static int user_read(policydb_t *p, hashtab_t h, struct policy_file *fp)
 						  &usrdatum->dfltlevel))
 				goto bad;
 		}
-	} else if ((p->policy_type == POLICY_MOD &&
-		    p->policyvers >= MOD_POLICYDB_VERSION_MLS_USERS) ||
-		   (p->policy_type == POLICY_BASE &&
-		    p->policyvers >= MOD_POLICYDB_VERSION_MLS_USERS)) {
+	} else {
 		if (mls_read_semantic_range_helper(&usrdatum->range, fp))
 			goto bad;
 		if (mls_read_semantic_level_helper(&usrdatum->dfltlevel, fp))
@@ -3906,8 +3781,7 @@ static int avrule_decl_read(policydb_t *p, avrule_decl_t *decl,
 	    filename_trans_rule_read(p, &decl->filename_trans_rules, fp))
 		return -1;
 
-	if (p->policyvers >= MOD_POLICYDB_VERSION_RANGETRANS &&
-	    range_trans_rule_read(&decl->range_tr_rules, fp) == -1) {
+	if (range_trans_rule_read(&decl->range_tr_rules, fp) == -1) {
 		return -1;
 	}
 	if (scope_index_read(&decl->required, num_scope_syms, fp) == -1 ||
@@ -4294,14 +4168,8 @@ int policydb_read(policydb_t *p, struct policy_file *fp, unsigned verbose)
 			goto bad;
 	}
 
-	if ((p->policy_type == POLICY_KERN) ||
-	    (p->policyvers >= MOD_POLICYDB_VERSION_POLCAP &&
-	     p->policy_type == POLICY_BASE) ||
-	    (p->policyvers >= MOD_POLICYDB_VERSION_POLCAP &&
-	     p->policy_type == POLICY_MOD)) {
-		if (ebitmap_read(&p->policycaps, fp))
-			goto bad;
-	}
+	if (ebitmap_read(&p->policycaps, fp))
+		goto bad;
 
 	if (p->policy_type == POLICY_KERN) {
 		if (ebitmap_read(&p->permissive_map, fp))
@@ -4417,10 +4285,7 @@ int policydb_read(policydb_t *p, struct policy_file *fp, unsigned verbose)
 		goto bad;
 	}
 
-	if ((p->policy_type == POLICY_KERN) ||
-	    (p->policy_type == POLICY_BASE &&
-	     p->policyvers >= MOD_POLICYDB_VERSION_MLS &&
-	     p->policyvers < MOD_POLICYDB_VERSION_RANGETRANS)) {
+	if (p->policy_type == POLICY_KERN) {
 		if (range_read(p, fp)) {
 			goto bad;
 		}

@@ -31,8 +31,12 @@ Minimum Supported Policy Version
 --------------------------------
 Kernel policy version 24 (boundary) for the SELinux and Xen
 targets. Support for this policy version first shipped in Linux
-v2.6.28 and Xen 4.0.0. libsepol dropped support for policy versions
-older than 24 starting with libsepol 3.12.
+v2.6.28 and Xen 4.0.0. libsepol dropped support for kernel policy
+versions older than 24 starting with libsepol 3.12.
+
+Modular policy version 10 (boundary alias). Support for this modular
+policy version first shipped in libsepol 2.0.35. libsepol dropped
+support for modular policies older than 10 starting with libsepol 3.12
 
 Installation
 ------------

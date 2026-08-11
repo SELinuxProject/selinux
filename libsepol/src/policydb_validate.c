@@ -1979,8 +1979,6 @@ static int validate_properties(sepol_handle_t *handle, const policydb_t *p)
 		if (p->policyvers < MOD_POLICYDB_VERSION_MIN ||
 		    p->policyvers > MOD_POLICYDB_VERSION_MAX)
 			goto bad;
-		if (p->mls && p->policyvers < MOD_POLICYDB_VERSION_MLS)
-			goto bad;
 		break;
 	default:
 		goto bad;
