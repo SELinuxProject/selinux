@@ -5563,7 +5563,9 @@ static void __cil_print_rule(const char *pad, const char *kind,
 }
 
 static int __cil_print_neverallow_failure(const struct cil_db *db,
-					  struct cil_tree_node *node)
+					  policydb_t *pdb,
+					  struct cil_tree_node *node,
+					  const avrule_t *rule)
 {
 	int rc;
 	struct cil_list_item *i2;
@@ -5608,6 +5610,12 @@ static int __cil_print_neverallow_failure(const struct cil_db *db,
 
 	cil_list_for_each(i2, matching) {
 		num_matching++;
+	}
+	if (num_matching == 0 && pdb != NULL && rule != NULL) {
+		int res = report_assertion_failures(NULL, pdb, rule);
+		if (res < 0) {
+			rc = res;
+		}
 	}
 	cil_list_for_each(i2, matching) {
 		n2 = i2->data;
@@ -5683,7 +5691,8 @@ static int cil_check_neverallow(const struct cil_db *db, policydb_t *pdb,
 		rc = check_assertion(pdb, rule);
 		if (rc == CIL_TRUE) {
 			*violation = CIL_TRUE;
-			rc = __cil_print_neverallow_failure(db, node);
+			rc = __cil_print_neverallow_failure(db, pdb, node,
+							    rule);
 			if (rc != SEPOL_OK) {
 				goto exit;
 			}
@@ -5708,7 +5717,8 @@ static int cil_check_neverallow(const struct cil_db *db, policydb_t *pdb,
 			rc = check_assertion(pdb, rule);
 			if (rc == CIL_TRUE) {
 				*violation = CIL_TRUE;
-				rc = __cil_print_neverallow_failure(db, node);
+				rc = __cil_print_neverallow_failure(db, pdb,
+								    node, rule);
 				if (rc != SEPOL_OK) {
 					goto exit;
 				}

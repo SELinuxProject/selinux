@@ -714,6 +714,8 @@ extern void cat_datum_destroy(cat_datum_t *x);
 extern int check_assertion(policydb_t *p, const avrule_t *avrule);
 extern int check_assertions(sepol_handle_t *handle, policydb_t *p,
 			    const avrule_t *avrules);
+extern int report_assertion_failures(sepol_handle_t *handle, policydb_t *p,
+				     const avrule_t *narule);
 
 extern int symtab_insert(policydb_t *x, uint32_t sym, hashtab_key_t key,
 			 hashtab_datum_t datum, uint32_t scope,
