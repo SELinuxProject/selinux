@@ -25,18 +25,28 @@ for more information.
 
 Minimum Supported Kernel Version
 --------------------------------
-Linux v3.0 (for /sys/fs/selinux mount point directory)
+Linux v3.0 (for /sys/fs/selinux mount point directory) for libselinux
+and anything that uses libselinux to access selinuxfs.
+
+Note that the policy build toolchain (e.g. libsepol, checkpolicy,
+checkmodule, secilc, semodule_package/expand/link) does not link with
+libselinux or have any other runtime dependencies on a particular
+Linux kernel version. The policy build toolchain has in the past
+successfully been built and run on non-Linux platforms as well
+(e.g. macOS), although this is not officially supported.
 
 Minimum Supported Policy Version
 --------------------------------
 Kernel policy version 24 (boundary) for the SELinux and Xen
-targets. Support for this policy version first shipped in Linux
-v2.6.28 and Xen 4.0.0. libsepol dropped support for kernel policy
-versions older than 24 starting with libsepol 3.12.
+targets. Support for this policy version first shipped in libsepol
+2.0.34 (userspace release 20090403), Linux v2.6.28, and Xen
+4.0.0. libsepol dropped support for kernel policy versions older than
+24 starting with libsepol 3.12.
 
 Modular policy version 10 (boundary alias). Support for this modular
-policy version first shipped in libsepol 2.0.35. libsepol dropped
-support for modular policies older than 10 starting with libsepol 3.12
+policy version first shipped in libsepol 2.0.35 (userspace release
+20090403). libsepol dropped support for modular policies older than 10
+starting with libsepol 3.12
 
 Installation
 ------------
