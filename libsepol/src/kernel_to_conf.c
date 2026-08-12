@@ -2825,6 +2825,7 @@ static int write_genfscon_rules_to_conf(FILE *out, struct policydb *pdb)
 				    name[name_len - 1] != '*') {
 					ERR(NULL,
 					    "genfscon path must end with '*' when genfs_seclabel_wildcard");
+					free(ctx);
 					rc = -1;
 					goto exit;
 				}
