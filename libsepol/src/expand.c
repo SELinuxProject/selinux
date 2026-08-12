@@ -2646,6 +2646,10 @@ static int type_attr_map(hashtab_key_t key __attribute__((unused)),
 	type = (type_datum_t *)datum;
 	value = type->s.value;
 
+	/* Skip aliases since they have the same value as their primary */
+	if (!type->primary)
+		return 0;
+
 	if (type->flavor == TYPE_ATTRIB) {
 		if (!(type->flags & TYPE_FLAGS_EXPAND_ATTR_TRUE)) {
 			if (ebitmap_cpy(&p->attr_type_map[value - 1],
