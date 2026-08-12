@@ -585,7 +585,8 @@ static int ibpkey_data_cmp(const void *a, const void *b)
 	struct ocontext *const *aa = a;
 	struct ocontext *const *bb = b;
 
-	rc = (*aa)->u.ibpkey.subnet_prefix - (*bb)->u.ibpkey.subnet_prefix;
+	rc = spaceship_cmp((*aa)->u.ibpkey.subnet_prefix,
+			   (*bb)->u.ibpkey.subnet_prefix);
 	if (rc)
 		return rc;
 
