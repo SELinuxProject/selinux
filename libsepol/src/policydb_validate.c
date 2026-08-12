@@ -2092,6 +2092,8 @@ int policydb_validate(sepol_handle_t *handle, const policydb_t *p)
 			if (validate_filename_trans_hashtab(handle, p, flavors))
 				goto bad;
 	} else {
+		if ((p->policy_type == POLICY_MOD) && (p->p_commons.nprim > 0))
+			goto bad;
 		if (validate_avrule_blocks(handle, p->global, p, flavors))
 			goto bad;
 	}
