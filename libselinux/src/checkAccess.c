@@ -9,14 +9,13 @@
 
 static pthread_once_t once = PTHREAD_ONCE_INIT;
 static int selinux_enabled;
+static int avc_ok;
 
 static void avc_init_once(void)
 {
 	selinux_enabled = is_selinux_enabled();
-	if (selinux_enabled == 1) {
-		if (avc_open(NULL, 0))
-			return;
-	}
+	if (selinux_enabled == 1 && avc_open(NULL, 0) == 0)
+		avc_ok = 1;
 }
 
 int selinux_check_access(const char *scon, const char *tcon, const char *class,
@@ -32,6 +31,11 @@ int selinux_check_access(const char *scon, const char *tcon, const char *class,
 
 	if (selinux_enabled != 1)
 		return 0;
+
+	if (!avc_ok) {
+		errno = EINVAL;
+		return -1;
+	}
 
 	rc = avc_context_to_sid(scon, &scon_id);
 	if (rc < 0)
