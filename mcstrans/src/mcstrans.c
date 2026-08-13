@@ -1074,6 +1074,32 @@ static int buf_append(char **buf, size_t *cap, size_t *len, const char *s)
 	return 0;
 }
 
+/*
+ * Append s with PCRE metacharacters backslash-escaped so it matches
+ * literally.  Used for config-supplied label/word/affix/whitespace
+ * text spliced into the alternation patterns in build_regexps().
+ * Works both inside and outside a character class.
+ */
+static int buf_append_literal(char **buf, size_t *cap, size_t *len,
+			      const char *s)
+{
+	char esc[3] = { '\\', 0, 0 };
+	char lit[2] = { 0, 0 };
+
+	for (; *s; s++) {
+		if (strchr("\\^$.|?*+()[]{}-", *s)) {
+			esc[1] = *s;
+			if (buf_append(buf, cap, len, esc))
+				return -1;
+		} else {
+			lit[0] = *s;
+			if (buf_append(buf, cap, len, lit))
+				return -1;
+		}
+	}
+	return 0;
+}
+
 static void build_regexp(pcre2_code **r, char *buffer)
 {
 	int error;
@@ -1106,6 +1132,11 @@ static int build_regexps(domain_t *domain)
 		if (buf_append(&buffer, &cap, &len, (s))) \
 			goto err;                         \
 	} while (0)
+#define APPEND_LIT(s)                                             \
+	do {                                                      \
+		if (buf_append_literal(&buffer, &cap, &len, (s))) \
+			goto err;                                 \
+	} while (0)
 #define RESET()                           \
 	do {                              \
 		len = 0;                  \
@@ -1133,7 +1164,7 @@ static int build_regexps(domain_t *domain)
 	qsort(sortable, n_el, sizeof(char *), string_size);
 
 	for (i = 0; i < n_el; i++) {
-		APPEND(sortable[i]);
+		APPEND_LIT(sortable[i]);
 		if (i != (n_el - 1))
 			APPEND("|");
 	}
@@ -1149,7 +1180,7 @@ static int build_regexps(domain_t *domain)
 		if (g->prefixes) {
 			APPEND("(?:");
 			for (a = g->prefixes; a; a = a->next) {
-				APPEND(a->text);
+				APPEND_LIT(a->text);
 				if (a->next)
 					APPEND("|");
 			}
@@ -1185,13 +1216,13 @@ static int build_regexps(domain_t *domain)
 			if (i)
 				APPEND("|");
 			APPEND("\\b");
-			APPEND(g->sword[i]->text);
+			APPEND_LIT(g->sword[i]->text);
 			APPEND("\\b");
 		}
 
 		if (g->whitespace) {
 			APPEND("|[");
-			APPEND(g->whitespace);
+			APPEND_LIT(g->whitespace);
 			APPEND("]+");
 		}
 
@@ -1208,7 +1239,7 @@ static int build_regexps(domain_t *domain)
 			APPEND("[ 	]+");
 			APPEND("(?:");
 			for (a = g->suffixes; a; a = a->next) {
-				APPEND(a->text);
+				APPEND_LIT(a->text);
 				if (a->next)
 					APPEND("|");
 			}
@@ -1227,6 +1258,7 @@ err:
 	free(buffer);
 	return -1;
 #undef APPEND
+#undef APPEND_LIT
 #undef RESET
 }
 
