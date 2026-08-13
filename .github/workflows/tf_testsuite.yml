@@ -5,6 +5,9 @@ on: [push, pull_request]
 jobs:
   tf_testsuite:
     runs-on: ubuntu-latest
+    # TESTING_FARM_API_TOKEN is a repository secret, which GitHub does not
+    # expose on pull_request runs from forks; skip those rather than fail.
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
     strategy:
       fail-fast: false
       matrix:
