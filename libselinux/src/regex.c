@@ -103,11 +103,12 @@ int regex_prepare_data(struct regex_data **regex, char const *pattern_string,
 		goto err;
 	}
 
-	/* JIT-compile for complete and partial matching. pcre2_match() uses the
-	 * JIT automatically when available, avoiding the interpreter's
-	 * susceptibility to catastrophic backtracking. Failures are non-fatal. */
-	(void)pcre2_jit_compile((*regex)->regex,
-				PCRE2_JIT_COMPLETE | PCRE2_JIT_PARTIAL_SOFT);
+	/* JIT-compile for complete matching only. pcre2_match() uses the JIT
+	 * automatically when available, avoiding the interpreter's
+	 * susceptibility to catastrophic backtracking. Partial matches fall
+	 * back to the interpreter, protected by the match limit. Failures
+	 * are non-fatal. */
+	(void)pcre2_jit_compile((*regex)->regex, PCRE2_JIT_COMPLETE);
 
 	return 0;
 
@@ -163,9 +164,7 @@ int regex_load_mmap(struct mmap_area *mmap_area, struct regex_data **regex,
 		if (rc != 1)
 			goto err;
 
-		(void)pcre2_jit_compile((*regex)->regex,
-					PCRE2_JIT_COMPLETE |
-						PCRE2_JIT_PARTIAL_SOFT);
+		(void)pcre2_jit_compile((*regex)->regex, PCRE2_JIT_COMPLETE);
 
 		*regex_compiled = true;
 	}
