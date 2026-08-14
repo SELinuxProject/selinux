@@ -173,18 +173,19 @@ int main(int argc, char **argv)
 	}
 	base = basename(r_opts.progname);
 
+	/* Common to setfiles and restorecon */
+	r_opts.userealpath = SELINUX_RESTORECON_REALPATH;
+
 	if (!strcmp(base, SETFILES)) {
 		/*
 		 * setfiles:
 		 * Recursive descent,
-		 * Does not expand paths via realpath,
 		 * Try to track inode associations for conflict detection,
 		 * Does not follow mounts (sets SELINUX_RESTORECON_XDEV),
 		 * Validates all file contexts at init time.
 		 */
 		iamrestorecon = false;
 		r_opts.recurse = SELINUX_RESTORECON_RECURSE;
-		r_opts.userealpath = 0; /* SELINUX_RESTORECON_REALPATH */
 		r_opts.add_assoc = SELINUX_RESTORECON_ADD_ASSOC;
 		/* FTS_PHYSICAL and FTS_NOCHDIR are always set by selinux_restorecon(3) */
 		r_opts.xdev = SELINUX_RESTORECON_XDEV;
@@ -195,7 +196,6 @@ int main(int argc, char **argv)
 		/*
 		 * restorecon:
 		 * No recursive descent unless -r/-R,
-		 * Expands paths via realpath,
 		 * Do not try to track inode associations for conflict detection,
 		 * Follows mounts,
 		 * Does lazy validation of contexts upon use.
@@ -207,7 +207,6 @@ int main(int argc, char **argv)
 
 		iamrestorecon = true;
 		r_opts.recurse = 0;
-		r_opts.userealpath = SELINUX_RESTORECON_REALPATH;
 		r_opts.add_assoc = 0;
 		r_opts.xdev = 0;
 		r_opts.ignore_mounts = 0;

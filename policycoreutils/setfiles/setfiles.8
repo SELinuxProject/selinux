@@ -264,7 +264,9 @@ otherwise.
 .IP "1." 4
 .B setfiles
 operates recursively on directories. Paths leading up the final
-component of the file(s) are not canonicalized before labeling.
+component of the file(s) are canonicalized using
+.BR realpath (3)
+before labeling.
 .IP "2." 4
 If the
 .I pathname
