@@ -25,8 +25,9 @@ for more information.
 
 Minimum Supported Kernel Version
 --------------------------------
-Linux v3.0 (for /sys/fs/selinux mount point directory) for libselinux
-and anything that uses libselinux to access selinuxfs.
+The minimum supported kernel version is Linux v3.0 (for the
+/sys/fs/selinux mount point directory) for libselinux and anything
+that uses libselinux to access selinuxfs.
 
 Note that the policy build toolchain (e.g. libsepol, checkpolicy,
 checkmodule, secilc, semodule_package/expand/link) does not link with
@@ -35,18 +36,56 @@ Linux kernel version. The policy build toolchain has in the past
 successfully been built and run on non-Linux platforms as well
 (e.g. macOS), although this is not officially supported.
 
-Minimum Supported Policy Version
---------------------------------
-Kernel policy version 24 (boundary) for the SELinux and Xen
-targets. Support for this policy version first shipped in libsepol
+Minimum Supported Policy Versions
+---------------------------------
+The minimum kernel policy version is 24 (boundary) for the SELinux and
+Xen targets. Support for this policy version first shipped in libsepol
 2.0.34 (userspace release 20090403), Linux v2.6.28, and Xen
 4.0.0. libsepol dropped support for kernel policy versions older than
 24 starting with libsepol 3.12.
 
-Modular policy version 10 (boundary alias). Support for this modular
-policy version first shipped in libsepol 2.0.35 (userspace release
-20090403). libsepol dropped support for modular policies older than 10
-starting with libsepol 3.12
+The minimum modular policy version is 10 (boundary alias). Support for
+this modular policy version first shipped in libsepol 2.0.35
+(userspace release 20090403). libsepol dropped support for modular
+policies older than 10 starting with libsepol 3.12
+
+These minimum policy versions in libsepol affect:
+1. The policy build toolchain. For example, checkpolicy, checkmodule,
+and secilc cannot generate a policy with a version less than the
+minimum.
+2. libselinux and its users. For example, libselinux cannot downgrade a
+policy file to a version less than the minimum, and libsemanage cannot
+read a binary policy module that was compiled with a version less than
+the minimum.
+3. SELinux policy analysis tools. For example, setools cannot read a
+policy with a version less the minimum.
+4. The Xen hypervisor, which compiles its XSM/Flask policies using
+checkpolicy, and only currently supports kernel policy versions 24 and
+30 for the Xen target. Xen does not use binary policy modules so it is
+unaffected by changes to the minimum modular policy version.
+5. Android, which is on kernel policy version 30. There has not been
+any need for newer policy version features yet. Android does not use
+binary policy modules so it is unaffected by changes to the minimum
+modular policy version.
+
+Increasing the minimum kernel policy version for libsepol therefore
+prevents generating, loading, or analyzing policies for Linux kernels
+or Xen hypervisors that only support a kernel policy version lower
+than the new minimum. The minimum kernel policy version should only
+be increased when there are no still-supported versions of the Linux
+kernel and Xen hypervisor that require a lower kernel policy version.
+
+Increasing the minimum modular policy version for libsepol prevents
+generating binary modules for distribution releases that only support
+a modular policy version lower than the new minimum, and also prevents
+reading and hence using binary modules that were built with a version
+lower than the new minimum. This could affect modules originally built
+under an older release and carried forward through system upgrades.
+The minimum modular policy version should only be increased when there
+are no still-supported Linux distributions that require a lower
+modular policy version _and_ any binary modules carried forward
+through system upgrades can reasonably be assumed to have required a
+rebuild anyway due to major changes to the system policy headers.
 
 Installation
 ------------
