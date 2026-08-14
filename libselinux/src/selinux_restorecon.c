@@ -1167,11 +1167,30 @@ static int safe_open(const char *path, struct stat *sb)
 				nfd = openat(dfd, cur,
 					     O_PATH | O_NOFOLLOW | O_DIRECTORY |
 						     O_CLOEXEC);
-				close(dfd);
 				if (nfd < 0) {
+					int err = errno;
+					struct stat st;
+
+					/*
+					 * O_NOFOLLOW | O_DIRECTORY on a
+					 * symlink yields ENOTDIR; report
+					 * ELOOP so the caller can tell an
+					 * unfollowed intermediate symlink
+					 * from a genuine non-directory, and
+					 * so the fallback matches openat2's
+					 * RESOLVE_NO_SYMLINKS.
+					 */
+					if (err == ENOTDIR &&
+					    fstatat(dfd, cur, &st,
+						    AT_SYMLINK_NOFOLLOW) == 0 &&
+					    S_ISLNK(st.st_mode))
+						err = ELOOP;
+					close(dfd);
 					free(copy);
+					errno = err;
 					return -1;
 				}
+				close(dfd);
 				dfd = nfd;
 				cur = next;
 				continue;
@@ -1680,8 +1699,14 @@ static int selinux_restorecon_common(const char *pathname_orig,
 			free(pathname);
 			return 0;
 		} else {
-			selinux_log(SELINUX_ERROR, "open(%s) failed: %m\n",
-				    pathname);
+			if (errno == ELOOP)
+				selinux_log(
+					SELINUX_ERROR,
+					"%s: an intermediate path component is a symbolic link (not followed)\n",
+					pathname);
+			else
+				selinux_log(SELINUX_ERROR,
+					    "open(%s) failed: %m\n", pathname);
 			error = -1;
 			goto cleanup;
 		}
