@@ -168,7 +168,7 @@ int main(int argc, char **argv)
 	const char *input_filename = NULL;
 	int use_input_file = 0;
 	char *buf = NULL;
-	size_t buf_len = 0, nthreads = 1;
+	size_t buf_len = 0, nthreads = 0;
 	const char *base;
 	int errors = 0;
 	const char *ropts = "ce:f:hijIDlmno:pqrsvFURW0xT:";
