@@ -1947,7 +1947,8 @@ static int scope_write(hashtab_key_t key, hashtab_datum_t datum, void *ptr)
 	struct policy_file *fp = pd->fp;
 	uint32_t static_buf[32], *dyn_buf = NULL, *buf;
 	size_t key_len = strlen(key);
-	unsigned int items = 2 + scope->decl_ids_len, i;
+	size_t items = 2 + scope->decl_ids_len;
+	uint32_t i;
 	int rc;
 
 	buf = static_buf;
