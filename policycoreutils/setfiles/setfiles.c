@@ -64,6 +64,32 @@ static void set_rootpath(const char *arg)
 	}
 }
 
+/*
+ * Parse a thread count, as given by the -T option.  Returns -1 on invalid
+ * input.
+ */
+static int parse_nthreads(const char *str, size_t *nthreads)
+{
+	unsigned long long value;
+	char *endptr;
+
+	/*
+	 * Reject anything strtoull(3) would silently accept but that is not
+	 * a plain thread count, most notably negative values, which would
+	 * otherwise wrap around to a huge number of threads.
+	 */
+	if (!isdigit((unsigned char)*str))
+		return -1;
+
+	errno = 0;
+	value = strtoull(str, &endptr, 10);
+	if (errno != 0 || *endptr != '\0' || value > SIZE_MAX)
+		return -1;
+
+	*nthreads = value;
+	return 0;
+}
+
 static int canoncon(char **contextp)
 {
 	char *context = *contextp, *tmpcon;
@@ -141,7 +167,7 @@ int main(int argc, char **argv)
 	int opt, i = 0;
 	const char *input_filename = NULL;
 	int use_input_file = 0;
-	char *buf = NULL, *endptr;
+	char *buf = NULL;
 	size_t buf_len = 0, nthreads = 1;
 	const char *base;
 	int errors = 0;
@@ -376,8 +402,7 @@ int main(int argc, char **argv)
 			r_opts.xdev = SELINUX_RESTORECON_XDEV;
 			break;
 		case 'T':
-			nthreads = strtoull(optarg, &endptr, 10);
-			if (*optarg == '\0' || *endptr != '\0')
+			if (parse_nthreads(optarg, &nthreads) < 0)
 				usage(argv[0]);
 			break;
 		case 'A':
