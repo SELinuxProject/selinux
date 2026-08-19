@@ -65,8 +65,8 @@ static void set_rootpath(const char *arg)
 }
 
 /*
- * Parse a thread count, as given by the -T option.  Returns -1 on invalid
- * input.
+ * Parse a thread count, as given by the -T option or the
+ * RESTORECON_THREADS environment variable.  Returns -1 on invalid input.
  */
 static int parse_nthreads(const char *str, size_t *nthreads)
 {
@@ -166,6 +166,7 @@ int main(int argc, char **argv)
 	struct stat sb;
 	int opt, i = 0;
 	const char *input_filename = NULL;
+	const char *env_nthreads;
 	int use_input_file = 0;
 	char *buf = NULL;
 	size_t buf_len = 0, nthreads = 0;
@@ -245,6 +246,19 @@ int main(int argc, char **argv)
 		if (is_selinux_enabled() <= 0)
 			exit(0);
 	}
+
+	/*
+	 * An explicit -T option takes precedence over the environment.  An
+	 * invalid value is not fatal, so that a bogus setting inherited by
+	 * every child process does not break unrelated callers;
+	 * parse_nthreads() leaves nthreads alone in that case.
+	 */
+	env_nthreads = getenv("RESTORECON_THREADS");
+	if (env_nthreads && env_nthreads[0] != '\0' &&
+	    parse_nthreads(env_nthreads, &nthreads) < 0)
+		fprintf(stderr,
+			"%s:  invalid RESTORECON_THREADS value \"%s\", ignoring\n",
+			r_opts.progname, env_nthreads);
 
 	/* Process any options. */
 	while ((opt = getopt(argc, argv, opts)) > 0) {
