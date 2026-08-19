@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 	sepol_security_id_t ssid, tsid;
 	sepol_security_class_t tclass;
 	const char *permlist;
-	sepol_access_vector_t av;
+	sepol_access_vector_t av = 0;
 	struct sepol_av_decision avd;
 	unsigned int reason;
 	char *reason_buf;
@@ -58,6 +58,7 @@ int main(int argc, char *argv[])
 		char *tmp = NULL;
 		const char *perm;
 		const char *delim = strchr(permlist, ',');
+		sepol_access_vector_t perm_av;
 
 		if (delim) {
 			tmp = strndup(permlist, delim - permlist);
@@ -71,13 +72,15 @@ int main(int argc, char *argv[])
 
 		perm = tmp ? tmp : permlist;
 
-		if (sepol_string_to_av_perm(tclass, perm, &av) < 0) {
+		if (sepol_string_to_av_perm(tclass, perm, &perm_av) < 0) {
 			fprintf(stderr,
 				"Invalid permission %s for security class %s:  %s\n",
 				perm, argv[4], strerror(errno));
 			free(tmp);
 			return 1;
 		}
+
+		av |= perm_av;
 
 		free(tmp);
 
