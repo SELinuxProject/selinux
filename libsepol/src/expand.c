@@ -3194,7 +3194,7 @@ static void discard_tunables(sepol_handle_t *sh, policydb_t *pol)
 
 		for (cur_node = decl->cond_list; cur_node != NULL;
 		     cur_node = cur_node->next) {
-			int booleans = 0, tunables = 0;
+			int booleans = 0;
 			cond_bool_datum_t *booldatum;
 
 			for (cur_expr = cur_node->expr; cur_expr != NULL;
@@ -3205,7 +3205,6 @@ static void discard_tunables(sepol_handle_t *sh, policydb_t *pol)
 						    [cur_expr->boolean - 1];
 				if (booldatum->flags &
 				    COND_BOOL_FLAGS_TUNABLE) {
-					tunables++;
 					if (preserve_tunables)
 						booldatum->flags &=
 							~COND_BOOL_FLAGS_TUNABLE;
@@ -3213,13 +3212,6 @@ static void discard_tunables(sepol_handle_t *sh, policydb_t *pol)
 					booleans++;
 				}
 			}
-
-			/* bool_copy_callback() at link phase has ensured
-			 * that no mixture of tunables and booleans in one
-			 * expression. However, this would be broken by the
-			 * request to preserve tunables */
-			if (!preserve_tunables)
-				assert(!(booleans && tunables));
 
 			if (booleans || preserve_tunables) {
 				cur_node->flags &= ~COND_NODE_FLAGS_TUNABLE;
