@@ -1322,9 +1322,12 @@ bad:
 }
 
 static int validate_cond_expr(sepol_handle_t *handle,
-			      const struct cond_expr *expr,
+			      const struct cond_expr *expr, const policydb_t *p,
 			      const validate_t *boolean)
 {
+	cond_bool_datum_t *booldatum;
+	int booleans = 0;
+	int tunables = 0;
 	int depth = -1;
 
 	if (!expr)
@@ -1338,6 +1341,11 @@ static int validate_cond_expr(sepol_handle_t *handle,
 			if (depth >= (COND_EXPR_MAXDEPTH - 1))
 				goto bad;
 			depth++;
+			booldatum = p->bool_val_to_struct[expr->boolean - 1];
+			if (booldatum->flags & COND_BOOL_FLAGS_TUNABLE)
+				tunables++;
+			else
+				booleans++;
 			break;
 		case COND_NOT:
 			if (depth < 0)
@@ -1364,6 +1372,12 @@ static int validate_cond_expr(sepol_handle_t *handle,
 	if (depth != 0)
 		goto bad;
 
+	if (tunables && booleans) {
+		ERR(handle, "Found both tunables and booleans in the same "
+			    "conditional expression");
+		goto bad;
+	}
+
 	return 0;
 
 bad:
@@ -1375,7 +1389,8 @@ static int validate_cond_list(sepol_handle_t *handle, const cond_list_t *cond,
 			      const policydb_t *p, validate_t flavors[])
 {
 	for (; cond; cond = cond->next) {
-		if (validate_cond_expr(handle, cond->expr, &flavors[SYM_BOOLS]))
+		if (validate_cond_expr(handle, cond->expr, p,
+				       &flavors[SYM_BOOLS]))
 			goto bad;
 		if (validate_cond_av_list(handle, cond->true_list, p, flavors))
 			goto bad;
