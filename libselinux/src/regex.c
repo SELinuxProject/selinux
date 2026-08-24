@@ -87,7 +87,7 @@ struct regex_data {
 };
 
 int regex_prepare_data(struct regex_data **regex, char const *pattern_string,
-		       struct regex_error_data *errordata)
+		       struct regex_error_data *errordata, bool jit)
 {
 	memset(errordata, 0, sizeof(struct regex_error_data));
 
@@ -108,7 +108,8 @@ int regex_prepare_data(struct regex_data **regex, char const *pattern_string,
 	 * susceptibility to catastrophic backtracking. Partial matches fall
 	 * back to the interpreter, protected by the match limit. Failures
 	 * are non-fatal. */
-	(void)pcre2_jit_compile((*regex)->regex, PCRE2_JIT_COMPLETE);
+	if (jit)
+		(void)pcre2_jit_compile((*regex)->regex, PCRE2_JIT_COMPLETE);
 
 	return 0;
 
@@ -130,7 +131,7 @@ char const *regex_version(void)
 }
 
 int regex_load_mmap(struct mmap_area *mmap_area, struct regex_data **regex,
-		    int do_load_precompregex, bool *regex_compiled)
+		    int do_load_precompregex, bool jit, bool *regex_compiled)
 {
 	int rc;
 	uint32_t data_u32, entry_len;
@@ -164,7 +165,9 @@ int regex_load_mmap(struct mmap_area *mmap_area, struct regex_data **regex,
 		if (rc != 1)
 			goto err;
 
-		(void)pcre2_jit_compile((*regex)->regex, PCRE2_JIT_COMPLETE);
+		if (jit)
+			(void)pcre2_jit_compile((*regex)->regex,
+						PCRE2_JIT_COMPLETE);
 
 		*regex_compiled = true;
 	}
@@ -367,7 +370,8 @@ struct regex_data {
 };
 
 int regex_prepare_data(struct regex_data **regex, char const *pattern_string,
-		       struct regex_error_data *errordata)
+		       struct regex_error_data *errordata,
+		       bool jit __attribute__((unused)))
 {
 	memset(errordata, 0, sizeof(struct regex_error_data));
 
@@ -402,7 +406,7 @@ char const *regex_version(void)
 
 int regex_load_mmap(struct mmap_area *mmap_area, struct regex_data **regex,
 		    int do_load_precompregex __attribute__((unused)),
-		    bool *regex_compiled)
+		    bool jit __attribute__((unused)), bool *regex_compiled)
 {
 	int rc;
 	uint32_t data_u32, entry_len;

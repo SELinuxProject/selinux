@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include <selinux/selinux.h>
 #include <selinux/label.h>
 #include "sha1.h"
@@ -73,6 +74,7 @@ struct selabel_handle {
 	/* arguments that were passed to selabel_open */
 	unsigned int backend;
 	int validating;
+	bool jit;
 
 	/* labeling operations */
 	struct selabel_lookup_rec *(*func_lookup)(struct selabel_handle *h,

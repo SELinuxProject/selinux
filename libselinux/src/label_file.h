@@ -398,7 +398,7 @@ static inline void sort_specs(struct saved_data *data)
 }
 
 static int compile_regex(struct regex_spec *spec, char *errbuf,
-			 size_t errbuf_size)
+			 size_t errbuf_size, bool jit)
 {
 	const char *reg_buf;
 	char *anchored_regex, *cp;
@@ -473,7 +473,7 @@ static int compile_regex(struct regex_spec *spec, char *errbuf,
 	*cp = '\0';
 
 	/* Compile the regular expression. */
-	rc = regex_prepare_data(&spec->regex, anchored_regex, &error_data);
+	rc = regex_prepare_data(&spec->regex, anchored_regex, &error_data, jit);
 	free(anchored_regex);
 	if (rc < 0) {
 		regex_format_error(&error_data, errbuf, errbuf_size);
@@ -655,7 +655,7 @@ static int insert_spec(const struct selabel_handle *rec,
 			char errbuf[256];
 
 			if (compile_regex(&node->regex_specs[id], errbuf,
-					  sizeof(errbuf))) {
+					  sizeof(errbuf), rec->jit)) {
 				COMPAT_LOG(
 					SELINUX_ERROR,
 					"%s:  line %u has invalid regex %s:  %s\n",

@@ -155,6 +155,18 @@ int selabel_validate(struct selabel_lookup_rec *contexts)
 	return 0;
 }
 
+/* Should we enable JIT compilation? */
+static inline int selabel_is_jit_set(const struct selinux_opt *opts, unsigned n)
+{
+	while (n) {
+		n--;
+		if (opts[n].type == SELABEL_OPT_JIT)
+			return !!opts[n].value;
+	}
+
+	return 0;
+}
+
 /* Public API helpers */
 static int selabel_fini(const struct selabel_handle *rec,
 			struct selabel_lookup_rec *lr, bool translating)
@@ -261,6 +273,7 @@ struct selabel_handle *selabel_open(unsigned int backend,
 
 	rec->backend = backend;
 	rec->validating = selabel_is_validate_set(opts, nopts);
+	rec->jit = selabel_is_jit_set(opts, nopts);
 
 	rec->digest = selabel_is_digest_set(opts, nopts);
 

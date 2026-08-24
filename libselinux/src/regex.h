@@ -78,11 +78,12 @@ void regex_data_free(struct regex_data *regex);
  *                to this function. This structure depends on the underlying
  *                implementation. It can be passed to regex_format_error
  *                to generate a human readable error message.
+ * @arg jit A boolean indicating whether JIT compilation should be performed.
  * @retval 0 on success
  * @retval -1 on error
  */
 int regex_prepare_data(struct regex_data **regex, char const *pattern_string,
-		       struct regex_error_data *errordata);
+		       struct regex_error_data *errordata, bool jit);
 /**
  * This function loads a serialized precompiled pattern from a contiguous
  * data region given by map_area.
@@ -93,6 +94,7 @@ int regex_prepare_data(struct regex_data **regex, char const *pattern_string,
  *            with regex_data_create and must be freed with regex_data_free.
  * @arg do_load_precompregex If non-zero precompiled patterns get loaded from
  *			     the mmap region (ignored by PCRE1 back-end).
+ * @arg jit A boolean indicating whether JIT compilation should be performed.
  * @arg regex_compiled Set to true if a precompiled pattern was loaded
  * 		       into regex, otherwise set to false to indicate later
  *		       compilation must occur
@@ -101,7 +103,7 @@ int regex_prepare_data(struct regex_data **regex, char const *pattern_string,
  * @retval -1 on error
  */
 int regex_load_mmap(struct mmap_area *map_area, struct regex_data **regex,
-		    int do_load_precompregex, bool *regex_compiled);
+		    int do_load_precompregex, bool jit, bool *regex_compiled);
 /**
  * This function stores a precompiled regular expression to a file.
  * In the case of PCRE, it just dumps the binary representation of the

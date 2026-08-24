@@ -73,6 +73,13 @@ A non-null value for this option enables the generation of an SHA1 digest of
 the spec files loaded as described in
 .BR selabel_digest (3)
 .
+.TP
+.B SELABEL_OPT_JIT
+A non-null value for this option enables the JIT compilation of regexes
+read from the spec files. This option is only currently supported with
+the
+.B SELABEL_CTX_FILE
+backend.
 .SH "BACKENDS"
 .TP
 .B SELABEL_CTX_FILE

@@ -59,8 +59,10 @@ struct selabel_handle;
 #define SELABEL_OPT_SUBSET 4
 /* require a hash calculation on spec files */
 #define SELABEL_OPT_DIGEST 5
+/* enable JIT compilation of regexes */
+#define SELABEL_OPT_JIT 6
 /* total number of options */
-#define SELABEL_NOPT 6
+#define SELABEL_NOPT 7
 
 /*
  * Label operations

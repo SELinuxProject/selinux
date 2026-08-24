@@ -633,8 +633,8 @@ static int load_mmap_literal_spec(struct mmap_area *mmap_area, bool validating,
 }
 
 static int load_mmap_regex_spec(struct mmap_area *mmap_area, bool validating,
-				bool do_load_precompregex, uint8_t inputno,
-				struct regex_spec *rspec,
+				bool jit, bool do_load_precompregex,
+				uint8_t inputno, struct regex_spec *rspec,
 				const struct context_array *ctx_array)
 {
 	uint32_t data_u32, ctx_id, lineno;
@@ -723,7 +723,7 @@ static int load_mmap_regex_spec(struct mmap_area *mmap_area, bool validating,
 	 * Read pcre regex related data
 	 */
 	rc = regex_load_mmap(mmap_area, &rspec->regex, do_load_precompregex,
-			     &rspec->regex_compiled);
+			     jit, &rspec->regex_compiled);
 	if (rc < 0)
 		return -1;
 
@@ -733,7 +733,8 @@ static int load_mmap_regex_spec(struct mmap_area *mmap_area, bool validating,
 }
 
 static int load_mmap_spec_node(struct mmap_area *mmap_area, const char *path,
-			       bool validating, bool do_load_precompregex,
+			       bool validating, bool jit,
+			       bool do_load_precompregex,
 			       struct spec_node *node, const unsigned depth,
 			       uint8_t inputno,
 			       const struct context_array *ctx_array)
@@ -840,7 +841,7 @@ static int load_mmap_spec_node(struct mmap_area *mmap_area, const char *path,
 		node->regex_specs_alloc = rspec_num;
 
 		for (uint32_t i = 0; i < rspec_num; i++) {
-			rc = load_mmap_regex_spec(mmap_area, validating,
+			rc = load_mmap_regex_spec(mmap_area, validating, jit,
 						  do_load_precompregex, inputno,
 						  &node->regex_specs[i],
 						  ctx_array);
@@ -876,7 +877,7 @@ static int load_mmap_spec_node(struct mmap_area *mmap_area, const char *path,
 
 		for (uint32_t i = 0; i < children_num; i++) {
 			rc = load_mmap_spec_node(mmap_area, path, validating,
-						 do_load_precompregex,
+						 jit, do_load_precompregex,
 						 &node->children[i], depth + 1,
 						 inputno, ctx_array);
 			if (rc)
@@ -1064,7 +1065,7 @@ end_arch_check:
 	if (!root)
 		goto err;
 
-	rc = load_mmap_spec_node(mmap_area, path, rec->validating,
+	rc = load_mmap_spec_node(mmap_area, path, rec->validating, rec->jit,
 				 reg_version_matches && reg_arch_matches, root,
 				 0, inputno, &ctx_array);
 	if (rc)
@@ -1538,6 +1539,7 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 		case SELABEL_OPT_UNUSED:
 		case SELABEL_OPT_VALIDATE:
 		case SELABEL_OPT_DIGEST:
+		case SELABEL_OPT_JIT:
 			break;
 		default:
 			errno = EINVAL;
@@ -1890,6 +1892,7 @@ fail:
  * @file_kind: The kind of the file to look up (translated from file type into LABEL_FILE_KIND_*).
  * @partial:   Whether to partially match the given file path or completely.
  * @find_all:  Whether to find all file context definitions or just the most specific.
+ * @jit:       Whether to enable JIT compilation of regexes.
  * @buf:       A pre-allocated buffer for a potential result to avoid allocating it on the heap or
  *             NULL. Mutual exclusive with @find_all.
  *
@@ -1897,9 +1900,11 @@ fail:
  *         its a linked list of all results. If @buf was specified it is returned on a match found.
  *         NULL is returned in case of no match found.
  */
-static struct lookup_result *
-lookup_check_node(struct spec_node *node, const char *key, uint8_t file_kind,
-		  bool partial, bool find_all, struct lookup_result *buf)
+static struct lookup_result *lookup_check_node(struct spec_node *node,
+					       const char *key,
+					       uint8_t file_kind, bool partial,
+					       bool find_all, bool jit,
+					       struct lookup_result *buf)
 {
 	struct lookup_result *result = NULL;
 	struct lookup_result **next = &result;
@@ -2002,7 +2007,8 @@ lookup_check_node(struct spec_node *node, const char *key, uint8_t file_kind,
 			    file_kind != rspec->file_kind)
 				continue;
 
-			if (compile_regex(rspec, errbuf, sizeof(errbuf)) < 0) {
+			if (compile_regex(rspec, errbuf, sizeof(errbuf), jit) <
+			    0) {
 				COMPAT_LOG(
 					SELINUX_ERROR,
 					"Failed to compile regular expression '%s':  %s\n",
@@ -2274,8 +2280,8 @@ FUZZ_EXTERN struct lookup_result *lookup_all(struct selabel_handle *rec,
 
 	node = lookup_find_deepest_node(data->root, key, &rest_key);
 
-	result =
-		lookup_check_node(node, key, file_kind, partial, find_all, buf);
+	result = lookup_check_node(node, key, file_kind, partial, find_all,
+				   rec->jit, buf);
 
 	/* For partial lookup if the key matches a child node, recursively add all specs */
 	if (partial && rest_key) {
