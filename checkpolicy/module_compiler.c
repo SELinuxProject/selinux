@@ -636,7 +636,8 @@ type_datum_t *get_local_type(char *id, uint32_t value, unsigned char isattr)
 
 	} else {
 		free(id);
-		if (dest_typdatum->flavor != isattr ? TYPE_ATTRIB : TYPE_TYPE) {
+		if (dest_typdatum->flavor !=
+		    (isattr ? TYPE_ATTRIB : TYPE_TYPE)) {
 			return NULL;
 		}
 	}
@@ -685,7 +686,8 @@ role_datum_t *get_local_role(char *id, uint32_t value, unsigned char isattr)
 		}
 	} else {
 		free(id);
-		if (dest_roledatum->flavor != isattr ? ROLE_ATTRIB : ROLE_ROLE)
+		if (dest_roledatum->flavor !=
+		    (isattr ? ROLE_ATTRIB : ROLE_ROLE))
 			return NULL;
 	}
 
