@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <limits.h>
 
 #include <selinux/selinux.h>
 #include <sepol/sepol.h>
