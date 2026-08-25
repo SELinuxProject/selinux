@@ -617,6 +617,10 @@ int bounds_check_users(sepol_handle_t *handle, policydb_t *p)
 	return 0;
 }
 
+#define type_datum_is_attr(d) ((d)->flavor == TYPE_ATTRIB)
+#define role_datum_is_attr(d) ((d)->flavor == ROLE_ATTRIB)
+#define user_datum_is_attr(d) (0)
+
 #define add_hierarchy_callback_template(prefix)                                  \
 	int hierarchy_add_##prefix##_callback(hashtab_key_t k                    \
 					      __attribute__((unused)),           \
@@ -628,6 +632,9 @@ int bounds_check_users(sepol_handle_t *handle, policydb_t *p)
 		prefix##_datum_t *datum = (prefix##_datum_t *)d;                 \
 		prefix##_datum_t *parent;                                        \
 		char *parent_name, *datum_name, *tmp;                            \
+                                                                                 \
+		if (prefix##_datum_is_attr(datum))                               \
+			return 0;                                                \
                                                                                  \
 		if (!datum->bounds) {                                            \
 			datum_name =                                             \
@@ -654,6 +661,16 @@ int bounds_check_users(sepol_handle_t *handle, policydb_t *p)
 				/* Orphan type/role/user */                      \
 				ERR(handle,                                      \
 				    "%s doesn't exist, %s is an orphan",         \
+				    parent_name,                                 \
+				    p->p_##prefix##_val_to_name[datum->s.value - \
+								1]);             \
+				free(parent_name);                               \
+				a->numbad++;                                     \
+				return 0;                                        \
+			}                                                        \
+			if (prefix##_datum_is_attr(parent)) {                    \
+				ERR(handle,                                      \
+				    "%s is an attribute, %s is an orphan",       \
 				    parent_name,                                 \
 				    p->p_##prefix##_val_to_name[datum->s.value - \
 								1]);             \
