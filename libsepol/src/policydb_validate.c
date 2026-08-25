@@ -18,9 +18,6 @@
  * Check that at least one permission bit is valid.
  * Older compilers might set invalid bits for the wildcard permission.
  */
-#define PERMISSION_MASK(nprim)                          \
-	((nprim) == PERM_SYMTAB_SIZE ? (~UINT32_C(0)) : \
-				       ((UINT32_C(1) << (nprim)) - 1))
 #define NO_VALID_PERMS(av, nprim) (!((av) & PERMISSION_MASK(nprim)))
 
 typedef struct validate {

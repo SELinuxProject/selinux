@@ -45,6 +45,10 @@
 
 #define MAX_ALIAS_REPEATS 32
 
+#define PERMISSION_MASK(nprim)                          \
+	((nprim) == PERM_SYMTAB_SIZE ? (~UINT32_C(0)) : \
+				       ((UINT32_C(1) << (nprim)) - 1))
+
 static inline int exceeds_available_bytes(const struct policy_file *fp,
 					  size_t x, size_t req_elem_size)
 {
