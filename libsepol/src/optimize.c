@@ -446,12 +446,41 @@ static void optimize_cond_avtab(policydb_t *p, const struct type_vec *type_map)
 	}
 }
 
+/*
+ * Older policy compilers could set bits higher than any of the permissions
+ * in the class. These junk bits must be removed before optimization to keep
+ * redundant rules from being kept because of junk bits and to prevent the
+ * failure of policy validation because no actual permission bit is set.
+ */
+static int remove_junk_permissions(avtab_key_t *k, avtab_datum_t *d, void *args)
+{
+	const policydb_t *p = args;
+	const class_datum_t *tclass;
+	uint32_t mask;
+
+	if (!(k->specified & AVTAB_AV))
+		return 0;
+
+	tclass = p->class_val_to_struct[k->target_class - 1];
+	mask = PERMISSION_MASK(tclass->permissions.nprim);
+
+	if ((k->specified & ~AVTAB_ENABLED) == AVTAB_AUDITDENY)
+		d->data |= ~mask;
+	else
+		d->data &= mask;
+
+	return 0;
+}
+
 int policydb_optimize(policydb_t *p)
 {
 	struct type_vec *type_map;
 
 	if (p->policy_type != POLICY_KERN)
 		return -1;
+
+	avtab_map(&p->te_avtab, remove_junk_permissions, p);
+	avtab_map(&p->te_cond_avtab, remove_junk_permissions, p);
 
 	type_map = build_type_map(p);
 	if (!type_map)
