@@ -218,6 +218,10 @@ static int raw_to_trans_context(const char *raw, char **transp)
 		goto out;
 
 	ret = ret_val;
+	if (ret) {
+		free(*transp);
+		*transp = NULL;
+	}
 out:
 	close(fd);
 	return ret;
@@ -243,6 +247,10 @@ static int trans_to_raw_context(const char *trans, char **rawp)
 		goto out;
 
 	ret = ret_val;
+	if (ret) {
+		free(*rawp);
+		*rawp = NULL;
+	}
 out:
 	close(fd);
 	return ret;
@@ -269,6 +277,10 @@ static int raw_context_to_color(const char *raw, char **colors)
 		goto out;
 
 	ret = ret_val;
+	if (ret) {
+		free(*colors);
+		*colors = NULL;
+	}
 out:
 	close(fd);
 	return ret;
