@@ -1092,12 +1092,12 @@ allow %s_t %s_t:%s_socket name_%s;
                 t1 = re.sub("TEMPLATETYPE", self.name, self.files[i][2].fc_sock_file)
             else:
                 t1 = re.sub("TEMPLATETYPE", self.name, self.files[i][2].fc_file)
-            t2 = re.sub("FILENAME", i, t1)
+            t2 = t1.replace("FILENAME", re.escape(i))
             fclist.append(re.sub("FILETYPE", self.files[i][0], t2))
 
         for i in self.dirs.keys():
             t1 = re.sub("TEMPLATETYPE", self.name, self.dirs[i][2].fc_dir)
-            t2 = re.sub("FILENAME", i, t1)
+            t2 = t1.replace("FILENAME", re.escape(i))
             fclist.append(re.sub("FILETYPE", self.dirs[i][0], t2))
 
         if self.type in USERS + [SANDBOX]:
@@ -1108,11 +1108,11 @@ allow %s_t %s_t:%s_socket name_%s;
             raise ValueError(_("You must enter the executable path for your confined process"))
 
         if self.program:
-            t1 = re.sub("EXECUTABLE", self.program, executable.fc_program)
+            t1 = executable.fc_program.replace("EXECUTABLE", re.escape(self.program))
             fclist.append(re.sub("TEMPLATETYPE", self.name, t1))
 
         if self.initscript != "":
-            t1 = re.sub("EXECUTABLE", self.initscript, executable.fc_initscript)
+            t1 = executable.fc_initscript.replace("EXECUTABLE", re.escape(self.initscript))
             fclist.append(re.sub("TEMPLATETYPE", self.name, t1))
 
         fclist.sort()
