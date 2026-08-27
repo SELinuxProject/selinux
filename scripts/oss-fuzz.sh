@@ -43,30 +43,6 @@ mkdir -p "$OUT"
 export LIB_FUZZING_ENGINE=${LIB_FUZZING_ENGINE:--fsanitize=fuzzer}
 
 rm -rf "$DESTDIR"
-
-## Build PCRE2 from source so it is instrumented with the same sanitizer
-## as the fuzzer targets.  Using the system libpcre2 (uninstrumented) causes
-## MSan to report use-of-uninitialized-value false positives: pcre2_compile()
-## writes character bytes via direct assignment that the sanitizer cannot
-## track in uninstrumented code, so pcre2_jit_compile()'s memcmp()-based
-## repeat-detection reads them as "uninitialized".  Building from source
-## with the same -fsanitize= flags ensures all writes are properly tracked.
-PCRE2_SRC=/tmp/pcre2-src
-if [ ! -d "$PCRE2_SRC" ]; then
-    git clone --depth 1 https://github.com/PCRE2Project/pcre2.git "$PCRE2_SRC"
-    git -C "$PCRE2_SRC" submodule update --init
-fi
-cmake -S "$PCRE2_SRC" -B "$PCRE2_SRC/build" \
-    -DCMAKE_C_COMPILER="$CC" \
-    -DCMAKE_C_FLAGS="$flags" \
-    -DPCRE2_SUPPORT_JIT=ON \
-    -DPCRE2_BUILD_TESTS=OFF \
-    -DBUILD_SHARED_LIBS=OFF \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_INSTALL_LIBDIR=lib
-cmake --build "$PCRE2_SRC/build" -j"$(nproc)"
-cmake --install "$PCRE2_SRC/build"
-
 make -C libsepol clean
 make -C libselinux clean
 # LIBSO and LIBMAP shouldn't be expanded here because their values are unknown until Makefile
@@ -130,7 +106,7 @@ cp checkpolicy/fuzz/checkpolicy-fuzzer.dict "$OUT/"
 # shellcheck disable=SC2086
 $CC $CFLAGS -DUSE_PCRE2 -DPCRE2_CODE_UNIT_WIDTH=8 -c -o selabel_file_text-fuzzer.o libselinux/fuzz/selabel_file_text-fuzzer.c
 # shellcheck disable=SC2086
-$CXX $CXXFLAGS $LIB_FUZZING_ENGINE selabel_file_text-fuzzer.o "$DESTDIR/usr/lib/libselinux.a" "$DESTDIR/usr/lib/libpcre2-8.a" -o "$OUT/selabel_file_text-fuzzer"
+$CXX $CXXFLAGS $LIB_FUZZING_ENGINE selabel_file_text-fuzzer.o "$DESTDIR/usr/lib/libselinux.a" -lpcre2-8 -o "$OUT/selabel_file_text-fuzzer"
 
 zip -j "$OUT/selabel_file_text-fuzzer_seed_corpus.zip" libselinux/fuzz/input
 
@@ -141,6 +117,6 @@ zip -j "$OUT/selabel_file_text-fuzzer_seed_corpus.zip" libselinux/fuzz/input
 # shellcheck disable=SC2086
 $CC $CFLAGS -DUSE_PCRE2 -DPCRE2_CODE_UNIT_WIDTH=8 -c -o selabel_file_compiled-fuzzer.o libselinux/fuzz/selabel_file_compiled-fuzzer.c
 # shellcheck disable=SC2086
-$CXX $CXXFLAGS $LIB_FUZZING_ENGINE selabel_file_compiled-fuzzer.o "$DESTDIR/usr/lib/libselinux.a" "$DESTDIR/usr/lib/libpcre2-8.a" -o "$OUT/selabel_file_compiled-fuzzer"
+$CXX $CXXFLAGS $LIB_FUZZING_ENGINE selabel_file_compiled-fuzzer.o "$DESTDIR/usr/lib/libselinux.a" -lpcre2-8 -o "$OUT/selabel_file_compiled-fuzzer"
 
 zip -j "$OUT/selabel_file_compiled-fuzzer_seed_corpus.zip" libselinux/fuzz/input
