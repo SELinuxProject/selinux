@@ -592,8 +592,7 @@ int cond_read_bool(policydb_t *p, hashtab_t h, struct policy_file *fp)
 	if (str_read(&key, fp, len))
 		goto err;
 
-	if (p->policy_type != POLICY_KERN &&
-	    p->policyvers >= MOD_POLICYDB_VERSION_TUNABLE_SEP) {
+	if (p->policy_type != POLICY_KERN) {
 		rc = next_entry(buf, fp, sizeof(uint32_t));
 		if (rc < 0)
 			goto err;
@@ -721,8 +720,8 @@ static int cond_read_av_list(policydb_t *p, void *fp, cond_av_list_t **ret_list,
 	data.head = NULL;
 	data.tail = NULL;
 	for (i = 0; i < len; i++) {
-		rc = avtab_read_item(fp, p->policyvers, &p->te_cond_avtab,
-				     cond_insertf, &data);
+		rc = avtab_read_item(fp, &p->te_cond_avtab, cond_insertf,
+				     &data);
 		if (rc) {
 			cond_av_list_destroy(data.head);
 			return rc;
@@ -808,8 +807,7 @@ static int cond_read_node(policydb_t *p, cond_node_t *node, void *fp)
 			goto err;
 	}
 
-	if (p->policy_type != POLICY_KERN &&
-	    p->policyvers >= MOD_POLICYDB_VERSION_TUNABLE_SEP) {
+	if (p->policy_type != POLICY_KERN) {
 		rc = next_entry(buf, fp, sizeof(uint32_t));
 		if (rc < 0)
 			goto err;

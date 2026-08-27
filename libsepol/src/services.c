@@ -202,12 +202,10 @@ static void cat_expr_buf(char *e_buf, const char *string)
 }
 
 /*
- * If the POLICY_KERN version is >= POLICYDB_VERSION_CONSTRAINT_NAMES,
- * then for 'types' only, read the types_names->types list as it will
+ * For 'types' only, read the types_names->types list as it will
  * contain a list of types and attributes that were defined in the
  * policy source.
- * For user and role plus types (for policy vers <
- * POLICYDB_VERSION_CONSTRAINT_NAMES) just read the e->names list.
+ * For user and role just read the e->names list.
  */
 static void get_name_list(constraint_expr_t *e, int type, const char *src,
 			  const char *op, int failed)
@@ -218,9 +216,7 @@ static void get_name_list(constraint_expr_t *e, int type, const char *src,
 	char tmp_buf[128];
 	int counter = 0;
 
-	if (policydb->policy_type == POLICY_KERN &&
-	    policydb->policyvers >= POLICYDB_VERSION_CONSTRAINT_NAMES &&
-	    type == CEXPR_TYPE)
+	if (policydb->policy_type == POLICY_KERN && type == CEXPR_TYPE)
 		types = &e->type_names->types;
 	else
 		types = &e->names;

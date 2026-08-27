@@ -201,8 +201,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 	    policyvers > POLICYDB_VERSION_MAX)
 		return 0;
 	if (platform == SEPOL_TARGET_XEN &&
-	    policyvers != POLICYDB_VERSION_XEN_DEVICETREE &&
-	    policyvers != POLICYDB_VERSION_BOUNDARY)
+	    policyvers != POLICYDB_VERSION_XEN_DEVICETREE)
 		return 0;
 #if VERBOSE
 	printf("policyvers=%d\n", policyvers);

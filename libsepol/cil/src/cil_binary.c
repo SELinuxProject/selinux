@@ -3189,28 +3189,23 @@ static int __cil_constrain_expr_datum_to_sepol_expr(policydb_t *pdb,
 		ebitmap_node_t *tnode;
 		unsigned int i;
 
-		if (pdb->policyvers >= POLICYDB_VERSION_CONSTRAINT_NAMES) {
-			rc = __cil_get_sepol_type_datum(pdb, item->data,
-							&sepol_type);
-			if (rc != SEPOL_OK) {
-				if (FLAVOR(item->data) == CIL_TYPEATTRIBUTE) {
-					struct cil_typeattribute *attr =
-						item->data;
-					if (!attr->keep) {
-						rc = 0;
-					}
+		rc = __cil_get_sepol_type_datum(pdb, item->data, &sepol_type);
+		if (rc != SEPOL_OK) {
+			if (FLAVOR(item->data) == CIL_TYPEATTRIBUTE) {
+				struct cil_typeattribute *attr = item->data;
+				if (!attr->keep) {
+					rc = 0;
 				}
 			}
+		}
 
-			if (sepol_type) {
-				rc = ebitmap_set_bit(&expr->type_names->types,
-						     sepol_type->s.value - 1,
-						     1);
-			}
+		if (sepol_type) {
+			rc = ebitmap_set_bit(&expr->type_names->types,
+					     sepol_type->s.value - 1, 1);
+		}
 
-			if (rc != SEPOL_OK) {
-				goto exit;
-			}
+		if (rc != SEPOL_OK) {
+			goto exit;
 		}
 
 		rc = __cil_expand_type(item->data, &type_bitmap);

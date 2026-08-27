@@ -25,9 +25,8 @@ for more information.
 
 Minimum Supported Kernel Version
 --------------------------------
-The minimum supported kernel version is Linux v3.0 (for the
-/sys/fs/selinux mount point directory) for libselinux and anything
-that uses libselinux to access selinuxfs.
+The minimum supported kernel version is Linux v4.3 to match the
+minimum supported kernel policy version by libsepol.
 
 Note that the policy build toolchain (e.g. libsepol, checkpolicy,
 checkmodule, secilc, semodule_package/expand/link) does not link with
@@ -38,16 +37,16 @@ successfully been built and run on non-Linux platforms as well
 
 Minimum Supported Policy Versions
 ---------------------------------
-The minimum kernel policy version is 24 (boundary) for the SELinux and
-Xen targets. Support for this policy version first shipped in libsepol
-2.0.34 (userspace release 20090403), Linux v2.6.28, and Xen
-4.0.0. libsepol dropped support for kernel policy versions older than
-24 starting with libsepol 3.12.
+The minimum kernel policy version is 30 (xperms_ioctl for SELinux,
+xen_devicetree for Xen). Support for this policy version first shipped
+in libsepol 2.5 (userspace release 20160223), Linux v4.3, and Xen
+4.6. libsepol dropped support for kernel policy versions older than 30
+starting with libsepol 3.12.
 
-The minimum modular policy version is 10 (boundary alias). Support for
-this modular policy version first shipped in libsepol 2.0.35
-(userspace release 20090403). libsepol dropped support for modular
-policies older than 10 starting with libsepol 3.12
+The minimum modular policy version is 18 (xperms_ioctl). Support for
+this modular policy version first shipped in libsepol 2.7 (userspace
+release 20170804). libsepol dropped support for modular policies older
+than 18 starting with libsepol 3.12.
 
 These minimum policy versions in libsepol affect:
 1. The policy build toolchain. For example, checkpolicy, checkmodule,
@@ -60,8 +59,8 @@ the minimum.
 3. SELinux policy analysis tools. For example, setools cannot read a
 policy with a version less the minimum.
 4. The Xen hypervisor, which compiles its XSM/Flask policies using
-checkpolicy, and only currently supports kernel policy versions 24 and
-30 for the Xen target. Xen does not use binary policy modules so it is
+checkpolicy, and only currently supports kernel policy version 30 for
+the Xen target. Xen does not use binary policy modules so it is
 unaffected by changes to the minimum modular policy version.
 5. Android, which is on kernel policy version 30. There has not been
 any need for newer policy version features yet. Android does not use

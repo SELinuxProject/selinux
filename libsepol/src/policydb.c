@@ -64,59 +64,10 @@ const char *const policydb_target_strings[] = { POLICYDB_STRING,
 static const struct policydb_compat_info policydb_compat[] = {
 	{
 		.type = POLICY_KERN,
-		.version = POLICYDB_VERSION_BOUNDARY,
-		.sym_num = SYM_NUM,
-		.ocon_num = OCON_XEN_PCIDEVICE + 1,
-		.target_platform = SEPOL_TARGET_XEN,
-	},
-	{
-		.type = POLICY_KERN,
 		.version = POLICYDB_VERSION_XEN_DEVICETREE,
 		.sym_num = SYM_NUM,
 		.ocon_num = OCON_XEN_DEVICETREE + 1,
 		.target_platform = SEPOL_TARGET_XEN,
-	},
-	{
-		.type = POLICY_KERN,
-		.version = POLICYDB_VERSION_BOUNDARY,
-		.sym_num = SYM_NUM,
-		.ocon_num = OCON_NODE6 + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_KERN,
-		.version = POLICYDB_VERSION_FILENAME_TRANS,
-		.sym_num = SYM_NUM,
-		.ocon_num = OCON_NODE6 + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_KERN,
-		.version = POLICYDB_VERSION_ROLETRANS,
-		.sym_num = SYM_NUM,
-		.ocon_num = OCON_NODE6 + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_KERN,
-		.version = POLICYDB_VERSION_NEW_OBJECT_DEFAULTS,
-		.sym_num = SYM_NUM,
-		.ocon_num = OCON_NODE6 + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_KERN,
-		.version = POLICYDB_VERSION_DEFAULT_TYPE,
-		.sym_num = SYM_NUM,
-		.ocon_num = OCON_NODE6 + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_KERN,
-		.version = POLICYDB_VERSION_CONSTRAINT_NAMES,
-		.sym_num = SYM_NUM,
-		.ocon_num = OCON_NODE6 + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
 	},
 	{
 		.type = POLICY_KERN,
@@ -158,62 +109,6 @@ static const struct policydb_compat_info policydb_compat[] = {
 		.version = POLICYDB_VERSION_NEVERAUDIT,
 		.sym_num = SYM_NUM,
 		.ocon_num = OCON_IBENDPORT + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_BASE,
-		.version = MOD_POLICYDB_VERSION_BOUNDARY_ALIAS,
-		.sym_num = SYM_NUM,
-		.ocon_num = OCON_NODE6 + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_BASE,
-		.version = MOD_POLICYDB_VERSION_FILENAME_TRANS,
-		.sym_num = SYM_NUM,
-		.ocon_num = OCON_NODE6 + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_BASE,
-		.version = MOD_POLICYDB_VERSION_ROLETRANS,
-		.sym_num = SYM_NUM,
-		.ocon_num = OCON_NODE6 + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_BASE,
-		.version = MOD_POLICYDB_VERSION_ROLEATTRIB,
-		.sym_num = SYM_NUM,
-		.ocon_num = OCON_NODE6 + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_BASE,
-		.version = MOD_POLICYDB_VERSION_TUNABLE_SEP,
-		.sym_num = SYM_NUM,
-		.ocon_num = OCON_NODE6 + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_BASE,
-		.version = MOD_POLICYDB_VERSION_NEW_OBJECT_DEFAULTS,
-		.sym_num = SYM_NUM,
-		.ocon_num = OCON_NODE6 + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_BASE,
-		.version = MOD_POLICYDB_VERSION_DEFAULT_TYPE,
-		.sym_num = SYM_NUM,
-		.ocon_num = OCON_NODE6 + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_BASE,
-		.version = MOD_POLICYDB_VERSION_CONSTRAINT_NAMES,
-		.sym_num = SYM_NUM,
-		.ocon_num = OCON_NODE6 + 1,
 		.target_platform = SEPOL_TARGET_SELINUX,
 	},
 	{
@@ -263,62 +158,6 @@ static const struct policydb_compat_info policydb_compat[] = {
 		.version = MOD_POLICYDB_VERSION_TYPE_ATTR_ATTRS,
 		.sym_num = SYM_NUM,
 		.ocon_num = OCON_IBENDPORT + 1,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_MOD,
-		.version = MOD_POLICYDB_VERSION_BOUNDARY_ALIAS,
-		.sym_num = SYM_NUM,
-		.ocon_num = 0,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_MOD,
-		.version = MOD_POLICYDB_VERSION_FILENAME_TRANS,
-		.sym_num = SYM_NUM,
-		.ocon_num = 0,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_MOD,
-		.version = MOD_POLICYDB_VERSION_ROLETRANS,
-		.sym_num = SYM_NUM,
-		.ocon_num = 0,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_MOD,
-		.version = MOD_POLICYDB_VERSION_ROLEATTRIB,
-		.sym_num = SYM_NUM,
-		.ocon_num = 0,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_MOD,
-		.version = MOD_POLICYDB_VERSION_TUNABLE_SEP,
-		.sym_num = SYM_NUM,
-		.ocon_num = 0,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_MOD,
-		.version = MOD_POLICYDB_VERSION_NEW_OBJECT_DEFAULTS,
-		.sym_num = SYM_NUM,
-		.ocon_num = 0,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_MOD,
-		.version = MOD_POLICYDB_VERSION_DEFAULT_TYPE,
-		.sym_num = SYM_NUM,
-		.ocon_num = 0,
-		.target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
-		.type = POLICY_MOD,
-		.version = MOD_POLICYDB_VERSION_CONSTRAINT_NAMES,
-		.sym_num = SYM_NUM,
-		.ocon_num = 0,
 		.target_platform = SEPOL_TARGET_SELINUX,
 	},
 	{
@@ -2046,9 +1885,8 @@ bad:
 	return -1;
 }
 
-static int read_cons_helper(policydb_t *p, constraint_node_t **nodep,
-			    unsigned int ncons, int allowxtarget,
-			    struct policy_file *fp)
+static int read_cons_helper(constraint_node_t **nodep, unsigned int ncons,
+			    int allowxtarget, struct policy_file *fp)
 {
 	constraint_node_t *c, *lc;
 	constraint_expr_t *e, *le;
@@ -2120,13 +1958,7 @@ static int read_cons_helper(policydb_t *p, constraint_node_t **nodep,
 				depth++;
 				if (ebitmap_read(&e->names, fp))
 					return -1;
-				if (p->policy_type != POLICY_KERN &&
-				    type_set_read(e->type_names, fp))
-					return -1;
-				else if (p->policy_type == POLICY_KERN &&
-					 p->policyvers >=
-						 POLICYDB_VERSION_CONSTRAINT_NAMES &&
-					 type_set_read(e->type_names, fp))
+				if (type_set_read(e->type_names, fp))
 					return -1;
 				break;
 			default:
@@ -2196,7 +2028,7 @@ static int class_read(policydb_t *p, hashtab_t h, struct policy_file *fp)
 			goto bad;
 	}
 
-	if (read_cons_helper(p, &cladatum->constraints, ncons, 0, fp))
+	if (read_cons_helper(&cladatum->constraints, ncons, 0, fp))
 		goto bad;
 
 	if ((p->policy_type == POLICY_KERN) ||
@@ -2206,26 +2038,18 @@ static int class_read(policydb_t *p, hashtab_t h, struct policy_file *fp)
 		if (rc < 0)
 			goto bad;
 		ncons = le32_to_cpu(buf[0]);
-		if (read_cons_helper(p, &cladatum->validatetrans, ncons, 1, fp))
+		if (read_cons_helper(&cladatum->validatetrans, ncons, 1, fp))
 			goto bad;
 	}
 
-	if ((p->policy_type == POLICY_KERN &&
-	     p->policyvers >= POLICYDB_VERSION_NEW_OBJECT_DEFAULTS) ||
-	    (p->policy_type == POLICY_BASE &&
-	     p->policyvers >= MOD_POLICYDB_VERSION_NEW_OBJECT_DEFAULTS)) {
+	if ((p->policy_type == POLICY_KERN) ||
+	    (p->policy_type == POLICY_BASE)) {
 		rc = next_entry(buf, fp, sizeof(uint32_t) * 3);
 		if (rc < 0)
 			goto bad;
 		cladatum->default_user = le32_to_cpu(buf[0]);
 		cladatum->default_role = le32_to_cpu(buf[1]);
 		cladatum->default_range = le32_to_cpu(buf[2]);
-	}
-
-	if ((p->policy_type == POLICY_KERN &&
-	     p->policyvers >= POLICYDB_VERSION_DEFAULT_TYPE) ||
-	    (p->policy_type == POLICY_BASE &&
-	     p->policyvers >= MOD_POLICYDB_VERSION_DEFAULT_TYPE)) {
 		rc = next_entry(buf, fp, sizeof(uint32_t));
 		if (rc < 0)
 			goto bad;
@@ -2277,8 +2101,7 @@ static int role_read(policydb_t *p, hashtab_t h, struct policy_file *fp)
 			goto bad;
 	}
 
-	if (p->policy_type != POLICY_KERN &&
-	    p->policyvers >= MOD_POLICYDB_VERSION_ROLEATTRIB) {
+	if (p->policy_type != POLICY_KERN) {
 		rc = next_entry(buf, fp, sizeof(uint32_t));
 		if (rc < 0)
 			goto bad;
@@ -2386,8 +2209,6 @@ static int role_trans_read(policydb_t *p, struct policy_file *fp)
 	uint32_t buf[3], nel;
 	role_trans_t *tr, *ltr;
 	int rc;
-	int new_roletr = (p->policy_type == POLICY_KERN &&
-			  p->policyvers >= POLICYDB_VERSION_ROLETRANS);
 
 	rc = next_entry(buf, fp, sizeof(uint32_t));
 	if (rc < 0)
@@ -2410,13 +2231,10 @@ static int role_trans_read(policydb_t *p, struct policy_file *fp)
 		tr->role = le32_to_cpu(buf[0]);
 		tr->type = le32_to_cpu(buf[1]);
 		tr->new_role = le32_to_cpu(buf[2]);
-		if (new_roletr) {
-			rc = next_entry(buf, fp, sizeof(uint32_t));
-			if (rc < 0)
-				return -1;
-			tr->tclass = le32_to_cpu(buf[0]);
-		} else
-			tr->tclass = p->process_class;
+		rc = next_entry(buf, fp, sizeof(uint32_t));
+		if (rc < 0)
+			return -1;
+		tr->tclass = le32_to_cpu(buf[0]);
 		ltr = tr;
 	}
 	return 0;
@@ -2722,6 +2540,7 @@ static int ocontext_read_xen(const struct policydb_compat_info *info,
 	size_t nel, len;
 	ocontext_t *l, *c;
 	uint32_t buf[8];
+	uint64_t b64[2];
 	int rc;
 
 	for (i = 0; i < info->ocon_num; i++) {
@@ -2771,27 +2590,12 @@ static int ocontext_read_xen(const struct policydb_compat_info *info,
 					return -1;
 				break;
 			case OCON_XEN_IOMEM:
-				if (p->policyvers >=
-				    POLICYDB_VERSION_XEN_DEVICETREE) {
-					uint64_t b64[2];
-					rc = next_entry(b64, fp,
-							sizeof(uint64_t) * 2);
-					if (rc < 0)
-						return -1;
-					c->u.iomem.low_iomem =
-						le64_to_cpu(b64[0]);
-					c->u.iomem.high_iomem =
-						le64_to_cpu(b64[1]);
-				} else {
-					rc = next_entry(buf, fp,
-							sizeof(uint32_t) * 2);
-					if (rc < 0)
-						return -1;
-					c->u.iomem.low_iomem =
-						le32_to_cpu(buf[0]);
-					c->u.iomem.high_iomem =
-						le32_to_cpu(buf[1]);
-				}
+				rc = next_entry(b64, fp, sizeof(uint64_t) * 2);
+				if (rc < 0)
+					return -1;
+				c->u.iomem.low_iomem = le64_to_cpu(b64[0]);
+				c->u.iomem.high_iomem = le64_to_cpu(b64[1]);
+
 				if (context_read_and_validate(&c->context[0], p,
 							      fp))
 					return -1;
@@ -3355,14 +3159,6 @@ static avrule_t *avrule_read(policydb_t *p, struct policy_file *fp)
 		size_t nel = ARRAY_SIZE(avrule->xperms->perms);
 		uint32_t buf32[nel];
 
-		if (p->policyvers < MOD_POLICYDB_VERSION_XPERMS_IOCTL) {
-			ERR(fp->handle,
-			    "module policy version %u does not support ioctl"
-			    " extended permissions rules and one was specified",
-			    p->policyvers);
-			goto bad;
-		}
-
 		if (p->target_platform != SEPOL_TARGET_SELINUX) {
 			ERR(fp->handle,
 			    "Target platform %s does not support ioctl"
@@ -3412,7 +3208,6 @@ static int range_read(policydb_t *p, struct policy_file *fp)
 	struct mls_range *r = NULL;
 	range_trans_rule_t *rtr = NULL, *lrtr = NULL;
 	unsigned int i;
-	int new_rangetr = (p->policy_type == POLICY_KERN);
 	int rc;
 
 	rc = next_entry(buf, fp, sizeof(uint32_t));
@@ -3432,13 +3227,10 @@ static int range_read(policydb_t *p, struct policy_file *fp)
 		rt->target_type = le32_to_cpu(buf[1]);
 		if (!value_isvalid(rt->target_type, p->p_types.nprim))
 			goto err;
-		if (new_rangetr) {
-			rc = next_entry(buf, fp, (sizeof(uint32_t)));
-			if (rc < 0)
-				goto err;
-			rt->target_class = le32_to_cpu(buf[0]);
-		} else
-			rt->target_class = p->process_class;
+		rc = next_entry(buf, fp, (sizeof(uint32_t)));
+		if (rc < 0)
+			goto err;
+		rt->target_class = le32_to_cpu(buf[0]);
 		if (!value_isvalid(rt->target_class, p->p_classes.nprim))
 			goto err;
 		r = calloc(1, sizeof(*r));
@@ -3532,8 +3324,7 @@ int avrule_read_list(policydb_t *p, avrule_t **avrules, struct policy_file *fp)
 	return 0;
 }
 
-static int role_trans_rule_read(policydb_t *p, role_trans_rule_t **r,
-				struct policy_file *fp)
+static int role_trans_rule_read(role_trans_rule_t **r, struct policy_file *fp)
 {
 	uint32_t buf[1], nel;
 	unsigned int i;
@@ -3564,16 +3355,8 @@ static int role_trans_rule_read(policydb_t *p, role_trans_rule_t **r,
 		if (type_set_read(&tr->types, fp))
 			return -1;
 
-		if (p->policyvers >= MOD_POLICYDB_VERSION_ROLETRANS) {
-			if (ebitmap_read(&tr->classes, fp))
-				return -1;
-		} else {
-			if (!p->process_class)
-				return -1;
-			if (ebitmap_set_bit(&tr->classes, p->process_class - 1,
-					    1))
-				return -1;
-		}
+		if (ebitmap_read(&tr->classes, fp))
+			return -1;
 
 		rc = next_entry(buf, fp, sizeof(uint32_t));
 		if (rc < 0)
@@ -3772,13 +3555,12 @@ static int avrule_decl_read(policydb_t *p, avrule_decl_t *decl,
 	decl->enabled = le32_to_cpu(buf[1]);
 	if (cond_read_list(p, &decl->cond_list, fp) == -1 ||
 	    avrule_read_list(p, &decl->avrules, fp) == -1 ||
-	    role_trans_rule_read(p, &decl->role_tr_rules, fp) == -1 ||
+	    role_trans_rule_read(&decl->role_tr_rules, fp) == -1 ||
 	    role_allow_rule_read(&decl->role_allow_rules, fp) == -1) {
 		return -1;
 	}
 
-	if (p->policyvers >= MOD_POLICYDB_VERSION_FILENAME_TRANS &&
-	    filename_trans_rule_read(p, &decl->filename_trans_rules, fp))
+	if (filename_trans_rule_read(p, &decl->filename_trans_rules, fp))
 		return -1;
 
 	if (range_trans_rule_read(&decl->range_tr_rules, fp) == -1) {
@@ -4214,7 +3996,7 @@ int policydb_read(policydb_t *p, struct policy_file *fp, unsigned verbose)
 	}
 
 	if (policy_type == POLICY_KERN) {
-		if (avtab_read(&p->te_avtab, fp, r_policyvers))
+		if (avtab_read(&p->te_avtab, fp))
 			goto bad;
 		if (cond_read_list(p, &p->cond_list, fp))
 			goto bad;
@@ -4222,8 +4004,7 @@ int policydb_read(policydb_t *p, struct policy_file *fp, unsigned verbose)
 			goto bad;
 		if (role_allow_read(&p->role_allow, fp))
 			goto bad;
-		if (r_policyvers >= POLICYDB_VERSION_FILENAME_TRANS &&
-		    filename_trans_read(p, fp))
+		if (filename_trans_read(p, fp))
 			goto bad;
 	} else {
 		/* first read the AV rule blocks, then the scope tables */

@@ -1627,11 +1627,6 @@ static int validate_ocontexts(sepol_handle_t *handle, const policydb_t *p,
 					if (octx->u.iomem.low_iomem >
 					    octx->u.iomem.high_iomem)
 						goto bad;
-					if (p->policyvers <
-						    POLICYDB_VERSION_XEN_DEVICETREE &&
-					    octx->u.iomem.high_iomem >
-						    0xFFFFFFFFULL)
-						goto bad;
 					break;
 				case OCON_XEN_DEVICETREE:
 					if (validate_string_field(octx->u.name))
@@ -2157,9 +2152,8 @@ int policydb_validate(sepol_handle_t *handle, const policydb_t *p)
 			goto bad;
 		if (validate_role_allows(handle, p->role_allow, flavors))
 			goto bad;
-		if (p->policyvers >= POLICYDB_VERSION_FILENAME_TRANS)
-			if (validate_filename_trans_hashtab(handle, p, flavors))
-				goto bad;
+		if (validate_filename_trans_hashtab(handle, p, flavors))
+			goto bad;
 	} else {
 		if ((p->policy_type == POLICY_MOD) && (p->p_commons.nprim > 0))
 			goto bad;

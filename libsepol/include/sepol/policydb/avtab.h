@@ -121,12 +121,12 @@ extern int avtab_map(const avtab_t *h,
 extern void avtab_hash_eval(avtab_t *h, char *tag);
 
 struct policy_file;
-extern int avtab_read_item(struct policy_file *fp, uint32_t vers, avtab_t *a,
+extern int avtab_read_item(struct policy_file *fp, avtab_t *a,
 			   int (*insert)(avtab_t *a, avtab_key_t *k,
 					 avtab_datum_t *d, void *p),
 			   void *p);
 
-extern int avtab_read(avtab_t *a, struct policy_file *fp, uint32_t vers);
+extern int avtab_read(avtab_t *a, struct policy_file *fp);
 
 extern avtab_ptr_t avtab_insert_nonunique(avtab_t *h, avtab_key_t *key,
 					  avtab_datum_t *datum);

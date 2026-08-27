@@ -417,7 +417,7 @@ void avtab_hash_eval(avtab_t *h, char *tag)
 	       tag, h->nel, slots_used, h->nslot, max_chain_len);
 }
 
-int avtab_read_item(struct policy_file *fp, uint32_t vers, avtab_t *a,
+int avtab_read_item(struct policy_file *fp, avtab_t *a,
 		    int (*insertf)(avtab_t *a, avtab_key_t *k, avtab_datum_t *d,
 				   void *p),
 		    void *p)
@@ -457,14 +457,7 @@ int avtab_read_item(struct policy_file *fp, uint32_t vers, avtab_t *a,
 		return -1;
 	}
 
-	if ((vers < POLICYDB_VERSION_XPERMS_IOCTL) &&
-	    (key.specified & AVTAB_XPERMS)) {
-		ERR(fp->handle,
-		    "policy version %u does not support extended "
-		    "permissions rules and one was specified",
-		    vers);
-		return -1;
-	} else if (key.specified & AVTAB_XPERMS) {
+	if (key.specified & AVTAB_XPERMS) {
 		rc = next_entry(&buf8, fp, sizeof(uint8_t));
 		if (rc < 0) {
 			ERR(fp->handle, "truncated entry");
@@ -502,7 +495,7 @@ static int avtab_insertf(avtab_t *a, avtab_key_t *k, avtab_datum_t *d,
 	return avtab_insert(a, k, d);
 }
 
-int avtab_read(avtab_t *a, struct policy_file *fp, uint32_t vers)
+int avtab_read(avtab_t *a, struct policy_file *fp)
 {
 	unsigned int i;
 	int rc;
@@ -528,7 +521,7 @@ int avtab_read(avtab_t *a, struct policy_file *fp, uint32_t vers)
 	}
 
 	for (i = 0; i < nel; i++) {
-		rc = avtab_read_item(fp, vers, a, avtab_insertf, NULL);
+		rc = avtab_read_item(fp, a, avtab_insertf, NULL);
 		if (rc) {
 			if (rc == SEPOL_ENOMEM)
 				ERR(fp->handle, "out of memory");
