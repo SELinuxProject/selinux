@@ -6,6 +6,9 @@ all:
 	$(MAKE) -C src 
 	$(MAKE) -C utils
 
+fuzz: all
+	$(MAKE) -C fuzz
+
 install: 
 	$(MAKE) -C include install
 	$(MAKE) -C src install

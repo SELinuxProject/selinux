@@ -5,7 +5,9 @@
 extern int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size);
 
 // set to 1 to enable more verbose libsepol logging
+#ifndef VERBOSE
 #define VERBOSE 0
+#endif
 
 int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
@@ -45,3 +47,40 @@ exit:
 	/* Non-zero return values are reserved for future use. */
 	return 0;
 }
+
+#ifdef DEFINEMAIN
+#include <sys/mman.h>
+#include <sys/stat.h>
+
+int main(int argc, char **argv)
+{
+	if (argc < 2) {
+		fprintf(stderr, "usage: %s fuzzer-input-file\n", argv[0]);
+		exit(1);
+	}
+
+	FILE *fp = fopen(argv[1], "rb");
+	if (!fp) {
+		perror(argv[1]);
+		exit(1);
+	}
+
+	struct stat sb;
+	int rc;
+
+	rc = fstat(fileno(fp), &sb);
+	if (rc < 0) {
+		perror("fstat");
+		exit(1);
+	}
+
+	void *address = mmap(NULL, sb.st_size, PROT_READ | PROT_WRITE,
+			     MAP_PRIVATE, fileno(fp), 0);
+	if (address == MAP_FAILED) {
+		perror("mmap");
+		exit(1);
+	}
+
+	return LLVMFuzzerTestOneInput(address, sb.st_size);
+}
+#endif

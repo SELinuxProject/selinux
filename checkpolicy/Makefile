@@ -58,6 +58,9 @@ test: checkpolicy checkmodule
 # helper target for fuzzing
 checkobjects: $(CHECKOBJS)
 
+fuzz: all
+	$(MAKE) -C fuzz
+
 install: all
 	-mkdir -p $(DESTDIR)$(BINDIR)
 	-mkdir -p $(DESTDIR)$(MANDIR)/man8

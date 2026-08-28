@@ -55,6 +55,9 @@ all install relabel clean distclean:
 		(cd $$subdir && $(MAKE) $@) || exit 1; \
 	done
 
+fuzz: all
+	$(MAKE) -C fuzz
+
 swigify: all
 	$(MAKE) -C src $@
 

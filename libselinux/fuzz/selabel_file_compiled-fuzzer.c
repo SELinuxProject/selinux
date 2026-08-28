@@ -15,12 +15,18 @@ extern int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size);
 #define CTRL_FIND_ALL (1U << 1)
 #define CTRL_MODE (1U << 2)
 
+#ifndef VERBOSE
+#define VERBOSE 0
+#endif
+
+#if !VERBOSE
 __attribute__((format(printf, 2, 3))) static int
 null_log(int type __attribute__((unused)),
 	 const char *fmt __attribute__((unused)), ...)
 {
 	return 0;
 }
+#endif
 
 static int validate_context(char **ctxp)
 {
@@ -120,6 +126,11 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 	/* S_IFSOCK has the highest integer value */
 	mode = (control & CTRL_MODE) ? S_IFSOCK : 0;
 
+#if VERBOSE
+	printf("partial=%s, find_all=%s, mode=%s\n", partial ? "true" : "false",
+	       find_all ? "true" : "false", mode ? "true" : "false");
+#endif
+
 	/*
 	 * Split the fuzzer input into up to four pieces: one to three compiled fcontext
 	 * definitions (to mimic file_contexts, file_contexts.homedirs and file_contexts.local,
@@ -186,8 +197,10 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 		.data = &sdata,
 	};
 
+#if !VERBOSE
 	selinux_set_callback(SELINUX_CB_LOG,
 			     (union selinux_callback){ .func_log = &null_log });
+#endif
 	/* validate to pre-compile regular expressions */
 	selinux_set_callback(
 		SELINUX_CB_VALIDATE,
@@ -298,3 +311,37 @@ cleanup:
 	/* Non-zero return values are reserved for future use. */
 	return 0;
 }
+
+#ifdef DEFINEMAIN
+int main(int argc, char **argv)
+{
+	if (argc < 2) {
+		fprintf(stderr, "usage: %s fuzzer-input-file\n", argv[0]);
+		exit(1);
+	}
+
+	FILE *fp = fopen(argv[1], "rb");
+	if (!fp) {
+		perror(argv[1]);
+		exit(1);
+	}
+
+	struct stat sb;
+	int rc;
+
+	rc = fstat(fileno(fp), &sb);
+	if (rc < 0) {
+		perror("fstat");
+		exit(1);
+	}
+
+	void *address = mmap(NULL, sb.st_size, PROT_READ | PROT_WRITE,
+			     MAP_PRIVATE, fileno(fp), 0);
+	if (address == MAP_FAILED) {
+		perror("mmap");
+		exit(1);
+	}
+
+	return LLVMFuzzerTestOneInput(address, sb.st_size);
+}
+#endif

@@ -33,7 +33,9 @@ extern int yylex_destroy(void);
 jmp_buf fuzzing_pre_parse_stack_state;
 
 // Set to 1 for verbose libsepol logging
+#ifndef VERBOSE
 #define VERBOSE 0
+#endif
 
 static ssize_t full_write(int fd, const void *buf, size_t count)
 {
@@ -163,9 +165,15 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 	switch (data[0]) {
 	case 'S':
 		platform = SEPOL_TARGET_SELINUX;
+#if VERBOSE
+		printf("target: SELinux\n");
+#endif
 		break;
 	case 'X':
 		platform = SEPOL_TARGET_XEN;
+#if VERBOSE
+		printf("target: Xen\n");
+#endif
 		break;
 	default:
 		return 0;
@@ -173,9 +181,15 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 	switch (data[1]) {
 	case '0':
 		mls = 0;
+#if VERBOSE
+		printf("MLS-disabled\n");
+#endif
 		break;
 	case '1':
 		mls = 1;
+#if VERBOSE
+		printf("MLS-enabled\n");
+#endif
 		break;
 	default:
 		return 0;
@@ -190,6 +204,9 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 	    policyvers != POLICYDB_VERSION_XEN_DEVICETREE &&
 	    policyvers != POLICYDB_VERSION_BOUNDARY)
 		return 0;
+#if VERBOSE
+	printf("policyvers=%d\n", policyvers);
+#endif
 	data += 3;
 	size -= 3;
 
@@ -286,3 +303,39 @@ exit:
 	/* Non-zero return values are reserved for future use. */
 	return 0;
 }
+
+#ifdef DEFINEMAIN
+#include <sys/stat.h>
+
+int main(int argc, char **argv)
+{
+	if (argc < 2) {
+		fprintf(stderr, "usage: %s fuzzer-input-file\n", argv[0]);
+		exit(1);
+	}
+
+	FILE *fp = fopen(argv[1], "rb");
+	if (!fp) {
+		perror(argv[1]);
+		exit(1);
+	}
+
+	struct stat sb;
+	int rc;
+
+	rc = fstat(fileno(fp), &sb);
+	if (rc < 0) {
+		perror("fstat");
+		exit(1);
+	}
+
+	void *address = mmap(NULL, sb.st_size, PROT_READ | PROT_WRITE,
+			     MAP_PRIVATE, fileno(fp), 0);
+	if (address == MAP_FAILED) {
+		perror("mmap");
+		exit(1);
+	}
+
+	return LLVMFuzzerTestOneInput(address, sb.st_size);
+}
+#endif

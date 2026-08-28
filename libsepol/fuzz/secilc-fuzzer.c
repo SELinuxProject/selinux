@@ -8,11 +8,17 @@
 #include <sepol/cil/cil.h>
 #include <sepol/policydb.h>
 
+#ifndef VERBOSE
+#define VERBOSE 0
+#endif
+
+#if !VERBOSE
 static void log_handler(__attribute__((unused)) int lvl,
 			__attribute__((unused)) const char *msg)
 {
 	/* be quiet */
 }
+#endif
 
 int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
@@ -31,7 +37,9 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 	sepol_policydb_t *pdb = NULL;
 
 	cil_set_log_level(log_level);
+#if !VERBOSE
 	cil_set_log_handler(log_handler);
+#endif
 
 	cil_db_init(&db);
 	cil_set_disable_dontaudit(db, disable_dontaudit);
@@ -75,3 +83,40 @@ exit:
 	sepol_policy_file_free(pf);
 	return 0;
 }
+
+#ifdef DEFINEMAIN
+#include <sys/mman.h>
+#include <sys/stat.h>
+
+int main(int argc, char **argv)
+{
+	if (argc < 2) {
+		fprintf(stderr, "usage: %s fuzzer-input-file\n", argv[0]);
+		exit(1);
+	}
+
+	FILE *fp = fopen(argv[1], "rb");
+	if (!fp) {
+		perror(argv[1]);
+		exit(1);
+	}
+
+	struct stat sb;
+	int rc;
+
+	rc = fstat(fileno(fp), &sb);
+	if (rc < 0) {
+		perror("fstat");
+		exit(1);
+	}
+
+	void *address = mmap(NULL, sb.st_size, PROT_READ | PROT_WRITE,
+			     MAP_PRIVATE, fileno(fp), 0);
+	if (address == MAP_FAILED) {
+		perror("mmap");
+		exit(1);
+	}
+
+	return LLVMFuzzerTestOneInput(address, sb.st_size);
+}
+#endif
