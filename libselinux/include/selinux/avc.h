@@ -208,7 +208,7 @@ extern int avc_init(const char *msgprefix,
 
 /**
  * avc_open - Initialize the AVC.
- * @opts: array of selabel_opt structures specifying AVC options or NULL.
+ * @opts: array of selinux_opt structures specifying AVC options or NULL.
  * @nopts: number of elements in opts array or zero for no options.
  *
  * This function is identical to avc_init(), except the message prefix

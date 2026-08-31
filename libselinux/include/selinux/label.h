@@ -71,7 +71,7 @@ struct selabel_handle;
 /**
  * selabel_open - Create a labeling handle.
  * @backend: one of the constants specifying a supported labeling backend.
- * @opts: array of selabel_opt structures specifying label options or NULL.
+ * @opts: array of selinux_opt structures specifying label options or NULL.
  * @nopts: number of elements in opts array or zero for no options.
  *
  * Open a labeling backend for use.  The available backend identifiers are
