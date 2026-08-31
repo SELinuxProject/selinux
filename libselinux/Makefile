@@ -50,11 +50,18 @@ COMPILER := clang
 endif
 export COMPILER
 
-all install relabel clean distclean:
+all install relabel:
 	@for subdir in $(SUBDIRS); do \
 		(cd $$subdir && $(MAKE) $@) || exit 1; \
 	done
 
+clean distclean:
+	@for subdir in $(SUBDIRS); do \
+		(cd $$subdir && $(MAKE) $@) || exit 1; \
+	done
+	make -C fuzz clean
+
+.PHONY: fuzz
 fuzz: all
 	$(MAKE) -C fuzz
 

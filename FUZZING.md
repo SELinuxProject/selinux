@@ -66,10 +66,9 @@ The fuzzers are built without debugging information and with verbose
 logging disabled when built using oss-fuzz.sh. You can recompile them
 with debugging, logging, and a trivial main() function as follows:
 
-    make clean all
-    make -C libsepol fuzz
-    make -C checkpolicy fuzz
-    make -C libselinux fuzz
+    make CFLAGS+=-g -C libsepol clean fuzz
+    make CFLAGS+=-g -C checkpolicy clean fuzz
+    make CFLAGS+=-g -C libselinux clean fuzz
 
 These build into the fuzz/ directories and do not touch any object
 files or archives used by the normal build.

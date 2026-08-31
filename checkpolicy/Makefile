@@ -58,7 +58,8 @@ test: checkpolicy checkmodule
 # helper target for fuzzing
 checkobjects: $(CHECKOBJS)
 
-fuzz: all
+.PHONY: fuzz
+fuzz:
 	$(MAKE) -C fuzz
 
 install: all
@@ -81,3 +82,4 @@ relabel: install
 clean:
 	-rm -f $(TARGETS) $(CHECKPOLOBJS) $(CHECKMODOBJS) y.tab.c y.tab.h lex.yy.c tests/testpol.conf tests/testpol.bin
 	$(MAKE) -C test clean
+	$(MAKE) -C fuzz clean

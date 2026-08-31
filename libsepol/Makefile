@@ -6,6 +6,7 @@ all:
 	$(MAKE) -C src 
 	$(MAKE) -C utils
 
+.PHONY: fuzz
 fuzz: all
 	$(MAKE) -C fuzz
 
@@ -22,6 +23,7 @@ clean:
 	$(MAKE) -C src clean
 	$(MAKE) -C utils clean
 	$(MAKE) -C tests clean
+	$(MAKE) -C fuzz clean
 
 test:
 	$(MAKE) -C tests test
