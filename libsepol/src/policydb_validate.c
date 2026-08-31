@@ -1478,8 +1478,6 @@ static int validate_filename_trans(hashtab_key_t k, hashtab_datum_t d,
 		goto bad;
 	if (validate_value(ftk->tclass, &flavors[SYM_CLASSES]))
 		goto bad;
-	if (validate_string_field(ftk->name))
-		goto bad;
 	if (!ftd)
 		goto bad;
 	for (; ftd; ftd = ftd->next) {
@@ -1634,8 +1632,6 @@ static int validate_genfs(sepol_handle_t *handle, const policydb_t *p,
 			if (octx->v.sclass &&
 			    validate_value(octx->v.sclass,
 					   &flavors[SYM_CLASSES]))
-				goto bad;
-			if (validate_string_field(octx->u.name))
 				goto bad;
 		}
 
@@ -1805,8 +1801,6 @@ validate_filename_trans_rules(sepol_handle_t *handle,
 				   &flavors[SYM_CLASSES]))
 			goto bad;
 		if (validate_simpletype(filename_trans->otype, p, flavors))
-			goto bad;
-		if (validate_string_field(filename_trans->name))
 			goto bad;
 
 		/* currently only the RULE_SELF flag can be set */
