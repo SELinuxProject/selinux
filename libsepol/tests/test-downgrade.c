@@ -97,23 +97,17 @@ int downgrade_add_tests(CU_pSuite suite)
  * Output: None
  *
  * Description:
- * Tests the backward compatibility of MLS and Non-MLS binary policy versions.
+ * Tests the backward compatibility of MLS binary policy versions.
  */
 void test_downgrade(void)
 {
-	if (do_downgrade_test(0) < 0)
-		fprintf(stderr,
-			"\nError during downgrade testing of Non-MLS policy\n");
-
-	if (do_downgrade_test(1) < 0)
+	if (do_downgrade_test() < 0)
 		fprintf(stderr,
 			"\nError during downgrade testing of MLS policy\n");
 }
 
 /*
  * Function Name:  do_downgrade_test
- *
- * Input: 0 for Non-MLS policy and 1 for MLS policy downgrade testing
  *
  * Output: 0 on success, negative number upon failure
  *
@@ -123,7 +117,7 @@ void test_downgrade(void)
  *              back out and then read back in again.  The process is
  *              repeated until the minimum policy version is reached.
  */
-int do_downgrade_test(int mls)
+int do_downgrade_test(void)
 {
 	policydb_t policydb_tmp;
 	int hi, lo, version;
@@ -134,14 +128,10 @@ int do_downgrade_test(int mls)
 
 	/* Read in the hi policy from file */
 	if (read_binary_policy(POLICY_BIN_HI, &policydb) != 0) {
-		fprintf(stderr, "error reading %spolicy binary\n",
-			mls ? "mls " : "");
+		fprintf(stderr, "error reading policy binary\n");
 		CU_FAIL("Unable to read the binary policy");
 		return -1;
 	}
-
-	/* Change MLS value based on parameter */
-	policydb.mls = mls ? 1 : 0;
 
 	for (hi = policydb.policyvers; hi >= POLICYDB_VERSION_MIN; hi--) {
 		/* Stash old version number */
@@ -156,8 +146,8 @@ int do_downgrade_test(int mls)
 			if (write_binary_policy(POLICY_BIN_LO, &policydb) !=
 			    0) {
 				fprintf(stderr,
-					"error writing %spolicy binary, version %d (downgraded from %d)\n",
-					mls ? "mls " : "", lo, hi);
+					"error writing policy binary, version %d (downgraded from %d)\n",
+					lo, hi);
 				CU_FAIL("Failed to write downgraded binary policy");
 				return -1;
 			}
@@ -171,8 +161,8 @@ int do_downgrade_test(int mls)
 			if (read_binary_policy(POLICY_BIN_LO, &policydb_tmp) !=
 			    0) {
 				fprintf(stderr,
-					"error reading %spolicy binary, version %d (downgraded from %d)\n",
-					mls ? "mls " : "", lo, hi);
+					"error reading policy binary, version %d (downgraded from %d)\n",
+					lo, hi);
 				CU_FAIL("Unable to read downgraded binary policy");
 				return -1;
 			}

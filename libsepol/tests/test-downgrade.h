@@ -65,16 +65,13 @@ int downgrade_add_tests(CU_pSuite suite);
  * 
  * Output: None
  * 
- * Description: Tests the backward compatibility of MLS and Non-MLS binary
- *		policy versions. 
+ * Description: Tests the backward compatibility of MLS binary policy
+ * versions. 
  */
 void test_downgrade(void);
 
 /*
  * Function Name:  do_downgrade_test
- * 
- * Input: int that represents a 0 for Non-MLS policy and a 
- * 		 1 for MLS policy downgrade testing
  * 
  * Output: (int) 0 on success, negative number upon failure
  * 
@@ -84,7 +81,7 @@ void test_downgrade(void);
  *		back in again. The process is iterative until the minimum
  *		policy version is reached. 
  */
-int do_downgrade_test(int mls);
+int do_downgrade_test(void);
 
 /*
  * Function Name: read_binary_policy
