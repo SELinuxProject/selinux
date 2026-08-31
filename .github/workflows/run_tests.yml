@@ -51,7 +51,7 @@ jobs:
 
     - name: Download and install refpolicy headers for sepolgen tests
       run: |
-        curl --location --retry 10 -o refpolicy.tar.bz2 https://github.com/SELinuxProject/refpolicy/releases/download/RELEASE_2_20220520/refpolicy-2.20220520.tar.bz2
+        curl --location --retry 10 -o refpolicy.tar.bz2 https://github.com/SELinuxProject/refpolicy/releases/download/RELEASE_2_20260616/refpolicy-2.20260616.tar.bz2
         tar -xvjf refpolicy.tar.bz2
         sed -e "s,^PREFIX :=.*,PREFIX := $DESTDIR/usr," -i refpolicy/support/Makefile.devel
         sudo make -C refpolicy install-headers bare
