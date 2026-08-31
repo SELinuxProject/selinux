@@ -1751,21 +1751,16 @@ static int validate_scope_index(sepol_handle_t *handle,
 		for (i = 0; i < scope_index->class_perms_len; i++) {
 			const ebitmap_t *map;
 			class_datum_t *class;
-			ebitmap_node_t *node;
-			unsigned int bit = 0;
 			if (validate_value(i + 1, &flavors[SYM_CLASSES]))
 				goto bad;
 			map = &scope_index->class_perms_map[i];
 			class = p->class_val_to_struct[i];
-			/* Either there are no perms */
+			/* Having no perms is allowed */
 			if (ebitmap_is_empty(map))
 				continue;
-			/* Or at least one valid perm */
-			ebitmap_for_each_positive_bit(map, node, bit) {
-				if (bit < class->permissions.nprim)
-					break;
-			}
-			if (bit >= class->permissions.nprim)
+			/* Having junk perms is not */
+			if (ebitmap_highest_set_bit(map) >=
+			    class->permissions.nprim)
 				goto bad;
 		}
 	} else {
