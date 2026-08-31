@@ -263,7 +263,7 @@ bad:
 
 static int validate_constraint_nodes(sepol_handle_t *handle, uint32_t nperms,
 				     const constraint_node_t *cons,
-				     validate_t flavors[])
+				     const policydb_t *p, validate_t flavors[])
 {
 	const constraint_expr_t *cexp;
 	const int is_validatetrans = (nperms == UINT32_MAX);
@@ -368,12 +368,15 @@ static int validate_constraint_nodes(sepol_handle_t *handle, uint32_t nperms,
 				case CEXPR_USER:
 				case CEXPR_ROLE:
 				case CEXPR_TYPE:
+					break;
 				case CEXPR_L1L2:
 				case CEXPR_L1H2:
 				case CEXPR_H1L2:
 				case CEXPR_H1H2:
 				case CEXPR_L1H1:
 				case CEXPR_L2H2:
+					if (!p->mls)
+						goto bad;
 					break;
 				default:
 					goto bad;
@@ -487,7 +490,7 @@ validate_common_datum_wrapper(__attribute__((unused)) hashtab_key_t k,
 }
 
 static int validate_class_datum(sepol_handle_t *handle,
-				const class_datum_t *class,
+				const class_datum_t *class, const policydb_t *p,
 				validate_t flavors[])
 {
 	if (class->s.value > UINT16_MAX ||
@@ -509,10 +512,10 @@ static int validate_class_datum(sepol_handle_t *handle,
 		    class->comdatum ? class->comdatum->permissions.nprim : 0))
 		goto bad;
 	if (validate_constraint_nodes(handle, class->permissions.nprim,
-				      class->constraints, flavors))
+				      class->constraints, p, flavors))
 		goto bad;
 	if (validate_constraint_nodes(handle, UINT32_MAX, class->validatetrans,
-				      flavors))
+				      p, flavors))
 		goto bad;
 
 	switch (class->default_user) {
@@ -568,7 +571,8 @@ static int validate_class_datum_wrapper(__attribute__((unused)) hashtab_key_t k,
 {
 	map_arg_t *margs = args;
 
-	return validate_class_datum(margs->handle, d, margs->flavors);
+	return validate_class_datum(margs->handle, d, margs->policy,
+				    margs->flavors);
 }
 
 static int validate_role_datum(sepol_handle_t *handle, const role_datum_t *role,
@@ -862,30 +866,29 @@ bad:
 static int validate_user_datum(sepol_handle_t *handle, const user_datum_t *user,
 			       validate_t flavors[], const policydb_t *p)
 {
+	int allow_unset;
+
 	if (validate_value(user->s.value, &flavors[SYM_USERS]))
 		goto bad;
 	if (validate_role_set(&user->roles, &flavors[SYM_ROLES]))
 		goto bad;
-	if (p->mls) {
-		int allow_unset = (p->policy_type != POLICY_MOD);
-		if (validate_mls_semantic_range(
-			    &user->range, &flavors[SYM_LEVELS],
-			    &flavors[SYM_CATS], allow_unset))
-			goto bad;
-		if (validate_mls_semantic_level(
-			    &user->dfltlevel, &flavors[SYM_LEVELS],
-			    &flavors[SYM_CATS], allow_unset))
-			goto bad;
 
-		allow_unset = (p->policy_type != POLICY_KERN);
-		if (validate_mls_range(&user->exp_range, &flavors[SYM_LEVELS],
-				       &flavors[SYM_CATS], allow_unset))
-			goto bad;
-		if (validate_mls_level(&user->exp_dfltlevel,
-				       &flavors[SYM_LEVELS], &flavors[SYM_CATS],
-				       allow_unset))
-			goto bad;
-	}
+	allow_unset = (!p->mls) || (p->policy_type != POLICY_MOD);
+	if (validate_mls_semantic_range(&user->range, &flavors[SYM_LEVELS],
+					&flavors[SYM_CATS], allow_unset))
+		goto bad;
+	if (validate_mls_semantic_level(&user->dfltlevel, &flavors[SYM_LEVELS],
+					&flavors[SYM_CATS], allow_unset))
+		goto bad;
+
+	allow_unset = (!p->mls) || (p->policy_type != POLICY_KERN);
+	if (validate_mls_range(&user->exp_range, &flavors[SYM_LEVELS],
+			       &flavors[SYM_CATS], allow_unset))
+		goto bad;
+	if (validate_mls_level(&user->exp_dfltlevel, &flavors[SYM_LEVELS],
+			       &flavors[SYM_CATS], allow_unset))
+		goto bad;
+
 	if (user->bounds && validate_value(user->bounds, &flavors[SYM_USERS]))
 		goto bad;
 
@@ -1021,13 +1024,20 @@ static int validate_datum_array_entries(sepol_handle_t *handle,
 			&margs))
 		goto bad;
 
-	if (hashtab_map(symtabs[SYM_LEVELS].table, validate_level_datum_wrapper,
-			&margs))
-		goto bad;
+	if (p->mls) {
+		if (hashtab_map(symtabs[SYM_LEVELS].table,
+				validate_level_datum_wrapper, &margs))
+			goto bad;
 
-	if (hashtab_map(symtabs[SYM_CATS].table, validate_datum,
-			&flavors[SYM_CATS]))
-		goto bad;
+		if (hashtab_map(symtabs[SYM_CATS].table, validate_datum,
+				&flavors[SYM_CATS]))
+			goto bad;
+	} else {
+		if (symtabs[SYM_LEVELS].table->nel != 0)
+			goto bad;
+		if (symtabs[SYM_CATS].table->nel != 0)
+			goto bad;
+	}
 
 	if (hashtab_map(symtabs[SYM_BOOLS].table, validate_bool_datum_wrapper,
 			&margs))
@@ -1736,10 +1746,19 @@ static int validate_scope_index(sepol_handle_t *handle,
 		goto bad;
 	if (validate_ebitmap(&scope_index->p_bools_scope, &flavors[SYM_BOOLS]))
 		goto bad;
-	if (validate_ebitmap(&scope_index->p_sens_scope, &flavors[SYM_LEVELS]))
-		goto bad;
-	if (validate_ebitmap(&scope_index->p_cat_scope, &flavors[SYM_CATS]))
-		goto bad;
+	if (p->mls) {
+		if (validate_ebitmap(&scope_index->p_sens_scope,
+				     &flavors[SYM_LEVELS]))
+			goto bad;
+		if (validate_ebitmap(&scope_index->p_cat_scope,
+				     &flavors[SYM_CATS]))
+			goto bad;
+	} else {
+		if (!ebitmap_is_empty(&scope_index->p_sens_scope))
+			goto bad;
+		if (!ebitmap_is_empty(&scope_index->p_cat_scope))
+			goto bad;
+	}
 
 	if (scope_index->class_perms_map != NULL) {
 		uint32_t i;
@@ -1916,8 +1935,13 @@ static int validate_range_transition(hashtab_key_t key, hashtab_datum_t data,
 	const range_trans_t *rt = (const range_trans_t *)key;
 	const mls_range_t *r = data;
 	const map_arg_t *margs = args;
+	const policydb_t *p = margs->policy;
 	const validate_t *flavors = margs->flavors;
 
+	if (!p->mls) {
+		ERR(margs->handle, "Range transition found in non-MLS policy");
+		goto bad;
+	}
 	if (validate_value(rt->source_type, &flavors[SYM_TYPES]))
 		goto bad;
 	if (validate_value(rt->target_type, &flavors[SYM_TYPES]))
@@ -2079,6 +2103,13 @@ int policydb_validate(sepol_handle_t *handle, const policydb_t *p)
 
 	if (validate_policycaps(handle, p))
 		goto bad;
+
+	if (!p->mls) {
+		if (flavors[SYM_LEVELS].nprim != 0)
+			goto bad;
+		if (flavors[SYM_CATS].nprim != 0)
+			goto bad;
+	}
 
 	if (p->policy_type == POLICY_KERN) {
 		if (validate_avtab(handle, &p->te_avtab, p, flavors))
