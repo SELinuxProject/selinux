@@ -4055,6 +4055,12 @@ uintptr_t define_cexpr(uint32_t expr_type, uintptr_t arg1, uintptr_t arg2)
 		e1->next = expr;
 		return arg1;
 	case CEXPR_ATTR:
+		if (!mlspol && (arg1 >= CEXPR_L1L2)) {
+			yyerror("MLS constraint expression "
+				"in non-MLS configuration");
+			constraint_expr_destroy(expr);
+			return 0;
+		}
 		expr->attr = arg1;
 		expr->op = arg2;
 		return (uintptr_t)expr;
