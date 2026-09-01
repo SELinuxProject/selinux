@@ -1628,6 +1628,19 @@ bad:
 	return -1;
 }
 
+static int validate_genfs_class(uint32_t sclass, const policydb_t *p)
+{
+	const char *class_name = p->p_class_val_to_name[sclass - 1];
+
+	if (strcmp(class_name, "file") && strcmp(class_name, "dir") &&
+	    strcmp(class_name, "chr_file") && strcmp(class_name, "blk_file") &&
+	    strcmp(class_name, "sock_file") &&
+	    strcmp(class_name, "fifo_file") && strcmp(class_name, "lnk_file"))
+		return -1;
+
+	return 0;
+}
+
 static int validate_genfs(sepol_handle_t *handle, const policydb_t *p,
 			  validate_t flavors[])
 {
@@ -1639,10 +1652,13 @@ static int validate_genfs(sepol_handle_t *handle, const policydb_t *p,
 			if (validate_context(&octx->context[0], flavors,
 					     p->mls))
 				goto bad;
-			if (octx->v.sclass &&
-			    validate_value(octx->v.sclass,
-					   &flavors[SYM_CLASSES]))
-				goto bad;
+			if (octx->v.sclass) {
+				if (validate_value(octx->v.sclass,
+						   &flavors[SYM_CLASSES]))
+					goto bad;
+				if (validate_genfs_class(octx->v.sclass, p))
+					goto bad;
+			}
 		}
 
 		if (validate_string_field(genfs->fstype))
