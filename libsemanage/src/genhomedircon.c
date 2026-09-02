@@ -1110,6 +1110,17 @@ retry:
 		pwent->pw_dir[len] = '\0';
 	}
 
+	if (pwent->pw_dir[0] != '/') {
+		/* an empty (or otherwise relative) home directory would
+		 * turn the HOME_DIR template into a regex that matches
+		 * everything, e.g. "/.+", so refuse to use it */
+		WARN(s->h_semanage,
+		     "user %s has an invalid home directory \"%s\", ignoring",
+		     name, pwent->pw_dir);
+		retval = STATUS_SUCCESS;
+		goto cleanup;
+	}
+
 	if (strcmp(pwent->pw_dir, "/") == 0) {
 		/* don't relabel / genhomdircon checked to see if root
 		 * was the user and if so, set his home directory to
