@@ -5,6 +5,7 @@
 #include <sepol/policydb/polcaps.h>
 #include <sepol/policydb/policydb.h>
 #include <sepol/policydb/services.h>
+#include <sepol/policydb/dtpath.h>
 
 #include "debug.h"
 #include "private.h"
@@ -1629,7 +1630,7 @@ static int validate_ocontexts(sepol_handle_t *handle, const policydb_t *p,
 						goto bad;
 					break;
 				case OCON_XEN_DEVICETREE:
-					if (validate_string_field(octx->u.name))
+					if (!is_valid_dt_path(octx->u.name))
 						goto bad;
 					break;
 				}

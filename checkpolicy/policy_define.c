@@ -54,6 +54,7 @@
 #include <sepol/policydb/conditional.h>
 #include <sepol/policydb/hierarchy.h>
 #include <sepol/policydb/polcaps.h>
+#include <sepol/policydb/dtpath.h>
 #include "queue.h"
 #include "module_compiler.h"
 #include "policy_define.h"
@@ -5136,6 +5137,7 @@ bad:
 int define_devicetree_context(void)
 {
 	ocontext_t *newc, *c, *l, *head;
+	char *path;
 
 	if (policydbp->target_platform != SEPOL_TARGET_XEN) {
 		yyerror("devicetreecon not supported for target");
@@ -5148,17 +5150,26 @@ int define_devicetree_context(void)
 		return 0;
 	}
 
-	newc = calloc(1, sizeof(ocontext_t));
-	if (!newc) {
-		yyerror("out of memory");
+	path = (char *)queue_remove(id_queue);
+	if (!path) {
+		yyerror("Missing devicetreepath");
 		return -1;
 	}
 
-	newc->u.name = (char *)queue_remove(id_queue);
-	if (!newc->u.name) {
-		free(newc);
+	if (!is_valid_dt_path(path)) {
+		yyerror2("invalid devicetreecon path \"%s\"", path);
+		free(path);
 		return -1;
 	}
+
+	newc = calloc(1, sizeof(ocontext_t));
+	if (!newc) {
+		yyerror("out of memory");
+		free(path);
+		return -1;
+	}
+
+	newc->u.name = path;
 
 	if (parse_security_context(&newc->context[0])) {
 		free(newc->u.name);
