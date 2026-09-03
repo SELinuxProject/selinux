@@ -131,6 +131,19 @@ It can be set to either "true" or "false" and by default it is set to "true".
 When set to "true", duplicate type, type attribute, and role declarations will be allowed.
 It can be set to either "true" or "false" and by default it is set to "true".
 
+.TP
+.B sort-local-fcontexts
+When set to "true", the installed
+.I file_contexts.local
+file is sorted from least to most specific using the same heuristic as the policy-supplied
+.IR file_contexts ,
+so the most specific local entry wins regardless of the order the entries were added with
+.BR "semanage fcontext \-a" .
+The module store copy (and thus
+.BR "semanage fcontext \-l \-C" )
+is unaffected.
+It can be set to either "true" or "false" and by default it is set to "false", preserving insertion-order matching.
+
 .RE
 .PP
 For certain tasks the SELinux Management library resorts to running

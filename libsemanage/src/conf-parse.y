@@ -62,7 +62,7 @@ static int parse_errors;
         char *s;
 }
 
-%token MODULE_STORE VERSION EXPAND_CHECK FILE_MODE SAVE_PREVIOUS SAVE_LINKED TARGET_PLATFORM COMPILER_DIR IGNORE_MODULE_CACHE STORE_ROOT OPTIMIZE_POLICY MULTIPLE_DECLS
+%token MODULE_STORE VERSION EXPAND_CHECK FILE_MODE SAVE_PREVIOUS SAVE_LINKED TARGET_PLATFORM COMPILER_DIR IGNORE_MODULE_CACHE STORE_ROOT OPTIMIZE_POLICY MULTIPLE_DECLS SORT_LOCAL_FCONTEXTS
 %token LOAD_POLICY_START SETFILES_START SEFCONTEXT_COMPILE_START DISABLE_GENHOMEDIRCON HANDLE_UNKNOWN USEPASSWD IGNOREDIRS
 %token BZIP_BLOCKSIZE BZIP_SMALL RELABEL_STORE REMOVE_HLL
 %token VERIFY_MOD_START VERIFY_LINKED_START VERIFY_KERNEL_START BLOCK_END
@@ -101,6 +101,7 @@ single_opt:     module_store
 	|	relabel_store
 	|	optimize_policy
 	|	multiple_decls
+        |       sort_local_fcontexts
         ;
 
 module_store:   MODULE_STORE '=' ARG {
@@ -329,6 +330,17 @@ multiple_decls:  MULTIPLE_DECLS '=' ARG {
 	free($3);
 }
 
+sort_local_fcontexts: SORT_LOCAL_FCONTEXTS '=' ARG {
+	if (strcasecmp($3, "false") == 0) {
+		current_conf->sort_local_fcontexts = false;
+	} else if (strcasecmp($3, "true") == 0) {
+		current_conf->sort_local_fcontexts = true;
+	} else {
+		yyerror("sort-local-fcontexts can only be 'true' or 'false'");
+	}
+	free($3);
+}
+
 command_block:
                 command_start external_opts BLOCK_END  {
                         if (new_external->path == NULL) {
@@ -425,6 +437,7 @@ static int semanage_conf_init(semanage_conf_t * conf)
 	conf->relabel_store = true;
 	conf->optimize_policy = true;
 	conf->multiple_decls = true;
+	conf->sort_local_fcontexts = false;
 
 	conf->save_previous = false;
 	conf->save_linked = false;

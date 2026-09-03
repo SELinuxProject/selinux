@@ -156,6 +156,8 @@ int semanage_split_fc(semanage_handle_t *sh);
 /* sort file context routines */
 int semanage_fc_sort(semanage_handle_t *sh, const char *buf, size_t buf_len,
 		     char **sorted_buf, size_t *sorted_buf_len);
+int semanage_sort_fc_file(semanage_handle_t *sh, const char *src,
+			  const char *dst, mode_t mode);
 
 /* sort netfilter context routines */
 int semanage_nc_sort(semanage_handle_t *sh, const char *buf, size_t buf_len,

@@ -51,6 +51,7 @@ typedef struct semanage_conf {
 	bool optimize_policy;
 	bool multiple_decls;
 	bool relabel_store;
+	bool sort_local_fcontexts;
 	char *ignoredirs; /* ";" separated of list for genhomedircon to ignore */
 	struct external_prog *load_policy;
 	struct external_prog *setfiles;

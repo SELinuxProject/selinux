@@ -1675,10 +1675,21 @@ static int semanage_direct_commit(semanage_handle_t *sh)
 		goto cleanup;
 	}
 
-	retval = copy_file_if_exists(
-		sh, semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_FC_LOCAL),
-		semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_FC_LOCAL),
-		sh->conf->file_mode);
+	if (sh->conf->sort_local_fcontexts) {
+		retval = semanage_sort_fc_file(
+			sh,
+			semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_FC_LOCAL),
+			semanage_final_path(SEMANAGE_FINAL_TMP,
+					    SEMANAGE_FC_LOCAL),
+			sh->conf->file_mode);
+	} else {
+		retval = copy_file_if_exists(
+			sh,
+			semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_FC_LOCAL),
+			semanage_final_path(SEMANAGE_FINAL_TMP,
+					    SEMANAGE_FC_LOCAL),
+			sh->conf->file_mode);
+	}
 	if (retval < 0) {
 		goto cleanup;
 	}
