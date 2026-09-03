@@ -38,6 +38,11 @@ typedef struct perm_arg {
 	const uint32_t inherited_nprim;
 } perm_arg_t;
 
+typedef struct scope_arg {
+	const symtab_t *symtab;
+	uint32_t num_decls;
+} scope_arg_t;
+
 static int create_gap_ebitmap(char **val_to_name, uint32_t nprim,
 			      ebitmap_t *gaps)
 {
@@ -210,11 +215,10 @@ bad:
 	return -1;
 }
 
-static int validate_scope(__attribute__((unused)) hashtab_key_t k,
-			  hashtab_datum_t d, void *args)
+static int validate_scope(hashtab_key_t k, hashtab_datum_t d, void *args)
 {
 	const scope_datum_t *scope_datum = (scope_datum_t *)d;
-	const uint32_t *nprim = (uint32_t *)args;
+	scope_arg_t *sargs = (scope_arg_t *)args;
 	uint32_t i;
 
 	switch (scope_datum->scope) {
@@ -226,9 +230,12 @@ static int validate_scope(__attribute__((unused)) hashtab_key_t k,
 	}
 
 	for (i = 0; i < scope_datum->decl_ids_len; i++) {
-		if (!value_isvalid(scope_datum->decl_ids[i], *nprim))
+		if (!value_isvalid(scope_datum->decl_ids[i], sargs->num_decls))
 			goto bad;
 	}
+
+	if (!hashtab_search(sargs->symtab->table, k))
+		goto bad;
 
 	return 0;
 
@@ -237,20 +244,34 @@ bad:
 }
 
 static int validate_scopes(sepol_handle_t *handle, const symtab_t scopes[],
-			   const avrule_block_t *block)
+			   const symtab_t symtabs[], const policydb_t *p)
 {
+	scope_arg_t sargs;
+	const avrule_block_t *block;
 	const avrule_decl_t *decl;
 	unsigned int i;
 	uint32_t num_decls = 0;
 
-	for (; block != NULL; block = block->next) {
+	for (block = p->global; block != NULL; block = block->next) {
 		for (decl = block->branch_list; decl; decl = decl->next) {
 			num_decls++;
 		}
 	}
 
-	for (i = 0; i < SYM_NUM; i++) {
-		if (hashtab_map(scopes[i].table, validate_scope, &num_decls))
+	if (scopes[SYM_COMMONS].table->nel != 0)
+		goto bad;
+
+	if (p->policy_type != POLICY_KERN) {
+		for (i = 1; i < SYM_NUM; i++) {
+			if (scopes[i].table->nel != symtabs[i].table->nel)
+				goto bad;
+		}
+	}
+
+	sargs.num_decls = num_decls;
+	for (i = 1; i < SYM_NUM; i++) {
+		sargs.symtab = &symtabs[i];
+		if (hashtab_map(scopes[i].table, validate_scope, &sargs))
 			goto bad;
 	}
 
@@ -2152,7 +2173,7 @@ int policydb_validate(sepol_handle_t *handle, const policydb_t *p)
 	if (validate_genfs(handle, p, flavors))
 		goto bad;
 
-	if (validate_scopes(handle, p->scope, p->global))
+	if (validate_scopes(handle, p->scope, p->symtab, p))
 		goto bad;
 
 	if (validate_datum_array_gaps(handle, p, flavors))

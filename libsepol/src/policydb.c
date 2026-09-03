@@ -3903,11 +3903,6 @@ static int scope_read(policydb_t *p, int symnum, struct policy_file *fp)
 	if (rc < 0)
 		goto cleanup;
 
-	/* ensure that there already exists a symbol with this key */
-	if (hashtab_search(p->symtab[symnum].table, key) == NULL) {
-		goto cleanup;
-	}
-
 	if ((scope = calloc(1, sizeof(*scope))) == NULL) {
 		goto cleanup;
 	}
