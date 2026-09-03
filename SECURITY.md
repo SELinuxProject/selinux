@@ -40,7 +40,8 @@ window.
   *  (GPG fingerprint) 578C 4211 832F 0A7E A2C5  A7C2 21A4 6E60 3F74 4ECF
 * Jason Zaman, perfinion@gentoo.org
   *  (GPG fingerprint) 6319 1CE9 4183 0986 89CA  B8DB 7EF1 37EC 935B 0EAF
-* Ondrej Mosnacek, omosnace@redhat.com
+* Ondrej Mosnáček, omosnacek@gmail.com
+  *  (GPG fingerprint) 9F17 354B 2928 339C 5130  906D CEEE 4E9C F167 6119
 
 If unsure about whether an issue is in kernel or userspace, feel free
 to send it to both the kernel and userspace maintainers and the
