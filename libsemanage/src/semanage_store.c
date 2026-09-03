@@ -746,7 +746,7 @@ int semanage_store_access_check(void)
 	int rc = -1;
 
 	/* read access on active store */
-	path = semanage_path(SEMANAGE_ACTIVE, SEMANAGE_TOPLEVEL);
+	path = semanage_path_read(SEMANAGE_ACTIVE, SEMANAGE_TOPLEVEL);
 	if (access(path, R_OK | X_OK) != 0)
 		goto out;
 
@@ -2228,8 +2228,8 @@ int semanage_direct_get_serial(semanage_handle_t *sh)
 		commit_filename =
 			semanage_path(SEMANAGE_TMP, SEMANAGE_COMMIT_NUM_FILE);
 	} else {
-		commit_filename = semanage_path(SEMANAGE_ACTIVE,
-						SEMANAGE_COMMIT_NUM_FILE);
+		commit_filename = semanage_path_read(SEMANAGE_ACTIVE,
+						     SEMANAGE_COMMIT_NUM_FILE);
 	}
 
 	if ((fd = open(commit_filename, O_RDONLY | O_CLOEXEC)) == -1) {
@@ -2309,7 +2309,8 @@ int semanage_read_policydb(semanage_handle_t *sh, sepol_policydb_t *in,
 	struct sepol_policy_file *pf = NULL;
 	FILE *infile = NULL;
 
-	if ((kernel_filename = semanage_path(SEMANAGE_ACTIVE, file)) == NULL) {
+	if ((kernel_filename = semanage_path_read(SEMANAGE_ACTIVE, file)) ==
+	    NULL) {
 		goto cleanup;
 	}
 	if ((infile = fopen(kernel_filename, "re")) == NULL) {
