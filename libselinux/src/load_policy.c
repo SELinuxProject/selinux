@@ -133,14 +133,22 @@ int selinux_mkload_policy(int preservebools __attribute__((unused)))
 
 	vers = maxvers;
 search:
-	snprintf(path, sizeof(path), "%s.%d", selinux_binary_policy_path(),
-		 vers);
-	fd = open(path, O_RDONLY | O_CLOEXEC);
-	while (fd < 0 && errno == ENOENT && --vers >= minvers) {
-		/* Check prior versions to see if old policy is available */
-		snprintf(path, sizeof(path), "%s.%d",
-			 selinux_binary_policy_path(), vers);
-		fd = open(path, O_RDONLY | O_CLOEXEC);
+	/*
+	 * For each version, try each policy root in turn: an admin-supplied
+	 * /etc copy at version N shadows a vendor /usr/lib copy at the same
+	 * version, but a newer vendor policy still beats an older admin one.
+	 */
+	fd = -1;
+	errno = ENOENT;
+	for (; fd < 0 && errno == ENOENT && vers >= minvers; vers--) {
+		const char *const *roots = selinux_policy_roots();
+		for (; *roots; roots++) {
+			snprintf(path, sizeof(path), "%s/policy/policy.%d",
+				 *roots, vers);
+			fd = open(path, O_RDONLY | O_CLOEXEC);
+			if (fd >= 0 || errno != ENOENT)
+				break;
+		}
 	}
 	if (fd < 0) {
 		selinux_log(

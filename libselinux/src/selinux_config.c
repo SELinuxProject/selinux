@@ -368,8 +368,8 @@ const char *selinux_binary_policy_path(void)
 
 const char *selinux_current_policy_path(void)
 {
-	int rc = 0;
-	int vers = 0;
+	int vers;
+	unsigned int i;
 	static char policy_path[PATH_MAX];
 
 	if (selinux_mnt) {
@@ -379,16 +379,17 @@ const char *selinux_current_policy_path(void)
 			return policy_path;
 		}
 	}
-	vers = security_policyvers();
-	do {
-		/* Check prior versions to see if old policy is available */
-		snprintf(policy_path, sizeof(policy_path), "%s.%d",
-			 selinux_binary_policy_path(), vers);
-	} while ((rc = access(policy_path, F_OK)) && --vers > 0);
-
-	if (rc)
-		return NULL;
-	return policy_path;
+	__selinux_once(once, init_selinux_config);
+	for (vers = security_policyvers(); vers > 0; vers--) {
+		for (i = 0; selinux_policyroots[i]; i++) {
+			snprintf(policy_path, sizeof(policy_path),
+				 "%s/policy/policy.%d", selinux_policyroots[i],
+				 vers);
+			if (access(policy_path, F_OK) == 0)
+				return policy_path;
+		}
+	}
+	return NULL;
 }
 
 const char *selinux_file_context_path(void)
