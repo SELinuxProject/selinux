@@ -539,6 +539,16 @@ const char *semanage_final_path(enum semanage_final_defs store,
 	return semanage_final_paths[store][path_name];
 }
 
+/*
+ * Directories under which semanage.conf is searched, in order. This
+ * mirrors the libselinux configuration-root search list so a vendor
+ * can ship semanage.conf (carrying ro-store-root=) alongside the
+ * read-only runtime tree. Overridable at build time.
+ */
+#ifndef SEMANAGE_CONF_DIRS
+#define SEMANAGE_CONF_DIRS "/etc/selinux/", "/usr/lib/selinux/"
+#endif
+
 /* Return a fully-qualified path + filename to the semanage
  * configuration file. If semanage.conf file in the semanage
  * root is cannot be read, use the default semanage.conf as a
@@ -548,24 +558,42 @@ const char *semanage_final_path(enum semanage_final_defs store,
  */
 char *semanage_conf_path(void)
 {
-	char *semanage_conf = NULL;
-	size_t len;
-	struct stat sb;
+	static const char *dirs[] = { SEMANAGE_CONF_DIRS, NULL };
+	char *conf = NULL;
+	unsigned int i;
 
-	len = strlen(semanage_root()) + strlen(selinux_path()) +
-	      strlen(SEMANAGE_CONF_FILE);
-	semanage_conf = calloc(len + 1, sizeof(char));
-	if (!semanage_conf)
-		return NULL;
-	snprintf(semanage_conf, len + 1, "%s%s%s", semanage_root(),
-		 selinux_path(), SEMANAGE_CONF_FILE);
-
-	if (stat(semanage_conf, &sb) != 0 && errno == ENOENT) {
-		snprintf(semanage_conf, len + 1, "%s%s", selinux_path(),
-			 SEMANAGE_CONF_FILE);
+	/*
+	 * Rooted at each configuration directory, then (for a chroot
+	 * build) fall back to the host directory.
+	 */
+	for (i = 0; dirs[i]; i++) {
+		free(conf);
+		if (asprintf(&conf, "%s%s%s", semanage_root(), dirs[i],
+			     SEMANAGE_CONF_FILE) < 0)
+			return NULL;
+		if (access(conf, F_OK) == 0)
+			return conf;
+	}
+	if (semanage_root()[0] != '\0') {
+		for (i = 0; dirs[i]; i++) {
+			free(conf);
+			if (asprintf(&conf, "%s%s", dirs[i],
+				     SEMANAGE_CONF_FILE) < 0)
+				return NULL;
+			if (access(conf, F_OK) == 0)
+				return conf;
+		}
 	}
 
-	return semanage_conf;
+	/*
+	 * Nothing found; return the primary path so the caller's
+	 * error message includes the canonical location.
+	 */
+	free(conf);
+	if (asprintf(&conf, "%s%s%s", semanage_root(), dirs[0],
+		     SEMANAGE_CONF_FILE) < 0)
+		return NULL;
+	return conf;
 }
 
 /* Recursively create a directory from a path string.
