@@ -1195,9 +1195,9 @@ int semanage_get_cil_paths(semanage_handle_t *sh,
 	}
 
 	for (i = 0; i < num_modinfos; i++) {
-		ret = semanage_module_get_path(sh, &modinfos[i],
-					       SEMANAGE_MODULE_PATH_CIL, path,
-					       sizeof(path));
+		ret = semanage_module_find_path(sh, &modinfos[i],
+						SEMANAGE_MODULE_PATH_CIL, path,
+						sizeof(path));
 		if (ret != 0) {
 			status = -1;
 			goto cleanup;

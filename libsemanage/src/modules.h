@@ -100,6 +100,16 @@ int semanage_module_get_path(semanage_handle_t *sh,
 			     enum semanage_module_path_type type, char *path,
 			     size_t len);
 
+/*
+ * Read-side variant: fill @path with the first location that exists
+ * across the writable and any ro-store-root modules roots. Falls back
+ * to the writable-root path when the file is not found anywhere.
+ */
+int semanage_module_find_path(semanage_handle_t *sh,
+			      const semanage_module_info_t *modinfo,
+			      enum semanage_module_path_type type, char *path,
+			      size_t len);
+
 extern const size_t CHECKSUM_CONTENT_SIZE;
 void semanage_hash_to_checksum_string(const uint8_t *hash, char *checksum);
 

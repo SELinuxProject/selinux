@@ -998,8 +998,9 @@ static int semanage_compile_module(semanage_handle_t *sh,
 		goto cleanup;
 	}
 
-	status = semanage_module_get_path(sh, modinfo, SEMANAGE_MODULE_PATH_HLL,
-					  hll_path, sizeof(hll_path));
+	status = semanage_module_find_path(sh, modinfo,
+					   SEMANAGE_MODULE_PATH_HLL, hll_path,
+					   sizeof(hll_path));
 	if (status != 0) {
 		goto cleanup;
 	}
@@ -1050,15 +1051,25 @@ static int semanage_compile_module(semanage_handle_t *sh,
 	}
 
 	if (sh->conf->remove_hll) {
-		status = unlink(hll_path);
-		if (status != 0) {
-			ERR(sh, "Error while removing HLL file %s.", hll_path);
-			goto cleanup;
-		}
+		const char *rw = semanage_path(SEMANAGE_TMP, SEMANAGE_MODULES);
 
-		status = semanage_direct_write_langext(sh, "cil", modinfo);
-		if (status != 0) {
-			goto cleanup;
+		/*
+		 * Only remove a HLL that lives in the writable sandbox;
+		 * a ro-store-root vendor module keeps its HLL.
+		 */
+		if (strncmp(hll_path, rw, strlen(rw)) == 0) {
+			status = unlink(hll_path);
+			if (status != 0) {
+				ERR(sh, "Error while removing HLL file %s.",
+				    hll_path);
+				goto cleanup;
+			}
+
+			status = semanage_direct_write_langext(sh, "cil",
+							       modinfo);
+			if (status != 0) {
+				goto cleanup;
+			}
 		}
 	}
 
@@ -1118,9 +1129,9 @@ semanage_compile_hll_modules(semanage_handle_t *sh,
 	/* prefix with module count to avoid collisions */
 	update_checksum_with_len(&context, num_modinfos);
 	for (i = 0; i < num_modinfos; i++) {
-		status = semanage_module_get_path(sh, &modinfos[i],
-						  SEMANAGE_MODULE_PATH_CIL,
-						  cil_path, sizeof(cil_path));
+		status = semanage_module_find_path(sh, &modinfos[i],
+						   SEMANAGE_MODULE_PATH_CIL,
+						   cil_path, sizeof(cil_path));
 		if (status != 0)
 			return -1;
 
@@ -1943,10 +1954,10 @@ static int semanage_direct_extract(semanage_handle_t *sh,
 	struct file_contents contents = {};
 
 	/* get path of module */
-	rc = semanage_module_get_path(sh,
-				      (const semanage_module_info_t *)modkey,
-				      SEMANAGE_MODULE_PATH_NAME, module_path,
-				      sizeof(module_path));
+	rc = semanage_module_find_path(sh,
+				       (const semanage_module_info_t *)modkey,
+				       SEMANAGE_MODULE_PATH_NAME, module_path,
+				       sizeof(module_path));
 	if (rc != 0) {
 		goto cleanup;
 	}
@@ -1969,8 +1980,8 @@ static int semanage_direct_extract(semanage_handle_t *sh,
 	}
 
 	/* get path of what to extract */
-	rc = semanage_module_get_path(sh, _modinfo, file_type, input_file,
-				      sizeof(input_file));
+	rc = semanage_module_find_path(sh, _modinfo, file_type, input_file,
+				       sizeof(input_file));
 	if (rc != 0) {
 		goto cleanup;
 	}
@@ -2388,7 +2399,7 @@ static int semanage_direct_get_module_info(semanage_handle_t *sh,
 	}
 
 	/* lookup module ext */
-	ret = semanage_module_get_path(
+	ret = semanage_module_find_path(
 		sh, *modinfo, SEMANAGE_MODULE_PATH_LANG_EXT, fn, sizeof(fn));
 	if (ret != 0) {
 		status = -1;
@@ -2431,7 +2442,7 @@ static int semanage_direct_get_module_info(semanage_handle_t *sh,
 	fp = NULL;
 
 	/* lookup enabled/disabled status */
-	ret = semanage_module_get_path(
+	ret = semanage_module_find_path(
 		sh, *modinfo, SEMANAGE_MODULE_PATH_DISABLED, fn, sizeof(fn));
 	if (ret != 0) {
 		status = -1;
