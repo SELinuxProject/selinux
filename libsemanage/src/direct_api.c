@@ -405,6 +405,19 @@ static int semanage_direct_disconnect(semanage_handle_t *sh)
 
 static int semanage_direct_begintrans(semanage_handle_t *sh)
 {
+	/*
+	 * A caller that never calls semanage_set_create_store()
+	 * may be running against a fresh writable store that has
+	 * no active/ tree yet. Any transaction needs a writable
+	 * skeleton - <root>/<type>/, active/, active/modules/ and
+	 * the read lock - so create it here rather than failing at
+	 * the trans-lock open or the sandbox copy.
+	 * semanage_create_store() is idempotent.
+	 */
+	if (semanage_create_store(sh, 1) < 0) {
+		return -1;
+	}
+
 	if (semanage_get_trans_lock(sh) < 0) {
 		return -1;
 	}
