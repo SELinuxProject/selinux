@@ -1594,17 +1594,37 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 	char subs_file[PATH_MAX + 1];
 	/* Process local and distribution substitution files */
 	if (!path_provided) {
-		rec->spec_files[0] = strdup(selinux_file_context_path());
+		char resolved[PATH_MAX + 1];
+
+		/*
+		 * Each file_contexts input is resolved independently
+		 * against the configuration-root list. The .local and
+		 * .subs files are admin config. The .homedirs file is
+		 * generated locally and .subs_dist ships with the policy
+		 * package and is not reinstalled by libsemanage, so on a
+		 * stateless system they will not share a directory with the
+		 * base file. Text/.bin pairing stays per-directory in
+		 * open_file(), so a lower-priority compiled form never
+		 * shadows a higher-priority text file.
+		 */
+		selinux_policy_resolve(selinux_file_context_path(), ".bin",
+				       resolved, sizeof(resolved));
+		rec->spec_files[0] = strdup(resolved);
 		if (rec->spec_files[0] == NULL)
 			goto finish;
-		status = selabel_subs_init(
-			selinux_file_context_subs_dist_path(), rec->digest,
-			&data->dist_subs, &data->dist_subs_num,
-			&data->dist_subs_alloc);
+
+		selinux_policy_resolve(selinux_file_context_subs_dist_path(),
+				       NULL, subs_file, sizeof(subs_file));
+		status = selabel_subs_init(subs_file, rec->digest,
+					   &data->dist_subs,
+					   &data->dist_subs_num,
+					   &data->dist_subs_alloc);
 		if (status)
 			goto finish;
-		status = selabel_subs_init(selinux_file_context_subs_path(),
-					   rec->digest, &data->subs,
+
+		selinux_policy_resolve(selinux_file_context_subs_path(), NULL,
+				       subs_file, sizeof(subs_file));
+		status = selabel_subs_init(subs_file, rec->digest, &data->subs,
 					   &data->subs_num, &data->subs_alloc);
 		if (status)
 			goto finish;
@@ -1627,6 +1647,21 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 #endif
 
 	for (i = 0; i < num_optional_paths; i++) {
+#if !defined(BUILD_HOST) && !defined(ANDROID)
+		if (!path_provided) {
+			char opt_path[PATH_MAX + 1], resolved[PATH_MAX + 1];
+
+			snprintf(opt_path, sizeof(opt_path), "%s.%s",
+				 selinux_file_context_path(), opt_suffixes[i]);
+			selinux_policy_resolve(opt_path, ".bin", resolved,
+					       sizeof(resolved));
+			rec->spec_files[num_required_paths + i] =
+				strdup(resolved);
+			if (rec->spec_files[num_required_paths + i] == NULL)
+				goto finish;
+			continue;
+		}
+#endif
 		if (asprintf(&rec->spec_files[num_required_paths + i], "%s.%s",
 			     rec->spec_files[0], opt_suffixes[i]) < 0) {
 			rec->spec_files[num_required_paths + i] = NULL;

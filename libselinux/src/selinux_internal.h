@@ -122,6 +122,16 @@ const char *const *selinux_policy_roots(void);
 FILE *selinux_policy_fopen(const char *path, const char *mode);
 int selinux_policy_open(const char *path, int flags);
 
+/*
+ * Resolve @path against the configuration-root list: write into @out
+ * the first remapping under which @out (or @out concatenated with
+ * @sibling, when the base file is optional but a sibling such as .bin
+ * may exist alone is present. If no root has the file, @out receives
+ * @path unchanged and -1 is returned with errno ENOENT. Internal only.
+ */
+int selinux_policy_resolve(const char *path, const char *sibling, char *out,
+			   size_t outlen);
+
 extern int has_selinux_config;
 
 #ifndef HAVE_STRLCPY

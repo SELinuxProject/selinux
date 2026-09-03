@@ -595,3 +595,34 @@ int selinux_policy_open(const char *path, int flags)
 	errno = ENOENT;
 	return -1;
 }
+
+int selinux_policy_resolve(const char *path, const char *sibling, char *out,
+			   size_t outlen)
+{
+	char probe[PATH_MAX];
+	unsigned int i;
+
+	__selinux_once(once, init_selinux_config);
+
+	if (strlcpy(out, path, outlen) >= outlen)
+		goto noent;
+	for (i = 0;; i++) {
+		if (access(out, F_OK) == 0)
+			return 0;
+		if (sibling) {
+			snprintf(probe, sizeof(probe), "%s%s", out, sibling);
+			if (access(probe, F_OK) == 0)
+				return 0;
+		}
+		if (!selinux_policyroots[i + 1] ||
+		    selinux_policy_remap(path, selinux_policyroots[i + 1], out,
+					 outlen))
+			break;
+	}
+
+	/* Nothing found: leave primary path in @out for diagnostics. */
+	strlcpy(out, path, outlen);
+noent:
+	errno = ENOENT;
+	return -1;
+}
