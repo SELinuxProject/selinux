@@ -759,12 +759,25 @@ int semanage_store_access_check(void)
 	 */
 	path = semanage_files[SEMANAGE_READ_LOCK];
 	if (access(path, R_OK) != 0) {
+		char anc[PATH_MAX], *slash;
+
 		if (access(path, F_OK) == 0) {
 			goto out;
 		}
 
-		path = semanage_files[SEMANAGE_ROOT];
-		if (access(path, R_OK | W_OK | X_OK) != 0) {
+		/*
+		 * semanage_get_lock() will mkdir_recursive() the store
+		 * root on demand, so predict success if any existing
+		 * ancestor of <root>/<type> is writable.
+		 */
+		snprintf(anc, sizeof(anc), "%s", semanage_files[SEMANAGE_ROOT]);
+		while (access(anc, F_OK) != 0 &&
+		       (slash = strrchr(anc, '/')) != NULL) {
+			if (slash == anc)
+				slash++;
+			*slash = '\0';
+		}
+		if (access(anc, R_OK | W_OK | X_OK) != 0) {
 			goto out;
 		}
 	}
@@ -2093,8 +2106,21 @@ static int semanage_get_lock(semanage_handle_t *sh, const char *lock_name,
 	int fd;
 	int left;
 
-	if ((fd = open(lock_file, O_RDWR | O_CREAT | O_CLOEXEC,
-		       S_IRUSR | S_IWUSR)) == -1) {
+	fd = open(lock_file, O_RDWR | O_CREAT | O_CLOEXEC, S_IRUSR | S_IWUSR);
+	if (fd == -1 && errno == ENOENT) {
+		/*
+		 * On a fresh writable store the <root>/<type>/ parent may
+		 * not exist yet for a reader (writers create it in
+		 * begintrans() via semanage_create_store()). Create it
+		 * here so a pure read can still take the lock and
+		 * serialize it against a concurrent commit.
+		 */
+		const char *root = semanage_files[SEMANAGE_ROOT];
+		if (mkdir_recursive(root, 0755) == 0 && chmod(root, 0700) == 0)
+			fd = open(lock_file, O_RDWR | O_CREAT | O_CLOEXEC,
+				  S_IRUSR | S_IWUSR);
+	}
+	if (fd == -1) {
 		ERR(sh, "Could not open direct %s at %s.", lock_name,
 		    lock_file);
 		return -1;
