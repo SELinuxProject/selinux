@@ -43,6 +43,7 @@ extern char *semanage_text;
 
 static int parse_module_store(char *arg);
 static int parse_store_root_path(char *arg);
+static int parse_ro_store_root_paths(char *arg);
 static int parse_compiler_path(char *arg);
 static void semanage_conf_external_prog_destroy(external_prog_t *ep);
 static int new_external_prog(external_prog_t **chain);
@@ -62,7 +63,7 @@ static int parse_errors;
         char *s;
 }
 
-%token MODULE_STORE VERSION EXPAND_CHECK FILE_MODE SAVE_PREVIOUS SAVE_LINKED TARGET_PLATFORM COMPILER_DIR IGNORE_MODULE_CACHE STORE_ROOT OPTIMIZE_POLICY MULTIPLE_DECLS SORT_LOCAL_FCONTEXTS
+%token MODULE_STORE VERSION EXPAND_CHECK FILE_MODE SAVE_PREVIOUS SAVE_LINKED TARGET_PLATFORM COMPILER_DIR IGNORE_MODULE_CACHE STORE_ROOT RO_STORE_ROOT OPTIMIZE_POLICY MULTIPLE_DECLS SORT_LOCAL_FCONTEXTS
 %token LOAD_POLICY_START SETFILES_START SEFCONTEXT_COMPILE_START DISABLE_GENHOMEDIRCON HANDLE_UNKNOWN USEPASSWD IGNOREDIRS
 %token BZIP_BLOCKSIZE BZIP_SMALL RELABEL_STORE REMOVE_HLL
 %token VERIFY_MOD_START VERIFY_LINKED_START VERIFY_KERNEL_START BLOCK_END
@@ -85,6 +86,7 @@ single_opt:     module_store
         |       version
         |       target_platform
         |       store_root
+        |       ro_store_root
         |       compiler_dir
         |       ignore_module_cache
         |       expand_check
@@ -116,6 +118,15 @@ module_store:   MODULE_STORE '=' ARG {
 
 store_root:     STORE_ROOT '=' ARG  {
                         if (parse_store_root_path($3) != 0) {
+                                parse_errors++;
+                                YYABORT;
+                        }
+                        free($3);
+                }
+        ;
+
+ro_store_root:  RO_STORE_ROOT '=' ARG  {
+                        if (parse_ro_store_root_paths($3) != 0) {
                                 parse_errors++;
                                 YYABORT;
                         }
@@ -547,6 +558,9 @@ void semanage_conf_destroy(semanage_conf_t * conf)
 		free(conf->store_path);
 		free(conf->ignoredirs);
 		free(conf->store_root_path);
+		while (conf->n_ro_store_roots)
+			free(conf->ro_store_root_paths[--conf->n_ro_store_roots]);
+		free(conf->ro_store_root_paths);
 		free(conf->compiler_directory_path);
 		semanage_conf_external_prog_destroy(conf->load_policy);
 		semanage_conf_external_prog_destroy(conf->setfiles);
@@ -622,6 +636,47 @@ static int parse_store_root_path(char *arg)
 
 	free(current_conf->store_root_path);
 	current_conf->store_root_path = strdup(arg);
+	return 0;
+}
+
+/* ro-store-root = /usr/lib/selinux[:/another/root...] */
+static int parse_ro_store_root_paths(char *arg)
+{
+	char *p, *saveptr = NULL;
+	unsigned int n = 0;
+	char **v;
+
+	if (arg == NULL) {
+		return -1;
+	}
+
+	for (p = arg; *p; p++)
+		if (*p == ':')
+			n++;
+	n++;
+
+	v = calloc(n, sizeof(*v));
+	if (!v)
+		return -1;
+
+	n = 0;
+	for (p = strtok_r(arg, ":", &saveptr); p;
+	     p = strtok_r(NULL, ":", &saveptr)) {
+		v[n] = strdup(p);
+		if (!v[n]) {
+			while (n)
+				free(v[--n]);
+			free(v);
+			return -1;
+		}
+		n++;
+	}
+
+	while (current_conf->n_ro_store_roots)
+		free(current_conf->ro_store_root_paths[--current_conf->n_ro_store_roots]);
+	free(current_conf->ro_store_root_paths);
+	current_conf->ro_store_root_paths = v;
+	current_conf->n_ro_store_roots = n;
 	return 0;
 }
 

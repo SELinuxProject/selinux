@@ -76,6 +76,9 @@ enum semanage_file_defs {
 
 static char *semanage_paths[SEMANAGE_NUM_STORES][SEMANAGE_STORE_NUM_PATHS];
 static char *semanage_files[SEMANAGE_NUM_FILES] = { NULL };
+
+static char **semanage_ro_active_paths;
+static unsigned int semanage_n_ro_roots;
 static int semanage_paths_initialized = 0;
 
 /* These are paths relative to the bottom of the module store */
@@ -200,6 +203,33 @@ static int semanage_init_store_paths(const char *root)
 		}
 	}
 
+	return 0;
+}
+
+static int semanage_init_ro_store_paths(semanage_handle_t *sh)
+{
+	unsigned int i, j, n = sh->conf->n_ro_store_roots;
+
+	if (n == 0)
+		return 0;
+
+	semanage_ro_active_paths = calloc((size_t)n * SEMANAGE_STORE_NUM_PATHS,
+					  sizeof(*semanage_ro_active_paths));
+	if (!semanage_ro_active_paths)
+		return -1;
+
+	for (i = 0; i < n; i++)
+		for (j = 0; j < SEMANAGE_STORE_NUM_PATHS; j++) {
+			if (asprintf(&semanage_ro_active_paths
+					     [i * SEMANAGE_STORE_NUM_PATHS + j],
+				     "%s%s/%s%s%s", semanage_root(),
+				     sh->conf->ro_store_root_paths[i],
+				     sh->conf->store_path,
+				     semanage_store_paths[SEMANAGE_ACTIVE],
+				     semanage_sandbox_paths[j]) < 0)
+				return -1;
+		}
+	semanage_n_ro_roots = n;
 	return 0;
 }
 
@@ -410,6 +440,10 @@ int semanage_check_init(semanage_handle_t *sh, const char *prefix)
 		if (rc)
 			return rc;
 
+		rc = semanage_init_ro_store_paths(sh);
+		if (rc)
+			return rc;
+
 		rc = semanage_init_final(sh, prefix);
 		if (rc)
 			return rc;
@@ -446,6 +480,48 @@ const char *semanage_path(enum semanage_store_defs store,
 {
 	assert(semanage_paths[store][path_name]);
 	return semanage_paths[store][path_name];
+}
+
+/* Number of read-only fallback store roots. */
+unsigned int semanage_ro_root_count(void)
+{
+	return semanage_n_ro_roots;
+}
+
+/*
+ * ACTIVE path in the @idx-th read-only fallback root (0-based).
+ * Returns NULL if no such root; the caller must not alter the string.
+ */
+const char *semanage_ro_active_path(unsigned int idx,
+				    enum semanage_sandbox_defs file)
+{
+	if (idx >= semanage_n_ro_roots)
+		return NULL;
+	return semanage_ro_active_paths[idx * SEMANAGE_STORE_NUM_PATHS + file];
+}
+
+/*
+ * First-existing of the writable ACTIVE path and each RO ACTIVE path,
+ * for read-side lookups. For TMP/PREVIOUS, or when no fallback root
+ * has the file, this is semanage_path(store, file) so callers that
+ * then create the file use the writable store.
+ */
+const char *semanage_path_read(enum semanage_store_defs store,
+			       enum semanage_sandbox_defs file)
+{
+	const char *path = semanage_path(store, file);
+	unsigned int i;
+
+	if (store != SEMANAGE_ACTIVE || access(path, F_OK) == 0)
+		return path;
+
+	for (i = 0; i < semanage_n_ro_roots; i++) {
+		const char *ropath = semanage_ro_active_path(i, file);
+
+		if (ropath && access(ropath, F_OK) == 0)
+			return ropath;
+	}
+	return path;
 }
 
 /* Given a store location (tmp or selinux) and a definition
