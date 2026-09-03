@@ -201,7 +201,7 @@ int getseuserbyname(const char *name, char **r_seuser, char **r_level)
 
 	gid_t gid = get_default_gid(name);
 
-	cfg = fopen(selinux_usersconf_path(), "re");
+	cfg = selinux_policy_fopen(selinux_usersconf_path(), "re");
 	if (!cfg)
 		goto nomatch;
 
@@ -296,7 +296,7 @@ int getseuser(const char *username, const char *service, char **r_seuser,
 	if (asprintf(&path, "%s/logins/%s", selinux_policy_root(), username) <
 	    0)
 		goto err;
-	fp = fopen(path, "re");
+	fp = selinux_policy_fopen(path, "re");
 	free(path);
 	if (fp == NULL)
 		goto err;

@@ -103,7 +103,7 @@ char *selinux_boolean_sub(const char *name)
 	if (!name)
 		return NULL;
 
-	cfg = fopen(selinux_booleans_subs_path(), "re");
+	cfg = selinux_policy_fopen(selinux_booleans_subs_path(), "re");
 	if (!cfg)
 		goto out;
 

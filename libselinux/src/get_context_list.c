@@ -297,7 +297,7 @@ static int get_failsafe_context(const char *user, char **newcon)
 	size_t plen, nlen;
 	int rc;
 
-	fp = fopen(selinux_failsafe_context_path(), "re");
+	fp = selinux_policy_fopen(selinux_failsafe_context_path(), "re");
 	if (!fp)
 		return -1;
 
@@ -422,7 +422,7 @@ int get_ordered_context_list(const char *user, const char *fromcon,
 	if (!fname)
 		goto failsafe;
 	snprintf(fname, fname_len, "%s%s", user_contexts_path, user);
-	fp = fopen(fname, "re");
+	fp = selinux_policy_fopen(fname, "re");
 	if (fp) {
 		__fsetlocking(fp, FSETLOCKING_BYCALLER);
 		rc = get_context_user(fp, con, user, &reachable, &nreachable);
@@ -437,7 +437,7 @@ int get_ordered_context_list(const char *user, const char *fromcon,
 		}
 	}
 	free(fname);
-	fp = fopen(selinux_default_context_path(), "re");
+	fp = selinux_policy_fopen(selinux_default_context_path(), "re");
 	if (fp) {
 		__fsetlocking(fp, FSETLOCKING_BYCALLER);
 		rc = get_context_user(fp, con, user, &reachable, &nreachable);

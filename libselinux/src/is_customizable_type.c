@@ -19,7 +19,7 @@ static void customizable_init(void)
 	unsigned int ctr = 0, i;
 	char **list = NULL;
 
-	fp = fopen(selinux_customizable_types_path(), "re");
+	fp = selinux_policy_fopen(selinux_customizable_types_path(), "re");
 	if (!fp)
 		return;
 
