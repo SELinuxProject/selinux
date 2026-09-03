@@ -188,6 +188,13 @@ A path that matches an entry in one or more of the file contexts policy configur
 .I subs_pathname
 .RS
 The path that will be aliased (considered equivalent) with pathname by the look up process.
+A path component consisting of a single \fB*\fR matches exactly one
+non-empty component of the input path.
+When the last component of \fIsubs_pathname\fR is \fB*\fR the
+substitution only applies when the input has a further \fB/\fR after
+the matched component, so an entry such as \fI/var/lib/extensions/*\fR
+remaps the contents of each named directory but not the directory itself
+or a sibling regular file.
 .RE
 .RE
 .sp
@@ -195,11 +202,13 @@ Example:
 .RS
 # ./contexts/files/file_contexts.subs
 .br
-# pathname  subs_pathname
+# pathname	subs_pathname
 .br
-/myweb      /var/www
+/myweb			/var/www
 .br
-/myspool    /var/spool/mail
+/myspool		/var/spool/mail
+.br
+/var/lib/extensions/*	/
 .sp
 Using the above example, when \fBselabel_lookup\fR(3) is passed a path of
 \fI/myweb/index.html\fR the function will substitute the \fI/myweb\fR
@@ -208,6 +217,10 @@ component with \fI/var/www\fR, therefore the path used is:
 .RS
 .I /var/www/index.html
 .RE
+.sp
+and a path of \fI/var/lib/extensions/example/usr/lib/foo.so\fR is looked
+up as \fI/usr/lib/foo.so\fR, while \fI/var/lib/extensions/example\fR and
+\fI/var/lib/extensions/example.raw\fR are left unchanged.
 .RE
 .
 .SH "NOTES"

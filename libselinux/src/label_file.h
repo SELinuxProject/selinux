@@ -79,6 +79,8 @@ struct selabel_sub {
 	char *dst; /* substituted path prefix */
 	uint32_t slen; /* length of source path prefix */
 	uint32_t dlen; /* length of substituted path prefix */
+	uint32_t plen; /* prefix up to first wildcard, == slen if none */
+	bool has_wild; /* src contains one or more '*' whole-component wildcards */
 };
 
 /* A regular expression file security context specification */

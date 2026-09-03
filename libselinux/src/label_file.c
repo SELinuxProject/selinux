@@ -1327,33 +1327,72 @@ static void selabel_subs_fini(struct selabel_sub *subs, uint32_t num)
 	free(subs);
 }
 
+static bool selabel_sub_match_wild(const struct selabel_sub *sub,
+				   const char *path, size_t *matched)
+{
+	const char *pat = sub->src + sub->plen;
+	const char *in = path + sub->plen;
+	bool trailing_wild = false;
+
+	/* The literal prefix before the first '*' has been checked. */
+	while (*pat) {
+		if (pat[0] == '*' && (pat == sub->src || pat[-1] == '/') &&
+		    (pat[1] == '/' || pat[1] == '\0')) {
+			/* Consume one non-empty component of the input. */
+			if (*in == '/' || *in == '\0')
+				return false;
+			while (*in && *in != '/')
+				in++;
+			trailing_wild = (pat[1] == '\0');
+			pat++;
+		} else if (*pat == *in) {
+			trailing_wild = false;
+			pat++;
+			in++;
+		} else
+			return false;
+	}
+
+	if (trailing_wild) {
+		if (*in != '/')
+			return false;
+	} else if (*in != '/' && *in != '\0')
+		return false;
+
+	*matched = (size_t)(in - path);
+	return true;
+}
+
 static char *selabel_apply_subs(const struct selabel_sub *subs, uint32_t num,
 				const char *src, size_t slen)
 {
 	char *dst, *tmp;
-	uint32_t len;
+	size_t len;
 
 	for (uint32_t i = 0; i < num; i++) {
 		const struct selabel_sub *ptr = &subs[i];
 
-		if (strncmp(src, ptr->src, ptr->slen) == 0) {
-			if (src[ptr->slen] == '/' || src[ptr->slen] == '\0') {
-				if ((src[ptr->slen] == '/') &&
-				    (strcmp(ptr->dst, "/") == 0))
-					len = ptr->slen + 1;
-				else
-					len = ptr->slen;
+		if (strncmp(src, ptr->src, ptr->plen) != 0)
+			continue;
 
-				dst = malloc(ptr->dlen + slen - len + 1);
-				if (!dst)
-					return NULL;
+		if (!ptr->has_wild) {
+			if (src[ptr->slen] != '/' && src[ptr->slen] != '\0')
+				continue;
+			len = ptr->slen;
+		} else if (!selabel_sub_match_wild(ptr, src, &len))
+			continue;
 
-				tmp = mempcpy(dst, ptr->dst, ptr->dlen);
-				tmp = mempcpy(tmp, &src[len], slen - len);
-				*tmp = '\0';
-				return dst;
-			}
-		}
+		if (src[len] == '/' && ptr->dlen == 1 && ptr->dst[0] == '/')
+			len++;
+
+		dst = malloc(ptr->dlen + slen - len + 1);
+		if (!dst)
+			return NULL;
+
+		tmp = mempcpy(dst, ptr->dst, ptr->dlen);
+		tmp = mempcpy(tmp, &src[len], slen - len);
+		*tmp = '\0';
+		return dst;
 	}
 
 	return NULL;
@@ -1386,7 +1425,8 @@ static int selabel_subs_init(const char *path, struct selabel_digest *digest,
 		char *ptr;
 		char *src = buf;
 		char *dst;
-		size_t slen, dlen;
+		size_t slen, dlen, plen;
+		bool has_wild;
 
 		while (*src && isspace((unsigned char)*src))
 			src++;
@@ -1422,6 +1462,33 @@ static int selabel_subs_init(const char *path, struct selabel_digest *digest,
 			goto err;
 		}
 
+		/*
+		 * A '*' in the source is a single-component wildcard: it
+		 * must be a whole path component. Reject a '*' that is
+		 * only part of a component so a literal '*' in a path stays
+		 * expressible without ambiguity, and record the literal
+		 * prefix length so non-wildcard entries keep the plain
+		 * strncmp() fast path.
+		 */
+		plen = slen;
+		has_wild = false;
+		for (size_t j = 0; j < slen; j++) {
+			if (src[j] != '*')
+				continue;
+			if ((j > 0 && src[j - 1] != '/') ||
+			    (src[j + 1] != '/' && src[j + 1] != '\0')) {
+				selinux_log(
+					SELINUX_ERROR,
+					"%s: '*' in substitution source '%s' is not a whole path component\n",
+					path, src);
+				errno = EINVAL;
+				goto err;
+			}
+			if (!has_wild)
+				plen = j;
+			has_wild = true;
+		}
+
 		src_cpy = strdup(src);
 		if (!src_cpy)
 			goto err;
@@ -1439,6 +1506,8 @@ static int selabel_subs_init(const char *path, struct selabel_digest *digest,
 			.slen = slen,
 			.dst = dst_cpy,
 			.dlen = dlen,
+			.plen = plen,
+			.has_wild = has_wild,
 		};
 		src_cpy = NULL;
 		dst_cpy = NULL;
