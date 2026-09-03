@@ -2287,6 +2287,23 @@ static int semanage_direct_set_enabled(semanage_handle_t *sh,
 			}
 		}
 
+		/*
+		 * A read-only store may still carry a disabled marker for
+		 * this module; the writable store cannot override it.
+		 */
+		if (semanage_ro_root_count() > 0 &&
+		    semanage_module_find_path(sh, modinfo,
+					      SEMANAGE_MODULE_PATH_DISABLED, fn,
+					      sizeof(fn)) == 0 &&
+		    access(fn, F_OK) == 0) {
+			errno = 0;
+			ERR(sh,
+			    "Module %s is disabled by the read-only store at %s and cannot be enabled here.",
+			    modkey->name, fn);
+			status = -1;
+			goto cleanup;
+		}
+
 		break;
 	case -1: /* warn about ignored setting to default */
 		WARN(sh, "Setting module %s to 'default' state has no effect",
@@ -3067,6 +3084,29 @@ static int semanage_direct_remove_key(semanage_handle_t *sh,
 	if (ret != 0) {
 		status = -2;
 		goto cleanup;
+	}
+
+	/*
+	 * A module that lives only in a read-only store has nothing to
+	 * remove in the writable one; disabling is the closest equivalent.
+	 * Removing a writable-store copy that shadows a read-only one is
+	 * still allowed and simply un-shadows the vendor module.
+	 */
+	if (semanage_ro_root_count() > 0 && access(path, F_OK) != 0) {
+		char ro_path[PATH_MAX];
+
+		if (semanage_module_find_path(
+			    sh, (const semanage_module_info_t *)modkey,
+			    SEMANAGE_MODULE_PATH_NAME, ro_path,
+			    sizeof(ro_path)) == 0 &&
+		    access(ro_path, F_OK) == 0) {
+			errno = 0;
+			ERR(sh,
+			    "Module %s at priority %d is provided by the read-only store at %s and cannot be removed; use -d to disable it.",
+			    modkey->name, modkey->priority, ro_path);
+			status = -2;
+			goto cleanup;
+		}
 	}
 
 	/* remove directory */
