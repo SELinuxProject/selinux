@@ -103,6 +103,10 @@ static void init_lib(void) __attribute__((constructor));
 static void init_lib(void)
 {
 	long page_size;
+#ifndef ANDROID
+	unsigned int i;
+	char cfg[PATH_MAX];
+#endif
 
 	SELINUX_PROTECT_ERRNO;
 	page_size = sysconf(_SC_PAGE_SIZE);
@@ -112,7 +116,13 @@ static void init_lib(void)
 				    4096;
 	init_selinuxmnt();
 #ifndef ANDROID
-	has_selinux_config = (access(SELINUXCONFIG, F_OK) == 0);
+	for (i = 0; selinux_confdirs[i]; i++) {
+		snprintf(cfg, sizeof(cfg), "%sconfig", selinux_confdirs[i]);
+		if (access(cfg, F_OK) == 0) {
+			has_selinux_config = 1;
+			break;
+		}
+	}
 #endif
 }
 

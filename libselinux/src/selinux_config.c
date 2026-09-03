@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <errno.h>
+#include <fcntl.h>
 #include "policy.h"
 #include "selinux_internal.h"
 #include "get_default_type_internal.h"
@@ -59,6 +60,11 @@
 static pthread_once_t once = PTHREAD_ONCE_INIT;
 static void init_selinux_config(void);
 
+/* Ordered configuration-root search list; see selinux_internal.h */
+const char *const selinux_confdirs[] = { SELINUXDIR, SELINUXFALLBACKDIRS,
+					 NULL };
+#define NCONFDIRS (sizeof(selinux_confdirs) / sizeof(selinux_confdirs[0]) - 1)
+
 /* New layout is relative to SELINUXDIR/policytype. */
 static char *file_paths[NEL];
 #define L1(l) L2(l)
@@ -84,9 +90,24 @@ static const uint16_t file_path_suffixes_idx[NEL] = {
 #undef L1
 #undef L2
 
+static FILE *open_selinux_config(void)
+{
+	char path[PATH_MAX];
+	FILE *fp;
+	unsigned int i;
+
+	for (i = 0; selinux_confdirs[i]; i++) {
+		snprintf(path, sizeof(path), "%sconfig", selinux_confdirs[i]);
+		fp = fopen(path, "re");
+		if (fp || errno != ENOENT)
+			return fp;
+	}
+	return NULL;
+}
+
 int selinux_getenforcemode(int *enforce)
 {
-	FILE *cfg = fopen(SELINUXCONFIG, "re");
+	FILE *cfg = open_selinux_config();
 	if (!cfg)
 		return -1;
 
@@ -149,6 +170,14 @@ static int setpolicytype(const char *type)
 
 static char *selinux_policyroot = NULL;
 
+/*
+ * <confdir><policytype> for each entry in selinux_confdirs[], plus a
+ * trailing NULL. [0] is aliased by selinux_policyroot. When
+ * selinux_set_policy_root() has been called the search is disabled and
+ * only [0] is populated (with the caller-supplied root).
+ */
+static char *selinux_policyroots[NCONFDIRS + 1];
+
 static void init_selinux_config(void)
 {
 	int i, *intptr;
@@ -160,7 +189,7 @@ static void init_selinux_config(void)
 	if (selinux_policyroot)
 		return;
 
-	fp = fopen(SELINUXCONFIG, "re");
+	fp = open_selinux_config();
 	if (fp) {
 		__fsetlocking(fp, FSETLOCKING_BYCALLER);
 		while ((len = getline(&line_buf, &line_len, fp)) > 0) {
@@ -224,9 +253,11 @@ static void init_selinux_config(void)
 	if (!selinux_policytype && setpolicytype(SELINUXDEFAULT) != 0)
 		return;
 
-	if (asprintf(&selinux_policyroot, "%s%s", SELINUXDIR,
-		     selinux_policytype) == -1)
-		return;
+	for (i = 0; selinux_confdirs[i]; i++)
+		if (asprintf(&selinux_policyroots[i], "%s%s",
+			     selinux_confdirs[i], selinux_policytype) == -1)
+			return;
+	selinux_policyroot = selinux_policyroots[0];
 
 	for (i = 0; i < NEL; i++)
 		if (asprintf(&file_paths[i], "%s%s", selinux_policyroot,
@@ -239,8 +270,12 @@ static void fini_selinux_policyroot(void) __attribute__((destructor));
 
 static void fini_selinux_policyroot(void)
 {
-	int i;
-	free(selinux_policyroot);
+	unsigned int i;
+
+	for (i = 0; i < NCONFDIRS; i++) {
+		free(selinux_policyroots[i]);
+		selinux_policyroots[i] = NULL;
+	}
 	selinux_policyroot = NULL;
 	for (i = 0; i < NEL; i++) {
 		free(file_paths[i]);
@@ -285,7 +320,7 @@ int selinux_set_policy_root(const char *path)
 
 	fini_selinux_policyroot();
 
-	selinux_policyroot = strdup(path);
+	selinux_policyroot = selinux_policyroots[0] = strdup(path);
 	if (!selinux_policyroot)
 		return -1;
 
@@ -486,4 +521,76 @@ const char *selinux_file_context_subs_dist_path(void)
 const char *selinux_sepgsql_context_path(void)
 {
 	return get_path(SEPGSQL_CONTEXTS);
+}
+
+const char *const *selinux_policy_roots(void)
+{
+	__selinux_once(once, init_selinux_config);
+	return (const char *const *)selinux_policyroots;
+}
+
+/*
+ * If @path is under selinux_policy_root(), rebuild it under @root and
+ * write the result to @out. Returns 0 on success, -1 if @path is not
+ * under the primary root or the result would truncate.
+ */
+static int selinux_policy_remap(const char *path, const char *root, char *out,
+				size_t outlen)
+{
+	size_t plen;
+
+	if (!selinux_policyroot)
+		return -1;
+	plen = strlen(selinux_policyroot);
+	if (strncmp(path, selinux_policyroot, plen) != 0)
+		return -1;
+	if ((size_t)snprintf(out, outlen, "%s%s", root, path + plen) >= outlen)
+		return -1;
+	return 0;
+}
+
+FILE *selinux_policy_fopen(const char *path, const char *mode)
+{
+	char alt[PATH_MAX];
+	unsigned int i;
+	FILE *fp;
+
+	fp = fopen(path, mode);
+	if (fp || errno != ENOENT)
+		return fp;
+
+	__selinux_once(once, init_selinux_config);
+	for (i = 1; selinux_policyroots[i]; i++) {
+		if (selinux_policy_remap(path, selinux_policyroots[i], alt,
+					 sizeof(alt)))
+			break;
+		fp = fopen(alt, mode);
+		if (fp || errno != ENOENT)
+			return fp;
+	}
+	errno = ENOENT;
+	return NULL;
+}
+
+int selinux_policy_open(const char *path, int flags)
+{
+	char alt[PATH_MAX];
+	unsigned int i;
+	int fd;
+
+	fd = open(path, flags);
+	if (fd >= 0 || errno != ENOENT)
+		return fd;
+
+	__selinux_once(once, init_selinux_config);
+	for (i = 1; selinux_policyroots[i]; i++) {
+		if (selinux_policy_remap(path, selinux_policyroots[i], alt,
+					 sizeof(alt)))
+			break;
+		fd = open(alt, flags);
+		if (fd >= 0 || errno != ENOENT)
+			return fd;
+	}
+	errno = ENOENT;
+	return -1;
 }

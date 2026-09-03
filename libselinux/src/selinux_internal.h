@@ -92,6 +92,36 @@ extern size_t selinux_page_size;
 #define SELINUXDIR "/etc/selinux/"
 #define SELINUXCONFIG SELINUXDIR "config"
 
+/*
+ * Ordered list of configuration roots, each with a trailing slash.
+ * SELINUXDIR is always first: it is the write target and the value the
+ * existing selinux_*_path() accessors return. The remaining entries are
+ * read-only fallbacks for hermetic-/usr / factory-reset systems where
+ * /etc and /var may be empty at boot. Distributions can override the
+ * fallback list at build time.
+ */
+#ifndef SELINUXFALLBACKDIRS
+#define SELINUXFALLBACKDIRS "/usr/lib/selinux/"
+#endif
+
+extern const char *const selinux_confdirs[];
+
+/*
+ * NULL-terminated list of <confdir><SELINUXTYPE> roots, populated by
+ * init_selinux_config(); [0] == selinux_policy_root(). Empty (only the
+ * NULL terminator) after selinux_set_policy_root() so that callers fall
+ * back to the single overridden root. Internal only.
+ */
+const char *const *selinux_policy_roots(void);
+
+/*
+ * Open @path (as returned by one of the selinux_*_path() accessors),
+ * falling back through selinux_policy_roots() when the primary path
+ * yields ENOENT. Internal-only.
+ */
+FILE *selinux_policy_fopen(const char *path, const char *mode);
+int selinux_policy_open(const char *path, int flags);
+
 extern int has_selinux_config;
 
 #ifndef HAVE_STRLCPY
