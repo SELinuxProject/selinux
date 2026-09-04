@@ -19,6 +19,7 @@ describing fully qualified path(s). The only PCRE flag in use is PCRE2_DOTALL,
 which causes a wildcard '.' to match anything, including a new line.
 Strings representing paths are processed as bytes (as opposed to Unicode),
 meaning that non-ASCII characters are not matched by a single wildcard.
+If you need to match a non-ASCII character with a wildcard, put it in a group, e.g. '(č)*'
 
 Note, that file context definitions specified using 'semanage fcontext'
 (i.e. local file context modifications stored in file_contexts.local)

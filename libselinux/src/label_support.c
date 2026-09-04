@@ -13,6 +13,76 @@
 #include <errno.h>
 #include "label_internal.h"
 
+#ifndef NO_UTF
+
+#define UTF8tail(x) ((x) >= 0x80 && (x) <= 0xBF)
+
+static size_t utf8_char_len(const unsigned char *s)
+{
+	/* rfc3629
+	 *  UTF8-octets = *( UTF8-char )
+	 *  UTF8-char   = UTF8-1 / UTF8-2 / UTF8-3 / UTF8-4
+	 *  UTF8-1      = %x00-7F
+	 *  UTF8-2      = %xC2-DF UTF8-tail
+	 *  UTF8-3      = %xE0 %xA0-BF UTF8-tail / %xE1-EC 2( UTF8-tail ) /
+	 *                %xED %x80-9F UTF8-tail / %xEE-EF 2( UTF8-tail )
+	 *  UTF8-4      = %xF0 %x90-BF 2( UTF8-tail ) / %xF1-F3 3( UTF8-tail ) /
+	 *                %xF4 %x80-8F 2( UTF8-tail )
+	 *  UTF8-tail   = %x80-BF
+	 */
+	if (s[0] == '\0')
+		return 0;
+
+	if (s[0] < 0x80)
+		return 1;
+
+	if (s[0] < 0xC2 || s[1] == '\0')
+		return 0;
+
+	if (s[0] <= 0xDF && UTF8tail(s[1]))
+		return 2;
+
+	if (s[2] == '\0')
+		return 0;
+
+	/* %xE0 %xA0-BF UTF8-tail */
+	if (s[0] == 0xE0 && s[1] >= 0xA0 && s[1] <= 0xBF && UTF8tail(s[2]))
+		return 3;
+
+	/* %xE1-EC 2( UTF8-tail ) */
+	if (s[0] >= 0xE1 && s[0] <= 0xEC && UTF8tail(s[1]) && UTF8tail(s[2]))
+		return 3;
+
+	/* %xED %x80-9F UTF8-tail */
+	if (s[0] == 0xED && s[1] >= 0x80 && s[1] <= 0x9F && UTF8tail(s[2]))
+		return 3;
+
+	/* %xEE-EF 2( UTF8-tail ) */
+	if (s[0] >= 0xEE && s[0] <= 0xEF && UTF8tail(s[1]) && UTF8tail(s[2]))
+		return 3;
+
+	if (s[3] == '\0')
+		return 0;
+
+	/* %xF0 %x90-BF 2( UTF8-tail ) */
+	if (s[0] == 0xF0 && s[1] >= 0x90 && s[1] <= 0xBF && UTF8tail(s[2]) &&
+	    UTF8tail(s[3]))
+		return 4;
+
+	/* %xF1-F3 3( UTF8-tail ) */
+	if (s[0] >= 0xF1 && s[0] <= 0xF3 && UTF8tail(s[1]) && UTF8tail(s[2]) &&
+	    UTF8tail(s[3]))
+		return 4;
+
+	/* %xF4 %x80-8F 2( UTF8-tail ) */
+	if (s[0] == 0xF4 && s[1] >= 0x80 && s[1] <= 0x8F && UTF8tail(s[2]) &&
+	    UTF8tail(s[3]))
+		return 4;
+
+	return 0;
+}
+#endif
+
 /*
  * Read an entry from a spec file (e.g. file_contexts)
  * entry - Buffer to allocate for the entry.
@@ -36,6 +106,7 @@ static inline int read_spec_entry(char **entry, const char **ptr, size_t *len,
 	*len = 0;
 
 	while (!isspace((unsigned char)**ptr) && **ptr != '\0') {
+#ifdef NO_UTF
 		if (!isascii((unsigned char)**ptr)) {
 			errno = EINVAL;
 			*errbuf = "Non-ASCII characters found";
@@ -43,6 +114,18 @@ static inline int read_spec_entry(char **entry, const char **ptr, size_t *len,
 		}
 		(*ptr)++;
 		(*len)++;
+#else
+		size_t char_len = utf8_char_len((const unsigned char *)*ptr);
+
+		if (char_len == 0) {
+			errno = EINVAL;
+			*errbuf = "Invalid UTF-8 encoding";
+			return -1;
+		}
+
+		*ptr += char_len;
+		*len += char_len;
+#endif
 	}
 
 	if (*len) {
