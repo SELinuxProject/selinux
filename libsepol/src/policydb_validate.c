@@ -1,5 +1,13 @@
 
 #include <ctype.h>
+#include <netinet/in.h>
+#ifndef IPPROTO_DCCP
+#define IPPROTO_DCCP 33
+#endif
+#ifndef IPPROTO_SCTP
+#define IPPROTO_SCTP 132
+#endif
+
 #include <sepol/policydb/conditional.h>
 #include <sepol/policydb/ebitmap.h>
 #include <sepol/policydb/polcaps.h>
@@ -1586,6 +1594,15 @@ static int validate_ocontexts(sepol_handle_t *handle, const policydb_t *p,
 					if (octx->u.port.low_port >
 					    octx->u.port.high_port)
 						goto bad;
+					switch (octx->u.port.protocol) {
+					case IPPROTO_TCP:
+					case IPPROTO_UDP:
+					case IPPROTO_DCCP:
+					case IPPROTO_SCTP:
+						break;
+					default:
+						goto bad;
+					}
 					break;
 				case OCON_FSUSE:
 					switch (octx->v.behavior) {
