@@ -5241,14 +5241,14 @@ int define_port_context(unsigned int low, unsigned int high)
 		goto bad;
 	}
 
+	if (low == 0 || low > high || high > 0xffff) {
+		yyerror2("Invalid port range %u-%u", low, high);
+		goto bad;
+	}
+
 	newc->u.port.protocol = protocol;
 	newc->u.port.low_port = low;
 	newc->u.port.high_port = high;
-
-	if (low > high) {
-		yyerror2("low port %d exceeds high port %d", low, high);
-		goto bad;
-	}
 
 	if (parse_security_context(&newc->context[0])) {
 		goto bad;

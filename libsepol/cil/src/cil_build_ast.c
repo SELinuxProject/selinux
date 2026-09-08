@@ -4438,6 +4438,14 @@ int cil_gen_portcon(struct cil_db *db, struct cil_tree_node *parse_current,
 		portcon->port_high = portcon->port_low;
 	}
 
+	if (portcon->port_low == 0 || portcon->port_low > portcon->port_high ||
+	    portcon->port_high > 0xffff) {
+		cil_log(CIL_ERR, "Invalid port range %u-%u\n",
+			portcon->port_low, portcon->port_high);
+		rc = SEPOL_ERR;
+		goto exit;
+	}
+
 	if (parse_current->next->next->next->cl_head == NULL) {
 		portcon->context_str = parse_current->next->next->next->data;
 	} else {

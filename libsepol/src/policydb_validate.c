@@ -1594,8 +1594,9 @@ static int validate_ocontexts(sepol_handle_t *handle, const policydb_t *p,
 						goto bad;
 					break;
 				case OCON_PORT:
-					if (octx->u.port.low_port >
-					    octx->u.port.high_port)
+					if (octx->u.port.low_port == 0 ||
+					    octx->u.port.low_port >
+						    octx->u.port.high_port)
 						goto bad;
 					switch (octx->u.port.protocol) {
 					case IPPROTO_TCP:
