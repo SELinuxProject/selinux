@@ -100,7 +100,9 @@ int main(int argc, char *argv[])
 	int preserve_tunables = 0;
 	int qualified_names = 0;
 	int handle_unknown = -1;
-	int policyvers = POLICYDB_VERSION_MAX;
+	int policyvers = 0;
+	int policyvers_min = POLICYDB_VERSION_MIN;
+	int policyvers_max = POLICYDB_VERSION_MAX;
 	int attrs_expand_generated = 0;
 	int attrs_expand_size = -1;
 	int optimize = 0;
@@ -165,17 +167,10 @@ int main(int argc, char *argv[])
 			char *endptr = NULL;
 			errno = 0;
 			policyvers = strtol(optarg, &endptr, 10);
-			if (errno != 0 || endptr == optarg || *endptr != '\0') {
+			if (errno != 0 || endptr == optarg || *endptr != '\0' ||
+			    policyvers < 1) {
 				fprintf(stderr, "Bad policy version: %s\n",
 					optarg);
-				usage(argv[0]);
-			}
-			if (policyvers > POLICYDB_VERSION_MAX ||
-			    policyvers < POLICYDB_VERSION_MIN) {
-				fprintf(stderr,
-					"Policy version must be between %d and %d\n",
-					POLICYDB_VERSION_MIN,
-					POLICYDB_VERSION_MAX);
 				usage(argv[0]);
 			}
 			break;
@@ -249,6 +244,19 @@ int main(int argc, char *argv[])
 	}
 	if (optind >= argc) {
 		fprintf(stderr, "No cil files specified\n");
+		usage(argv[0]);
+	}
+
+	if (target == SEPOL_TARGET_XEN) {
+		policyvers_min = POLICYDB_XEN_VERSION_MIN;
+		policyvers_max = POLICYDB_XEN_VERSION_MAX;
+	}
+
+	if (!policyvers)
+		policyvers = policyvers_max;
+	else if (policyvers < policyvers_min || policyvers > policyvers_max) {
+		fprintf(stderr, "Policy version must be between %d and %d\n",
+			policyvers_min, policyvers_max);
 		usage(argv[0]);
 	}
 

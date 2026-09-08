@@ -760,9 +760,15 @@ extern int policydb_set_target_platform(policydb_t *p, int platform);
 	34 /* extended permissions in conditional policies */
 #define POLICYDB_VERSION_NEVERAUDIT 35 /* neveraudit domains */
 
-/* Range of policy versions we understand*/
+/* Range of SELinux policy versions we understand*/
 #define POLICYDB_VERSION_MIN POLICYDB_VERSION_XPERMS_IOCTL
 #define POLICYDB_VERSION_MAX POLICYDB_VERSION_NEVERAUDIT
+
+/*
+ * Range of Xen policy versions we understand.
+ */
+#define POLICYDB_XEN_VERSION_MIN POLICYDB_VERSION_XEN_DEVICETREE
+#define POLICYDB_XEN_VERSION_MAX POLICYDB_VERSION_XEN_DEVICETREE
 
 /* Module versions and specific changes*/
 #define MOD_POLICYDB_VERSION_XPERMS_IOCTL 18

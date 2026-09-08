@@ -60,6 +60,7 @@
 
 #include <ctype.h>
 #include <getopt.h>
+#include <limits.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -393,6 +394,8 @@ int main(int argc, char **argv)
 	struct val_to_name v;
 	int ret, ch, fd, target = SEPOL_TARGET_SELINUX;
 	unsigned int policyvers = 0;
+	unsigned int policyvers_min = POLICYDB_VERSION_MIN;
+	unsigned int policyvers_max = POLICYDB_VERSION_MAX;
 	unsigned int nel, uret;
 	struct stat sb;
 	void *map;
@@ -488,19 +491,10 @@ int main(int argc, char **argv)
 			long int n;
 			errno = 0;
 			n = strtol(optarg, NULL, 10);
-			if (errno) {
+			if (errno || n < 1 || n > INT_MAX) {
 				fprintf(stderr,
 					"Invalid policyvers specified: %s\n",
 					optarg);
-				usage(argv[0]);
-				exit(1);
-			}
-			if (n < POLICYDB_VERSION_MIN ||
-			    n > POLICYDB_VERSION_MAX) {
-				fprintf(stderr,
-					"policyvers value %ld not in range %d-%d\n",
-					n, POLICYDB_VERSION_MIN,
-					POLICYDB_VERSION_MAX);
 				usage(argv[0]);
 				exit(1);
 			}
@@ -519,10 +513,22 @@ int main(int argc, char **argv)
 		}
 	}
 
+	if (target == SEPOL_TARGET_XEN) {
+		policyvers_min = POLICYDB_XEN_VERSION_MIN;
+		policyvers_max = POLICYDB_XEN_VERSION_MAX;
+	}
+
+	if (!policyvers)
+		policyvers = policyvers_max;
+	else if (policyvers < policyvers_min || policyvers > policyvers_max) {
+		fprintf(stderr, "policyvers value %u not in range %u-%u\n",
+			policyvers, policyvers_min, policyvers_max);
+		usage(argv[0]);
+	}
+
 	if (show_version) {
-		printf("%d (compatibility range %d-%d)\n",
-		       policyvers ? policyvers : POLICYDB_VERSION_MAX,
-		       POLICYDB_VERSION_MAX, POLICYDB_VERSION_MIN);
+		printf("%u (compatibility range %u-%u)\n", policyvers,
+		       policyvers_max, policyvers_min);
 		exit(0);
 	}
 
@@ -605,8 +611,7 @@ int main(int argc, char **argv)
 			}
 		}
 
-		policydbp->policyvers = policyvers ? policyvers :
-						     POLICYDB_VERSION_MAX;
+		policydbp->policyvers = policyvers;
 	} else {
 		if (conf) {
 			fprintf(stderr,
@@ -622,8 +627,7 @@ int main(int argc, char **argv)
 		/* Let sepol know if we are dealing with MLS support */
 		parse_policy.mls = mlspol;
 		parse_policy.handle_unknown = handle_unknown;
-		parse_policy.policyvers = policyvers ? policyvers :
-						       POLICYDB_VERSION_MAX;
+		parse_policy.policyvers = policyvers;
 
 		policydbp = &parse_policy;
 
@@ -651,8 +655,7 @@ int main(int argc, char **argv)
 					"Error while expanding policy\n");
 				exit(1);
 			}
-			policydb.policyvers = policyvers ? policyvers :
-							   POLICYDB_VERSION_MAX;
+			policydb.policyvers = policyvers;
 			policydb_destroy(policydbp);
 			policydbp = &policydb;
 		}
