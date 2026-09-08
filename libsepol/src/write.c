@@ -1938,17 +1938,18 @@ int policydb_write(policydb_t *p, struct policy_file *fp)
 		if (ebitmap_write(&p->permissive_map, fp) == -1)
 			return POLICYDB_ERROR;
 
-		if (p->policyvers < POLICYDB_VERSION_NEVERAUDIT) {
-			ebitmap_node_t *tnode;
-
-			ebitmap_for_each_positive_bit(&p->neveraudit_map, tnode,
-						      i) {
+		if (p->target_platform != SEPOL_TARGET_SELINUX) {
+			if (!ebitmap_is_empty(&p->neveraudit_map))
+				WARN(fp->handle,
+				     "Warning! Target platform %s does not "
+				     "support neveraudit types, but some were defined",
+				     policydb_target_strings[p->target_platform]);
+		} else if (p->policyvers < POLICYDB_VERSION_NEVERAUDIT) {
+			if (!ebitmap_is_empty(&p->neveraudit_map))
 				WARN(fp->handle,
 				     "Warning! Policy version %d cannot "
 				     "support neveraudit types, but some were defined",
 				     p->policyvers);
-				break;
-			}
 		} else if (ebitmap_write(&p->neveraudit_map, fp) == -1)
 			return POLICYDB_ERROR;
 	}

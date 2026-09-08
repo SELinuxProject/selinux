@@ -3954,7 +3954,8 @@ int policydb_read(policydb_t *p, struct policy_file *fp, unsigned verbose)
 	}
 
 	if (p->policyvers >= POLICYDB_VERSION_NEVERAUDIT &&
-	    p->policy_type == POLICY_KERN) {
+	    p->policy_type == POLICY_KERN &&
+	    p->target_platform == SEPOL_TARGET_SELINUX) {
 		if (ebitmap_read(&p->neveraudit_map, fp))
 			goto bad;
 	}
