@@ -1680,6 +1680,9 @@ static int validate_genfs(sepol_handle_t *handle, const policydb_t *p,
 {
 	const genfs_t *genfs;
 	const ocontext_t *octx;
+	size_t len;
+	int wildcard = ebitmap_get_bit(&p->policycaps,
+				       POLICYDB_CAP_GENFS_SECLABEL_WILDCARD);
 
 	for (genfs = p->genfs; genfs; genfs = genfs->next) {
 		for (octx = genfs->head; octx; octx = octx->next) {
@@ -1691,6 +1694,13 @@ static int validate_genfs(sepol_handle_t *handle, const policydb_t *p,
 						   &flavors[SYM_CLASSES]))
 					goto bad;
 				if (validate_genfs_class(octx->v.sclass, p))
+					goto bad;
+			}
+			if (!octx->u.name || !octx->u.name[0])
+				goto bad;
+			if (wildcard) {
+				len = strlen(octx->u.name);
+				if (octx->u.name[len - 1] != '*')
 					goto bad;
 			}
 		}
