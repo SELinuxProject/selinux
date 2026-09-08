@@ -893,9 +893,11 @@ bad:
 	return -1;
 }
 
-static int validate_user_datum(sepol_handle_t *handle, const user_datum_t *user,
-			       validate_t flavors[], const policydb_t *p)
+static int validate_user_datum(sepol_handle_t *handle, hashtab_key_t key,
+			       const user_datum_t *user, validate_t flavors[],
+			       const policydb_t *p)
 {
+	const scope_datum_t *scope;
 	int allow_unset;
 
 	if (validate_value(user->s.value, &flavors[SYM_USERS]))
@@ -903,7 +905,8 @@ static int validate_user_datum(sepol_handle_t *handle, const user_datum_t *user,
 	if (validate_role_set(&user->roles, &flavors[SYM_ROLES]))
 		goto bad;
 
-	allow_unset = (!p->mls) || (p->policy_type != POLICY_MOD);
+	scope = hashtab_search(p->scope[SYM_USERS].table, key);
+	allow_unset = (!p->mls) || (!scope || scope->scope != SCOPE_DECL);
 	if (validate_mls_semantic_range(&user->range, &flavors[SYM_LEVELS],
 					&flavors[SYM_CATS], allow_unset))
 		goto bad;
@@ -929,12 +932,12 @@ bad:
 	return -1;
 }
 
-static int validate_user_datum_wrapper(__attribute__((unused)) hashtab_key_t k,
-				       hashtab_datum_t d, void *args)
+static int validate_user_datum_wrapper(hashtab_key_t k, hashtab_datum_t d,
+				       void *args)
 {
 	map_arg_t *margs = args;
 
-	return validate_user_datum(margs->handle, d, margs->flavors,
+	return validate_user_datum(margs->handle, k, d, margs->flavors,
 				   margs->policy);
 }
 
