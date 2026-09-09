@@ -45,10 +45,11 @@
 #include "private.h"
 #include "mls.h"
 
-#define glblub_version                                 \
-	((p->policy_type == POLICY_KERN &&             \
-	  p->policyvers >= POLICYDB_VERSION_GLBLUB) || \
-	 (p->policy_type == POLICY_BASE &&             \
+#define glblub_version                                  \
+	((p->target_platform == SEPOL_TARGET_SELINUX && \
+	  p->policy_type == POLICY_KERN &&              \
+	  p->policyvers >= POLICYDB_VERSION_GLBLUB) ||  \
+	 (p->policy_type == POLICY_BASE &&              \
 	  p->policyvers >= MOD_POLICYDB_VERSION_GLBLUB))
 
 struct policy_data {
@@ -477,7 +478,8 @@ static int filename_trans_write(struct policydb *p, void *fp)
 	uint32_t buf[1];
 	int rc;
 
-	if (p->policyvers < POLICYDB_VERSION_COMP_FTRANS) {
+	if (p->target_platform == SEPOL_TARGET_SELINUX &&
+	    p->policyvers < POLICYDB_VERSION_COMP_FTRANS) {
 		buf[0] = cpu_to_le32(p->filename_trans_count);
 		items = put_entry(buf, sizeof(uint32_t), 1, fp);
 		if (items != 1)

@@ -2517,7 +2517,8 @@ static int filename_trans_read(policydb_t *p, struct policy_file *fp)
 		return -1;
 	nel = le32_to_cpu(buf[0]);
 
-	if (p->policyvers < POLICYDB_VERSION_COMP_FTRANS) {
+	if (p->target_platform == SEPOL_TARGET_SELINUX &&
+	    p->policyvers < POLICYDB_VERSION_COMP_FTRANS) {
 		for (i = 0; i < nel; i++) {
 			rc = filename_trans_read_one_compat(p, fp);
 			if (rc < 0)
@@ -3868,13 +3869,20 @@ int policydb_read(policydb_t *p, struct policy_file *fp, unsigned verbose)
 
 	r_policyvers = buf[bufindex];
 	if (policy_type == POLICY_KERN) {
-		if (r_policyvers < POLICYDB_VERSION_MIN ||
-		    r_policyvers > POLICYDB_VERSION_MAX) {
+		unsigned int policyvers_min = POLICYDB_VERSION_MIN;
+		unsigned int policyvers_max = POLICYDB_VERSION_MAX;
+
+		if (p->target_platform == SEPOL_TARGET_XEN) {
+			policyvers_min = POLICYDB_XEN_VERSION_MIN;
+			policyvers_max = POLICYDB_XEN_VERSION_MAX;
+		}
+
+		if (r_policyvers < policyvers_min ||
+		    r_policyvers > policyvers_max) {
 			ERR(fp->handle,
 			    "policydb version %d does not match "
 			    "my version range %d-%d",
-			    buf[bufindex], POLICYDB_VERSION_MIN,
-			    POLICYDB_VERSION_MAX);
+			    buf[bufindex], policyvers_min, policyvers_max);
 			return POLICYDB_ERROR;
 		}
 	} else if (policy_type == POLICY_BASE || policy_type == POLICY_MOD) {

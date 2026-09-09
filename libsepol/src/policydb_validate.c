@@ -2080,8 +2080,13 @@ static int validate_properties(sepol_handle_t *handle, const policydb_t *p)
 {
 	switch (p->policy_type) {
 	case POLICY_KERN:
-		if (p->policyvers < POLICYDB_VERSION_MIN ||
-		    p->policyvers > POLICYDB_VERSION_MAX)
+		if (p->target_platform == SEPOL_TARGET_SELINUX &&
+		    (p->policyvers < POLICYDB_VERSION_MIN ||
+		     p->policyvers > POLICYDB_VERSION_MAX))
+			goto bad;
+		if (p->target_platform == SEPOL_TARGET_XEN &&
+		    (p->policyvers < POLICYDB_XEN_VERSION_MIN ||
+		     p->policyvers > POLICYDB_XEN_VERSION_MAX))
 			goto bad;
 		break;
 	case POLICY_BASE:

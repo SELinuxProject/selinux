@@ -788,11 +788,12 @@ extern int policydb_set_target_platform(policydb_t *p, int platform);
 
 /* TODO: add other features here */
 
-#define policydb_has_cond_xperms_feature(p)                   \
-	(((p)->policy_type == POLICY_KERN &&                  \
-	  (p)->policyvers >= POLICYDB_VERSION_COND_XPERMS) || \
-	 ((p)->policy_type != POLICY_KERN &&                  \
-	  (p)->policyvers >= MOD_POLICYDB_VERSION_COND_XPERMS))
+#define policydb_has_cond_xperms_feature(p)                    \
+	((p)->target_platform == SEPOL_TARGET_SELINUX &&       \
+	 (((p)->policy_type == POLICY_KERN &&                  \
+	   (p)->policyvers >= POLICYDB_VERSION_COND_XPERMS) || \
+	  ((p)->policy_type != POLICY_KERN &&                  \
+	   (p)->policyvers >= MOD_POLICYDB_VERSION_COND_XPERMS)))
 
 /* the config flags related to unknown classes/perms are bits 2 and 3 */
 #define DENY_UNKNOWN SEPOL_DENY_UNKNOWN
