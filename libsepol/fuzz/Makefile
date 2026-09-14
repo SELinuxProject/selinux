@@ -10,7 +10,7 @@ TARGETS := binpolicy-fuzzer secilc-fuzzer module-package-fuzzer
 LIBSEPOLA := ../src/libsepol.a
 
 CFLAGS ?= -g -O0 -Wall
-override CFLAGS += -I../include -I../cil/include -D_GNU_SOURCE \
+override CFLAGS += -I../include -D_GNU_SOURCE \
 	-DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION -DDEFINEMAIN -DVERBOSE=1
 
 all: $(TARGETS)
