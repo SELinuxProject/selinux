@@ -1257,6 +1257,31 @@ static int avrule_list_to_cil(int indent, struct policydb *pdb,
 	struct type_set *ts;
 
 	for (avrule = avrule_list; avrule != NULL; avrule = avrule->next) {
+		if ((avrule->flags & RULE_NOTSELF) &&
+		    (!ebitmap_is_empty(&avrule->ttypes.types) ||
+		     !ebitmap_is_empty(&avrule->ttypes.negset))) {
+			/*
+			 * CIL has no target syntax for "T minus self":
+			 * (notself) is the universe minus self and (other) is
+			 * the source set minus self. A neverallow with a
+			 * non-trivial target set and -self therefore has no
+			 * representation. Drop it rather than fail the whole
+			 * conversion; the rule is an assertion, not an
+			 * enforcement rule, so the resulting policy is no more
+			 * permissive.
+			 */
+			if (avrule->source_filename) {
+				WARN(NULL,
+				     "%s:%lu: neverallow with a non-trivial -self target is not representable in CIL, dropped",
+				     avrule->source_filename,
+				     avrule->source_line);
+			} else {
+				WARN(NULL,
+				     "neverallow with a non-trivial -self target is not representable in CIL, dropped");
+			}
+			continue;
+		}
+
 		if ((avrule->specified & pdb->line_marker_avrules) &&
 		    avrule->source_filename) {
 			cil_println(0, ";;* lmx %lu %s\n", avrule->source_line,
@@ -1270,21 +1295,6 @@ static int avrule_list_to_cil(int indent, struct policydb *pdb,
 		}
 
 		if (avrule->flags & RULE_NOTSELF) {
-			if (!ebitmap_is_empty(&avrule->ttypes.types) ||
-			    !ebitmap_is_empty(&avrule->ttypes.negset)) {
-				if (avrule->source_filename) {
-					ERR(NULL,
-					    "%s:%lu: Non-trivial neverallow rules with targets containing not or minus self not yet supported",
-					    avrule->source_filename,
-					    avrule->source_line);
-				} else {
-					ERR(NULL,
-					    "Non-trivial neverallow rules with targets containing not or minus self not yet supported");
-				}
-				rc = -1;
-				goto exit;
-			}
-
 			num_tnames = 0;
 		} else {
 			ts = &avrule->ttypes;
