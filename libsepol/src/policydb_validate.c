@@ -736,7 +736,8 @@ static int validate_type_datum(sepol_handle_t *handle, const type_datum_t *type,
 			while ((t->flavor == TYPE_ALIAS) || (t->primary == 0)) {
 				if (repeats >= MAX_ALIAS_REPEATS)
 					break;
-				v = (t->primary) ? t->primary : t->s.value;
+				v = (t->flavor == TYPE_ALIAS) ? t->primary :
+								t->s.value;
 				if (validate_value(v, &flavors[SYM_TYPES]))
 					break;
 				t = p->type_val_to_struct[v - 1];
