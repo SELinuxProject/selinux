@@ -403,7 +403,6 @@ static int compile_regex(struct regex_spec *spec, char *errbuf,
 			 size_t errbuf_size, bool jit)
 {
 	const char *reg_buf;
-	char *anchored_regex, *cp;
 	struct regex_error_data error_data;
 	size_t len;
 	int rc;
@@ -449,7 +448,6 @@ static int compile_regex(struct regex_spec *spec, char *errbuf,
 	}
 
 	reg_buf = spec->regex_str;
-	/* Anchor the regular expression. */
 	len = strlen(reg_buf);
 	/* Use a sufficient large upper bound for regular expression lengths
 	 * to limit the compilation time on malformed inputs. */
@@ -460,23 +458,12 @@ static int compile_regex(struct regex_spec *spec, char *errbuf,
 		errno = EINVAL;
 		return -1;
 	}
-	cp = anchored_regex = malloc(len + 3);
-	if (!anchored_regex) {
-		__pthread_mutex_unlock(&spec->regex_lock);
-		snprintf(errbuf, errbuf_size, "out of memory");
-		return -1;
-	}
 
-	/* Create ^...$ regexp.  */
-	*cp++ = '^';
-	memcpy(cp, reg_buf, len);
-	cp += len;
-	*cp++ = '$';
-	*cp = '\0';
-
-	/* Compile the regular expression. */
-	rc = regex_prepare_data(&spec->regex, anchored_regex, &error_data, jit);
-	free(anchored_regex);
+	/*
+	 * Compile the regular expression; anchoring is applied by the
+	 * regex back end.
+	 */
+	rc = regex_prepare_data(&spec->regex, reg_buf, &error_data, jit);
 	if (rc < 0) {
 		regex_format_error(&error_data, errbuf, errbuf_size);
 		__pthread_mutex_unlock(&spec->regex_lock);

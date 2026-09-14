@@ -41,7 +41,9 @@ static pthread_once_t match_data_key_once = PTHREAD_ONCE_INIT;
 static int match_data_key_alloc_failed = 0;
 static int match_data_key_created = 0;
 static pthread_once_t once = PTHREAD_ONCE_INIT;
+static pthread_once_t compile_context_once = PTHREAD_ONCE_INIT;
 static pcre2_match_context *match_context;
+static pcre2_compile_context *compile_context;
 static char arch_string_buffer[32];
 
 /*
@@ -86,19 +88,58 @@ struct regex_data {
 	pcre2_code *regex; /* compiled regular expression */
 };
 
+static void compile_context_init(void)
+{
+	pcre2_compile_context *cctx;
+
+	cctx = pcre2_compile_context_create(NULL);
+	if (cctx) {
+		pcre2_set_compile_extra_options(cctx, PCRE2_EXTRA_MATCH_LINE);
+		compile_context = cctx;
+	}
+}
+
 int regex_prepare_data(struct regex_data **regex, char const *pattern_string,
 		       struct regex_error_data *errordata, bool jit)
 {
+	pcre2_compile_context *cctx, *tmp_cctx = NULL;
+
 	memset(errordata, 0, sizeof(struct regex_error_data));
+	*regex = NULL;
+
+	__selinux_once(compile_context_once, compile_context_init);
+	cctx = compile_context;
+	if (!cctx) {
+		/*
+		 * One-time init failed (OOM); retry per call so a
+		 * long-running process is not left permanently unable to
+		 * compile file context entries.
+		 */
+		tmp_cctx = pcre2_compile_context_create(NULL);
+		if (!tmp_cctx)
+			return -1;
+		pcre2_set_compile_extra_options(tmp_cctx,
+						PCRE2_EXTRA_MATCH_LINE);
+		cctx = tmp_cctx;
+	}
 
 	*regex = regex_data_create();
 	if (!(*regex))
-		return -1;
+		goto err;
 
+	/*
+	 * PCRE2_EXTRA_MATCH_LINE anchors the pattern as ^(?:pattern)$
+	 * inside pcre2 after parsing, so a top-level | is grouped, an
+	 * unmatched parenthesis in the pattern is still rejected, and
+	 * (?x)/\Q inside the pattern cannot swallow the anchoring.
+	 * PCRE2_DOLLAR_ENDONLY makes the injected $ match only at the end
+	 * of the subject.
+	 */
 	(*regex)->regex = pcre2_compile((PCRE2_SPTR)pattern_string,
-					PCRE2_ZERO_TERMINATED, PCRE2_DOTALL,
+					PCRE2_ZERO_TERMINATED,
+					PCRE2_DOTALL | PCRE2_DOLLAR_ENDONLY,
 					&errordata->error_code,
-					&errordata->error_offset, NULL);
+					&errordata->error_offset, cctx);
 	if (!(*regex)->regex) {
 		goto err;
 	}
@@ -111,9 +152,11 @@ int regex_prepare_data(struct regex_data **regex, char const *pattern_string,
 	if (jit)
 		(void)pcre2_jit_compile((*regex)->regex, PCRE2_JIT_COMPLETE);
 
+	pcre2_compile_context_free(tmp_cctx);
 	return 0;
 
 err:
+	pcre2_compile_context_free(tmp_cctx);
 	regex_data_free(*regex);
 	*regex = NULL;
 	return -1;
@@ -373,15 +416,42 @@ int regex_prepare_data(struct regex_data **regex, char const *pattern_string,
 		       struct regex_error_data *errordata,
 		       bool jit __attribute__((unused)))
 {
+	char *anchored, *cp;
+	size_t len;
+
 	memset(errordata, 0, sizeof(struct regex_error_data));
 
 	*regex = regex_data_create();
 	if (!(*regex))
 		return -1;
 
-	(*regex)->regex = pcre_compile(pattern_string, PCRE_DOTALL,
+	/*
+	 * Anchor as \A(?:...\E)\z so a top-level | stays inside the anchors,
+	 * a trailing newline in the subject is not matched, and a pattern
+	 * ending inside \Q does not swallow the closing group and anchor.
+	 * PCRE1 has no equivalent of PCRE2_EXTRA_MATCH_LINE, so an (?x)#...
+	 * comment at the end of the pattern will still consume the suffix;
+	 * that case is left unhandled on this legacy path.
+	 */
+	len = strlen(pattern_string);
+#define REPREFIX "\\A(?:"
+#define RESUFFIX "\\E)\\z"
+	cp = anchored = malloc(len + strlen(REPREFIX) + strlen(RESUFFIX) + 1);
+	if (!anchored)
+		goto err;
+
+	cp = mempcpy(cp, REPREFIX, strlen(REPREFIX));
+	cp = mempcpy(cp, pattern_string, len);
+	cp = mempcpy(cp, RESUFFIX, strlen(RESUFFIX));
+	*cp = '\0';
+#undef REPREFIX
+#undef RESUFFIX
+
+	(*regex)->regex = pcre_compile(anchored,
+				       PCRE_DOTALL | PCRE_DOLLAR_ENDONLY,
 				       &errordata->error_buffer,
 				       &errordata->error_offset, NULL);
+	free(anchored);
 	if (!(*regex)->regex)
 		goto err;
 
