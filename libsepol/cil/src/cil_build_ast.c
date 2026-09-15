@@ -56,6 +56,22 @@ struct cil_args_build {
 	struct cil_tree_node *boolif;
 };
 
+static int cil_verify_ocon_name(const char *name, const char *what)
+{
+	const unsigned char *s;
+
+	for (s = (const unsigned char *)name; *s; s++) {
+		if (iscntrl(*s)) {
+			cil_log(CIL_ERR,
+				"Invalid character 0x%02x in %s name\n", *s,
+				what);
+			return SEPOL_ERR;
+		}
+	}
+
+	return SEPOL_OK;
+}
+
 static int cil_fill_list(struct cil_tree_node *current, enum cil_flavor flavor,
 			 struct cil_list **list)
 {
@@ -4622,6 +4638,11 @@ int cil_gen_genfscon(struct cil_db *db, struct cil_tree_node *parse_current,
 	genfscon->fs_str = parse_current->next->data;
 	genfscon->path_str = parse_current->next->next->data;
 
+	rc = cil_verify_ocon_name(genfscon->fs_str, "genfscon filesystem");
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+
 	if (parse_current->next->next->next->next) {
 		/* (genfscon <FS_STR> <PATH_STR> <FILE_TYPE> ... */
 		char *file_type = parse_current->next->next->next->data;
@@ -4715,6 +4736,12 @@ int cil_gen_netifcon(struct cil_db *db, struct cil_tree_node *parse_current,
 
 	netifcon->interface_str = parse_current->next->data;
 
+	rc = cil_verify_ocon_name(netifcon->interface_str,
+				  "netifcon interface");
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+
 	if (parse_current->next->next->cl_head == NULL) {
 		netifcon->if_context_str = parse_current->next->next->data;
 	} else {
@@ -4791,6 +4818,11 @@ int cil_gen_ibendportcon(__attribute__((unused)) struct cil_db *db,
 	cil_ibendportcon_init(&ibendportcon);
 
 	ibendportcon->dev_name_str = parse_current->next->data;
+
+	rc = cil_verify_ocon_name(ibendportcon->dev_name_str,
+				  "ibendportcon device");
+	if (rc != SEPOL_OK)
+		goto exit;
 
 	rc = cil_fill_integer(parse_current->next->next, &ibendportcon->port,
 			      10);
@@ -5240,6 +5272,11 @@ int cil_gen_fsuse(struct cil_db *db, struct cil_tree_node *parse_current,
 	}
 
 	fsuse->fs_str = parse_current->next->next->data;
+
+	rc = cil_verify_ocon_name(fsuse->fs_str, "fsuse filesystem");
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
 
 	if (parse_current->next->next->next->cl_head == NULL) {
 		fsuse->context_str = parse_current->next->next->next->data;
