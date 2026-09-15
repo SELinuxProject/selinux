@@ -75,13 +75,12 @@ static int port_from_record(sepol_handle_t *handle, const policydb_t *policydb,
 	tmp_port->u.port.protocol = tmp_proto;
 
 	/* Port range */
-	tmp_port->u.port.low_port = low;
-	tmp_port->u.port.high_port = high;
-	if (tmp_port->u.port.low_port > tmp_port->u.port.high_port) {
-		ERR(handle, "low port %d exceeds high port %d",
-		    tmp_port->u.port.low_port, tmp_port->u.port.high_port);
+	if (low < 1 || low > high || high > 0xffff) {
+		ERR(handle, "invalid port range %d-%d", low, high);
 		goto err;
 	}
+	tmp_port->u.port.low_port = low;
+	tmp_port->u.port.high_port = high;
 
 	/* Context */
 	if (context_from_record(handle, policydb, &tmp_con,
