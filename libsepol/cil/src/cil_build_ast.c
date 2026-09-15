@@ -4859,6 +4859,12 @@ int cil_gen_pirqcon(struct cil_db *db, struct cil_tree_node *parse_current,
 		goto exit;
 	}
 
+	if (pirqcon->pirq > 0xffff) {
+		cil_log(CIL_ERR, "Invalid pirq %u\n", pirqcon->pirq);
+		rc = SEPOL_ERR;
+		goto exit;
+	}
+
 	if (parse_current->next->next->cl_head == NULL) {
 		pirqcon->context_str = parse_current->next->next->data;
 	} else {

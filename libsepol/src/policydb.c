@@ -2571,15 +2571,23 @@ static int ocontext_read_xen(const struct policydb_compat_info *info,
 							      fp))
 					return -1;
 				break;
-			case OCON_XEN_PIRQ:
+			case OCON_XEN_PIRQ: {
+				uint32_t pirq;
+
 				rc = next_entry(buf, fp, sizeof(uint32_t));
 				if (rc < 0)
 					return -1;
+
+				pirq = le32_to_cpu(buf[0]);
+				if (pirq > UINT16_MAX)
+					return -1;
+				c->u.pirq = pirq;
 				c->u.pirq = le32_to_cpu(buf[0]);
 				if (context_read_and_validate(&c->context[0], p,
 							      fp))
 					return -1;
 				break;
+			}
 			case OCON_XEN_IOPORT:
 				rc = next_entry(buf, fp, sizeof(uint32_t) * 2);
 				if (rc < 0)

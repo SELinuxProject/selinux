@@ -4923,6 +4923,11 @@ int define_pirq_context(unsigned int pirq)
 		return 0;
 	}
 
+	if (pirq > 0xffff) {
+		yyerror2("pirq %u out of range", pirq);
+		return -1;
+	}
+
 	newc = calloc(1, sizeof(ocontext_t));
 	if (!newc) {
 		yyerror("out of memory");
