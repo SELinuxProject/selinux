@@ -2582,7 +2582,6 @@ static int ocontext_read_xen(const struct policydb_compat_info *info,
 				if (pirq > UINT16_MAX)
 					return -1;
 				c->u.pirq = pirq;
-				c->u.pirq = le32_to_cpu(buf[0]);
 				if (context_read_and_validate(&c->context[0], p,
 							      fp))
 					return -1;
