@@ -2741,17 +2741,29 @@ static int ocontext_read_selinux(const struct policydb_compat_info *info,
 					return -1;
 				break;
 			}
-			case OCON_PORT:
+			case OCON_PORT: {
+				uint32_t proto, port_lo, port_hi;
+
 				rc = next_entry(buf, fp, sizeof(uint32_t) * 3);
 				if (rc < 0)
 					return -1;
-				c->u.port.protocol = le32_to_cpu(buf[0]);
-				c->u.port.low_port = le32_to_cpu(buf[1]);
-				c->u.port.high_port = le32_to_cpu(buf[2]);
+
+				proto = le32_to_cpu(buf[0]);
+				port_lo = le32_to_cpu(buf[1]);
+				port_hi = le32_to_cpu(buf[2]);
+
+				if (proto > UINT8_MAX || port_lo > UINT16_MAX ||
+				    port_hi > UINT16_MAX)
+					return -1;
+
+				c->u.port.protocol = proto;
+				c->u.port.low_port = port_lo;
+				c->u.port.high_port = port_hi;
 				if (context_read_and_validate(&c->context[0], p,
 							      fp))
 					return -1;
 				break;
+			}
 			case OCON_NODE:
 				rc = next_entry(buf, fp, sizeof(uint32_t) * 2);
 				if (rc < 0)
