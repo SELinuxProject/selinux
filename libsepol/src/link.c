@@ -2007,9 +2007,13 @@ static int is_decl_requires_met(link_state_t *state, const avrule_decl_t *decl,
 	}
 	/* check that all classes and permissions have been satisfied */
 	for (i = 0; i < decl->required.class_perms_len; i++) {
-		const class_datum_t *cladatum = pol->class_val_to_struct[i];
+		const class_datum_t *cladatum;
 		const scope_datum_t *scope;
 
+		if (!ebitmap_get_bit(&decl->required.scope[SYM_CLASSES], i))
+			continue;
+
+		cladatum = pol->class_val_to_struct[i];
 		bitmap = &decl->required.class_perms_map[i];
 		id = pol->p_class_val_to_name[i];
 
