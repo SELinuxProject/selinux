@@ -15,8 +15,13 @@ This command maps file paths using regular expressions to SELinux labels.
 
 FILE_SPEC may contain either a fully qualified path,
 or a Perl compatible regular expression (PCRE),
-describing fully qualified path(s). The only PCRE flag in use is PCRE2_DOTALL,
-which causes a wildcard '.' to match anything, including a new line.
+describing fully qualified path(s).
+The regular expression is anchored at both ends,
+so the whole path must match; a leading ^ or trailing $ is not required.
+The PCRE flags in use are PCRE2_DOTALL,
+which causes a wildcard '.' to match anything, including a new line,
+PCRE2_DOLLAR_ENDONLY, and PCRE2_EXTRA_MATCH_LINE,
+which apply the anchoring.
 Strings representing paths are processed as bytes (as opposed to Unicode),
 meaning that non-ASCII characters are not matched by a single wildcard.
 If you need to match a non-ASCII character with a wildcard, put it in a group, e.g. '(č)*'
