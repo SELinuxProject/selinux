@@ -109,12 +109,10 @@ static int read_binary_policy(policydb_t *p, const char *file,
 }
 
 static int write_binary_policy(policydb_t *p, FILE *outfp,
-			       unsigned int policy_type,
 			       unsigned int policyvers)
 {
 	struct policy_file pf;
 
-	p->policy_type = policy_type;
 	p->policyvers = policyvers;
 	p->handle_unknown = handle_unknown;
 
@@ -264,13 +262,6 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
-	if (binary && (policy_type != POLICY_BASE)) {
-		fprintf(stderr,
-			"%s:  -b and -m are incompatible with each other.\n",
-			argv[0]);
-		exit(1);
-	}
-
 	if (line_marker_for_allow && !cil) {
 		fprintf(stderr, "%s:  -L must be used along with -C.\n",
 			argv[0]);
@@ -293,6 +284,11 @@ int main(int argc, char **argv)
 		if (read_binary_policy(&modpolicydb, file, argv[0]) == -1) {
 			exit(1);
 		}
+		/*
+		 * Preserve the input's policy type instead of the getopt
+		 * default; -m is redundant with -b but harmless.
+		 */
+		policy_type = modpolicydb.policy_type;
 	} else {
 		if (policydb_init(&modpolicydb)) {
 			fprintf(stderr, "%s: out of memory!\n", argv[0]);
@@ -313,7 +309,7 @@ int main(int argc, char **argv)
 		}
 	}
 
-	if (policy_type != POLICY_BASE && outfile) {
+	if (policy_type != POLICY_BASE && outfile && !binary) {
 		char *out_name;
 		char *separator;
 		char *mod_name = modpolicydb.name;
@@ -372,7 +368,7 @@ int main(int argc, char **argv)
 
 		if (!cil) {
 			if (write_binary_policy(&modpolicydb, outfp,
-						policy_type, policyvers) != 0) {
+						policyvers) != 0) {
 				fprintf(stderr, "%s:  error writing %s\n",
 					argv[0], outfile);
 				exit(1);
