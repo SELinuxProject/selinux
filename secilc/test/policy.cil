@@ -130,6 +130,7 @@
 	(typealiasactual sbin_t bin_t)
 	(typepermissive device_t)
 	(typeneveraudit device_t)
+	(typebounds exec_t bad_t)
 	(typemember device_t bin_t file exec_t)
 	(typemember exec_type self file exec_t)
 	(typetransition device_t console_t files console_device_t)
@@ -232,6 +233,7 @@
 	(roletype exec_role bin_t)
 	(roletype exec_role exec_type)
 	(roleallow system_r user_r)
+	(rolebounds system_r baz_r)
 	(roletransition system_r bin_t file user_r)
 
 	(userrole foo_u foo_role)
@@ -251,6 +253,7 @@
 	(userrange u5 low_high)
 	(userrange u6 low_high)
 	(userattributeset ua4 (u5 u6))
+	(userbounds u5 u6)
 	(userrole ua4 foo_role_a)
 
 	(userrange foo_u low_high)
