@@ -2660,6 +2660,25 @@ static int write_user_decl_rules_to_cil(FILE *out, struct policydb *pdb)
 			goto exit;
 		}
 
+		if (user->bounds > 0) {
+			sepol_printf(out, "(userbounds %s %s)\n",
+				     pdb->p_user_val_to_name[user->bounds - 1],
+				     name);
+		}
+	}
+
+	for (i = 0; i < num; i++) {
+		name = strs_read_at_index(strs, i);
+		if (!name) {
+			continue;
+		}
+
+		user = hashtab_search(pdb->p_users.table, name);
+		if (!user) {
+			rc = -1;
+			goto exit;
+		}
+
 		roles = &user->roles.roles;
 		if (roles && !ebitmap_is_empty(roles)) {
 			rc = strs_init(&role_strs, pdb->p_roles.nprim);

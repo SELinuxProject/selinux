@@ -2493,8 +2493,9 @@ static int role_to_cil(int indent, struct policydb *pdb,
 		}
 
 		if (role->bounds > 0) {
-			cil_println(indent, "(rolebounds %s %s)", key,
-				    pdb->p_role_val_to_name[role->bounds - 1]);
+			cil_println(indent, "(rolebounds %s %s)",
+				    pdb->p_role_val_to_name[role->bounds - 1],
+				    key);
 		}
 		break;
 
@@ -2661,6 +2662,11 @@ static int user_to_cil(int indent, struct policydb *pdb,
 	ebitmap_for_each_positive_bit(&roles, node, i) {
 		cil_println(indent, "(userrole %s %s)", key,
 			    pdb->p_role_val_to_name[i]);
+	}
+
+	if (user->bounds > 0) {
+		cil_println(indent, "(userbounds %s %s)",
+			    pdb->p_user_val_to_name[user->bounds - 1], key);
 	}
 
 	cil_indent(indent);
