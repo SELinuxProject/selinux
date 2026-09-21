@@ -115,9 +115,16 @@ static int port_parse(semanage_handle_t *handle, parse_info_t *info,
 			goto err;
 		if (parse_assert_space(handle, info) < 0)
 			goto err;
-		semanage_port_set_range(port, low, high);
-	} else
-		semanage_port_set_port(port, low);
+	} else {
+		high = low;
+	}
+
+	if (low < 1 || low > high || high > 0xffff) {
+		ERR(handle, "port range %d - %d is invalid (%s: %u):\n%s", low,
+		    high, info->filename, info->lineno, info->orig_line);
+		goto err;
+	}
+	semanage_port_set_range(port, low, high);
 
 	/* Port context */
 	if (parse_fetch_string(handle, info, &str, ' ', 0) < 0)
