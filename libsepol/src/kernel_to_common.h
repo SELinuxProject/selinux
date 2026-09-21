@@ -1,6 +1,13 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <sys/types.h>
+#include <netinet/in.h>
+#ifndef IPPROTO_DCCP
+#define IPPROTO_DCCP 33
+#endif
+#ifndef IPPROTO_SCTP
+#define IPPROTO_SCTP 132
+#endif
 
 #include <sepol/policydb/avtab.h>
 #include <sepol/policydb/policydb.h>

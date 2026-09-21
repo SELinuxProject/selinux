@@ -27,12 +27,6 @@
 #include <getopt.h>
 #include <libgen.h>
 #include <netinet/in.h>
-#ifndef IPPROTO_DCCP
-#define IPPROTO_DCCP 33
-#endif
-#ifndef IPPROTO_SCTP
-#define IPPROTO_SCTP 132
-#endif
 #include <signal.h>
 #include <stdarg.h>
 #include <stdio.h>
