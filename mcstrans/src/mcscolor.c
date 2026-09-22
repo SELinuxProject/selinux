@@ -263,9 +263,14 @@ int init_colors(void)
 	if (getcon(&my_context) < 0)
 		return 1;
 
-	cfg = fopen(selinux_colors_path(), "r");
-	if (!cfg)
+	int fd = selinux_policy_open(selinux_colors_path(), O_RDONLY);
+	if (fd < 0)
 		return 1;
+	cfg = fdopen(fd, "r");
+	if (!cfg) {
+		close(fd);
+		return 1;
+	}
 
 	__fsetlocking(cfg, FSETLOCKING_BYCALLER);
 	while (getline(&buffer, &size, cfg) > 0) {

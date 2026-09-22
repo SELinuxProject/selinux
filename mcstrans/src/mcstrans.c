@@ -921,9 +921,16 @@ int read_translations(const char *filename)
 		return -1;
 	}
 
-	FILE *cfg = fopen(filename, "r");
+	int fd = selinux_policy_open(filename, O_RDONLY);
+	if (fd < 0) {
+		syslog(LOG_ERR, "%s file open failed", filename);
+		return -1;
+	}
+
+	FILE *cfg = fdopen(fd, "r");
 	if (!cfg) {
 		syslog(LOG_ERR, "%s file open failed", filename);
+		close(fd);
 		return -1;
 	}
 
