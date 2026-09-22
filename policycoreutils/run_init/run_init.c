@@ -302,12 +302,20 @@ static int get_init_context(char **context)
 {
 	FILE *fp;
 	char buf[255], *bufp;
-	int buf_len;
+	int buf_len, fd;
 	char context_file[PATH_MAX];
+
 	snprintf(context_file, sizeof(context_file) - 1, "%s/%s",
 		 selinux_contexts_path(), CONTEXT_FILE);
-	fp = fopen(context_file, "r");
+	fd = selinux_policy_open(context_file, O_RDONLY);
+	if (fd < 0) {
+		fprintf(stderr, _("Could not open file %s\n"), context_file);
+		return -1;
+	}
+
+	fp = fdopen(fd, "r");
 	if (!fp) {
+		close(fd);
 		fprintf(stderr, _("Could not open file %s\n"), context_file);
 		return -1;
 	}
