@@ -65,8 +65,32 @@
 const char *homedir;
 static int master_fd = -1;
 
-static const char *server_watch_file = "/etc/selinux/restorecond.conf";
-static const char *user_watch_file = "/etc/selinux/restorecond_user.conf";
+#ifndef RESTORECOND_CONFDIRS
+#define RESTORECOND_CONFDIRS "/etc/selinux/", "/usr/lib/selinux/"
+#endif
+
+static const char *resolve_watch_file(const char *name, char *out, size_t len)
+{
+	static const char *dirs[] = { RESTORECOND_CONFDIRS, NULL };
+	unsigned int i;
+
+	for (i = 0; dirs[i]; i++) {
+		snprintf(out, len, "%s%s", dirs[i], name);
+		if (access(out, R_OK) == 0)
+			return out;
+	}
+	/*
+	 * Nothing found: return the primary path so the eventual open()
+	 * error names the location an administrator would create.
+	 */
+	snprintf(out, len, "%s%s", dirs[0], name);
+	return out;
+}
+
+static char server_watch_path[PATH_MAX];
+static char user_watch_path[PATH_MAX];
+static const char *server_watch_file;
+static const char *user_watch_file;
 static const char *watch_file;
 struct restore_opts r_opts;
 
@@ -152,6 +176,13 @@ int main(int argc, char **argv)
 	if (is_selinux_enabled() != 1)
 		return 0;
 
+	server_watch_file = resolve_watch_file("restorecond.conf",
+					       server_watch_path,
+					       sizeof(server_watch_path));
+
+	user_watch_file = resolve_watch_file("restorecond_user.conf",
+					     user_watch_path,
+					     sizeof(user_watch_path));
 	watch_file = server_watch_file;
 
 	/* Set all options to zero/NULL except for ignore_noent, digest, and skip_multilink. */
