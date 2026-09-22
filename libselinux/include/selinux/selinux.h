@@ -565,6 +565,18 @@ extern const char *selinux_policy_root(void);
  */
 extern int selinux_set_policy_root(const char *rootpath);
 
+/*
+ * selinux_policy_open opens @path for reading, and if @path is under
+ * selinux_policy_root() and yields ENOENT or EACCES, retries the open
+ * under each fallback configuration root in turn (e.g. /usr/lib/selinux
+ * when a distribution ships policy configuration there instead of /etc).
+ * @path is normally a path returned by one of the selinux_*_path()
+ * functions below. Returns a file descriptor on success or -1 with
+ * errno set (ENOENT if no configuration root had the file, EACCES if
+ * at least one root had it but refused access).
+ */
+extern int selinux_policy_open(const char *path, int flags);
+
 /* These functions return the paths to specific files under the 
    policy root directory. */
 extern const char *selinux_current_policy_path(void);

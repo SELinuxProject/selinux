@@ -1,0 +1,57 @@
+.TH "selinux_policy_open" "3" "" "SELinux" "SELinux API Documentation"
+.SH "NAME"
+selinux_policy_open \- open a SELinux policy configuration file, searching fallback roots
+.
+.SH "SYNOPSIS"
+.B #include <selinux/selinux.h>
+.sp
+.BI "int selinux_policy_open(const char *" path ", int " flags ");"
+.
+.SH "DESCRIPTION"
+.BR selinux_policy_open ()
+opens
+.I path
+with the given
+.BR open (2)
+.IR flags .
+If
+.I path
+is under
+.BR selinux_policy_root (3)
+and the open fails with
+.B ENOENT
+or
+.BR EACCES ,
+the open is retried under each fallback configuration root in turn
+(for example
+.I /usr/lib/selinux
+on a system that ships vendor policy configuration there and keeps
+.I /etc/selinux
+for administrator overrides).
+.PP
+.I path
+is normally a value returned by one of the
+.BR selinux_binary_policy_path (3)
+family of accessors. Paths outside the policy root are opened as-is
+with no fallback. If
+.BR selinux_set_policy_root (3)
+has been called, the search is disabled and only
+.I path
+is tried.
+.
+.SH "RETURN VALUE"
+On success a file descriptor is returned. On failure \-1 is returned and
+.I errno
+is set:
+.B ENOENT
+if no configuration root contained the file, or
+.B EACCES
+if at least one root contained it but access was refused. Any other
+.BR open (2)
+error is returned against the root that produced it.
+.
+.SH "SEE ALSO"
+.BR selinux_policy_root (3),
+.BR selinux_binary_policy_path (3),
+.BR open (2),
+.BR selinux (8)

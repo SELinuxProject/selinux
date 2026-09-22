@@ -117,10 +117,9 @@ const char *const *selinux_policy_roots(void);
 /*
  * Open @path (as returned by one of the selinux_*_path() accessors),
  * falling back through selinux_policy_roots() when the primary path
- * yields ENOENT or EACCES. Internal-only.
+ * yields ENOENT or EACCES. selinux_policy_open() is the public form.
  */
 FILE *selinux_policy_fopen(const char *path, const char *mode);
-int selinux_policy_open(const char *path, int flags);
 
 /*
  * Resolve @path against the configuration-root list: write into @out
