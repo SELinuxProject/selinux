@@ -100,6 +100,9 @@
 
 #ifdef USE_PAM
 #define PAM_SERVICE_CONFIG "/etc/selinux/newrole_pam.conf"
+#ifndef PAM_SERVICE_CONFIG_FALLBACKS
+#define PAM_SERVICE_CONFIG_FALLBACKS "/usr/lib/selinux/newrole_pam.conf"
+#endif
 #endif
 
 #define DEFAULT_PATH "/usr/bin:/bin"
@@ -249,9 +252,8 @@ static int reqsymcmp(hashtab_t h __attribute__((unused)),
 static hashtab_t app_service_names = NULL;
 #define PAM_SERVICE_SLOTS 64
 
-static int process_pam_config(FILE *cfg)
+static int process_pam_config(const char *config_file_path, FILE *cfg)
 {
-	const char *config_file_path = PAM_SERVICE_CONFIG;
 	char *line_buf = NULL;
 	unsigned long lineno = 0;
 	size_t len = 0;
@@ -305,16 +307,23 @@ err:
  */
 static int read_pam_config(void)
 {
-	const char *config_file_path = PAM_SERVICE_CONFIG;
+	static const char *paths[] = { PAM_SERVICE_CONFIG,
+				       PAM_SERVICE_CONFIG_FALLBACKS, NULL };
 	FILE *cfg = NULL;
-	cfg = fopen(config_file_path, "r");
+	unsigned int i;
+
+	for (i = 0; paths[i]; i++) {
+		cfg = fopen(paths[i], "re");
+		if (cfg)
+			break;
+	}
 	if (!cfg)
 		return 0; /* This configuration is optional. */
 	app_service_names =
 		hashtab_create(reqsymhash, reqsymcmp, PAM_SERVICE_SLOTS);
 	if (!app_service_names)
 		goto err;
-	if (process_pam_config(cfg))
+	if (process_pam_config(paths[i], cfg))
 		goto err;
 	fclose(cfg);
 	return 0;
