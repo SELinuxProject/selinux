@@ -46,7 +46,9 @@ booleanif
 
 Contains the run time conditional statements that are instantiated in the binary policy according to the computed boolean identifier(s) state.
 
-[`call`](cil_call_macro_statements.md#call) statements are allowed within a [`booleanif`](cil_conditional_statements.md#booleanif), however the contents of the resulting macro must be limited to those of the [`booleanif`](cil_conditional_statements.md#booleanif) statement (i.e. [`allow`](cil_access_vector_rules.md#allow), [`auditallow`](cil_access_vector_rules.md#auditallow), [`dontaudit`](cil_access_vector_rules.md#dontaudit), [`typemember`](cil_type_statements.md#typemember), [`typetransition`](cil_type_statements.md#typetransition), [`typechange`](cil_type_statements.md#typechange) and the compile time [`tunableif`](cil_conditional_statements.md#tunableif) statement)).
+[`call`](cil_call_macro_statements.md#call) statements are allowed within a [`booleanif`](cil_conditional_statements.md#booleanif), however the contents of the resulting macro must be limited to those of the [`booleanif`](cil_conditional_statements.md#booleanif) statement (i.e. [`allow`](cil_access_vector_rules.md#allow), [`auditallow`](cil_access_vector_rules.md#auditallow), [`dontaudit`](cil_access_vector_rules.md#dontaudit), [`allowx`](cil_access_vector_rules.md#allowx), [`auditallowx`](cil_access_vector_rules.md#auditallowx), [`dontauditx`](cil_access_vector_rules.md#dontauditx), [`typemember`](cil_type_statements.md#typemember), [`typetransition`](cil_type_statements.md#typetransition), [`typechange`](cil_type_statements.md#typechange) and the compile time [`tunableif`](cil_conditional_statements.md#tunableif) statement)).
+
+At least one `true` or `false` branch must be present. A branchless `(booleanif expression)` is invalid. Extended-permission rules in runtime conditionals require a target policy version that supports conditional extended permissions.
 
 **Statement definition:**
 
@@ -169,6 +171,8 @@ tunableif
 Compile time conditional statement that may or may not add CIL statements to be compiled.
 
 If tunables are being treated as booleans (by using the CIL compiler command line parameter `-P` or `--preserve-tunables` flag), then only the statements allowed in a [`booleanif`](cil_conditional_statements.md#booleanif) block are allowed in a [`tunableif`](cil_conditional_statements.md#tunableif) block. Otherwise, [`tunable`](cil_conditional_statements.md#tunable) statements are not allowed in a [`tunableif`](cil_conditional_statements.md#tunableif) block.
+
+At least one `true` or `false` branch must be present.
 
 **Statement definition:**
 

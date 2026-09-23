@@ -487,7 +487,7 @@ The type transition rule specifies the labeling and object creation allowed betw
 **Statement definition:**
 
 ```secil
-    (typetransition source_type_id target_type_id class_id [object_name] default_type_id)
+    (typetransition source_type_id target_type_id|self class_id [object_name] default_type_id)
 ```
 
 **Where:**
@@ -508,7 +508,7 @@ The type transition rule specifies the labeling and object creation allowed betw
 </tr>
 <tr class="odd">
 <td align="left"><p><code>target_type_id</code></p></td>
-<td align="left"><p>A single previously declared <code>type</code>, <code>typealias</code> or <code>typeattribute</code> identifier.</p></td>
+<td align="left"><p>A single previously declared <code>type</code>, <code>typealias</code> or <code>typeattribute</code> identifier, or <code>self</code> to use each source type as its own target.</p></td>
 </tr>
 <tr class="even">
 <td align="left"><p><code>class_id</code></p></td>
@@ -516,7 +516,7 @@ The type transition rule specifies the labeling and object creation allowed betw
 </tr>
 <tr class="odd">
 <td align="left"><p><code>object_name</code></p></td>
-<td align="left"><p>A optional string within double quotes representing an object name for the 'name transition' rule. This string will be matched against the objects name (if a path then the last component of that path). If the string matches exactly, the <code>default_type_id</code> will then become the new type.</p></td>
+<td align="left"><p>A optional string within double quotes representing an object name for the 'name transition' rule. This string will be matched against the objects name (if a path then the last component of that path). If the string matches exactly, the <code>default_type_id</code> will then become the new type. The special name <code>*</code>, including the quoted form <code>"*"</code>, instead produces an unnamed transition. CIL string literals do not process escapes, so a literal asterisk filename cannot be expressed this way.</p></td>
 </tr>
 <tr class="even">
 <td align="left"><p><code>default_type_id</code></p></td>
