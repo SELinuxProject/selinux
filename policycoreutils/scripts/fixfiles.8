@@ -38,8 +38,9 @@ new policy, or  just check whether the file contexts are all
 as you expect.  By default it will relabel all mounted ext2, ext3, ext4, gfs2, xfs,
 jfs and btrfs file systems as long as they do not have a security context mount
 option.  You can use the \-R flag to use rpmpackages as an alternative.
-The file /etc/selinux/fixfiles_exclude_dirs can contain a list of directories
-excluded from relabeling.
+The file /etc/selinux/fixfiles_exclude_dirs (or
+/usr/lib/selinux/fixfiles_exclude_dirs if that does not exist) can
+contain a list of directories excluded from relabeling.
 .P
 .B fixfiles onboot
 will setup the machine to relabel on the next reboot.
@@ -114,7 +115,9 @@ List of files or directories trees that you wish to check file context on.
 
 .SH EXAMPLE
 .nf
-Relabel the whole filesystem, except paths listed in /etc/selinux/fixfiles_exclude_dirs
+Relabel the whole filesystem, except paths listed in
+/etc/selinux/fixfiles_exclude_dirs (or
+/usr/lib/selinux/fixfiles_exclude_dirs if the former does not exist)
 # fixfiles relabel
 Schedule the machine to relabel on the next boot and force relabeling of customizable types
 # fixfiles -F onboot

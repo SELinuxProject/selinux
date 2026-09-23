@@ -66,22 +66,32 @@ for i in $FS; do
 done
 }
 
+SELINUX_CONFDIRS="/etc/selinux /usr/lib/selinux"
+selinux_resolve() {
+    for d in $SELINUX_CONFDIRS; do
+	if [ -e "$d/$1" ]; then
+	    echo "$d/$1"
+	    return 0
+	fi
+    done
+    return 1
+}
+
 exclude_dirs_from_relabelling() {
+    local f
     exclude_from_relabelling=
-    if [ -e /etc/selinux/fixfiles_exclude_dirs ]
-    then
-	while read i
-	do
-	  # skip blank line and comment
-	  # skip not absolute path
-	  # skip not directory
-	  [ -z "${i}" ] && continue
-	  [[ "${i}" =~ ^[[:blank:]]*# ]] && continue
-	  [[ ! "${i}" =~ ^/.* ]] && continue
-	  [[ ! -d "${i}" ]] && continue
-	  exclude_from_relabelling="$exclude_from_relabelling -e $i"
-	done < /etc/selinux/fixfiles_exclude_dirs
-    fi
+    f=$(selinux_resolve fixfiles_exclude_dirs) || return 0
+    while read i
+    do
+	# skip blank line and comment
+	# skip not absolute path
+	# skip not directory
+	[ -z "${i}" ] && continue
+	[[ "${i}" =~ ^[[:blank:]]*# ]] && continue
+	[[ ! "${i}" =~ ^/.* ]] && continue
+	[[ ! -d "${i}" ]] && continue
+	exclude_from_relabelling="$exclude_from_relabelling -e $i"
+    done < "$f"
     echo "$exclude_from_relabelling"
 }
 
@@ -103,10 +113,12 @@ RESTORECON=/sbin/restorecon
 FILESYSTEMSRW=`get_rw_labeled_mounts`
 FILESYSTEMSRO=`get_ro_labeled_mounts`
 SELINUXTYPE="targeted"
-if [ -e /etc/selinux/config ]; then
-    . /etc/selinux/config
-    FC=/etc/selinux/${SELINUXTYPE}/contexts/files/file_contexts
-else
+SELINUXCONFIG=$(selinux_resolve config)
+if [ -n "$SELINUXCONFIG" ]; then
+    . "$SELINUXCONFIG"
+fi
+FC=$(selinux_resolve "${SELINUXTYPE}/contexts/files/file_contexts")
+if [ -z "$FC" ]; then
     FC=/etc/security/selinux/file_contexts
 fi
 
@@ -153,9 +165,9 @@ done
 LogExcluded
 
 if [ -f ${PREFC} -a -x /usr/bin/diff ]; then
-	TEMPFILE=`mktemp ${FC}.XXXXXXXXXX`
+	TEMPFILE=`mktemp`
 	test -z "$TEMPFILE" && exit
-	PREFCTEMPFILE=`mktemp ${PREFC}.XXXXXXXXXX`
+	PREFCTEMPFILE=`mktemp`
 	sed -r -e 's,:s0, ,g' $PREFC | sort -u > ${PREFCTEMPFILE}
 	sed -r -e 's,:s0, ,g' $FC | sort -u |
 	/usr/bin/diff -b ${PREFCTEMPFILE} - |
