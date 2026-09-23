@@ -61,15 +61,6 @@ and responsibly disclosed. If a CVE, or other tag, has been assigned to the
 problem, the GitHub issue title should include the vulnerability tag once the
 problem has been disclosed.
 
-### Public Disclosure
-
-Whenever possible, responsible reporting and patching practices should be
-followed, including notification to the linux-distros and oss-security mailing
-lists.
-
-* https://oss-security.openwall.org/wiki/mailing-lists/distros
-* https://oss-security.openwall.org/wiki/mailing-lists/oss-security
-
 ### Maintainer Process
 
 This is the process maintainers will follow upon receiving a security notification.
@@ -91,4 +82,4 @@ This is the process maintainers will follow upon receiving a security notificati
    period up to 90 days if the complexity of the issue requires it or if
    severity of the issue requires coordinated rollout amongst distros.
 6. Public disclosure will involve pushing the fix to the public repo and
-   publishing the security advisory on Github and to the mailing list.
+   publishing the security advisory on Github and to the selinux mailing list.
