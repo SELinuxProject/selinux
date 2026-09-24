@@ -2375,7 +2375,7 @@ class fcontextRecords(semanageRecords):
         self.equiv_dist = {}
         self.equal_ind = False
         try:
-            fd = open(selinux.selinux_file_context_subs_path(), "r")
+            fd = selinux.policy_open(selinux.selinux_file_context_subs_path())
             for i in fd.readlines():
                 i = i.strip()
                 if len(i) == 0:
@@ -2388,7 +2388,7 @@ class fcontextRecords(semanageRecords):
         except IOError:
             pass
         try:
-            fd = open(selinux.selinux_file_context_subs_dist_path(), "r")
+            fd = selinux.policy_open(selinux.selinux_file_context_subs_dist_path())
             for i in fd.readlines():
                 i = i.strip()
                 if len(i) == 0:

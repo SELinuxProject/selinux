@@ -365,7 +365,7 @@ def usage():
 
 
 def listcats():
-    fd = open(selinux.selinux_translations_path())
+    fd = selinux.policy_open(selinux.selinux_translations_path())
     for l in fd.read().split("\n"):
         if l.startswith("#"):
             continue

@@ -589,7 +589,7 @@ def find_entrypoint_path(exe, exclude_list=[]):
 
 def read_file_equiv(edict, fc_path, modify):
     try:
-        with open(fc_path, "r") as fd:
+        with selinux.policy_open(fc_path) as fd:
             for e in fd:
                 f = e.split()
                 if f and not f[0].startswith('#'):
@@ -624,7 +624,7 @@ def get_local_file_paths(fc_path=selinux.selinux_file_context_path()):
         return local_files
     local_files = []
     try:
-        with open(fc_path + ".local", "r") as fd:
+        with selinux.policy_open(fc_path + ".local") as fd:
             fc = fd.readlines()
     except OSError as e:
         if e.errno != errno.ENOENT:
@@ -650,15 +650,15 @@ def get_fcdict(fc_path=selinux.selinux_file_context_path()):
     global fcdict
     if fcdict:
         return fcdict
-    fd = open(fc_path, "r")
+    fd = selinux.policy_open(fc_path)
     fc = fd.readlines()
     fd.close()
-    fd = open(fc_path + ".homedirs", "r")
+    fd = selinux.policy_open(fc_path + ".homedirs")
     fc += fd.readlines()
     fd.close()
     fcdict = {}
     try:
-        with open(fc_path + ".local", "r") as fd:
+        with selinux.policy_open(fc_path + ".local") as fd:
             fc += fd.readlines()
     except OSError as e:
         if e.errno != errno.ENOENT:
@@ -957,7 +957,7 @@ def get_login_mappings():
     if login_mappings:
         return login_mappings
 
-    fd = open(selinux.selinux_usersconf_path(), "r")
+    fd = selinux.policy_open(selinux.selinux_usersconf_path())
     buf = fd.read()
     fd.close()
     login_mappings = []
