@@ -743,6 +743,14 @@
   }
 }
 
+%exception selinux_policy_open {
+  $action
+  if (result < 0) {
+     PyErr_SetFromErrno(PyExc_OSError);
+     SWIG_fail;
+  }
+}
+
 %exception selinux_check_access {
   $action
   if (result < 0) {
