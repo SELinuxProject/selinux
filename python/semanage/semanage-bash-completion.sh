@@ -57,18 +57,18 @@ __get_all_stores () {
 __get_all_modules () {
     semodule -l
 }
-__get_import_opts () { echo '$ALL_OPTS --f --input_file' ; }
-__get_export_opts () { echo '$ALL_OPTS --f --output_file' ; }
-__get_boolean_opts () { echo '$ALL_OPTS --on -off -1 -0' ; }
-__get_user_opts () { echo '$ALL_OPTS $MANAGED_OPTS -L --level -r --range -R --role '; }
-__get_login_opts () { echo '$ALL_OPTS $MANAGED_OPTS -s --seuser -r --range'; }
-__get_port_opts () { echo '$ALL_OPTS $MANAGED_OPTS -t --type -r --range -p --proto'; }
-__get_interface_opts () { echo '$ALL_OPTS $MANAGED_OPTS -t --type '; }
-__get_node_opts () { echo '$ALL_OPTS $MANAGED_OPTS -t --type -M --mask -p --proto'; }
-__get_fcontext_opts () { echo '$ALL_OPTS $MANAGED_OPTS -t --type -e --equal -f --ftype '; }
-__get_module_opts () { echo '$ALL_OPTS $MANAGED_OPTS --enable --disable '; }
-__get_dontaudit_opts () { echo '-S on off' ; }
-__get_permissive_opts () { echo '$ALL_OPTS -a --add -d --delete' ; }
+__get_import_opts () { echo "$ALL_OPTS --f --input_file" ; }
+__get_export_opts () { echo "$ALL_OPTS --f --output_file" ; }
+__get_boolean_opts () { echo "$ALL_OPTS --on -off -1 -0" ; }
+__get_user_opts () { echo "$ALL_OPTS $MANAGED_OPTS -L --level -r --range -R --role "; }
+__get_login_opts () { echo "$ALL_OPTS $MANAGED_OPTS -s --seuser -r --range"; }
+__get_port_opts () { echo "$ALL_OPTS $MANAGED_OPTS -t --type -r --range -p --proto"; }
+__get_interface_opts () { echo "$ALL_OPTS $MANAGED_OPTS -t --type "; }
+__get_node_opts () { echo "$ALL_OPTS $MANAGED_OPTS -t --type -M --mask -p --proto"; }
+__get_fcontext_opts () { echo "$ALL_OPTS $MANAGED_OPTS -t --type -e --equal -f --ftype "; }
+__get_module_opts () { echo "$ALL_OPTS $MANAGED_OPTS --enable --disable "; }
+__get_dontaudit_opts () { echo "-S on off" ; }
+__get_permissive_opts () { echo "$ALL_OPTS -a --add -d --delete" ; }
 
 _semanage () {
         local command=${COMP_WORDS[1]}
@@ -150,7 +150,9 @@ _semanage () {
                 COMPREPLY=( $(compgen -W "$( __get_node_opts ) " -- "$cur") )
 		return 0
         elif __contains_word "$command" ${VERBS[FCONTEXT]} ; then
-                COMPREPLY=( $(compgen -W "$( __get_fcontext_opts ) " -- "$cur") )
+		if [[ -z "$cur" || "$cur" == -* ]] ; then
+			COMPREPLY=( $(compgen -W "$( __get_fcontext_opts ) " -- "$cur") )
+		fi
 		return 0
         elif __contains_word "$command" ${VERBS[BOOLEAN]} ; then
                 COMPREPLY=( $(compgen -W "$( __get_boolean_opts ) " -- "$cur") )
@@ -171,4 +173,4 @@ _semanage () {
         COMPREPLY=( $(compgen -W "$comps" -- "$cur") )
         return 0
 }
-complete -F _semanage semanage
+complete -o default -o bashdefault -F _semanage semanage
