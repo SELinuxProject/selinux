@@ -416,7 +416,8 @@ def setupUserParser(subparsers):
     userParser.add_argument('-R', '--roles', default=[],
                             action=CheckRole,
                             help=_("SELinux Roles. You must enclose multiple roles within quotes, separate by spaces. Or specify -R multiple times."))
-    userParser.add_argument('-P', '--prefix', default="user", help=argparse.SUPPRESS)
+    userParser.add_argument('-P', '--prefix', default="user",
+                            help=_("Labeling prefix for the SELinux user, used by genhomedircon when generating home directory labels. Defaults to 'user'."))
     userParser.add_argument('selinux_name', nargs='?', default=None, help=_('selinux_name'))
     userParser.set_defaults(func=handleUser)
 

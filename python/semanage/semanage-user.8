@@ -2,7 +2,7 @@
 .SH "NAME"
 .B semanage\-user \- SELinux Policy Management SELinux User mapping tool
 .SH "SYNOPSIS"
-.B  semanage user [\-h] [\-n] [\-N] [\-S STORE] [ \-\-add ( \-L LEVEL \-R ROLES \-r RANGE SEUSER) | \-\-delete SEUSER | \-\-deleteall  | \-\-extract  | \-\-list [\-C] | \-\-modify ( \-L LEVEL \-R ROLES \-r RANGE SEUSER ) ]
+.B  semanage user [\-h] [\-n] [\-N] [\-S STORE] [ \-\-add ( \-L LEVEL \-R ROLES \-r RANGE \-P PREFIX SEUSER) | \-\-delete SEUSER | \-\-deleteall  | \-\-extract  | \-\-list [\-C] | \-\-modify ( \-L LEVEL \-R ROLES \-r RANGE \-P PREFIX SEUSER ) ]
 
 .SH "DESCRIPTION"
 semanage is used to configure certain elements of
@@ -54,6 +54,14 @@ MLS/MCS Security Range (MLS/MCS Systems only) SELinux Range for SELinux login ma
 .TP
 .I   \-R [ROLES], \-\-roles [ROLES]
 SELinux Roles. You must enclose multiple roles within quotes, separate by spaces. Or specify \-R multiple times.
+.TP
+.I   \-P PREFIX, \-\-prefix PREFIX
+Labeling prefix for the SELinux user, stored in
+.I users_extra
+and used by
+.BR genhomedircon (8)
+when generating home directory context entries. Defaults to
+.BR user .
 
 .SH EXAMPLE
 .nf

@@ -1043,10 +1043,12 @@ class seluserRecords(semanageRecords):
         l = []
         ddict = self.get_all(True)
         for k in sorted(ddict.keys()):
-            if ddict[k][1] or ddict[k][2]:
-                l.append("-a -L %s -r %s -R '%s' %s" % (ddict[k][1], ddict[k][2], ddict[k][3], k))
+            prefix, level, srange, roles = ddict[k]
+            popt = "-P %s " % prefix if prefix and prefix != "user" else ""
+            if level or srange:
+                l.append("-a %s-L %s -r %s -R '%s' %s" % (popt, level, srange, roles, k))
             else:
-                l.append("-a -R '%s' %s" % (ddict[k][3], k))
+                l.append("-a %s-R '%s' %s" % (popt, roles, k))
         return l
 
     def list(self, heading=1, locallist=0):
