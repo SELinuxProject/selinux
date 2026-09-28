@@ -30,6 +30,10 @@ DISABLED = -1
 modearray = ("disabled", "permissive", "enforcing")
 
 SELINUXDIR = "/etc/selinux/"
+# Fallback configuration roots searched (in order) for installed policy
+# types when populating the type menu. Writes always go to SELINUXDIR
+# via selinux_path().
+SELINUX_CONFDIRS = (SELINUXDIR, "/usr/lib/selinux/")
 RELABELFILE = "/.autorelabel"
 
 ##
@@ -195,13 +199,20 @@ class statusPage:
         n = 0
         current = n
 
-        for i in os.listdir(SELINUXDIR):
-            if os.path.isdir(SELINUXDIR + i) and os.path.isdir(SELINUXDIR + i + "/policy"):
-                self.types.append(i)
-                self.selinuxTypeOptionMenu.append_text(i)
-                if i == self.initialtype:
-                    current = n
-                n = n + 1
+        for confdir in SELINUX_CONFDIRS:
+            try:
+                entries = sorted(os.listdir(confdir))
+            except OSError:
+                continue
+            for i in entries:
+                if i in self.types:
+                    continue
+                if os.path.isdir(confdir + i + "/policy"):
+                    self.types.append(i)
+                    self.selinuxTypeOptionMenu.append_text(i)
+                    if i == self.initialtype:
+                        current = n
+                    n = n + 1
         self.selinuxTypeOptionMenu.set_active(current)
         self.typeHistory = current
 
