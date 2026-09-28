@@ -107,7 +107,7 @@ static __attribute__((__noreturn__)) void usage(const char *progname)
 {
 	printf("usage:  %s [-b[F]] [-C] [-d] [-U handle_unknown (allow,deny,reject)] [-M] "
 	       "[-N] [-c policyvers (%d-%d)] [-o output_file|-] [-S] [-O] "
-	       "[-t target_platform (selinux,xen)] [-E] [-V] [-L] [input_file]\n",
+	       "[-t target_platform (selinux,xen)] [-E] [-V] [-L] [-m] [input_file]\n",
 	       progname, POLICYDB_VERSION_MIN, POLICYDB_VERSION_MAX);
 	exit(1);
 }
@@ -391,6 +391,7 @@ int main(int argc, char **argv)
 	unsigned int binary = 0, debug = 0, sort = 0, cil = 0, conf = 0,
 		     optimize = 0, disable_neverallow = 0;
 	unsigned int line_marker_for_allow = 0;
+	unsigned int multiple_decls = 0;
 	struct val_to_name v;
 	int ret, ch, fd, target = SEPOL_TARGET_SELINUX;
 	unsigned int policyvers = 0;
@@ -422,11 +423,12 @@ int main(int argc, char **argv)
 		{ "optimize", no_argument, NULL, 'O' },
 		{ "werror", no_argument, NULL, 'E' },
 		{ "line-marker-for-allow", no_argument, NULL, 'L' },
+		{ "multiple-decls", no_argument, NULL, 'm' },
 		{ "help", no_argument, NULL, 'h' },
 		{ NULL, 0, NULL, 0 }
 	};
 
-	while ((ch = getopt_long(argc, argv, "o:t:dbU:MNCFSVc:OELh",
+	while ((ch = getopt_long(argc, argv, "o:t:dbU:MNCFSVc:OELmh",
 				 long_options, NULL)) != -1) {
 		switch (ch) {
 		case 'o':
@@ -507,6 +509,9 @@ int main(int argc, char **argv)
 		case 'L':
 			line_marker_for_allow = 1;
 			break;
+		case 'm':
+			multiple_decls = 1;
+			break;
 		case 'h':
 		default:
 			usage(argv[0]);
@@ -552,6 +557,12 @@ int main(int argc, char **argv)
 	if (line_marker_for_allow && !cil) {
 		fprintf(stderr,
 			"Must convert to CIL for line markers to be printed\n");
+		exit(1);
+	}
+
+	if (multiple_decls && binary) {
+		fprintf(stderr,
+			"Multiple declarations are only meaningful when compiling source policy\n");
 		exit(1);
 	}
 
@@ -628,6 +639,7 @@ int main(int argc, char **argv)
 		parse_policy.mls = mlspol;
 		parse_policy.handle_unknown = handle_unknown;
 		parse_policy.policyvers = policyvers;
+		parse_policy.multiple_decls = multiple_decls;
 
 		policydbp = &parse_policy;
 

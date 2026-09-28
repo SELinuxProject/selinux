@@ -1385,6 +1385,12 @@ int policydb_load_isids(policydb_t *p, sidtab_t *s)
 	return 0;
 }
 
+static int type_is_alias(const type_datum_t *type)
+{
+	return type->flavor == TYPE_ALIAS ||
+	       (type->flavor == TYPE_TYPE && !type->primary);
+}
+
 /* Declare a symbol for a certain avrule_block context.  Insert it
  * into a symbol table for a policy.  This function will handle
  * inserting the appropriate scope information in addition to
@@ -1456,8 +1462,11 @@ int symtab_insert(policydb_t *pol, uint32_t sym, hashtab_key_t key,
 			return rc;
 		}
 	} else if (scope_datum->scope == SCOPE_DECL && scope == SCOPE_DECL) {
-		/* disallow multiple declarations for non-roles/users */
-		if (sym != SYM_ROLES && sym != SYM_USERS) {
+		/* disallow multiple declarations for non-roles/users, unless
+		 * the policy opted in to multiple declarations of types and
+		 * attributes */
+		if (sym != SYM_ROLES && sym != SYM_USERS &&
+		    !(sym == SYM_TYPES && pol->multiple_decls)) {
 			return -2;
 		}
 		/* Further confine that a role attribute can't have the same
@@ -1475,6 +1484,21 @@ int symtab_insert(policydb_t *pol, uint32_t sym, hashtab_key_t key,
 			      (cur_role->flavor == ROLE_ROLE))) {
 				/* Only regular roles are allowed to have
 				 * multiple declarations. */
+				return -2;
+			}
+		}
+		if (sym == SYM_TYPES) {
+			type_datum_t *base_type;
+			type_datum_t *cur_type = (type_datum_t *)datum;
+
+			base_type = (type_datum_t *)hashtab_search(
+				pol->symtab[sym].table, key);
+			assert(base_type != NULL);
+
+			if (type_is_alias(base_type) ||
+			    type_is_alias(cur_type)) {
+				/* Only regular types and attributes are
+				 * allowed to have multiple declarations. */
 				return -2;
 			}
 		}

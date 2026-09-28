@@ -630,6 +630,8 @@ typedef struct policydb {
 	/* avrules whose line markes will be printed. Defaults to neverallow and
 	   neverallowxperm */
 	uint32_t line_marker_avrules;
+
+	int multiple_decls;
 } policydb_t;
 
 struct sepol_policydb {
