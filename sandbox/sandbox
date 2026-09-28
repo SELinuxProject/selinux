@@ -27,6 +27,7 @@ import socket
 import random
 import fcntl
 import shutil
+import shlex
 import re
 import subprocess
 import selinux
@@ -274,9 +275,10 @@ class Sandbox:
 /etc/gdm/Xsession
 """)
         else:
-            command = self.__paths[0] + " "
-            for p in self.__paths[1:]:
-                command += "'%s' " % p
+            command = shlex.join(self.__paths)
+            # #TITLE: is read back by sandboxX.sh with grep|cut for the
+            # window title; keep it on one line and printable.
+            title = re.sub(r"[^ -~]", " ", " ".join(self.__paths))[:72]
             fd.write("""#! /bin/sh
 #TITLE: %s
 # /usr/bin/test -r ~/.xmodmap && /usr/bin/xmodmap ~/.xmodmap
@@ -285,7 +287,7 @@ if which dbus-run-session >/dev/null 2>&1; then
 else
     dbus-launch --exit-with-session %s
 fi
-""" % (command, command, command))
+""" % (title, command, command))
         fd.close()
         os.chmod(execfile, 0o700)
 
