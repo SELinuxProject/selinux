@@ -343,11 +343,14 @@ with exit status
 .SH EXAMPLE
 .nf
 Fix labeling of /var/www/ including all sub-directories, using targeted policy file context definitions and list all context changes
+# setfiles -v /usr/lib/selinux/targeted/contexts/files/file_contexts /var/www/
 # setfiles -v /etc/selinux/targeted/contexts/files/file_contexts /var/www/
 List mislabeled files in user home directory and what the label should be based on targeted policy file context definitions
+# setfiles -nv /usr/lib/selinux/targeted/contexts/files/file_contexts ~
 # setfiles -nv /etc/selinux/targeted/contexts/files/file_contexts ~
 Fix labeling of files listed in file_list file, ignoring any that do not exist
 # setfiles -vif file_list /etc/selinux/targeted/contexts/files/file_contexts
+# setfiles -vif file_list /usr/lib/selinux/targeted/contexts/files/file_contexts
 
 .SH "AUTHOR"
 This man page was written by Russell Coker <russell@coker.com.au>.

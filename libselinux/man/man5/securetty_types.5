@@ -10,7 +10,7 @@ file contains a list of types associated to secure tty type that are defined in 
 .BR selinux_securetty_types_path "(3) "
 will return the active policy path to this file. The default securetty types file is:
 .RS
-.I /etc/selinux/{SELINUXTYPE}/contexts/securetty_types
+.I {/etc,/usr/lib}/selinux/{SELINUXTYPE}/contexts/securetty_types
 .RE
 .sp
 Where \fI{SELINUXTYPE}\fR is the entry from the selinux configuration file \fIconfig\fR (see \fBselinux_config\fR(5)).

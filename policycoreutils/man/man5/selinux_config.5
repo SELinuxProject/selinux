@@ -18,7 +18,8 @@ Whether the system is to be relabeled or not.
 
 The entries controlling these functions are described in the \fBFILE FORMAT\fR section.
 .sp
-The fully qualified path name of the SELinux configuration file is \fI/etc/selinux/config\fR.
+The fully qualified path name of the SELinux configuration file is
+.I {/etc,/usr/lib}/selinux/config
 .sp
 If the \fIconfig\fR file is missing or corrupt, then no SELinux policy is loaded (i.e. SELinux is disabled).
 .sp
@@ -80,7 +81,13 @@ The actual binary policy is located relative to this directory and also has a po
 The binary policy name has by convention the SELinux policy version that it supports appended to it. The maximum policy version supported by the kernel can be determined using the \fBsestatus\fR(8) command or \fBsecurity_policyvers\fR(3). An example binary policy file with the version is:
 .br
 .RS
-.I /etc/selinux/targeted/policy/policy.24
+.I /etc/selinux/targeted/policy/policy.35
+Note that this file and any other policy file might instead be found
+under
+.I /usr/lib/selinux
+if the vendor ships policy files there; in that case, those files can
+still be overridden by creating a file under
+.IR /etc/selinux .
 .RE
 .RE
 .sp

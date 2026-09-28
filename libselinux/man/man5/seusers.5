@@ -10,7 +10,7 @@ file contains a list GNU/Linux user to SELinux user mapping for use by SELinux-a
 .BR selinux_usersconf_path "(3) "
 will return the active policy path to this file. The default SELinux users mapping file is located at:
 .RS
-.I /etc/selinux/{SELINUXTYPE}/seusers
+.I {/etc,/usr/lib}/selinux/{SELINUXTYPE}/seusers
 .RE
 .sp
 Where \fI{SELINUXTYPE}\fR is the entry from the selinux configuration file \fIconfig\fR (see \fBselinux_config\fR(5)).

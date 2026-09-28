@@ -67,7 +67,12 @@ Display the current state of booleans.
 .RE
 
 .SH "FILES"
+.TP
 .I /etc/sestatus.conf
+The sestatus configuration file. The file in
+.B /etc
+overrides any default configuration provided by the vendor in
+the configured vendor directory (VENDORDIR at build time).
 
 .SH "AUTHOR"
 This man page was written by Daniel Walsh <dwalsh@redhat.com>.

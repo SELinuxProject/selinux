@@ -8,7 +8,7 @@ This file contains the default label that should be used for removable devices.
 .BR selinux_removable_context_path "(3) "
 will return the active policy path to this file. The default removable context file is:
 .RS
-.I /etc/selinux/{SELINUXTYPE}/contexts/removable_context
+.I {/etc,/usr/lib}/selinux/{SELINUXTYPE}/contexts/removable_context
 .RE
 .sp
 Where \fI{SELINUXTYPE}\fR is the entry from the selinux configuration file \fIconfig\fR (see \fBselinux_config\fR(5)).

@@ -15,7 +15,8 @@ infrastructure.  They just differ in their specific configuration.
 
 
 The
-.I /etc/selinux/{SELINUXTYPE}/setrans.conf configuration file translates the labels on disk to human
+.I {/etc,/usr/lib}/selinux/{SELINUXTYPE}/setrans.conf
+configuration file translates the labels on disk to human
 readable form.   Administrators can define any labels they want in this file.
 Certain applications like printing and auditing will use these labels to 
 identify the files.  By setting a category on a file you will prevent 
@@ -27,4 +28,11 @@ Examples of file labels would be PatientRecord, CompanyConfidential etc.
 selinux(8), chcon(1)
 
 .SH FILES
-/etc/selinux/{SELINUXTYPE}/setrans.conf 
+.TP
+.I /etc/selinux/{SELINUXTYPE}/setrans.conf
+.TP
+.I /usr/lib/selinux/{SELINUXTYPE}/setrans.conf
+The SELinux context translation configuration file. The file in
+.B /etc
+overrides the default configuration provided by the vendor in
+.BR /usr/lib .

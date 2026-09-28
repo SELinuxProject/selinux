@@ -7,7 +7,7 @@ The \fIdefault_type\fR file contains entries that allow SELinux-aware applicatio
 .sp
 \fBselinux_default_type_path\fR(3) will return the active policy path to this file. The default, default type file is:
 .RS
-.I /etc/selinux/{SELINUXTYPE}/contexts/default_type
+.I {/etc,/usr/lib}/selinux/{SELINUXTYPE}/contexts/default_type
 .RE
 .sp
 Where \fI{SELINUXTYPE}\fR is the entry from the selinux configuration file \fIconfig\fR (see \fBselinux_config\fR(5)).

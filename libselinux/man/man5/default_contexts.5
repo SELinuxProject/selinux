@@ -27,7 +27,7 @@ SELinux-aware login applications generally use one or more of the following libs
 .sp
 The default context configuration file path for the active policy is returned by \fBselinux_default_contexts_path\fR(3). The default, default contexts file is:
 .RS
-.I /etc/selinux/{SELINUXTYPE}/contexts/default_contexts
+.I {/etc,/usr/lib}/selinux/{SELINUXTYPE}/contexts/default_contexts
 .RE
 .sp
 Where \fI{SELINUXTYPE}\fR is the entry from the selinux configuration file \fIconfig\fR (see \fBselinux_config\fR(5)).

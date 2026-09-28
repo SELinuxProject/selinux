@@ -48,9 +48,9 @@ SELinux
 identity that are reachable from the specified
 .I fromcon
 context based on the global
-.I \%/etc/selinux/{SELINUXTYPE}/contexts/default_contexts
+.I {/etc,/usr/lib}/selinux/{SELINUXTYPE}/contexts/default_contexts
 file and the per-user
-.I \%/etc/selinux/{SELINUXTYPE}/contexts/users/<username>
+.I {/etc,/usr/lib}/selinux/{SELINUXTYPE}/contexts/users/<username>
 file if it exists.  The 
 .I fromcon
 parameter may be NULL to indicate that the current context should

@@ -4,7 +4,7 @@ setrans.conf \- translation configuration file for MCS/MLS SELinux systems
 
 .SH "DESCRIPTION"
 The
-.I /etc/selinux/{SELINUXTYPE}/setrans.conf
+.I {/etc,/usr/lib}/selinux/{SELINUXTYPE}/setrans.conf
 configuration file specifies the way that SELinux MCS/MLS labels are translated into human
 readable form by the mcstransd daemon.  The default policies support 16 sensitivity levels (s0 through s15) and 1024 categories (c0 through c1023). Multiple categories can be separated with commas (c0,c1,c3,c5) and a range of categories can be shortened using dot notation (c0.c3,c5).
 
@@ -101,6 +101,14 @@ if category bits 5 and 9 are set and the sensitivity level is s1, the constraint
 selinux(8), mcs(8), mls(8), chcon(1)
 
 .SH "FILES"
-/etc/selinux/{SELINUXTYPE}/setrans.conf
-.br
-/usr/share/mcstrans/examples
+.TP
+.I /etc/selinux/{SELINUXTYPE}/setrans.conf
+.TP
+.I /usr/lib/selinux/{SELINUXTYPE}/setrans.conf
+The SELinux context translation configuration file.  The file in
+.B /etc
+overrides the default configuration provided by the vendor in
+.BR /usr/lib .
+.TP
+.I /usr/share/mcstrans/examples
+Other examples of SELinux context translation configurations.

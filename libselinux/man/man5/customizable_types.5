@@ -18,7 +18,7 @@ will use this information to obtain a list of types relating to files that shoul
 .BR selinux_customizable_types_path (3)
 will return the active policy path to this file. The default customizable types file is:
 .RS
-.I /etc/selinux/{SELINUXTYPE}/contexts/customizable_types
+.I {/etc,/usr/lib}/selinux/{SELINUXTYPE}/contexts/customizable_types
 .RE
 .sp
 Where \fI{SELINUXTYPE}\fR is the entry from the selinux configuration file \fIconfig\fR (see \fBselinux_config\fR(5)).

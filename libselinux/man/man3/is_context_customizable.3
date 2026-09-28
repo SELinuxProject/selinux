@@ -9,7 +9,7 @@ is_context_customizable \- check whether SELinux context type is customizable by
 .
 .SH "DESCRIPTION"
 This function checks whether the type of scon is in the
-.I /etc/selinux/{SELINUXTYPE}/context/customizable_types
+.I {/etc,/usr/lib}/selinux/{SELINUXTYPE}/contexts/customizable_types
 file.  A customizable type is a file context type that
 administrators set on files, usually to allow certain domains to share the file content. restorecon and setfiles, by default, leave these context in place.
 .
@@ -18,7 +18,14 @@ Returns 1 if security context is customizable or 0 if it is not.
 Returns \-1 on error.
 .
 .SH "FILE"
-.I /etc/selinux/{SELINUXTYPE}/context/customizable_types
+.TP
+.I /etc/selinux/{SELINUXTYPE}/contexts/customizable_types
+.TP
+.I /usr/lib/selinux/{SELINUXTYPE}/contexts/customizable_types
+The list of customizable types for file contexts. The file in
+.B /etc
+overrides the default configuration provided by the vendor in
+.BR /usr/lib .
 .
 .SH "SEE ALSO"
 .BR selinux "(8)"

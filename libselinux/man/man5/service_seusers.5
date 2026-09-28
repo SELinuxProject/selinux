@@ -13,7 +13,7 @@ The path for each configuration file is formed by the path returned by
 .IR /logins/username
 appended (where \fIusername\fR is a file representing the GNU/Linux user name). The default services directory is located at:
 .RS
-.I /etc/selinux/{SELINUXTYPE}/logins
+.I {/etc,/usr/lib}/selinux/{SELINUXTYPE}/logins
 .RE
 .sp
 Where \fI{SELINUXTYPE}\fR is the entry from the selinux configuration file \fIconfig\fR (see \fBselinux_config\fR(5)).

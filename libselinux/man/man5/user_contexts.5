@@ -30,9 +30,9 @@ There can be one file for each SELinux user configured on the system. The file  
 .BR \%selinux_user_contexts_path (3)
 for the active policy, with the SELinux user name appended, for example:
 .RS
-.I /etc/selinux/{SELINUXTYPE}/contexts/users/unconfined_u
+.I {/etc,/usr/lib}/selinux/{SELINUXTYPE}/contexts/users/unconfined_u
 .br
-.I /etc/selinux/{SELINUXTYPE}/contexts/users/xguest_u
+.I {/etc,/usr/lib}/selinux/{SELINUXTYPE}/contexts/users/xguest_u
 .RE
 .sp
 Where \fI{SELINUXTYPE}\fR is the entry from the selinux configuration file \fIconfig\fR (see \fBselinux_config\fR(5)).
@@ -60,7 +60,7 @@ This consists of a \fIrole\fB:\fItype\fR[\fB:\fIrange\fR] entry that represents 
 .RE
 .
 .SH "EXAMPLE"
-# Example for xguest_u at /etc/selinux/targeted/contexts/users/xguest_u
+# Example for xguest_u at {/etc,/usr/lib}/selinux/targeted/contexts/users/xguest_u
 .br
 system_r:crond_t:s0			xguest_r:xguest_t:s0
 .br

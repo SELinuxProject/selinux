@@ -11,7 +11,10 @@ This manual page describes the
 .BR mcstransd
 program.
 .P
-This daemon reads /etc/selinux/{SELINUXTYPE}/setrans.conf configuration file, and communicates with libselinux via a socket in /var/run/setrans.
+This daemon reads the
+.I {/etc,/usr/lib}/selinux/{SELINUXTYPE}/setrans.conf
+configuration file, and communicates with libselinux via a socket in
+.IR /var/run/setrans .
 .SH "OPTIONS"
 .TP
 \-f
@@ -26,7 +29,13 @@ The program was originally written by Dan Walsh <dwalsh@redhat.com>.
 The program was enhanced/rewritten by Joe Nall <joe@nall.com>.
 
 .SH "FILES"
-/etc/selinux/{SELINUXTYPE}/setrans.conf 
-
+.TP
+.I /etc/selinux/{SELINUXTYPE}/setrans.conf
+.TP
+.I /usr/lib/selinux/{SELINUXTYPE}/setrans.conf
+The SELinux context translation configuration file. The file in
+.B /etc
+overrides the default configuration provided by the vendor in
+.BR /usr/lib .
 .SH "SEE ALSO"
 .BR setrans.conf (5), mcs (8)

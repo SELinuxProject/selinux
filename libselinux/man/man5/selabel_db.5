@@ -121,7 +121,7 @@ The database context file used to retrieve a context depends on the \fBSELABEL_O
 .sp
 The default database object contexts file is:
 .RS
-.I /etc/selinux/{SELINUXTYPE}/contexts/sepgsql_context
+.I {/etc,/usr/lib}/selinux/{SELINUXTYPE}/contexts/sepgsql_context
 .RE
 .sp
 Where \fI{SELINUXTYPE}\fR is the entry from the selinux configuration file \fIconfig\fR (see \fBselinux_config\fR(5)).

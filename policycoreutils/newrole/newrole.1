@@ -54,7 +54,9 @@ In particular, an argument of \-\- \-c will cause the next argument to be
 treated as a command by most command interpreters.
 .PP
 If a command argument is specified to newrole and the command name is found
-in /etc/selinux/newrole_pam.conf, then the pam service name listed in that
+in
+.IR {/etc,/usr/lib}/selinux/newrole_pam.conf ,
+then the pam service name listed in that
 file for the command will be used rather than the normal newrole pam
 configuration.  This allows for per-command pam configuration when
 invoked via newrole, e.g. to skip the interactive re-authentication phase.
@@ -99,15 +101,36 @@ Running a program in a given role or level:
    # newrole \-l Secret \-\- \-c "/path/to/app arg1 arg2..."
 
 .SH FILES
-/etc/passwd - user account information
-.br
-/etc/shadow - encrypted passwords and age information
-.br
-/etc/selinux/<policy>/contexts/default_type - default types for roles
-.br
-/etc/selinux/<policy>/contexts/securetty_types - securetty types for level changes
-.br
-/etc/selinux/newrole_pam.conf - optional mapping of commands to separate pam service names
+.TP
+.I /etc/passwd
+User account information
+.TP
+.I /etc/shadow
+Encrypted passwords and age information
+.TP
+.I /etc/selinux/{SELINUXTYPE}/contexts/default_type
+.TP
+.I /usr/lib/selinux/{SELINUXTYPE}/contexts/default_type
+Default types for roles. The file in
+.B /etc
+overrides the default configuration provided by the vendor in
+.BR /usr/lib .
+.TP
+.I /etc/selinux/{SELINUXTYPE}/contexts/securetty_types
+.TP
+.I /usr/lib/selinux/{SELINUXTYPE}/contexts/securetty_types
+Contains securetty types authorized for level changes. The file in
+.B /etc
+overrides the default configuration provided by the vendor in
+.BR /usr/lib .
+.TP
+.I /etc/selinux/newrole_pam.conf
+.TP
+.I /usr/lib/selinux/newrole_pam.conf
+Optional mapping of commands to separate pam service names. The file in
+.B /etc
+overrides the default configuration provided by the vendor in
+.BR /usr/lib .
 .br
 .SH SEE ALSO
 .BR runcon (1)

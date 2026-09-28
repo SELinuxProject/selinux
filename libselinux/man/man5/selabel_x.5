@@ -87,7 +87,7 @@ The X context file used to retrieve a default context depends on the \fBSELABEL_
 .sp
 The default X object contexts file is:
 .RS
-.I /etc/selinux/{SELINUXTYPE}/contexts/x_contexts
+.I {/etc,/usr/lib}/selinux/{SELINUXTYPE}/contexts/x_contexts
 .RE
 .sp
 Where \fI{SELINUXTYPE}\fR is the entry from the selinux configuration file \fIconfig\fR (see \fBselinux_config\fR(5)).

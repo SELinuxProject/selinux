@@ -76,15 +76,18 @@ Show version information.
 Show usage information.
 
 .SH EXAMPLE
+The read paths may be under /usr/lib on stateless systems.
 .nf
 Generate policy.conf based on the system policy
 # checkpolicy -b -M -F /etc/selinux/targeted/policy/policy.33 -o policy.conf
+# checkpolicy -b -M -F /usr/lib/selinux/targeted/policy/policy.33 -o policy.conf
 Recompile system policy so that unknown permissions are denied (uses policy.conf from ^^).
 Note that binary policy extension represents its version, which is subject to change
 # checkpolicy -M -U deny -o /etc/selinux/targeted/policy/policy.33 policy.conf
 # load_policy
 Generate CIL representation of current system policy
 # checkpolicy -b -M -C /etc/selinux/targeted/policy/policy.33 -o policy.out
+# checkpolicy -b -M -C /usr/lib/selinux/targeted/policy/policy.33 -o policy.out
 
 .SH "SEE ALSO"
 SELinux Reference Policy documentation at https://github.com/SELinuxProject/refpolicy/wiki

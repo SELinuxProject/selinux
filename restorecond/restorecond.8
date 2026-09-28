@@ -11,7 +11,11 @@ This manual page describes the
 .BR restorecond
 program.
 .P
-This daemon uses inotify to watch files listed in the /etc/selinux/restorecond.conf, when they are created, this daemon will make sure they have 
+This daemon uses inotify to watch files listed in the
+.I {/etc,/usr/lib}/selinux/restorecond.conf
+file.
+
+When any of the listed files are created, this daemon will make sure they have
 the correct file context associated with the policy.
 
 .SH "OPTIONS"
@@ -30,7 +34,9 @@ Use alternative restorecond.conf file.
 Run in foreground, do not become a daemon.
 .TP
 .B \-u
-Turns on user mode.  Runs restorecond in the user session and reads /etc/selinux/restorecond_user.conf.  Uses dbus to make sure only one restorecond is running per user session.
+Turns on user mode.  Runs restorecond in the user session and reads the
+.I {/etc,/usr/lib}/selinux/restorecond_user.conf
+file. Uses dbus to make sure only one restorecond is running per user session.
 .TP
 .B \-v
 Turns on verbose debugging.  (Report missing files)
@@ -39,8 +45,22 @@ Turns on verbose debugging.  (Report missing files)
 This man page and program was written by Dan Walsh <dwalsh@redhat.com>.
 
 .SH "FILES"
-/etc/selinux/restorecond.conf
-/etc/selinux/restorecond_user.conf
+.TP
+.I /etc/selinux/restorecond.conf
+.TP
+.I /usr/lib/selinux/restorecond.conf
+The restorecond root daemon configuration file. The file in
+.B /etc
+overrides the default configuration provided by the vendor in
+.BR /usr/lib .
+.TP
+.I /etc/selinux/restorecond_user.conf
+.TP
+.I /usr/lib/selinux/restorecond_user.conf
+The restorecond user session configuration file. The file in
+.B /etc
+overrides the default configuration provided by the vendor in
+.BR /usr/lib .
 
 .SH "SEE ALSO"
 .BR restorecon (8),

@@ -59,6 +59,21 @@ chcon(1), selinux(8), semanage(8)
 .br
 When operating on files this script wraps the chcon command.
 .SH "FILES"
-/etc/selinux/{SELINUXTYPE}/setrans.conf 
-.br
+.TP
+.I /etc/selinux/{SELINUXTYPE}/setrans.conf
+.TP
+.I /usr/lib/selinux/{SELINUXTYPE}/setrans.conf
+The SELinux context translation configuration file. The file in
+.B /etc
+overrides the default configuration provided by the vendor in
+.BR /usr/lib .
+.TP
+.I
 /etc/selinux/{SELINUXTYPE}/seusers
+.TP
+.I
+/usr/lib/selinux/{SELINUXTYPE}/seusers
+The SELinux users configuration. The file in
+.B /etc
+overrides the default configuration provided by the vendor in
+.BR /usr/lib .

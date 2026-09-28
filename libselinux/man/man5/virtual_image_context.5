@@ -10,7 +10,7 @@ file contains a list of image contexts for use by the SELinux-aware virtualizati
 .BR selinux_virtual_image_context_path "(3) "
 will return the active policy path to this file. The default virtual image context file is:
 .RS
-.I /etc/selinux/{SELINUXTYPE}/contexts/virtual_image_context
+.I {/etc,/usr/lib}/selinux/{SELINUXTYPE}/contexts/virtual_image_context
 .RE
 .sp
 Where \fI{SELINUXTYPE}\fR is the entry from the selinux configuration file \fIconfig\fR (see \fBselinux_config\fR(5)).

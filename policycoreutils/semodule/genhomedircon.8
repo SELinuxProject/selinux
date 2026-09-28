@@ -9,15 +9,18 @@ to rebuild the currently active SELinux policy (without reloading it) and to cre
 labels for each user home directory based on directory paths returned by calls to getpwent().
 
 The latter functionality depends on the "usepasswd" parameter being set to "true" (default)
-in /etc/selinux/semanage.conf.
+in
+.IR {/etc,/usr/lib}/selinux/semanage.conf .
 
 This script is usually executed by
 .B semanage
 although this default behavior can be optionally modified by setting to "true" the
-"disable-genhomedircon" in /etc/selinux/semanage.conf.
+"disable-genhomedircon" in
+.IR {/etc,/usr/lib}/selinux/semanage.conf .
 
 Directories can be excluded from the list of home directories by the setting "ignoredirs"
-in /etc/selinux/semanage.conf.
+in
+.IR {/etc,/usr/lib}/selinux/semanage.conf .
 
 .SH AUTHOR
 This manual page was written by

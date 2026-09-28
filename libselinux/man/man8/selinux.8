@@ -13,7 +13,7 @@ information and technical documentation about SELinux can be found at
 https://github.com/SELinuxProject.
 
 The
-.I /etc/selinux/config
+.I {/etc,/usr/lib}/selinux/config
 configuration file controls whether SELinux is
 enabled or disabled, and if enabled, whether SELinux operates in
 permissive mode or enforcing mode.  The
@@ -36,7 +36,7 @@ privileged mode of operation if denied access.
 Disabling SELinux by setting
 .B SELINUX=disabled
 in
-.I /etc/selinux/config
+.I {/etc,/usr/lib}/selinux/config
 is deprecated and depending on kernel version and configuration it might
 not lead to SELinux being completely disabled.  Specifically, the
 SELinux hooks will still be executed internally, but the SELinux policy
@@ -47,11 +47,11 @@ recommended to use the
 .B selinux=0
 kernel boot option instead.  In that case SELinux will be disabled
 regardless of what is set in the
-.I /etc/selinux/config
+.I {/etc,/usr/lib}/selinux/config
 file.
 
 The
-.I /etc/selinux/config
+.I {/etc,/usr/lib}/selinux/config
 configuration file also controls what policy
 is active on the system.  SELinux allows for multiple policies to be
 installed on the system, but only one policy may be active at any
@@ -69,11 +69,11 @@ You can
 define which policy you will run by setting the
 .B SELINUXTYPE
 environment variable within
-.IR /etc/selinux/config .
+.IR {/etc,/usr/lib}/selinux/config .
 You must reboot and possibly relabel if you change the policy type to have it take effect on the system.
 The corresponding
 policy configuration for each such policy must be installed in the
-.I /etc/selinux/{SELINUXTYPE}/
+.I {/etc,/usr/lib}/selinux/{SELINUXTYPE}/
 directories.
 
 A given SELinux policy can be customized further based on a set of
@@ -106,7 +106,14 @@ is used in the policy to allow this, which in turn needs also policy capability
 This manual page was written by Dan Walsh <dwalsh@redhat.com>.
 .
 .SH FILES
+.TP
 .I /etc/selinux/config
+.TP
+.I /usr/lib/selinux/config
+The SELinux configuration file. The file in
+.B /etc
+overrides the default configuration provided by the vendor in
+.BR /usr/lib .
 .
 .SH "SEE ALSO"
 .ad l

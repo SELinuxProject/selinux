@@ -10,7 +10,7 @@ selinux_getpolicytype \- get the type of SELinux policy running on the system
 .SH "DESCRIPTION"
 .BR selinux_getpolicytype ()
 Reads the contents of the
-.I /etc/selinux/config
+.I {/etc,/usr/lib}/selinux/config
 file to determine the SELinux policy used on the system, and sets
 .I \%policytype
 accordingly. Free
