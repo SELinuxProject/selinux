@@ -25,7 +25,14 @@ import re
 class PathChooser(object):
     def __init__(self, pathname):
         self.config = dict()
-        if not os.path.exists(pathname):
+        if isinstance(pathname, str):
+            candidates = (pathname,)
+        else:
+            candidates = tuple(pathname)
+        for pathname in candidates:
+            if os.path.exists(pathname):
+                break
+        else:
             self.config_pathname = "(defaults)"
             self.config["SELINUX_DEVEL_PATH"] = "/usr/share/selinux/default:/usr/share/selinux/mls:/usr/share/selinux/devel"
             return
@@ -68,14 +75,19 @@ def interface_info():
 def attribute_info():
     return data_dir() + "/attribute_info"
 
+SEPOLGEN_CONF_PATHS = (
+    "/etc/selinux/sepolgen.conf",
+    "/usr/lib/selinux/sepolgen.conf",
+)
+
 def refpolicy_makefile():
-    chooser = PathChooser("/etc/selinux/sepolgen.conf")
+    chooser = PathChooser(SEPOLGEN_CONF_PATHS)
     result = chooser("Makefile")
     if not os.path.exists(result):
         result = chooser("include/Makefile")
     return result
 
 def headers():
-    chooser = PathChooser("/etc/selinux/sepolgen.conf")
+    chooser = PathChooser(SEPOLGEN_CONF_PATHS)
     return chooser("include")
 
