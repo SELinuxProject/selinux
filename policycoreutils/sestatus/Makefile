@@ -28,10 +28,11 @@ install: all
 	[ -d $(DESTDIR)$(MANDIR)/man5 ] || mkdir -p $(DESTDIR)$(MANDIR)/man5
 	-mkdir -p $(DESTDIR)$(BINDIR)
 	-mkdir -p $(DESTDIR)$(SBINDIR)
+ifneq ($(BINDIR),$(SBINDIR))
 	# Some tools hard code /usr/sbin/sestatus ; add a compatibility symlink
-	# install will overwrite a symlink, so create the symlink before calling
-	# install to allow distributions with BINDIR == SBINDIR
+	# install will overwrite a symlink, so create it before installing.
 	ln -sf --relative $(DESTDIR)$(BINDIR)/sestatus $(DESTDIR)$(SBINDIR)
+endif
 	install -m 755 sestatus $(DESTDIR)$(BINDIR)
 	install -m 644 sestatus.8 $(DESTDIR)$(MANDIR)/man8
 	install -m 644 sestatus.conf.5 $(DESTDIR)$(MANDIR)/man5
