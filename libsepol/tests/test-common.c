@@ -246,6 +246,7 @@ void test_attr_types(policydb_t *p, const char *id, avrule_decl_t *decl,
 		     const char **types, int len)
 {
 	ebitmap_node_t *tnode;
+	const ebitmap_t *members;
 	int j, new, found = 0;
 	unsigned int i;
 	type_datum_t *attr;
@@ -265,7 +266,16 @@ void test_attr_types(policydb_t *p, const char *id, avrule_decl_t *decl,
 	CU_ASSERT(attr->flavor == TYPE_ATTRIB);
 	CU_ASSERT(attr->primary == 1);
 
-	ebitmap_for_each_positive_bit(&attr->types, tnode, i) {
+	/*
+	 * On a kernel policydb attribute membership lives in attr_type_map;
+	 * type_datum.types is only populated on BASE/MOD or per-decl.
+	 */
+	if (!decl && p->policy_type == POLICY_KERN)
+		members = &p->attr_type_map[attr->s.value - 1];
+	else
+		members = &attr->types;
+
+	ebitmap_for_each_positive_bit(members, tnode, i) {
 		new = 0;
 		for (j = 0; j < len; j++) {
 			if (strcmp(p->sym_val_to_name[SYM_TYPES][i],

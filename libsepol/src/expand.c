@@ -2669,6 +2669,12 @@ static int type_attr_map(hashtab_key_t key __attribute__((unused)),
 				goto oom;
 			}
 		}
+		/*
+		 * The member set now lives in attr_type_map; drop it from the
+		 * datum so the kernel policydb matches what policydb_read()
+		 * would produce (type_write() does not emit it for KERN).
+		 */
+		ebitmap_destroy(&type->types);
 	} else {
 		if (ebitmap_set_bit(&p->attr_type_map[value - 1], value - 1,
 				    1)) {
