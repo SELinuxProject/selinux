@@ -374,6 +374,8 @@ static int check_level(hashtab_key_t key, hashtab_datum_t datum,
 	return 0;
 }
 
+extern int policydb_validate(sepol_handle_t *handle, const policydb_t *p);
+
 int main(int argc, char **argv)
 {
 	policydb_t parse_policy;
@@ -680,6 +682,23 @@ int main(int argc, char **argv)
 		ret = policydb_optimize(policydbp);
 		if (ret) {
 			fprintf(stderr, "%s:  error optimizing policy\n",
+				argv[0]);
+			exit(1);
+		}
+	}
+
+	/*
+	 * Validate the kernel policydb before writing it so we fail here
+	 * rather than producing a policy file that policydb_read() will
+	 * reject. The POLICY_BASE parse_policy on the source->CIL path is
+	 * not validated: policydb_validate() assumes read-side invariants
+	 * that the parser does not establish, and the parser is authoritative
+	 * on source input.
+	 */
+	if (policydbp->policy_type == POLICY_KERN) {
+		ret = policydb_validate(NULL, policydbp);
+		if (ret) {
+			fprintf(stderr, "%s: validation of policydb failed\n",
 				argv[0]);
 			exit(1);
 		}
