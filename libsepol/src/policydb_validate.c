@@ -1307,7 +1307,7 @@ static int validate_avrules(sepol_handle_t *handle, const avrule_t *avrule,
 		case 0:
 			break;
 		case RULE_SELF:
-			if (p->policyvers != POLICY_KERN &&
+			if (p->policy_type != POLICY_KERN &&
 			    p->policyvers <
 				    MOD_POLICYDB_VERSION_SELF_TYPETRANS &&
 			    (avrule->specified & AVRULE_TYPE))
@@ -1885,7 +1885,7 @@ validate_filename_trans_rules(sepol_handle_t *handle,
 		case 0:
 			break;
 		case RULE_SELF:
-			if (p->policyvers != POLICY_KERN &&
+			if (p->policy_type != POLICY_KERN &&
 			    p->policyvers < MOD_POLICYDB_VERSION_SELF_TYPETRANS)
 				goto bad;
 			break;
