@@ -2941,7 +2941,7 @@ static int ocontext_isid_to_cil(struct policydb *pdb,
 	}
 	for (isid = isids; isid != NULL; isid = isid->next) {
 		i = isid->sid[0];
-		if (i < strs_num_items(strs)) {
+		if (i < strs_num_items(strs) && isid->context[0].user) {
 			isid_array[i] = isid;
 		}
 	}
