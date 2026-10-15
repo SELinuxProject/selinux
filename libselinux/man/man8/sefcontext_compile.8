@@ -6,6 +6,7 @@ sefcontext_compile \- compile file context regular expression files
 .B sefcontext_compile
 .RB [ \-r ]
 .RB [ \-i ]
+.RB [ \-V ]
 .RB [ \-o
 .IR outputfile ]
 .RB [ \-p
@@ -61,6 +62,9 @@ architecture identifier.  Arch identifier format (PCRE2):
 .br
 .in
 e.g., "8-8-el" for x86_64.
+.TP
+.B \-V
+Print binary output format version and exit.
 
 .SH "RETURN VALUE"
 On error -1 is returned.  On success 0 is returned.
