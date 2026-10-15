@@ -5,6 +5,7 @@ sefcontext_compile \- compile file context regular expression files
 .SH "SYNOPSIS"
 .B sefcontext_compile
 .RB [ \-r ]
+.RB [ \-i ]
 .RB [ \-o
 .IR outputfile ]
 .RB [ \-p
@@ -48,6 +49,18 @@ Omit precompiled regular expressions from the output.
 (PCRE2 only. Compiled PCRE2 regular expressions are not portable across
 architectures.  Use this flag if you know that you build for an incompatible
 architecture to save space.  When linked against PCRE1 this flag is ignored.)
+.TP
+.B \-i
+Print regular expression info and exit. That is, back end version and
+architecture identifier.  Arch identifier format (PCRE2):
+.br
+.in +4n
+.EX
+<pointer width>\-<size type width>\-<endianness>
+.EE
+.br
+.in
+e.g., "8-8-el" for x86_64.
 
 .SH "RETURN VALUE"
 On error -1 is returned.  On success 0 is returned.
