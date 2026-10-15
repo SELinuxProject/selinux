@@ -4,6 +4,7 @@ sefcontext_compile \- compile file context regular expression files
 .
 .SH "SYNOPSIS"
 .B sefcontext_compile
+.RB [ \-r ]
 .RB [ \-o
 .IR outputfile ]
 .RB [ \-p
@@ -40,6 +41,13 @@ that will be used to validate the context entries in the
 .br
 If an invalid context is found the pcre formatted file will not be written and
 an error will be returned.
+.TP
+.B \-r
+Omit precompiled regular expressions from the output.
+.br
+(PCRE2 only. Compiled PCRE2 regular expressions are not portable across
+architectures.  Use this flag if you know that you build for an incompatible
+architecture to save space.  When linked against PCRE1 this flag is ignored.)
 
 .SH "RETURN VALUE"
 On error -1 is returned.  On success 0 is returned.

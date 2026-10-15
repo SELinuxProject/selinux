@@ -524,7 +524,7 @@ err:
 static __attribute__((__noreturn__)) void usage(const char *progname)
 {
 	fprintf(stderr,
-		"usage: %s [-iV] [-o out_file] [-p policy_file] fc_file\n"
+		"usage: %s [-riV] [-o out_file] [-p policy_file] fc_file\n"
 		"Where:\n\t"
 		"-o       Optional file name of the PCRE formatted binary\n\t"
 		"         file to be output. If not specified the default\n\t"
