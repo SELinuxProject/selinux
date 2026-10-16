@@ -142,6 +142,32 @@ done
 }
 
 #
+# Drop mount points that are excluded, or that sit under an excluded
+# directory, from the list printed and passed to setfiles.  -e is still
+# passed so the same paths are skipped if reached from a parent mount.
+#
+filesystems_to_relabel() {
+    local m e skip result
+    result=
+    for m in ${FILESYSTEMSRW}; do
+        skip=
+        for e in ${EXCLUDEDIRS//-e /}; do
+            e="${e%/}"
+            [ -z "$e" ] && e=/
+            case "$m" in
+            "$e"|"$e"/*)
+                skip=1
+                break
+                ;;
+            esac
+        done
+        [ -n "$skip" ] && continue
+        result="${result} ${m}"
+    done
+    echo "${result# }"
+}
+
+#
 # Find files newer then the passed in date and fix the label
 #
 newer() {
@@ -259,14 +285,18 @@ case "$RESTORE_MODE" in
     *)
 	if [ -n "${FILESYSTEMSRW}" ]; then
 	    LogReadOnly
-	    echo "${OPTION}ing `echo ${FILESYSTEMSRW}`"
+	    FILESYSTEMS_TO_RELABEL="`filesystems_to_relabel`"
+            if [ -z "${FILESYSTEMS_TO_RELABEL}" ]; then
+               echo >&2 "fixfiles: No suitable file systems found"
+            else
+            echo "${OPTION}ing `echo ${FILESYSTEMS_TO_RELABEL}`"
 
 	    if [ -z "$BIND_MOUNT_FILESYSTEMS" ]; then
-	        ${SETFILES} ${VERBOSE} ${EXCLUDEDIRS} ${FORCEFLAG} ${DIGESTFLAG} $* -q ${THREADS} ${FC} ${FILESYSTEMSRW}
+	        ${SETFILES} ${VERBOSE} ${EXCLUDEDIRS} ${FORCEFLAG} ${DIGESTFLAG} $* -q ${THREADS} ${FC} ${FILESYSTEMS_TO_RELABEL}
 	    else
 	        # we bind mount so we can fix the labels of files that have already been
 	        # mounted over
-	        for m in `echo $FILESYSTEMSRW`; do
+	        for m in `echo $FILESYSTEMS_TO_RELABEL`; do
 	            TMP_MOUNT="$(mktemp -p /run -d fixfiles.XXXXXXXXXX)"
 	            export SETFILES VERBOSE EXCLUDEDIRS FORCEFLAG DIGESTFLAG THREADS FC TMP_MOUNT m
 	            if type unshare &> /dev/null; then
@@ -277,6 +307,7 @@ case "$RESTORE_MODE" in
 	                trap EXIT
 	            fi
 	        done;
+	    fi
 	    fi
 	else
 	    echo >&2 "fixfiles: No suitable file systems found"
