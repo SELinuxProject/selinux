@@ -36,6 +36,9 @@
 
 #include "utilities.h"
 #include "genhomedircon.h"
+#include "path_subs.h"
+
+#include <selinux/selinux.h>
 
 #include <assert.h>
 #include <ctype.h>
@@ -120,6 +123,10 @@ typedef struct {
 	genhomedircon_user_entry_t *fallback;
 	semanage_handle_t *h_semanage;
 	sepol_policydb_t *policydb;
+	/* path substitution rules (see file_contexts.subs(5)) used to
+	 * canonicalize home directory paths */
+	semanage_path_subs_t *local_subs;
+	semanage_path_subs_t *dist_subs;
 } genhomedircon_settings_t;
 
 typedef struct {
@@ -188,6 +195,122 @@ static int ignore(const char *homedir)
 		ptr = ptr->next;
 	}
 	return 0;
+}
+
+/* Canonicalize every entry of a home directory list in place.  Since
+ * canonicalization may make entries collide (e.g. when the useradd and
+ * libuser defaults resolve to the same directory), the list is rebuilt
+ * without duplicates, preserving its order. */
+static int canonicalize_homedir_list(genhomedircon_settings_t *s,
+				     semanage_list_t **list)
+{
+	semanage_list_t *canonical = NULL, *h, *prev = NULL, *next;
+
+	for (h = *list; h; h = h->next) {
+		char *newpath = NULL;
+
+		if (semanage_path_subs_canonicalize(s->local_subs, s->dist_subs,
+						    h->data, &newpath) < 0)
+			goto err;
+		if (newpath) {
+			free(h->data);
+			h->data = newpath;
+		}
+	}
+
+	/* semanage_list_push() skips duplicates but prepends, so the
+	 * rebuilt list has to be reversed afterwards */
+	for (h = *list; h; h = h->next) {
+		if (semanage_list_push(&canonical, h->data))
+			goto err;
+	}
+
+	h = canonical;
+	while (h) {
+		next = h->next;
+		h->next = prev;
+		prev = h;
+		h = next;
+	}
+	canonical = prev;
+
+	semanage_list_destroy(list);
+	*list = canonical;
+	return STATUS_SUCCESS;
+
+err:
+	semanage_list_destroy(&canonical);
+	return STATUS_ERR;
+}
+
+/* Load a path substitution file (file_contexts.subs or
+ * file_contexts.subs_dist) of the selected store: below the final
+ * SELinux policy directory or, failing that, below the vendor
+ * configuration root, both below the semanage root.  A file that
+ * neither root has is not an error.  Returns 0 on success, -1 on
+ * error. */
+static int load_subs_file(semanage_handle_t *sh, bool dist,
+			  semanage_path_subs_t **rules)
+{
+	const char *abs_path = dist ? selinux_file_context_subs_dist_path() :
+				      selinux_file_context_subs_path();
+	const char *policy_root = selinux_policy_root();
+	const char *toplevel = semanage_final_path(SEMANAGE_FINAL_SELINUX,
+						   SEMANAGE_FINAL_TOPLEVEL);
+	const char *root = semanage_root();
+	const char *suffix, *store;
+	char *paths[2] = { NULL, NULL };
+	FILE *fp;
+	int refused = 0;
+	int rc = -1;
+	int i;
+
+	*rules = NULL;
+
+	if (!abs_path || !policy_root || !toplevel || !root)
+		return -1;
+
+	/* the part of the libselinux path below the policy root */
+	suffix = abs_path + strlen(policy_root);
+
+	/* the store part of the final SELinux policy directory */
+	if (strlen(toplevel) < strlen(root) + strlen(selinux_path()))
+		return -1;
+	store = toplevel + strlen(root) + strlen(selinux_path());
+
+	if (asprintf(&paths[0], "%s%s", toplevel, suffix) < 0)
+		goto out;
+	if (asprintf(&paths[1], "%s/usr/lib/selinux/%s%s", root, store,
+		     suffix) < 0)
+		goto out;
+
+	for (i = 0; i < 2; i++) {
+		fp = fopen(paths[i], "re");
+		if (fp)
+			break;
+		if (errno == EACCES)
+			refused = 1;
+		else if (errno != ENOENT)
+			goto out;
+	}
+	if (!fp) {
+		if (!refused) {
+			/* not an error: neither root has the file */
+			rc = 0;
+		} else {
+			errno = EACCES;
+		}
+		goto out;
+	}
+
+	rc = semanage_path_subs_load_file(sh, fp, paths[i], rules);
+
+	fclose(fp);
+
+out:
+	free(paths[0]);
+	free(paths[1]);
+	return rc;
 }
 
 static int prefix_is_homedir_role(const semanage_user_t *user,
@@ -355,7 +478,7 @@ static bool parse_uid_config(const char *file, const char *key, const char *sep,
 	return false;
 }
 
-static semanage_list_t *get_home_dirs(genhomedircon_settings_t *s)
+static int get_home_dirs(genhomedircon_settings_t *s, semanage_list_t **out)
 {
 	semanage_list_t *homedir_list = NULL;
 	semanage_list_t *shells = NULL;
@@ -363,6 +486,8 @@ static semanage_list_t *get_home_dirs(genhomedircon_settings_t *s)
 	char *path = NULL;
 	struct passwd *pwbuf;
 	struct stat buf;
+
+	*out = NULL;
 
 	path = semanage_findval(PATH_ETC_USERADD, "HOME", "=");
 	if (path && *path) {
@@ -394,8 +519,13 @@ static semanage_list_t *get_home_dirs(genhomedircon_settings_t *s)
 		}
 	}
 
-	if (!(s->usepasswd))
-		return homedir_list;
+	if (canonicalize_homedir_list(s, &homedir_list))
+		goto fail;
+
+	if (!(s->usepasswd)) {
+		*out = homedir_list;
+		return STATUS_SUCCESS;
+	}
 
 	shells = get_shell_list();
 	if (!shells) {
@@ -462,6 +592,20 @@ static semanage_list_t *get_home_dirs(genhomedircon_settings_t *s)
 
 		semanage_rtrim(path, '/');
 
+		{
+			char *canonical = NULL;
+
+			if (semanage_path_subs_canonicalize(s->local_subs,
+							    s->dist_subs, path,
+							    &canonical) < 0)
+				goto fail;
+
+			if (canonical) {
+				free(path);
+				path = canonical;
+			}
+		}
+
 		if (!semanage_list_find(homedir_list, path)) {
 			/*
 			 * Now check for an existing file context that matches
@@ -500,14 +644,15 @@ static semanage_list_t *get_home_dirs(genhomedircon_settings_t *s)
 	endpwent();
 	semanage_list_destroy(&shells);
 
-	return homedir_list;
+	*out = homedir_list;
+	return STATUS_SUCCESS;
 
 fail:
 	endpwent();
 	free(path);
 	semanage_list_destroy(&homedir_list);
 	semanage_list_destroy(&shells);
-	return NULL;
+	return STATUS_ERR;
 }
 
 /**
@@ -1144,8 +1289,20 @@ retry:
 		goto cleanup;
 	}
 
-	retval = push_user_entry(head, name, uid, gid, sename, prefix,
-				 pwent->pw_dir, level, selogin, homedir_role);
+	char *canonical_home = NULL;
+
+	if (semanage_path_subs_canonicalize(s->local_subs, s->dist_subs,
+					    pwent->pw_dir,
+					    &canonical_home) < 0) {
+		retval = STATUS_ERR;
+		goto cleanup;
+	}
+
+	retval =
+		push_user_entry(head, name, uid, gid, sename, prefix,
+				canonical_home ? canonical_home : pwent->pw_dir,
+				level, selogin, homedir_role);
+	free(canonical_home);
 cleanup:
 	free(rbuf);
 	return retval;
@@ -1386,7 +1543,12 @@ static int write_context_file(genhomedircon_settings_t *s, FILE *out)
 	}
 
 	if (homedir_context_tpl || homeroot_context_tpl) {
-		homedirs = get_home_dirs(s);
+		if (get_home_dirs(s, &homedirs) != STATUS_SUCCESS) {
+			ERR(s->h_semanage,
+			    "Could not get the home directories");
+			retval = STATUS_ERR;
+			goto done;
+		}
 		if (!homedirs) {
 			WARN(s->h_semanage,
 			     "no home directories were available, exiting without writing");
@@ -1469,6 +1631,8 @@ int semanage_genhomedircon(semanage_handle_t *sh, sepol_policydb_t *policydb,
 	s.homedir_template_path =
 		semanage_path(SEMANAGE_TMP, SEMANAGE_HOMEDIR_TMPL);
 	s.fcfilepath = semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_FC_HOMEDIRS);
+	s.local_subs = NULL;
+	s.dist_subs = NULL;
 
 	s.fallback = calloc(1, sizeof(genhomedircon_user_entry_t));
 	if (s.fallback == NULL) {
@@ -1493,6 +1657,13 @@ int semanage_genhomedircon(semanage_handle_t *sh, sepol_policydb_t *policydb,
 	s.h_semanage = sh;
 	s.policydb = policydb;
 
+	if (load_subs_file(sh, false, &s.local_subs) < 0 ||
+	    load_subs_file(sh, true, &s.dist_subs) < 0) {
+		ERR(sh, "Could not load the path substitution rules");
+		retval = STATUS_ERR;
+		goto done;
+	}
+
 	if (!(out = fopen(s.fcfilepath, "we"))) {
 		/* couldn't open output file */
 		ERR(sh, "Could not open the file_context file for writing");
@@ -1509,6 +1680,9 @@ done:
 
 	while (s.fallback)
 		pop_user_entry(&(s.fallback));
+
+	semanage_path_subs_free(&s.local_subs);
+	semanage_path_subs_free(&s.dist_subs);
 
 	ignore_free();
 
