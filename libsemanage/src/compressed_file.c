@@ -58,8 +58,7 @@ static int bzip(semanage_handle_t *sh, const char *filename, void *data,
 			fclose(f);
 			return -1;
 		}
-		fclose(f);
-		return 0;
+		return (fclose(f) == 0) ? 0 : -1;
 	}
 
 	b = BZ2_bzWriteOpen(&bzerror, f, sh->conf->bzip_blocksize, 0, 0);
@@ -77,19 +76,28 @@ static int bzip(semanage_handle_t *sh, const char *filename, void *data,
 		}
 		BZ2_bzWrite(&bzerror, b, (uint8_t *)data + total, len);
 		if (bzerror == BZ_IO_ERROR) {
+			int errsv = errno;
+
+			clearerr(f);
 			BZ2_bzWriteClose(&bzerror, b, 1, NULL, NULL);
 			fclose(f);
+			errno = errsv;
 			return -1;
 		}
 		total += len;
 	}
 
 	BZ2_bzWriteClose(&bzerror, b, 0, NULL, NULL);
-	fclose(f);
 	if (bzerror == BZ_IO_ERROR) {
+		int errsv = errno;
+
+		clearerr(f);
+		BZ2_bzWriteClose(&bzerror, b, 1, NULL, NULL);
+		fclose(f);
+		errno = errsv;
 		return -1;
 	}
-	return 0;
+	return (fclose(f) == 0) ? 0 : -1;
 }
 
 /* bunzip() a file to '*data', returning the total number of uncompressed bytes
