@@ -157,6 +157,7 @@ int dbase_llist_set(semanage_handle_t *handle, dbase_llist_t *dbase,
 		    const record_key_t *key, const record_t *data)
 {
 	cache_entry_t *entry;
+	record_t *replacement;
 	int status;
 
 	status = dbase_llist_cache_locate(handle, dbase, key, &entry);
@@ -166,9 +167,10 @@ int dbase_llist_set(semanage_handle_t *handle, dbase_llist_t *dbase,
 		ERR(handle, "record not found in the database");
 		goto err;
 	} else {
-		dbase->rtable->free(entry->data);
-		if (dbase->rtable->clone(handle, data, &entry->data) < 0)
+		if (dbase->rtable->clone(handle, data, &replacement) < 0)
 			goto err;
+		dbase->rtable->free(entry->data);
+		entry->data = replacement;
 	}
 
 	dbase->modified = 1;
@@ -183,6 +185,7 @@ int dbase_llist_modify(semanage_handle_t *handle, dbase_llist_t *dbase,
 		       const record_key_t *key, const record_t *data)
 {
 	cache_entry_t *entry;
+	record_t *replacement;
 	int status;
 
 	status = dbase_llist_cache_locate(handle, dbase, key, &entry);
@@ -192,9 +195,10 @@ int dbase_llist_modify(semanage_handle_t *handle, dbase_llist_t *dbase,
 		if (dbase_llist_cache_prepend(handle, dbase, data) < 0)
 			goto err;
 	} else {
-		dbase->rtable->free(entry->data);
-		if (dbase->rtable->clone(handle, data, &entry->data) < 0)
+		if (dbase->rtable->clone(handle, data, &replacement) < 0)
 			goto err;
+		dbase->rtable->free(entry->data);
+		entry->data = replacement;
 	}
 
 	dbase->modified = 1;
