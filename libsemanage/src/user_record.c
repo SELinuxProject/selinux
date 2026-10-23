@@ -255,9 +255,7 @@ int semanage_user_join(semanage_handle_t *handle,
 		       semanage_user_t **result)
 {
 	const char *name;
-	semanage_user_t *tmp_user = calloc(1, sizeof(semanage_user_t));
-	if (!tmp_user)
-		goto omem;
+	semanage_user_t *tmp_user;
 
 	/* Set the shared name from one of the records
 	 * (at least one is available) */
@@ -265,6 +263,10 @@ int semanage_user_join(semanage_handle_t *handle,
 		name = semanage_user_extra_get_name(record2);
 	else
 		name = semanage_user_base_get_name(record1);
+
+	tmp_user = calloc(1, sizeof(semanage_user_t));
+	if (!tmp_user)
+		goto omem;
 
 	/* Join base record if it exists, create a blank one otherwise */
 	if (record1) {
@@ -305,8 +307,7 @@ omem:
 	ERR(handle, "out of memory");
 
 err:
-	ERR(handle, "could not join data records for user %s",
-	    semanage_user_base_get_name(record1));
+	ERR(handle, "could not join data records for user %s", name);
 	semanage_user_free(tmp_user);
 	return STATUS_ERR;
 }
