@@ -46,6 +46,7 @@ typedef struct dbase_policydb dbase_t;
 #include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <glob.h>
 #include <stdio.h>
 #include <stdio_ext.h>
 #include <stdlib.h>
@@ -1885,18 +1886,278 @@ cleanup:
 	return status;
 }
 
-/* Load the contexts of the final tmp into the final selinux directory.
- * Return 0 on success, -3 on error.
+struct final_backup {
+	char *directory;
+	char *original;
+	char *restore;
+	char *manifest;
+	bool selected;
+	bool existed;
+	bool attempted;
+};
+
+static void semanage_free_final_backups(semanage_handle_t *sh,
+					struct final_backup *backups, bool keep)
+{
+	int i, errsv = errno;
+
+	for (i = 1; i < SEMANAGE_FINAL_PATH_NUM; i++) {
+		struct final_backup *b = &backups[i];
+
+		if (b->directory) {
+			if (keep) {
+				ERR(sh, "Recovery for %s retained in %s (%s).",
+				    semanage_final_path(SEMANAGE_FINAL_SELINUX,
+							i),
+				    b->directory,
+				    b->existed ? "original saved" :
+						 "previously absent");
+			} else {
+				if (b->restore)
+					unlink(b->restore);
+				if (b->original)
+					unlink(b->original);
+				if (b->manifest)
+					unlink(b->manifest);
+				if (rmdir(b->directory) < 0)
+					ERR(sh,
+					    "Could not remove backup directory %s.",
+					    b->directory);
+			}
+		}
+		free(b->restore);
+		free(b->original);
+		free(b->directory);
+		free(b->manifest);
+	}
+	errno = errsv;
+}
+
+/* Back up every destination before publishing any file. The hard link
+ * preserves the original inode (including symlinks) across replacement.
  */
-static int semanage_install_final_tmp(semanage_handle_t *sh)
+static int semanage_backup_final(semanage_handle_t *sh,
+				 struct final_backup *backups)
+{
+	int i;
+	struct stat sb;
+	char parent[PATH_MAX];
+
+	for (i = 1; i < SEMANAGE_FINAL_PATH_NUM; i++) {
+		struct final_backup *b = &backups[i];
+		const char *src = semanage_final_path(SEMANAGE_FINAL_TMP, i);
+		const char *dst =
+			semanage_final_path(SEMANAGE_FINAL_SELINUX, i);
+		char *directory = NULL;
+
+		if (sh->conf->disable_genhomedircon &&
+		    i == SEMANAGE_FC_HOMEDIRS)
+			continue;
+		if (stat(src, &sb) < 0) {
+			if (errno == ENOENT)
+				continue;
+			ERR(sh, "Could not inspect staged file %s.", src);
+			return -1;
+		}
+		if (strlen(dst) >= sizeof(parent)) {
+			errno = ENAMETOOLONG;
+			return -1;
+		}
+		strcpy(parent, dst);
+		if (semanage_mkpath(sh, dirname(parent)) < 0)
+			return -1;
+		if (lstat(dst, &sb) == 0) {
+			if (!S_ISREG(sb.st_mode) && !S_ISLNK(sb.st_mode)) {
+				errno = EINVAL;
+				ERR(sh,
+				    "Cannot back up non-file destination %s.",
+				    dst);
+				return -1;
+			}
+			b->existed = true;
+		} else if (errno != ENOENT) {
+			return -1;
+		}
+		if (asprintf(&directory, "%s/.semanage-backup-XXXXXX", parent) <
+		    0)
+			return -1;
+		if (!mkdtemp(directory)) {
+			free(directory);
+			return -1;
+		}
+		b->directory = directory;
+		if (asprintf(&b->original, "%s/original", directory) < 0) {
+			b->original = NULL;
+			return -1;
+		}
+		if (asprintf(&b->restore, "%s/restore", directory) < 0) {
+			b->restore = NULL;
+			return -1;
+		}
+		if (b->existed && link(dst, b->original) < 0) {
+			ERR(sh, "Could not back up %s.", dst);
+			return -1;
+		}
+		b->selected = true;
+		if (asprintf(&b->manifest, "%s/destination", directory) < 0) {
+			b->manifest = NULL;
+			return -1;
+		}
+		int fd = open(b->manifest,
+			      O_WRONLY | O_CREAT | O_EXCL | O_CLOEXEC,
+			      S_IRUSR | S_IWUSR);
+		if (fd < 0)
+			return -1;
+		int rc = dprintf(fd, "%s\n%s\n",
+				 b->existed ? "present" : "absent", dst);
+		if (rc < 0 || fsync(fd) < 0) {
+			int errsv = errno;
+			close(fd);
+			errno = errsv;
+			return -1;
+		}
+		if (close(fd) < 0)
+			return -1;
+	}
+	return 0;
+}
+
+static int semanage_restore_final(semanage_handle_t *sh,
+				  struct final_backup *backups)
+{
+	int i, rc = 0;
+
+	for (i = 1; i < SEMANAGE_FINAL_PATH_NUM; i++) {
+		struct final_backup *b = &backups[i];
+		const char *dst =
+			semanage_final_path(SEMANAGE_FINAL_SELINUX, i);
+
+		if (!b->attempted)
+			continue;
+		if (b->existed) {
+			/* Keep original available even if another restore or reload fails. */
+			if (link(b->original, b->restore) == 0 &&
+			    rename(b->restore, dst) == 0)
+				continue;
+		} else if (unlink(dst) == 0 || errno == ENOENT) {
+			continue;
+		}
+		ERR(sh, "Could not restore runtime file %s.", dst);
+		rc = -1;
+	}
+	return rc;
+}
+
+static void semanage_sweep_final_backups(semanage_handle_t *sh,
+					 struct final_backup *backups)
+{
+	int errsv = errno;
+
+	for (int i = 1; i < SEMANAGE_FINAL_PATH_NUM; i++) {
+		const char *dst =
+			semanage_final_path(SEMANAGE_FINAL_SELINUX, i);
+		char parent[PATH_MAX], pattern[2 * PATH_MAX + 40], *p = pattern;
+		glob_t matches = { 0 };
+		int rc;
+
+		if (!backups[i].selected)
+			continue;
+		strcpy(parent, dst); /* Validated by semanage_backup_final(). */
+		/* The configured parent is a literal path, not a glob pattern. */
+		for (const char *s = dirname(parent); *s; s++) {
+			if (strchr("\\*?[", *s))
+				*p++ = '\\';
+			*p++ = *s;
+		}
+		strcpy(p, "/.semanage-backup-*/destination");
+		rc = glob(pattern, GLOB_ERR, NULL, &matches);
+		if (rc != 0 && rc != GLOB_NOMATCH) {
+			errno = rc == GLOB_NOSPACE ? ENOMEM : EIO;
+			ERR(sh, "Could not find stale backups for %s.", dst);
+			globfree(&matches);
+			continue;
+		}
+		for (size_t j = 0; j < matches.gl_pathc; j++) {
+			char *directory = matches.gl_pathv[j];
+			char state[16], destination[PATH_MAX + 2];
+			struct stat sb;
+			FILE *fp;
+			int dirfd, fd, saved;
+			size_t len = strlen(dst);
+
+			*strrchr(directory, '/') = '\0';
+			if (!strcmp(directory, backups[i].directory))
+				continue;
+			dirfd = open(directory, O_RDONLY | O_DIRECTORY |
+							O_NOFOLLOW | O_CLOEXEC);
+			if (dirfd < 0)
+				goto report;
+			fd = openat(dirfd, "destination",
+				    O_RDONLY | O_NOFOLLOW | O_NONBLOCK |
+					    O_CLOEXEC);
+			if (fd < 0)
+				goto close_directory;
+			if (fstat(fd, &sb) < 0 || !S_ISREG(sb.st_mode)) {
+				close(fd);
+				errno = EINVAL;
+				goto close_directory;
+			}
+			fp = fdopen(fd, "r");
+			if (!fp) {
+				saved = errno;
+				close(fd);
+				errno = saved;
+				goto close_directory;
+			}
+			bool valid =
+				fgets(state, sizeof(state), fp) &&
+				(!strcmp(state, "present\n") ||
+				 !strcmp(state, "absent\n")) &&
+				fgets(destination, sizeof(destination), fp);
+			if (fclose(fp) != 0 || !valid) {
+				errno = EINVAL;
+				goto close_directory;
+			}
+			if (strlen(destination) != len + 1 ||
+			    memcmp(destination, dst, len) ||
+			    destination[len] != '\n') {
+				close(dirfd);
+				continue;
+			}
+			/* Never follow an original/restore symlink into its target. */
+			if ((unlinkat(dirfd, "original", 0) < 0 &&
+			     errno != ENOENT) ||
+			    (unlinkat(dirfd, "restore", 0) < 0 &&
+			     errno != ENOENT) ||
+			    unlinkat(dirfd, "destination", 0) < 0)
+				goto close_directory;
+			close(dirfd);
+			if (rmdir(directory) == 0)
+				continue;
+			goto report;
+
+close_directory:
+			saved = errno;
+			close(dirfd);
+			errno = saved;
+report:
+			ERR(sh, "Could not remove stale backup %s.", directory);
+		}
+		globfree(&matches);
+	}
+	errno = errsv;
+}
+
+/* Load the staged files, using the same selection that was backed up. */
+static int semanage_install_final_tmp(semanage_handle_t *sh,
+				      struct final_backup *backups,
+				      bool *reload_attempted)
 {
 	int status = -3;
 	int ret = 0;
 	int i = 0;
 	const char *src = NULL;
 	const char *dst = NULL;
-	struct stat sb;
-	char fn[PATH_MAX];
 
 	/* For each of the final files install it if it exists.
 	 * i = 1 to avoid copying the top level directory.
@@ -1905,26 +2166,9 @@ static int semanage_install_final_tmp(semanage_handle_t *sh)
 		src = semanage_final_path(SEMANAGE_FINAL_TMP, i);
 		dst = semanage_final_path(SEMANAGE_FINAL_SELINUX, i);
 
-		/* skip file if src doesn't exist */
-		if (stat(src, &sb) != 0)
+		if (!backups[i].selected)
 			continue;
-
-		/* skip genhomedircon if configured */
-		if (sh->conf->disable_genhomedircon &&
-		    i == SEMANAGE_FC_HOMEDIRS)
-			continue;
-
-		if (strlen(dst) >= sizeof(fn)) {
-			ERR(sh, "Unable to compose the final paths.");
-			status = -1;
-			goto cleanup;
-		}
-		strcpy(fn, dst);
-		ret = semanage_mkpath(sh, dirname(fn));
-		if (ret < 0) {
-			goto cleanup;
-		}
-
+		backups[i].attempted = true;
 		ret = semanage_copy_file(sh, src, dst, sh->conf->file_mode,
 					 true);
 		if (ret < 0) {
@@ -1963,6 +2207,7 @@ static int semanage_install_final_tmp(semanage_handle_t *sh)
 		goto skip_reload;
 	}
 
+	*reload_attempted = true;
 	if (semanage_reload_policy(sh)) {
 		goto cleanup;
 	}
@@ -1990,6 +2235,8 @@ static int semanage_commit_sandbox(semanage_handle_t *sh)
 	const char *sandbox = semanage_path(SEMANAGE_TMP, SEMANAGE_TOPLEVEL);
 	struct stat buf;
 	struct selabel_handle *sehandle;
+	struct final_backup final_backups[SEMANAGE_FINAL_PATH_NUM] = { 0 };
+	bool keep_backups = false, reload_attempted = false;
 
 	/* update the commit number */
 	if ((commit_number = semanage_direct_get_serial(sh)) < 0) {
@@ -2036,6 +2283,12 @@ static int semanage_commit_sandbox(semanage_handle_t *sh)
 	if (semanage_get_active_lock(sh) < 0) {
 		return -1;
 	}
+	if (semanage_backup_final(sh, final_backups) < 0) {
+		ERR(sh,
+		    "Could not back up runtime files; publication aborted.");
+		retval = -1;
+		goto cleanup;
+	}
 	/* make the backup of the current active directory */
 	if (stat(backup, &buf) == 0) {
 		if (S_ISDIR(buf.st_mode) &&
@@ -2070,23 +2323,35 @@ static int semanage_commit_sandbox(semanage_handle_t *sh)
 		retval = -1;
 		goto cleanup;
 	}
-	if (semanage_install_final_tmp(sh) != 0) {
-		/* note that if an error occurs during the next three
-		 * function then the store will be left in an
-		 * inconsistent state */
+	if (semanage_install_final_tmp(sh, final_backups, &reload_attempted) !=
+	    0) {
+		/* Restore both namespaces; retain recovery files if either fails. */
 		int errsv = errno;
-		if (semanage_rename(sh, active, sandbox) < 0)
+		if (semanage_rename(sh, active, sandbox) < 0) {
 			ERR(sh, "Error while renaming %s back to %s.", active,
 			    sandbox);
-		else if (semanage_rename(sh, backup, active) < 0)
+			keep_backups = true;
+		} else if (semanage_rename(sh, backup, active) < 0) {
 			ERR(sh, "Error while renaming %s back to %s.", backup,
 			    active);
-		else
-			semanage_install_final_tmp(sh);
+			keep_backups = true;
+		}
+		if (semanage_restore_final(sh, final_backups) < 0)
+			keep_backups = true;
+		if (reload_attempted && !keep_backups) {
+			if (!final_backups[SEMANAGE_KERNEL].existed ||
+			    semanage_reload_policy(sh) != 0) {
+				ERR(sh,
+				    "Could not reload the restored runtime policy.");
+				keep_backups = true;
+			}
+		}
 		errno = errsv;
 		retval = -1;
 		goto cleanup;
 	}
+
+	semanage_sweep_final_backups(sh, final_backups);
 
 	if (!sh->conf->save_previous) {
 		int errsv = errno;
@@ -2100,6 +2365,7 @@ static int semanage_commit_sandbox(semanage_handle_t *sh)
 	}
 
 cleanup:
+	semanage_free_final_backups(sh, final_backups, keep_backups);
 	semanage_release_active_lock(sh);
 
 	if (sh->conf->relabel_store) {

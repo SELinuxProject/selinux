@@ -1,5 +1,10 @@
 Notes on tests
 ============================
+The final rollback regression uses real store and runtime-file operations,
+injected write/rename/link failures, and an offline loader that records its
+loaded state. It never loads a kernel policy. Cases cover backup creation,
+publication, restoration, reload recovery, symlinks and prior absence.
+
 Commit tests require the CIL fixture sources as well as their compiled
 policies. They install those sources into an isolated store so that commit
 and reconnect checks exercise persistent changes rather than cached records.

@@ -1,4 +1,5 @@
 libsemanage-tests
+test-final-rollback
 test-user-join-transaction
 test-handle-lifecycle
 test-parse-read-error
