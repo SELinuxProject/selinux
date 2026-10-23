@@ -1000,6 +1000,7 @@ static int semanage_compile_module(semanage_handle_t *sh,
 {
 	char cil_path[PATH_MAX];
 	char hll_path[PATH_MAX];
+	char module_path[PATH_MAX];
 	char *compiler_path = NULL;
 	char *cil_data = NULL;
 	char *err_data = NULL;
@@ -1072,6 +1073,16 @@ static int semanage_compile_module(semanage_handle_t *sh,
 		Sha256Update(context, cil_data, cil_data_len);
 	}
 
+	/* Vendor-only modules have no writable directory for their CIL cache. */
+	status = semanage_module_get_path(sh, modinfo,
+					  SEMANAGE_MODULE_PATH_NAME,
+					  module_path, sizeof(module_path));
+	if (status != 0)
+		goto cleanup;
+	status = semanage_mkpath(sh, module_path);
+	if (status != 0)
+		goto cleanup;
+
 	status = write_compressed_file(sh, cil_path, cil_data, cil_data_len);
 	if (status == -1) {
 		ERR(sh, "Failed to write %s.", cil_path);
@@ -1125,6 +1136,23 @@ struct extra_checksum_params {
 	int policyvers;
 };
 
+static int semanage_module_external_hll(semanage_handle_t *sh,
+					const semanage_module_info_t *modinfo)
+{
+	char source[PATH_MAX], writable[PATH_MAX];
+
+	if (!strcasecmp(modinfo->lang_ext, "cil") || !semanage_ro_root_count())
+		return 0;
+
+	if (semanage_module_find_path(sh, modinfo, SEMANAGE_MODULE_PATH_HLL,
+				      source, sizeof(source)) != 0 ||
+	    semanage_module_get_path(sh, modinfo, SEMANAGE_MODULE_PATH_HLL,
+				     writable, sizeof(writable)) != 0)
+		return -1;
+
+	return strcmp(source, writable) != 0;
+}
+
 static int
 semanage_compile_hll_modules(semanage_handle_t *sh,
 			     semanage_module_info_t *modinfos, int num_modinfos,
@@ -1157,13 +1185,20 @@ semanage_compile_hll_modules(semanage_handle_t *sh,
 	/* prefix with module count to avoid collisions */
 	update_checksum_with_len(&context, num_modinfos);
 	for (i = 0; i < num_modinfos; i++) {
+		int external_hll =
+			semanage_module_external_hll(sh, &modinfos[i]);
+
+		if (external_hll < 0)
+			return -1;
+
 		status = semanage_module_find_path(sh, &modinfos[i],
 						   SEMANAGE_MODULE_PATH_CIL,
 						   cil_path, sizeof(cil_path));
 		if (status != 0)
 			return -1;
 
-		if (!semanage_get_ignore_module_cache(sh)) {
+		/* RO sources can change independently of the writable CIL cache. */
+		if (!external_hll && !semanage_get_ignore_module_cache(sh)) {
 			status = stat(cil_path, &sb);
 			if (status == 0) {
 				status = map_compressed_file(sh, cil_path,
@@ -1717,14 +1752,16 @@ static int semanage_direct_commit(semanage_handle_t *sh)
 	if (sh->conf->sort_local_fcontexts) {
 		retval = semanage_sort_fc_file(
 			sh,
-			semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_FC_LOCAL),
+			semanage_path_read(SEMANAGE_TMP,
+					   SEMANAGE_STORE_FC_LOCAL),
 			semanage_final_path(SEMANAGE_FINAL_TMP,
 					    SEMANAGE_FC_LOCAL),
 			sh->conf->file_mode);
 	} else {
 		retval = copy_file_if_exists(
 			sh,
-			semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_FC_LOCAL),
+			semanage_path_read(SEMANAGE_TMP,
+					   SEMANAGE_STORE_FC_LOCAL),
 			semanage_final_path(SEMANAGE_FINAL_TMP,
 					    SEMANAGE_FC_LOCAL),
 			sh->conf->file_mode);
@@ -2014,17 +2051,25 @@ static int semanage_direct_extract(semanage_handle_t *sh,
 		goto cleanup;
 	}
 
-	if (extract_cil == 1 && strcmp(_modinfo->lang_ext, "cil") &&
-	    stat(input_file, &sb) != 0) {
-		if (errno != ENOENT) {
+	if (extract_cil == 1 && strcmp(_modinfo->lang_ext, "cil")) {
+		int external_hll = semanage_module_external_hll(sh, _modinfo);
+		int missing = (stat(input_file, &sb) != 0);
+
+		if (external_hll < 0 || (missing && errno != ENOENT)) {
 			ERR(sh, "Unable to access %s.", input_file);
 			rc = -1;
 			goto cleanup;
 		}
 
-		rc = semanage_compile_module(sh, _modinfo, NULL);
-		if (rc < 0) {
-			goto cleanup;
+		if (external_hll || missing) {
+			rc = semanage_compile_module(sh, _modinfo, NULL);
+			if (rc < 0)
+				goto cleanup;
+			rc = semanage_module_get_path(sh, _modinfo, file_type,
+						      input_file,
+						      sizeof(input_file));
+			if (rc != 0)
+				goto cleanup;
 		}
 	}
 
@@ -2148,8 +2193,6 @@ static int semanage_direct_get_enabled(semanage_handle_t *sh,
 	int status = 0;
 	int ret = 0;
 
-	char path[PATH_MAX];
-	struct stat sb;
 	semanage_module_info_t *modinfo = NULL;
 
 	/* get module info */
@@ -2159,25 +2202,7 @@ static int semanage_direct_get_enabled(semanage_handle_t *sh,
 		goto cleanup;
 	}
 
-	/* get disabled file path */
-	ret = semanage_module_get_path(
-		sh, modinfo, SEMANAGE_MODULE_PATH_DISABLED, path, sizeof(path));
-	if (ret != 0) {
-		status = -1;
-		goto cleanup;
-	}
-
-	if (stat(path, &sb) < 0) {
-		if (errno != ENOENT) {
-			ERR(sh, "Unable to access %s.", path);
-			status = -1;
-			goto cleanup;
-		}
-
-		*enabled = 1;
-	} else {
-		*enabled = 0;
-	}
+	*enabled = modinfo->enabled;
 
 cleanup:
 	semanage_module_info_destroy(sh, modinfo);

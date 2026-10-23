@@ -32,6 +32,9 @@ struct dbase_file {
 	/* Backing path for read-only[0] and transaction[1] */
 	const char *path[2];
 
+	int store_file;
+	int cache_in_transaction;
+
 	/* FILE extension */
 	const record_file_table_t *rftable;
 };
@@ -47,6 +50,12 @@ static int dbase_file_cache(semanage_handle_t *handle, dbase_file_t *dbase)
 	parse_info_t *parse_info = NULL;
 	const char *fname = NULL;
 
+	/* A transaction changes the source even when the serial is unchanged. */
+	if (dbase->store_file >= 0 &&
+	    dbase->cache_in_transaction != handle->is_in_transaction)
+		dbase_llist_drop_cache(&dbase->llist);
+	dbase->cache_in_transaction = handle->is_in_transaction;
+
 	/* Already cached */
 	if (!dbase_llist_needs_resync(handle, &dbase->llist))
 		return STATUS_SUCCESS;
@@ -57,6 +66,11 @@ static int dbase_file_cache(semanage_handle_t *handle, dbase_file_t *dbase)
 		goto err;
 
 	fname = dbase->path[handle->is_in_transaction];
+	if (dbase->store_file >= 0)
+		fname = semanage_path_read(handle->is_in_transaction ?
+						   SEMANAGE_TMP :
+						   SEMANAGE_ACTIVE,
+					   dbase->store_file);
 
 	if (parse_init(handle, fname, NULL, &parse_info) < 0)
 		goto err;
@@ -168,6 +182,18 @@ int dbase_file_init(semanage_handle_t *handle, const char *path_ro,
 
 	tmp_dbase->path[0] = path_ro;
 	tmp_dbase->path[1] = path_rw;
+	tmp_dbase->store_file = -1;
+	tmp_dbase->cache_in_transaction = handle->is_in_transaction;
+	if (semanage_ro_root_count() > 0) {
+		int i;
+
+		for (i = 0; i < SEMANAGE_STORE_NUM_PATHS; i++) {
+			if (!strcmp(path_rw, semanage_path(SEMANAGE_TMP, i))) {
+				tmp_dbase->store_file = i;
+				break;
+			}
+		}
+	}
 	tmp_dbase->rftable = rftable;
 	dbase_llist_init(&tmp_dbase->llist, rtable, &SEMANAGE_FILE_DTABLE);
 

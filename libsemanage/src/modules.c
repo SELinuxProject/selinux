@@ -555,6 +555,8 @@ int semanage_module_get_path(semanage_handle_t *sh,
  * modules root, filling @path with the first location that exists.
  * When the module exists nowhere, @path is left with the writable root
  * value so the caller's error message names the write target.
+ * A missing CIL cache beside an HLL source must be rebuilt, not replaced
+ * by a lower root's cache for a different source module.
  */
 int semanage_module_find_path(semanage_handle_t *sh,
 			      const semanage_module_info_t *modinfo,
@@ -562,19 +564,28 @@ int semanage_module_find_path(semanage_handle_t *sh,
 			      size_t len)
 {
 	unsigned int i, n = semanage_ro_root_count();
+	const char *root;
+	char hll_path[PATH_MAX];
 	int ret;
 
-	ret = semanage_module_build_path(sh, semanage_module_write_root(sh),
-					 modinfo, type, path, len);
-	if (ret != 0 || n == 0 || access(path, F_OK) == 0)
-		return ret;
-
-	for (i = 0; i < n; i++) {
-		ret = semanage_module_build_path(
-			sh, semanage_ro_active_path(i, SEMANAGE_MODULES),
-			modinfo, type, path, len);
+	for (i = 0;; i++) {
+		root = (i == 0) ?
+			       semanage_module_write_root(sh) :
+			       semanage_ro_active_path(i - 1, SEMANAGE_MODULES);
+		ret = semanage_module_build_path(sh, root, modinfo, type, path,
+						 len);
 		if (ret != 0 || access(path, F_OK) == 0)
 			return ret;
+
+		if (type == SEMANAGE_MODULE_PATH_CIL) {
+			ret = semanage_module_build_path(
+				sh, root, modinfo, SEMANAGE_MODULE_PATH_HLL,
+				hll_path, sizeof(hll_path));
+			if (ret != 0 || access(hll_path, F_OK) == 0)
+				return ret;
+		}
+		if (i == n)
+			break;
 	}
 
 	/* Not found anywhere; restore the writable-root path */

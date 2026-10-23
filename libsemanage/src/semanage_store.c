@@ -502,9 +502,10 @@ const char *semanage_ro_active_path(unsigned int idx,
 
 /*
  * First-existing of the writable ACTIVE path and each RO ACTIVE path,
- * for read-side lookups. For TMP/PREVIOUS, or when no fallback root
- * has the file, this is semanage_path(store, file) so callers that
- * then create the file use the writable store.
+ * for read-side lookups. TMP also falls back for local record files;
+ * generated policy files and PREVIOUS never fall back. An existing empty
+ * writable file shadows the read-only file, including after deleting
+ * the last local record.
  */
 const char *semanage_path_read(enum semanage_store_defs store,
 			       enum semanage_sandbox_defs file)
@@ -512,7 +513,26 @@ const char *semanage_path_read(enum semanage_store_defs store,
 	const char *path = semanage_path(store, file);
 	unsigned int i;
 
-	if (store != SEMANAGE_ACTIVE || access(path, F_OK) == 0)
+	if (store == SEMANAGE_TMP) {
+		switch (file) {
+		case SEMANAGE_IBPKEYS_LOCAL:
+		case SEMANAGE_IBENDPORTS_LOCAL:
+		case SEMANAGE_PORTS_LOCAL:
+		case SEMANAGE_INTERFACES_LOCAL:
+		case SEMANAGE_NODES_LOCAL:
+		case SEMANAGE_BOOLEANS_LOCAL:
+		case SEMANAGE_SEUSERS_LOCAL:
+		case SEMANAGE_USERS_BASE_LOCAL:
+		case SEMANAGE_USERS_EXTRA_LOCAL:
+		case SEMANAGE_STORE_FC_LOCAL:
+			break;
+		default:
+			return path;
+		}
+	} else if (store != SEMANAGE_ACTIVE)
+		return path;
+
+	if (access(path, F_OK) == 0 || errno != ENOENT)
 		return path;
 
 	for (i = 0; i < semanage_n_ro_roots; i++) {
