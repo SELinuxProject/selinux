@@ -127,6 +127,7 @@ static int dbase_policydb_cache(semanage_handle_t *handle,
 			goto err;
 
 		sepol_policy_file_free(pf);
+		pf = NULL;
 		fclose(fp);
 		fp = NULL;
 	}
