@@ -83,8 +83,8 @@ int semanage_ibpkey_validate_local(semanage_handle_t *handle)
 	unsigned int i = 0, j = 0;
 	uint64_t subnet_prefix;
 	uint64_t subnet_prefix2;
-	char *subnet_prefix_str;
-	char *subnet_prefix_str2;
+	char *subnet_prefix_str = NULL;
+	char *subnet_prefix_str2 = NULL;
 	int low, high;
 	int low2, high2;
 
@@ -98,6 +98,8 @@ int semanage_ibpkey_validate_local(semanage_handle_t *handle)
 
 	/* Test each ibpkey for overlap */
 	while (i < nibpkeys) {
+		free(subnet_prefix_str);
+		subnet_prefix_str = NULL;
 		if (STATUS_SUCCESS !=
 		    semanage_ibpkey_get_subnet_prefix(handle, ibpkeys[i],
 						      &subnet_prefix_str)) {
@@ -118,6 +120,8 @@ int semanage_ibpkey_validate_local(semanage_handle_t *handle)
 				goto next;
 			j++;
 
+			free(subnet_prefix_str2);
+			subnet_prefix_str2 = NULL;
 			if (STATUS_SUCCESS !=
 			    semanage_ibpkey_get_subnet_prefix(
 				    handle, ibpkeys[j], &subnet_prefix_str2)) {
@@ -152,6 +156,8 @@ next:
 		j = i;
 	}
 
+	free(subnet_prefix_str);
+	free(subnet_prefix_str2);
 	for (i = 0; i < nibpkeys; i++)
 		semanage_ibpkey_free(ibpkeys[i]);
 	free(ibpkeys);
@@ -161,6 +167,8 @@ err:
 	ERR(handle, "could not complete ibpkeys validity check");
 
 invalid:
+	free(subnet_prefix_str);
+	free(subnet_prefix_str2);
 	for (i = 0; i < nibpkeys; i++)
 		semanage_ibpkey_free(ibpkeys[i]);
 	free(ibpkeys);

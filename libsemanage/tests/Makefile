@@ -61,7 +61,7 @@ $(EXECUTABLE): $(OBJECTS) ../src/libsemanage.a
 clean distclean:
 	rm -rf $(OBJECTS) $(POLICIES) $(EXECUTABLE) $(USER_JOIN_TEST) $(LIFECYCLE_TEST) $(ERROR_TESTS) $(SERIAL_TESTS) $(ROLLBACK_TEST) $(RESTART_TEST)
 
-test: all
+test: all test-ibpkey-validation
 	./$(EXECUTABLE)
 	./$(USER_JOIN_TEST)
 	./$(LIFECYCLE_TEST)
@@ -71,3 +71,8 @@ test: all
 	@for test in $(SERIAL_TESTS); do ./$$test || exit 1; done
 	./$(ROLLBACK_TEST)
 	./$(RESTART_TEST)
+
+test-ibpkey-validation:
+	sh ibpkey-validation/run.sh
+
+.PHONY: test-ibpkey-validation
