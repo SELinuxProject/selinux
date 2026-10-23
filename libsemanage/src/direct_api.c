@@ -422,12 +422,16 @@ static int semanage_direct_begintrans(semanage_handle_t *sh)
 		return -1;
 	}
 	if ((semanage_make_sandbox(sh)) < 0) {
-		return -1;
+		goto err_unlock;
 	}
 	if ((semanage_make_final(sh)) < 0) {
-		return -1;
+		goto err_unlock;
 	}
 	return 0;
+
+err_unlock:
+	semanage_release_trans_lock(sh);
+	return -1;
 }
 
 /********************* utility functions *********************/
