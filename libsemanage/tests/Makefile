@@ -26,9 +26,14 @@ $(EXECUTABLE): $(OBJECTS) ../src/libsemanage.a
 clean distclean:
 	rm -rf $(OBJECTS) $(POLICIES) $(EXECUTABLE) test-config-empty
 
-test: all
+test: all test-ibpkey-validation
 	./test-config-empty
 	./$(EXECUTABLE)
+
+test-ibpkey-validation:
+	sh ibpkey-validation/run.sh
+
+.PHONY: test-ibpkey-validation
 
 # Requires SWIG, Python development headers and the built shared library.
 PYTHON ?= python3

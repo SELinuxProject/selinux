@@ -1,5 +1,10 @@
 Notes on tests
 ============================
+`make test-ibpkey-validation` checks overlap validation and subnet-string
+cleanup for empty/single/multiple records, different prefixes, overlap,
+and allocation failures. Records and subnet conversion use real source;
+database listing is a fixture. Tracked allocations must all be freed.
+
 The semanage_access_check test in the semanage_store suite simulates a
 read-only filesystem by using DAC permissions. Consequently, these tests
 will fail if run as root, as root can override DAC permissions.
