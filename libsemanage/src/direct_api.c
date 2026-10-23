@@ -1393,16 +1393,19 @@ static int semanage_direct_commit(semanage_handle_t *sh)
 			if (fclose(touch) != 0 && errno != EINTR) {
 				ERR(sh,
 				    "Error attempting to create disable_dontaudit flag.");
+				retval = -1;
 				goto cleanup;
 			}
 		} else {
 			ERR(sh,
 			    "Error attempting to create disable_dontaudit flag.");
+			retval = -1;
 			goto cleanup;
 		}
 	} else {
 		if (remove(path) == -1 && errno != ENOENT) {
 			ERR(sh, "Error removing the disable_dontaudit flag.");
+			retval = -1;
 			goto cleanup;
 		}
 	}
@@ -1427,16 +1430,19 @@ static int semanage_direct_commit(semanage_handle_t *sh)
 			if (fclose(touch) != 0 && errno != EINTR) {
 				ERR(sh,
 				    "Error attempting to create preserve_tunable flag.");
+				retval = -1;
 				goto cleanup;
 			}
 		} else {
 			ERR(sh,
 			    "Error attempting to create preserve_tunable flag.");
+			retval = -1;
 			goto cleanup;
 		}
 	} else {
 		if (remove(path) == -1 && errno != ENOENT) {
 			ERR(sh, "Error removing the preserve_tunables flag.");
+			retval = -1;
 			goto cleanup;
 		}
 	}
