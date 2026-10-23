@@ -44,6 +44,7 @@ static int clear_obsolete(semanage_handle_t *handle, record_t **records,
 		}
 
 		rtable->key_free(key);
+		key = NULL;
 	}
 
 	return STATUS_SUCCESS;
@@ -81,6 +82,7 @@ static int load_records(semanage_handle_t *handle, dbase_config_t *dst,
 			goto err;
 
 		rtable->key_free(rkey);
+		rkey = NULL;
 	}
 
 	return STATUS_SUCCESS;
