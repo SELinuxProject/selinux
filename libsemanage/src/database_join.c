@@ -28,6 +28,7 @@ struct dbase_join {
 	 * thing being joined  */
 	dbase_config_t *join1;
 	dbase_config_t *join2;
+	int cache_in_transaction;
 
 	/* JOIN extension */
 	const record_join_table_t *rjtable;
@@ -50,6 +51,11 @@ static int dbase_join_cache(semanage_handle_t *handle, dbase_join_t *dbase)
 	record1_t **records1 = NULL;
 	record2_t **records2 = NULL;
 	unsigned int rcount1 = 0, rcount2 = 0, i = 0, j = 0;
+
+	/* Synchronize child caches before mutating a join in a new transaction */
+	if (dbase->cache_in_transaction != handle->is_in_transaction)
+		dbase_llist_drop_cache(&dbase->llist);
+	dbase->cache_in_transaction = handle->is_in_transaction;
 
 	/* Already cached */
 	if (!dbase_llist_needs_resync(handle, &dbase->llist))
@@ -249,6 +255,7 @@ int dbase_join_init(semanage_handle_t *handle, const record_table_t *rtable,
 	tmp_dbase->rjtable = rjtable;
 	tmp_dbase->join1 = join1;
 	tmp_dbase->join2 = join2;
+	tmp_dbase->cache_in_transaction = handle->is_in_transaction;
 
 	*dbase = tmp_dbase;
 
