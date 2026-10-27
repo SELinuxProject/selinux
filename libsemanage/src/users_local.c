@@ -36,7 +36,10 @@ static int lookup_seuser(semanage_handle_t *handle,
 	if (semanage_user_query(handle, k, &user) < 0)
 		return 0;
 	name = semanage_user_get_name(user);
-	semanage_seuser_list_local(handle, &records, &count);
+	if (semanage_seuser_list_local(handle, &records, &count) < 0) {
+		semanage_user_free(user);
+		return -1;
+	}
 	for (i = 0; i < count; i++) {
 		sename = semanage_seuser_get_sename(records[i]);
 		if (strcmp(name, sename) == 0) {
