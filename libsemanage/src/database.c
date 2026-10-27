@@ -31,8 +31,12 @@ static int enter_ro(semanage_handle_t *handle, dbase_config_t *dconfig)
 		}
 	}
 
-	if (dconfig->dtable->cache(handle, dconfig->dbase) < 0)
+	if (dconfig->dtable->cache(handle, dconfig->dbase) < 0) {
+		if (!handle->is_in_transaction &&
+		    handle->conf->store_type == SEMANAGE_CON_DIRECT)
+			semanage_release_active_lock(handle);
 		goto err;
+	}
 
 	return STATUS_SUCCESS;
 

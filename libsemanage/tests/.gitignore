@@ -1,4 +1,5 @@
 libsemanage-tests
 test-user-join-transaction
 test-parse-read-error
+test-read-lock-error
 *.policy
