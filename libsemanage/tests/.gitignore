@@ -1,2 +1,3 @@
 libsemanage-tests
+test-user-join-transaction
 *.policy
