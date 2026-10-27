@@ -126,7 +126,8 @@ extern int semanage_connect(semanage_handle_t *);
 /* Disconnect from the manager given by the handle.  If already
  * disconnected then this function does nothing.  Return 0 if
  * disconnected properly or already disconnected, negative value on
- * error. */
+ * error.  The handle is disconnected even if temporary-file cleanup
+ * fails; a repeated disconnect is harmless. */
 extern int semanage_disconnect(semanage_handle_t *);
 
 /* Attempt to obtain a transaction lock on the manager.	 If another

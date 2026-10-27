@@ -1,5 +1,6 @@
 libsemanage-tests
 test-user-join-transaction
+test-handle-lifecycle
 test-parse-read-error
 test-read-lock-error
 test-user-delete-error

@@ -353,17 +353,20 @@ int semanage_access_check(semanage_handle_t *sh)
 
 int semanage_disconnect(semanage_handle_t *sh)
 {
+	int retval = 0;
+
 	assert(sh != NULL);
 	if (!sh->is_connected) {
 		return 0;
 	}
-	if (sh->funcs && sh->funcs->disconnect(sh) < 0) {
-		return -1;
-	}
+	if (sh->funcs)
+		retval = sh->funcs->disconnect(sh);
+	/* The backend releases its databases even when disk cleanup fails. */
+	memset(sh->dbase, 0, sizeof(sh->dbase));
 	sh->is_in_transaction = 0;
 	sh->is_connected = 0;
 	sh->modules_modified = 0;
-	return 0;
+	return retval;
 }
 
 void semanage_handle_destroy(semanage_handle_t *sh)
@@ -400,7 +403,7 @@ int semanage_begin_transaction(semanage_handle_t *sh)
 
 int semanage_commit(semanage_handle_t *sh)
 {
-	int retval;
+	int retval, errsv, i;
 	assert(sh != NULL && sh->funcs != NULL && sh->funcs->commit != NULL);
 	if (!sh->is_in_transaction) {
 		ERR(sh,
@@ -408,7 +411,16 @@ int semanage_commit(semanage_handle_t *sh)
 		return -1;
 	}
 	retval = sh->funcs->commit(sh);
+	errsv = errno;
+	/* A completed attempt ends this transaction, including its cached views. */
+	for (i = 0; i < DBASE_COUNT; i++) {
+		dbase_config_t *dbase = &sh->dbase[i];
+
+		if (dbase->dtable && dbase->dbase)
+			dbase->dtable->drop_cache(dbase->dbase);
+	}
 	sh->is_in_transaction = 0;
 	sh->modules_modified = 0;
+	errno = errsv;
 	return retval;
 }
