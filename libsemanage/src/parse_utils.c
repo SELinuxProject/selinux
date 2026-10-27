@@ -120,8 +120,14 @@ int parse_skip_space(semanage_handle_t *handle, parse_info_t *info)
 		}
 	}
 
+	if (info->file_stream &&
+	    (ferror(info->file_stream) || !feof(info->file_stream))) {
+		ERR(handle, "could not read file %s.", info->filename);
+		free(buffer);
+		return STATUS_ERR;
+	}
+
 	free(buffer);
-	buffer = NULL;
 
 	return STATUS_SUCCESS;
 
