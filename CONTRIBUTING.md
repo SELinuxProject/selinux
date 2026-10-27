@@ -3,6 +3,9 @@
 Contributing to the SELinux userspace project is a similar process to
 other open source projects. Bug reports, new features to the existing
 code, additional tools, or updated documentation are all welcome.
+Before undertaking a new task, it is a good idea to first post to the
+selinux@vger.kernel.org mailing list to see if anyone else is already
+working on it.
 
 You can find a list of open issues to the SELinux userspace code at
 https://github.com/SELinuxProject/selinux/issues
@@ -58,6 +61,20 @@ When preparing patches, please follow these guidelines:
 
 When adding new, large features or tools it is best to discuss the
 design on the mailing list prior to submitting the patch.
+
+See [git-send-email](https://git-scm.com/docs/git-send-email) and
+[submitting-patches](https://docs.kernel.org/process/submitting-patches.html)
+for how to configure git-send-email for sending patches inline within
+email messages as required by the SELinux maintainers.
+
+You will send the patch via git send-email to the
+[selinux@vger.kernel.org](mailto:selinux@vger.kernel.org) mailing
+list. The command below is for sending the topmost patch from your
+repository; if you need to send more than one patch or you are sending
+a patch from a file instead, you will need to adjust the command line
+accordingly.
+
+    git send-email --subject-prefix="PATCH userspace" -1 --to=selinux@vger.kernel.org
 
 ## Development Repository
 
