@@ -81,7 +81,7 @@ exclude_dirs_from_relabelling() {
     local f
     exclude_from_relabelling=
     f=$(selinux_resolve fixfiles_exclude_dirs) || return 0
-    while read i
+    while read -r i || [ -n "$i" ]
     do
 	# skip blank line and comment
 	# skip not absolute path
