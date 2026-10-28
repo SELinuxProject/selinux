@@ -1,5 +1,13 @@
 Notes on tests
 ============================
+Commit tests require the CIL fixture sources as well as their compiled
+policies. They install those sources into an isolated store so that commit
+and reconnect checks exercise persistent changes rather than cached records.
+
+When the system setfiles does not support the policy version of this tree,
+set SEMANAGE_TEST_SETFILES to the absolute path of a matching setfiles binary.
+SEMANAGE_TEST_VERBOSE=1 enables library diagnostics for troubleshooting.
+
 The semanage_access_check test in the semanage_store suite simulates a
 read-only filesystem by using DAC permissions. Consequently, these tests
 will fail if run as root, as root can override DAC permissions.

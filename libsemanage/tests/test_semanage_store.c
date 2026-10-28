@@ -89,7 +89,14 @@ int semanage_store_test_init(void)
 	sh->conf->store_path = strdup("store");
 
 	/* initialize paths */
-	err = semanage_check_init(sh, rootpath);
+	char *root = realpath(rootpath, NULL);
+	if (!root)
+		return -1;
+	err = semanage_set_root(root);
+	free(root);
+	if (err != 0)
+		return -1;
+	err = semanage_check_init(sh, "");
 	if (err != 0)
 		return -1;
 

@@ -18,6 +18,8 @@
 (type first_port_t)
 (type second_port_t)
 (type third_port_t)
+(type user_home_t)
+(type user_tmp_t)
 (sidcontext security (system_u object_r first_port_t ((s0) (s0))))
 (class file (open))
 (classorder (file))

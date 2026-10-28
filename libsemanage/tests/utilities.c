@@ -23,6 +23,8 @@
  */
 
 #include "utilities.h"
+#include "handle.h"
+#include <limits.h>
 
 static int test_store_enabled = 0;
 
@@ -40,6 +42,7 @@ void test_msg_handler(__attribute__((unused)) void *varg,
 int create_test_store(void)
 {
 	FILE *fptr;
+	const char *setfiles = getenv("SEMANAGE_TEST_SETFILES");
 
 	if (mkdir("test-policy", 0700) < 0)
 		return -1;
@@ -64,6 +67,13 @@ int create_test_store(void)
 	if (!fptr)
 		return -1;
 
+	if (setfiles && fprintf(fptr,
+				"[setfiles]\npath = %s\n"
+				"args = -q -c $@ $<\n[end]\n",
+				setfiles) < 0) {
+		fclose(fptr);
+		return -1;
+	}
 	fclose(fptr);
 
 	enable_test_store();
@@ -103,6 +113,9 @@ static int write_test_policy(char *data, size_t data_len)
 int write_test_policy_from_file(const char *filename)
 {
 	char *buf = NULL;
+	char *source = NULL;
+	char *extension;
+	long source_len;
 	size_t len = 0;
 	FILE *fptr = fopen(filename, "rb");
 	int rc;
@@ -128,6 +141,47 @@ int write_test_policy_from_file(const char *filename)
 	fclose(fptr);
 
 	rc = write_test_policy(buf, len);
+	free(buf);
+	if (rc < 0)
+		return rc;
+
+	/* Commits need module sources, not just a queryable binary policy. */
+	source = strdup(filename);
+	if (!source)
+		return -1;
+	extension = strrchr(source, '.');
+	if (!extension || strcmp(extension, ".policy")) {
+		free(source);
+		return -1;
+	}
+	strcpy(extension, ".cil");
+	fptr = fopen(source, "rb");
+	free(source);
+	if (!fptr)
+		return -1;
+	if (fseek(fptr, 0, SEEK_END) != 0) {
+		fclose(fptr);
+		return -1;
+	}
+	source_len = ftell(fptr);
+	if (source_len < 0 || (unsigned long)source_len > UINT_MAX ||
+	    fseek(fptr, 0, SEEK_SET) != 0) {
+		fclose(fptr);
+		return -1;
+	}
+	buf = malloc((size_t)source_len + 1);
+	if (!buf) {
+		fclose(fptr);
+		return -1;
+	}
+	if (fread(buf, 1, (size_t)source_len, fptr) != (size_t)source_len) {
+		free(buf);
+		fclose(fptr);
+		return -1;
+	}
+	fclose(fptr);
+	rc = write_test_policy_src((unsigned char *)buf,
+				   (unsigned int)source_len);
 	free(buf);
 	return rc;
 }
@@ -210,15 +264,22 @@ int destroy_test_store(void)
 
 void helper_handle_create(void)
 {
-	if (test_store_enabled)
-		semanage_set_root("test-policy");
+	if (test_store_enabled) {
+		char *root = realpath("test-policy", NULL);
+		CU_ASSERT_PTR_NOT_NULL_FATAL(root);
+		CU_ASSERT(semanage_set_root(root) == 0);
+		free(root);
+	}
 
 	sh = semanage_handle_create();
 	CU_ASSERT_PTR_NOT_NULL(sh);
 
-	semanage_msg_set_callback(sh, test_msg_handler, NULL);
+	if (!getenv("SEMANAGE_TEST_VERBOSE"))
+		semanage_msg_set_callback(sh, test_msg_handler, NULL);
 
 	if (test_store_enabled) {
+		sh->conf->disable_genhomedircon = 1;
+		sh->conf->relabel_store = 0;
 		semanage_set_create_store(sh, 1);
 		semanage_set_reload(sh, 0);
 		semanage_set_store_root(sh, "");
