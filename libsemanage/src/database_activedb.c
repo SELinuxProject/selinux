@@ -37,10 +37,12 @@ static int dbase_activedb_cache(semanage_handle_t *handle,
 	record_t **records = NULL;
 	unsigned int rcount = 0;
 	unsigned int i = 0;
+	int resync;
 
 	/* Already cached */
-	if (!dbase_llist_needs_resync(handle, &dbase->llist))
-		return STATUS_SUCCESS;
+	resync = dbase_llist_needs_resync(handle, &dbase->llist);
+	if (resync <= 0)
+		return resync;
 
 	/* Update cache serial */
 	dbase_llist_cache_init(&dbase->llist);

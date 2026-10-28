@@ -21,8 +21,10 @@ int dbase_llist_needs_resync(semanage_handle_t *handle, dbase_llist_t *dbase)
 		return 1;
 
 	cache_serial = handle->funcs->get_serial(handle);
-	if (cache_serial < 0)
-		return 1;
+	if (cache_serial < 0) {
+		ERR(handle, "could not check cache serial");
+		return STATUS_ERR;
+	}
 
 	if (cache_serial != dbase->cache_serial) {
 		dbase_llist_drop_cache(dbase);

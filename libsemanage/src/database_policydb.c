@@ -71,8 +71,10 @@ static int dbase_policydb_needs_resync(semanage_handle_t *handle,
 		return 1;
 
 	cache_serial = handle->funcs->get_serial(handle);
-	if (cache_serial < 0)
-		return 1;
+	if (cache_serial < 0) {
+		ERR(handle, "could not check cache serial");
+		return STATUS_ERR;
+	}
 
 	if (cache_serial != dbase->cache_serial) {
 		dbase_policydb_drop_cache(dbase);
@@ -89,13 +91,15 @@ static int dbase_policydb_cache(semanage_handle_t *handle,
 	sepol_policydb_t *policydb = NULL;
 	sepol_policy_file_t *pf = NULL;
 	const char *fname = NULL;
+	int resync;
 
 	/* Check if cache is needed */
 	if (dbase->attached)
 		return STATUS_SUCCESS;
 
-	if (!dbase_policydb_needs_resync(handle, dbase))
-		return STATUS_SUCCESS;
+	resync = dbase_policydb_needs_resync(handle, dbase);
+	if (resync <= 0)
+		return resync;
 
 	fname = dbase->path[handle->is_in_transaction];
 

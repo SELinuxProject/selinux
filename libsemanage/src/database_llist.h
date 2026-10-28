@@ -52,6 +52,7 @@ extern int dbase_llist_cache_prepend(semanage_handle_t *handle,
 				     dbase_llist_t *dbase,
 				     const record_t *data);
 
+/* Return 1 for a cache miss, 0 for a hit, or -1 on serial lookup failure. */
 extern int dbase_llist_needs_resync(semanage_handle_t *handle,
 				    dbase_llist_t *dbase);
 

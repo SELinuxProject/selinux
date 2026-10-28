@@ -51,6 +51,7 @@ static int dbase_join_cache(semanage_handle_t *handle, dbase_join_t *dbase)
 	record1_t **records1 = NULL;
 	record2_t **records2 = NULL;
 	unsigned int rcount1 = 0, rcount2 = 0, i = 0, j = 0;
+	int resync;
 
 	/* Synchronize child caches before mutating a join in a new transaction */
 	if (dbase->cache_in_transaction != handle->is_in_transaction)
@@ -58,8 +59,9 @@ static int dbase_join_cache(semanage_handle_t *handle, dbase_join_t *dbase)
 	dbase->cache_in_transaction = handle->is_in_transaction;
 
 	/* Already cached */
-	if (!dbase_llist_needs_resync(handle, &dbase->llist))
-		return STATUS_SUCCESS;
+	resync = dbase_llist_needs_resync(handle, &dbase->llist);
+	if (resync <= 0)
+		return resync;
 
 	/* Update cache serial */
 	dbase_llist_cache_init(&dbase->llist);

@@ -46,6 +46,7 @@ static int dbase_file_cache(semanage_handle_t *handle, dbase_file_t *dbase)
 
 	record_t *process_record = NULL;
 	int pstatus = STATUS_SUCCESS;
+	int resync;
 
 	parse_info_t *parse_info = NULL;
 	const char *fname = NULL;
@@ -57,8 +58,9 @@ static int dbase_file_cache(semanage_handle_t *handle, dbase_file_t *dbase)
 	dbase->cache_in_transaction = handle->is_in_transaction;
 
 	/* Already cached */
-	if (!dbase_llist_needs_resync(handle, &dbase->llist))
-		return STATUS_SUCCESS;
+	resync = dbase_llist_needs_resync(handle, &dbase->llist);
+	if (resync <= 0)
+		return resync;
 
 	/* Update cache serial */
 	dbase_llist_cache_init(&dbase->llist);
