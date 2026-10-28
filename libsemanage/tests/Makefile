@@ -6,6 +6,7 @@ CILS = $(sort $(wildcard *.cil))
 
 EXECUTABLE = libsemanage-tests
 ROLLBACK_TEST = test-final-rollback
+RESTART_TEST = test-transaction-restart
 USER_JOIN_TEST = test-user-join-transaction
 LIFECYCLE_TEST = test-handle-lifecycle
 ERROR_TESTS = test-read-lock-error test-user-delete-error test-parse-read-error
@@ -17,7 +18,10 @@ override LDLIBS += -lcunit -lbz2 -laudit -lselinux -lsepol
 OBJECTS = $(SOURCES:.c=.o)
 POLICIES = $(CILS:.cil=.policy)
 
-all: $(EXECUTABLE) $(POLICIES) $(USER_JOIN_TEST) $(LIFECYCLE_TEST) $(ERROR_TESTS) $(SERIAL_TESTS) $(ROLLBACK_TEST)
+all: $(EXECUTABLE) $(POLICIES) $(USER_JOIN_TEST) $(LIFECYCLE_TEST) $(ERROR_TESTS) $(SERIAL_TESTS) $(ROLLBACK_TEST) $(RESTART_TEST)
+
+$(RESTART_TEST): regression/test_transaction_restart.c ../src/libsemanage.a
+	$(CC) $(CFLAGS) $(LDFLAGS) -Wl,--wrap=scandir -o $@ $^ $(LDLIBS)
 
 $(ROLLBACK_TEST): regression/test_final_rollback.c ../src/libsemanage.a
 	$(CC) $(CFLAGS) $(LDFLAGS) -Wl,--wrap=fsync -Wl,--wrap=rename -Wl,--wrap=link -Wl,--wrap=unlinkat -Wl,--wrap=glob -o $@ $^ $(LDLIBS)
@@ -55,7 +59,7 @@ $(EXECUTABLE): $(OBJECTS) ../src/libsemanage.a
 	../../secilc/secilc $*.cil -o $*.policy -f /dev/null
 
 clean distclean:
-	rm -rf $(OBJECTS) $(POLICIES) $(EXECUTABLE) $(USER_JOIN_TEST) $(LIFECYCLE_TEST) $(ERROR_TESTS) $(SERIAL_TESTS) $(ROLLBACK_TEST)
+	rm -rf $(OBJECTS) $(POLICIES) $(EXECUTABLE) $(USER_JOIN_TEST) $(LIFECYCLE_TEST) $(ERROR_TESTS) $(SERIAL_TESTS) $(ROLLBACK_TEST) $(RESTART_TEST)
 
 test: all
 	./$(EXECUTABLE)
@@ -66,3 +70,4 @@ test: all
 	./test-user-delete-error
 	@for test in $(SERIAL_TESTS); do ./$$test || exit 1; done
 	./$(ROLLBACK_TEST)
+	./$(RESTART_TEST)

@@ -427,6 +427,8 @@ static int semanage_direct_begintrans(semanage_handle_t *sh)
 	if ((semanage_make_final(sh)) < 0) {
 		goto err_unlock;
 	}
+	/* The new transaction no longer owns the previous failure's files. */
+	sh->commit_err = 0;
 	return 0;
 
 err_unlock:

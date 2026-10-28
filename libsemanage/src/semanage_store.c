@@ -1207,7 +1207,8 @@ int semanage_make_final(semanage_handle_t *sh)
 	/* Delete store specific dir if it exists. */
 	ret = semanage_remove_directory(semanage_final_path(
 		SEMANAGE_FINAL_TMP, SEMANAGE_FINAL_TOPLEVEL));
-	if (ret < -1) {
+	if (ret < 0 && (ret != -1 || errno != ENOENT)) {
+		ERR(sh, "Could not remove previous final directory.");
 		status = -1;
 		goto cleanup;
 	}
