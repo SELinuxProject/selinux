@@ -714,6 +714,7 @@ static int restorecon_sb(int fd, const char *pathname, const struct stat *sb,
 	char *curcon = NULL;
 	int rc;
 	bool updated = false;
+	int saved_errno;
 	const char *lookup_path = pathname;
 
 	if (flags->skip_multilink && !S_ISDIR(sb->st_mode) &&
@@ -885,8 +886,10 @@ out:
 		*updated_out = updated;
 	rc = 0;
 out1:
+	saved_errno = errno;
 	freecon(curcon);
 	freecon(newcon);
+	errno = saved_errno;
 	return rc;
 err:
 	selinux_log(SELINUX_ERROR, "Could not set context for %s:  %m\n",
@@ -979,7 +982,9 @@ static int walk_push(struct rest_state *st, int rdfd, dev_t dev, ino_t ino,
 		struct walk_level *n =
 			reallocarray(st->stack, ncap, sizeof(*st->stack));
 		if (!n) {
+			int saved_errno = errno;
 			close(rdfd);
+			errno = saved_errno;
 			return -1;
 		}
 		st->stack = n;
@@ -988,7 +993,9 @@ static int walk_push(struct rest_state *st, int rdfd, dev_t dev, ino_t ino,
 
 	dirp = fdopendir(rdfd);
 	if (!dirp) {
+		int saved_errno = errno;
 		close(rdfd);
+		errno = saved_errno;
 		return -1;
 	}
 
@@ -1051,8 +1058,11 @@ static bool walk_is_cycle(const struct rest_state *st, dev_t dev, ino_t ino)
 	return false;
 }
 
-static bool note_walk_error(struct rest_state *state)
+static bool note_walk_error(struct rest_state *state, int error)
 {
+	if ((state->flags.abort_on_error || !state->flags.count_errors) &&
+	    !state->saved_errno)
+		state->saved_errno = error;
 	if (state->flags.abort_on_error) {
 		state->error = -1;
 		state->abort = true;
@@ -1103,7 +1113,9 @@ static int open_final(int dfd, const char *name, struct stat *sb)
 		return -1;
 
 	if (fstat(fd, sb) < 0) {
+		int saved_errno = errno;
 		close(fd);
+		errno = saved_errno;
 		return -1;
 	}
 
@@ -1129,7 +1141,9 @@ static int safe_open(const char *path, struct stat *sb)
 	nfd = syscall(__NR_openat2, AT_FDCWD, path, &how, sizeof(how));
 	if (nfd >= 0) {
 		if (fstat(nfd, sb) < 0) {
+			int saved_errno = errno;
 			close(nfd);
+			errno = saved_errno;
 			return -1;
 		}
 		return nfd;
@@ -1200,21 +1214,25 @@ static int safe_open(const char *path, struct stat *sb)
 		}
 
 		nfd = open_final(dfd, cur, sb);
+		int saved_errno = errno;
 		close(dfd);
 		free(copy);
+		errno = saved_errno;
 		return nfd;
 	}
 
 	nfd = open_final(dfd, NULL, sb);
+	int saved_errno = errno;
 	close(dfd);
 	free(copy);
+	errno = saved_errno;
 	return nfd;
 }
 
 /*
  * Returns 1 if we successfully filled ent_* with the next entry
- * to process, 0 on clean end-of-walk, -1 with errno set on
- * fatal failure from readdir() or path too long.
+ * to process, 0 on end-of-walk, or -1 after recording an aborting
+ * traversal error in state.
  */
 static int walk_next(struct rest_state *state, int *ent_fd, int *rd_fd,
 		     struct stat *ent_sb, char *ent_path, size_t ent_path_sz,
@@ -1241,7 +1259,7 @@ static int walk_next(struct rest_state *state, int *ent_fd, int *rd_fd,
 				selinux_log(SELINUX_ERROR,
 					    "Could not read %s: %m\n",
 					    state->pathbuf);
-				note_walk_error(state);
+				note_walk_error(state, errno);
 			}
 		}
 		return 1;
@@ -1259,12 +1277,13 @@ static int walk_next(struct rest_state *state, int *ent_fd, int *rd_fd,
 		de = readdir(top->dirp);
 		if (!de) {
 			if (errno) {
+				int saved_errno = errno;
 				selinux_log(
 					SELINUX_ERROR,
 					"Could not read directory %s: %m.\n",
 					state->pathbuf);
 				walk_pop(state);
-				if (note_walk_error(state))
+				if (note_walk_error(state, saved_errno))
 					return -1;
 				continue;
 			}
@@ -1303,7 +1322,7 @@ static int walk_next(struct rest_state *state, int *ent_fd, int *rd_fd,
 				"Path name too long under %.*s, skipping.\n",
 				(int)top->pathlen, state->pathbuf);
 			errno = ENAMETOOLONG;
-			if (note_walk_error(state))
+			if (note_walk_error(state, ENAMETOOLONG))
 				return -1;
 			continue;
 		}
@@ -1316,7 +1335,7 @@ static int walk_next(struct rest_state *state, int *ent_fd, int *rd_fd,
 					    "Could not open %s: %m.\n",
 					    state->pathbuf);
 				state->pathbuf[top->pathlen] = '\0';
-				if (note_walk_error(state))
+				if (note_walk_error(state, errno))
 					return -1;
 				continue;
 			}
@@ -1338,12 +1357,13 @@ static int walk_next(struct rest_state *state, int *ent_fd, int *rd_fd,
 
 		if (need_fstat) {
 			if (fstat(fd, ent_sb) < 0) {
+				int saved_errno = errno;
 				selinux_log(SELINUX_ERROR,
 					    "Could not stat %s: %m.\n",
 					    state->pathbuf);
 				close(fd);
 				state->pathbuf[top->pathlen] = '\0';
-				if (note_walk_error(state))
+				if (note_walk_error(state, saved_errno))
 					return -1;
 				continue;
 			}
@@ -1367,7 +1387,7 @@ static int walk_next(struct rest_state *state, int *ent_fd, int *rd_fd,
 				 * reading, we want to relabel the directory
 				 * itself.
 				 */
-				(void)note_walk_error(state);
+				(void)note_walk_error(state, errno);
 			}
 		}
 
@@ -1471,11 +1491,12 @@ static void *selinux_restorecon_thread(void *arg)
 			if (descend) {
 				if (walk_push(state, rd_fd, ent_sb.st_dev,
 					      ent_sb.st_ino, ent_pathlen) < 0) {
+					if (!state->saved_errno)
+						state->saved_errno = errno;
 					close(ent_fd);
-					errno = ENOMEM;
 					state->error = -1;
 					state->abort = true;
-					goto finish;
+					goto unlock;
 				}
 
 				if (have_digest) {
@@ -1497,6 +1518,7 @@ static void *selinux_restorecon_thread(void *arg)
 		bool updated = false;
 		error = restorecon_sb(ent_fd, ent_path, &ent_sb, &state->flags,
 				      first, &updated);
+		int saved_errno = errno;
 		close(ent_fd);
 
 		if (state->parallel) {
@@ -1510,15 +1532,8 @@ static void *selinux_restorecon_thread(void *arg)
 
 		first = false;
 		if (error) {
-			if (state->flags.abort_on_error) {
-				state->error = error;
-				state->abort = true;
-				goto finish;
-			}
-			if (state->flags.count_errors)
-				state->skipped_errors++;
-			else
-				state->error = error;
+			if (note_walk_error(state, saved_errno))
+				goto unlock;
 		} else if (updated && state->flags.count_relabeled) {
 			state->relabeled_files++;
 		}
@@ -1529,9 +1544,6 @@ static void *selinux_restorecon_thread(void *arg)
 		state->abort = true;
 	}
 
-finish:
-	if (!state->saved_errno)
-		state->saved_errno = errno;
 unlock:
 	if (state->parallel)
 		__pthread_mutex_unlock(&state->mutex);
@@ -1544,6 +1556,7 @@ static int selinux_restorecon_common(const char *pathname_orig,
 {
 	struct rest_state state;
 	int top_fd;
+	int saved_errno;
 
 	state.flags.nochange =
 		(restorecon_flags & SELINUX_RESTORECON_NOCHANGE) ? true : false;
@@ -1746,19 +1759,23 @@ static int selinux_restorecon_common(const char *pathname_orig,
 		bool updated = false;
 		error = restorecon_sb(top_fd, pathname, &sb, &state.flags, true,
 				      &updated);
+		saved_errno = errno;
 		if (updated && state.flags.count_relabeled) {
 			state.relabeled_files++;
 		}
 		close(top_fd);
+		errno = saved_errno;
 		goto cleanup;
 	}
 
 	/* Obtain fs type */
 	memset(&state.sfsb, 0, sizeof(state.sfsb));
 	if (!S_ISLNK(sb.st_mode) && fstatfs(top_fd, &state.sfsb) < 0) {
+		saved_errno = errno;
 		selinux_log(SELINUX_ERROR, "statfs(%s) failed: %m\n", pathname);
 		error = -1;
 		close(top_fd);
+		errno = saved_errno;
 		goto cleanup;
 	}
 
@@ -1854,6 +1871,7 @@ static int selinux_restorecon_common(const char *pathname_orig,
 
 	errno = state.saved_errno;
 cleanup:
+	saved_errno = errno;
 	if (state.root_fd >= 0)
 		close(state.root_fd);
 	walk_free(&state);
@@ -1865,6 +1883,7 @@ cleanup:
 	}
 	free(pathdnamer);
 	free(pathname);
+	errno = saved_errno;
 	return error;
 
 oom:

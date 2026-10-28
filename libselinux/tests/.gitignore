@@ -1,2 +1,3 @@
 test-restorecon-digest
 /test-restorecon-errors
+/test-restorecon-errno
