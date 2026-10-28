@@ -64,6 +64,7 @@ clean distclean:
 		(cd $$subdir && $(MAKE) $@) || exit 1; \
 	done
 	$(MAKE) -C fuzz clean
+	$(MAKE) -C tests clean
 
 .PHONY: fuzz
 fuzz: all
@@ -90,4 +91,5 @@ clean-pywrap:
 clean-rubywrap:
 	$(MAKE) -C src $@
 
-test:
+test: all
+	$(MAKE) -C tests test
