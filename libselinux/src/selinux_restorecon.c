@@ -1619,6 +1619,7 @@ static int selinux_restorecon_common(const char *pathname_orig,
 	int error;
 
 	fc_count = 0;
+	skipped_errors = 0;
 
 	if (state.flags.verbose && state.flags.progress)
 		state.flags.verbose = false;
@@ -1846,12 +1847,8 @@ static int selinux_restorecon_common(const char *pathname_orig,
 	}
 
 	error = state.error;
-	if (state.saved_errno)
-		goto out;
-
 	skipped_errors = state.skipped_errors;
 
-out:
 	if (state.flags.progress && state.flags.mass_relabel)
 		fprintf(stdout, "\r%s 100.0%%\n", pathname);
 
