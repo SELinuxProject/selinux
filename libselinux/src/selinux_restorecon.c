@@ -1250,7 +1250,8 @@ static int walk_next(struct rest_state *state, int *ent_fd, int *rd_fd,
 		*ent_pathlen = strlen(state->pathbuf);
 		strlcpy(ent_path, state->pathbuf, ent_path_sz);
 		*rd_fd = -1;
-		if (S_ISDIR(state->root_sb.st_mode)) {
+		if (S_ISDIR(state->root_sb.st_mode) &&
+		    !check_excluded(state->pathbuf)) {
 			*rd_fd = openat(fd, ".",
 					O_RDONLY | O_DIRECTORY | O_NOFOLLOW |
 						O_CLOEXEC);
@@ -1373,7 +1374,8 @@ static int walk_next(struct rest_state *state, int *ent_fd, int *rd_fd,
 		}
 
 		int rdfd = -1;
-		if (S_ISDIR(ent_sb->st_mode)) {
+		if (S_ISDIR(ent_sb->st_mode) &&
+		    !check_excluded(state->pathbuf)) {
 			rdfd = openat(fd, ".",
 				      O_RDONLY | O_DIRECTORY | O_NOFOLLOW |
 					      O_CLOEXEC);
