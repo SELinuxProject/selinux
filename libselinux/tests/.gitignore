@@ -4,3 +4,4 @@ test-restorecon-digest
 /test-restorecon-exclude
 /test-restorecon-xdev
 /test-label-init-oom
+/test-label-merge

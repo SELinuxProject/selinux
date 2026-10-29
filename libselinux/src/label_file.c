@@ -384,6 +384,9 @@ static int merge_mmap_spec_nodes(struct spec_node *restrict dest,
 					new_children[new_children_num++] =
 						*child_dest;
 					free_spec_node(child_source);
+					/* A later sibling failure may revisit this node. */
+					memset(child_source, 0,
+					       sizeof(*child_source));
 					iter_dest++;
 					iter_source++;
 				} else if (r < 0) {
