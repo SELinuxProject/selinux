@@ -1726,14 +1726,17 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 					       sizeof(resolved));
 			rec->spec_files[num_required_paths + i] =
 				strdup(resolved);
-			if (rec->spec_files[num_required_paths + i] == NULL)
+			if (rec->spec_files[num_required_paths + i] == NULL) {
+				status = -1;
 				goto finish;
+			}
 			continue;
 		}
 #endif
 		if (asprintf(&rec->spec_files[num_required_paths + i], "%s.%s",
 			     rec->spec_files[0], opt_suffixes[i]) < 0) {
 			rec->spec_files[num_required_paths + i] = NULL;
+			status = -1;
 			goto finish;
 		}
 	}
