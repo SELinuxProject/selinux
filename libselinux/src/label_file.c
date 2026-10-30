@@ -1578,6 +1578,85 @@ static void closef(struct selabel_handle *rec);
 
 static const char *const opt_suffixes[] = { "homedirs", "local" };
 
+static void hash_spec_tree(Sha1Context *hash, const struct spec_node *node)
+{
+	for (uint32_t i = 0; i < node->literal_specs_num; i++) {
+		const struct literal_spec *s = &node->literal_specs[i];
+		Sha1Update(hash, s->regex_str, strlen(s->regex_str) + 1);
+		Sha1Update(hash, &s->file_kind, sizeof(s->file_kind));
+		Sha1Update(hash, &s->inputno, sizeof(s->inputno));
+		Sha1Update(hash, s->lr.ctx_raw, strlen(s->lr.ctx_raw) + 1);
+	}
+	for (uint32_t i = 0; i < node->regex_specs_num; i++) {
+		const struct regex_spec *s = &node->regex_specs[i];
+		Sha1Update(hash, &s->lineno, sizeof(s->lineno));
+		Sha1Update(hash, s->regex_str, strlen(s->regex_str) + 1);
+		Sha1Update(hash, &s->file_kind, sizeof(s->file_kind));
+		Sha1Update(hash, &s->inputno, sizeof(s->inputno));
+		Sha1Update(hash, s->lr.ctx_raw, strlen(s->lr.ctx_raw) + 1);
+	}
+	for (uint32_t i = 0; i < node->children_num; i++)
+		hash_spec_tree(hash, &node->children[i]);
+}
+
+static void hash_substitutions(Sha1Context *hash,
+			       const struct selabel_sub *subs, uint32_t num)
+{
+	for (uint32_t i = 0; i < num; i++) {
+		Sha1Update(hash, subs[i].src, subs[i].slen + 1);
+		Sha1Update(hash, subs[i].dst, subs[i].dlen + 1);
+	}
+}
+
+static void gen_substitution_digest(struct saved_data *data)
+{
+	Sha1Context hash;
+	SHA1_HASH result;
+	static const char domain[] = "selabel-substitution-inputs-v1";
+	static const char separator[] = "distribution substitutions";
+	Sha1Initialise(&hash);
+	Sha1Update(&hash, domain, sizeof(domain));
+	hash_spec_tree(&hash, data->root);
+	hash_substitutions(&hash, data->subs, data->subs_num);
+	Sha1Update(&hash, separator, sizeof(separator));
+	hash_substitutions(&hash, data->dist_subs, data->dist_subs_num);
+	Sha1Finalise(&hash, &result);
+	memcpy(data->substitution_digest, result.bytes, sizeof(result.bytes));
+}
+
+/* The literal prefix before the first wildcard conservatively covers every
+ * possible source descendant, including ancestors and chained rewrites. */
+static bool overlaps_substitution(const char *key,
+				  const struct selabel_sub *subs, uint32_t num)
+{
+	size_t len = strlen(key);
+	for (uint32_t i = 0; i < num; i++) {
+		size_t plen = subs[i].plen;
+		size_t common = len < plen ? len : plen;
+		if (strncmp(key, subs[i].src, common))
+			continue;
+		if (len == plen || !common ||
+		    (len < plen &&
+		     (key[len - 1] == '/' || subs[i].src[len] == '/')) ||
+		    (len > plen &&
+		     (subs[i].src[plen - 1] == '/' || key[plen] == '/')))
+			return true;
+	}
+	return false;
+}
+
+static bool substitution_affected(const struct saved_data *data,
+				  const char *key)
+{
+	/* lookup_all normalizes these; conservatively include all such inputs. */
+	if (!key || !*key)
+		return false;
+	if (strstr(key, "//"))
+		return data->subs_num || data->dist_subs_num;
+	return overlaps_substitution(key, data->subs, data->subs_num) ||
+	       overlaps_substitution(key, data->dist_subs, data->dist_subs_num);
+}
+
 static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 		unsigned n)
 {
@@ -1774,6 +1853,8 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 	}
 
 	digest_gen_hash(rec->digest);
+	if (data->subs_num || data->dist_subs_num)
+		gen_substitution_digest(data);
 
 	status = 0;
 
@@ -2496,6 +2577,11 @@ static bool hash_all_partial_matches(struct selabel_handle *rec,
 				     const char *key, uint8_t *digest)
 {
 	assert(digest);
+	struct saved_data *data = rec->data;
+	if (substitution_affected(data, key)) {
+		memcpy(digest, data->substitution_digest, SHA1_HASH_SIZE);
+		return true;
+	}
 
 	struct lookup_result *matches =
 		lookup_all(rec, key, 0, true, true, NULL);
@@ -2539,6 +2625,8 @@ static struct selabel_lookup_rec *lookup(struct selabel_handle *rec,
 static bool partial_match(struct selabel_handle *rec, const char *key)
 {
 	struct lookup_result buf;
+	if (substitution_affected(rec->data, key))
+		return true;
 
 	return !!lookup_common(rec, key, 0, true, &buf);
 }

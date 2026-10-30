@@ -228,6 +228,14 @@ up as \fI/usr/lib/foo.so\fR, while \fI/var/lib/extensions/example\fR and
 .RE
 .
 .SH "NOTES"
+.sp
+For paths that may be affected by substitutions, including their ancestor
+directories, partial-match digests cover all loaded labeling rules and
+substitution entries. A change to any of those inputs invalidates the cached
+digest for such a directory. This can cause additional relabeling after an
+unrelated rule change, but ensures that changes to substituted descendants
+are not hidden by an unchanged directory digest. Exact label lookup is
+unchanged. Paths outside substitution prefixes retain per-directory digests.
 .IP "1." 4
 If contexts are to be validated, then the global option \fBSELABEL_OPT_VALIDATE\fR must be set before calling \fBselabel_open\fR(3). If this is not set, then it is possible for an invalid context to be returned.
 .IP "2." 4
