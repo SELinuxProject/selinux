@@ -75,10 +75,11 @@ selabel_is_digest_set(const struct selinux_opt *opts, unsigned n)
 			if (!digest->digest)
 				goto err;
 
-			digest->specfile_list =
-				calloc(DIGEST_FILES_MAX + 1, sizeof(char *));
+			digest->specfile_list = calloc(DIGEST_FILES_INITIAL + 1,
+						       sizeof(char *));
 			if (!digest->specfile_list)
 				goto err;
+			digest->specfile_capacity = DIGEST_FILES_INITIAL;
 
 			return digest;
 		}
