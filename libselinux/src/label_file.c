@@ -1193,6 +1193,7 @@ static FILE *open_file(const char *path, const char *suffix, char *save_path,
 	int rc;
 	char stack_path[len];
 	struct file_details *found = NULL;
+	bool unreadable = false;
 
 	/*
 	 * Rolling append of suffix. Try to open with path.suffix then the
@@ -1217,8 +1218,17 @@ static FILE *open_file(const char *path, const char *suffix, char *save_path,
 		}
 
 		rc = stat(path, &fdetails[i].sb);
-		if (rc)
+		if (rc) {
+			unreadable |= errno == EACCES;
 			continue;
+		}
+
+		/* Choose by mtime only among siblings this caller can read. */
+		if (faccessat(AT_FDCWD, path, R_OK, AT_EACCESS) < 0 &&
+		    errno == EACCES) {
+			unreadable = true;
+			continue;
+		}
 
 		/* first file thing found, just take it */
 		if (!found) {
@@ -1247,7 +1257,7 @@ static FILE *open_file(const char *path, const char *suffix, char *save_path,
 	}
 
 	if (!found) {
-		errno = ENOENT;
+		errno = unreadable ? EACCES : ENOENT;
 		return NULL;
 	}
 
