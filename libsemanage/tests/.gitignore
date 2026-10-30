@@ -11,3 +11,4 @@ test-cache-serial-join
 test-cache-serial-active
 test-cache-serial-policydb
 *.policy
+/test-config-empty
