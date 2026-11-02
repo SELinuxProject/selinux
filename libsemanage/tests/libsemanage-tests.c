@@ -30,6 +30,7 @@
 #include "test_port.h"
 #include "test_user.h"
 #include "test_other.h"
+#include "test_path_subs.h"
 
 #include <CUnit/Basic.h>
 #include <CUnit/Console.h>
@@ -82,6 +83,7 @@ static bool do_tests(int interactive, int verbose)
 	DECLARE_SUITE(port);
 	DECLARE_SUITE(user);
 	DECLARE_SUITE(other);
+	DECLARE_SUITE(path_subs);
 
 	if (verbose)
 		CU_basic_set_mode(CU_BRM_VERBOSE);
