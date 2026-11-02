@@ -30,3 +30,8 @@ test: all
 	./test-config-empty
 	./$(EXECUTABLE)
 
+# Requires SWIG, Python development headers and the built shared library.
+PYTHON ?= python3
+.PHONY: test-python-module-buffer
+test-python-module-buffer:
+	$(PYTHON) regression/test_module_buffer.py

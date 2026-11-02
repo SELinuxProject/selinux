@@ -131,8 +131,7 @@
  * Python object exposing the buffer protocol (bytes, bytearray, mmap, ...)
  * as a single argument and derive the length from it.
  */
-%typemap(in) (char *module_data, size_t data_len) (Py_buffer view) {
-	view.obj = NULL;
+%typemap(in) (char *module_data, size_t data_len) (Py_buffer view = {0}) {
 	if (PyObject_GetBuffer($input, &view, PyBUF_SIMPLE) < 0)
 		SWIG_fail;
 	$1 = (char *)view.buf;
