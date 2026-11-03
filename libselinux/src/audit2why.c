@@ -46,6 +46,27 @@ static struct avc_t *avc = NULL;
 
 static sidtab_t sidtab;
 
+static void policy_destroy(void)
+{
+	for (int i = 0; i < boolcnt; i++) {
+		free(boollist[i]->name);
+		free(boollist[i]);
+	}
+	free(boollist);
+	boollist = NULL;
+	boolcnt = 0;
+	if (avc) {
+		sepol_set_policydb(NULL);
+		sepol_set_sidtab(NULL);
+		sepol_sidtab_shutdown(&sidtab);
+		sepol_sidtab_destroy(&sidtab);
+		sepol_policydb_free(avc->policydb);
+		sepol_handle_destroy(avc->handle);
+		free(avc);
+		avc = NULL;
+	}
+}
+
 static int load_booleans(const sepol_bool_t *boolean, void *arg)
 {
 	const unsigned int *boolmax = arg;
@@ -182,31 +203,10 @@ static int check_booleans(struct boolean_t **bools)
 
 static PyObject *finish(PyObject *self __attribute__((unused)), PyObject *args)
 {
-	PyObject *result = 0;
-
-	if (PyArg_ParseTuple(args, ":finish")) {
-		int i = 0;
-		if (!avc)
-			Py_RETURN_NONE;
-
-		for (i = 0; i < boolcnt; i++) {
-			free(boollist[i]->name);
-			free(boollist[i]);
-		}
-		free(boollist);
-		sepol_sidtab_shutdown(&sidtab);
-		sepol_sidtab_destroy(&sidtab);
-		sepol_policydb_free(avc->policydb);
-		sepol_handle_destroy(avc->handle);
-		free(avc);
-		avc = NULL;
-		boollist = NULL;
-		boolcnt = 0;
-
-		/* Boilerplate to return "None" */
-		Py_RETURN_NONE;
-	}
-	return result;
+	if (!PyArg_ParseTuple(args, ":finish"))
+		return NULL;
+	policy_destroy();
+	Py_RETURN_NONE;
 }
 
 static int __policy_init(const char *init_path)
@@ -268,6 +268,10 @@ static int __policy_init(const char *init_path)
 	fp = NULL;
 	sepol_set_policydb(&avc->policydb->p);
 	avc->handle = sepol_handle_create();
+	if (!avc->handle) {
+		PyErr_NoMemory();
+		goto err;
+	}
 	/* Turn off messages */
 	sepol_msg_set_callback(avc->handle, NULL, NULL);
 
@@ -278,6 +282,10 @@ static int __policy_init(const char *init_path)
 		goto err;
 	}
 
+	if (cnt > INT_MAX) {
+		PyErr_SetString(PyExc_OverflowError, "too many booleans\n");
+		goto err;
+	}
 	if (cnt > 0) {
 		boollist = calloc(cnt, sizeof(*boollist));
 		if (!boollist) {
@@ -285,8 +293,13 @@ static int __policy_init(const char *init_path)
 			goto err;
 		}
 
-		sepol_bool_iterate(avc->handle, avc->policydb, load_booleans,
-				   &cnt);
+		rc = sepol_bool_iterate(avc->handle, avc->policydb,
+					load_booleans, &cnt);
+		if (rc < 0 || (unsigned int)boolcnt != cnt) {
+			PyErr_SetString(PyExc_RuntimeError,
+					"unable to load booleans\n");
+			goto err;
+		}
 	}
 
 	/* Initialize the sidtab for subsequent use by sepol_context_to_sid
@@ -297,19 +310,11 @@ static int __policy_init(const char *init_path)
 		goto err;
 	}
 	sepol_set_sidtab(&sidtab);
+	sepol_policy_file_free(pf);
 	return 0;
 
 err:
-	free(boollist);
-	boollist = NULL;
-	if (avc) {
-		if (avc->handle)
-			sepol_handle_destroy(avc->handle);
-		if (avc->policydb)
-			sepol_policydb_free(avc->policydb);
-		free(avc);
-		avc = NULL;
-	}
+	policy_destroy();
 	if (pf)
 		sepol_policy_file_free(pf);
 	if (fp)
@@ -329,6 +334,8 @@ static PyObject *init(PyObject *self __attribute__((unused)), PyObject *args)
 	if (!PyArg_ParseTuple(args, "|s:policy_init", &init_path))
 		return NULL;
 	result = __policy_init(init_path);
+	if (result)
+		return NULL;
 	return Py_BuildValue("i", result);
 }
 

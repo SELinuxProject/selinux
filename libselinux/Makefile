@@ -93,3 +93,9 @@ clean-rubywrap:
 
 test: all
 	$(MAKE) -C tests test
+
+# Optional: requires Python development headers and a built tree libsepol.
+test-audit2why:
+	$(MAKE) -C tests/audit2why test
+
+.PHONY: test-audit2why
