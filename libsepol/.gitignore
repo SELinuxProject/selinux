@@ -5,3 +5,4 @@ utils/sepol_compute_member
 utils/sepol_compute_relabel
 utils/sepol_validate_transition
 libsepol.map
+tests/regression/test_conditional_count

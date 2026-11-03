@@ -54,6 +54,7 @@ lex.yy.c: policy_scan.l y.tab.c
 test: checkpolicy checkmodule
 	./tests/test_roundtrip.sh
 	./tests/test_checkmodule_negative.sh
+	sh ./tests/test_conditional_count.sh
 
 # helper target for fuzzing
 checkobjects: $(CHECKOBJS)

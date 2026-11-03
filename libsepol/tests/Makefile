@@ -57,7 +57,7 @@ $(EXE): $(objs) $(parserobjs) $(LIBSEPOL)
 	$(M4) $(M4PARAMS) -D enable_mls $^ > $@
 
 clean: 
-	rm -f $(objs) $(EXE)
+	rm -f $(objs) $(EXE) regression/test_conditional_count
 	rm -f $(policies)
 	rm -f policies/test-downgrade/policy.hi policies/test-downgrade/policy.lo
 
@@ -67,9 +67,15 @@ clean:
 #   you should either link runtime to your application or manually preload it with LD_PRELOAD
 #
 # when the source code is built with ASan
-test: $(EXE) $(policies)
+test: $(EXE) $(policies) test-conditional-count
 	$(ENV) -i $(MKDIR) -p policies/test-downgrade
 	../../checkpolicy/checkpolicy -M policies/test-cond/refpolicy-base.conf -o policies/test-downgrade/policy.hi	
 	./$(EXE)
 
-.PHONY: all policies clean test
+regression/test_conditional_count: regression/test_conditional_count.c $(LIBSEPOL)
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBSEPOL)
+
+test-conditional-count: regression/test_conditional_count
+	./regression/test_conditional_count
+
+.PHONY: all policies clean test test-conditional-count

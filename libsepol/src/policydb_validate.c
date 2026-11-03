@@ -1341,10 +1341,8 @@ static int validate_bool_id_array(sepol_handle_t *handle,
 {
 	unsigned int i;
 
-	if (nbools >= COND_MAX_BOOLS)
-		goto bad;
-
-	for (i = 0; i < nbools; i++) {
+	/* Larger expressions only cache their first COND_MAX_BOOLS IDs. */
+	for (i = 0; i < nbools && i < COND_MAX_BOOLS; i++) {
 		if (validate_value(bool_ids[i], boolean))
 			goto bad;
 	}
