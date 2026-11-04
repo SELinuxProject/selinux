@@ -554,6 +554,8 @@ static int selinux_policy_remap(const char *path, const char *root, char *out,
 	plen = strlen(selinux_policyroot);
 	if (strncmp(path, selinux_policyroot, plen) != 0)
 		return -1;
+	if (path[plen] != '/' && path[plen] != '\0')
+		return -1;
 	if ((size_t)snprintf(out, outlen, "%s%s", root, path + plen) >= outlen)
 		return -1;
 	return 0;
