@@ -184,6 +184,14 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 	if (!S_ISREG(sb.st_mode))
 		goto finish;
 
+	rec->spec_files = calloc(1, sizeof(*rec->spec_files));
+	if (!rec->spec_files)
+		goto finish;
+	rec->spec_files[0] = strdup(path);
+	if (!rec->spec_files[0])
+		goto finish;
+	rec->spec_files_len = 1;
+
 	/*
 	 * Two passes of the specification file. First is to get the size.
 	 * After the first pass, the spec array is malloced to the appropriate
