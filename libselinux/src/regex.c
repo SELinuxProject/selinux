@@ -292,6 +292,8 @@ static void match_data_key_init(void)
 
 static void __attribute__((destructor)) match_data_key_destroy(void)
 {
+	pcre2_compile_context_free(compile_context);
+	pcre2_match_context_free(match_context);
 	if (match_data_key_created) {
 		__selinux_key_delete(match_data_key);
 		match_data_key_created = 0;

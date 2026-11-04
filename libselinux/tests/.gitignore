@@ -18,3 +18,4 @@ test-restorecon-digest
 /test-match-limit
 /test-avc-lock-failure
 /test-descendant-oom
+/test-regex-context-lifetime
