@@ -127,10 +127,10 @@ FILE *selinux_policy_fopen(const char *path, const char *mode);
  * Resolve @path against the configuration-root list: write into @out
  * the first remapping under which @out (or @out concatenated with
  * @sibling, when the base file is optional but a sibling such as .bin
- * may exist alone) is present. If no root has the file, @out receives
- * @path unchanged and -1 is returned with errno ENOENT, or if a root
- * contains the file but it is un-readable and there is no readable
- * fallback, @out receives @path unchanged and -1 is returned with errno
+ * may exist alone) is readable with effective credentials. If no root has
+ * the file, @out receives @path unchanged and -1 is returned with errno
+ * ENOENT. If there is no readable fallback for an unreadable file, @out
+ * receives the first refused base path and -1 is returned with errno
  * EACCES. Internal only.
  */
 int selinux_policy_resolve(const char *path, const char *sibling, char *out,

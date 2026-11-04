@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <limits.h>
 #include <unistd.h>
@@ -620,19 +621,29 @@ int selinux_policy_resolve(const char *path, const char *sibling, char *out,
 			   size_t outlen)
 {
 	char probe[PATH_MAX];
+	char refused[PATH_MAX];
 	unsigned int i;
+	bool unreadable = false;
 
 	__selinux_once(once, init_selinux_config);
 
 	if (strlcpy(out, path, outlen) >= outlen)
 		goto noent;
 	for (i = 0;; i++) {
-		if (access(out, F_OK) == 0)
+		if (faccessat(AT_FDCWD, out, R_OK, AT_EACCESS) == 0)
 			return 0;
+		if (errno == EACCES && !unreadable) {
+			strlcpy(refused, out, sizeof(refused));
+			unreadable = true;
+		}
 		if (sibling) {
 			snprintf(probe, sizeof(probe), "%s%s", out, sibling);
-			if (access(probe, F_OK) == 0)
+			if (faccessat(AT_FDCWD, probe, R_OK, AT_EACCESS) == 0)
 				return 0;
+			if (errno == EACCES && !unreadable) {
+				strlcpy(refused, out, sizeof(refused));
+				unreadable = true;
+			}
 		}
 		if (!selinux_policyroots[i + 1] ||
 		    selinux_policy_remap(path, selinux_policyroots[i + 1], out,
@@ -640,6 +651,12 @@ int selinux_policy_resolve(const char *path, const char *sibling, char *out,
 			break;
 	}
 
+	/* Let callers report a read denial even if only a fallback refused. */
+	if (unreadable) {
+		strlcpy(out, refused, outlen);
+		errno = EACCES;
+		return -1;
+	}
 	/* Nothing found: leave primary path in @out for diagnostics. */
 	strlcpy(out, path, outlen);
 noent:

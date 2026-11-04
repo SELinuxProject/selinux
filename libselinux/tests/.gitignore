@@ -7,3 +7,4 @@ test-restorecon-digest
 /test-label-merge
 /test-substitution-hash
 /test-substitution-restorecon
+/test-readable-fallback
