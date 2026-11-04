@@ -69,6 +69,10 @@ regular expression in the database failed to compile.
 .TP
 .B ENOMEM
 An attempt to allocate memory failed.
+.TP
+.B EIO
+A regular expression match could not be completed, for example because
+the matching resource limit was exceeded.
 .
 .SH "AUTHOR"
 Eamon Walsh <ewalsh@tycho.nsa.gov>

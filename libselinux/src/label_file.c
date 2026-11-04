@@ -2284,7 +2284,7 @@ static struct lookup_result *lookup_check_node(struct spec_node *node,
 				continue;
 
 			/* else it's an error */
-			errno = ENOENT;
+			errno = EIO;
 			goto fail;
 		}
 
@@ -2488,6 +2488,8 @@ FUZZ_EXTERN struct lookup_result *lookup_all(struct selabel_handle *rec,
 
 	result = lookup_check_node(node, key, file_kind, partial, find_all,
 				   rec->jit, buf);
+	if (!result && errno != ENOENT)
+		goto finish;
 
 	/* For partial lookup if the key matches a child node, recursively add all specs */
 	if (partial && rest_key) {
@@ -2643,7 +2645,9 @@ static bool partial_match(struct selabel_handle *rec, const char *key)
 	if (substitution_affected(rec->data, key))
 		return true;
 
-	return !!lookup_common(rec, key, 0, true, &buf);
+	/* An unsuccessful match attempt cannot rule out matching descendants. */
+	return lookup_common(rec, key, 0, true, &buf) != NULL ||
+	       errno != ENOENT;
 }
 
 static struct selabel_lookup_rec *lookup_best_match(struct selabel_handle *rec,
@@ -2666,6 +2670,8 @@ static struct selabel_lookup_rec *lookup_best_match(struct selabel_handle *rec,
 	if (!results)
 		return NULL;
 	results[0] = lookup_common(rec, key, type, false, NULL);
+	if (!results[0] && errno != ENOENT)
+		goto out;
 	if (results[0]) {
 		if (!results[0]->has_meta_chars) {
 			/* exact match on key */
@@ -2678,6 +2684,8 @@ static struct selabel_lookup_rec *lookup_best_match(struct selabel_handle *rec,
 	for (i = 1; i <= n; i++) {
 		results[i] =
 			lookup_common(rec, aliases[i - 1], type, false, NULL);
+		if (!results[i] && errno != ENOENT)
+			goto out;
 		if (results[i]) {
 			if (!results[i]->has_meta_chars) {
 				/* exact match on alias */

@@ -25,6 +25,8 @@ The \fIkey\fR parameter is a file path to check for a direct or partial match.
 .sp
 .SH "RETURN VALUE"
 TRUE is returned if a direct or partial match is found, FALSE if not.
+TRUE is also returned if an error prevents ruling out a match, so callers
+do not skip potentially matching descendants.
 .sp
 .SH "SEE ALSO"
 .BR selabel_open (3),
