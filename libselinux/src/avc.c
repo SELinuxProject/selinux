@@ -162,6 +162,12 @@ static int avc_init_internal(const char *prefix,
 
 	avc_lock = avc_alloc_lock();
 	avc_log_lock = avc_alloc_lock();
+	if (!avc_func_alloc_lock && (!avc_lock || !avc_log_lock)) {
+		avc_free_lock(avc_lock);
+		avc_free_lock(avc_log_lock);
+		errno = ENOMEM;
+		return -1;
+	}
 
 	memset(&cache_stats, 0, sizeof(cache_stats));
 

@@ -16,3 +16,4 @@ test-restorecon-digest
 /test-regex-tls
 /test-policy-root-boundary
 /test-match-limit
+/test-avc-lock-failure
