@@ -168,6 +168,7 @@ struct saved_data {
 
 	/* Number of file specifications */
 	uint64_t num_specs;
+	uint8_t substitution_digest[SHA1_HASH_SIZE];
 
 	struct mmap_area *mmap_areas;
 

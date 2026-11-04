@@ -5,3 +5,5 @@ test-restorecon-digest
 /test-restorecon-xdev
 /test-label-init-oom
 /test-label-merge
+/test-substitution-hash
+/test-substitution-restorecon
