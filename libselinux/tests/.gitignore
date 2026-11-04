@@ -9,3 +9,4 @@ test-restorecon-digest
 /test-substitution-restorecon
 /test-readable-fallback
 /test-digest-inputs
+/test-load-policy-version

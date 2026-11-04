@@ -160,7 +160,8 @@ search:
 			}
 			break;
 		}
-		if (fd < 0 && errno != ENOENT && errno != EACCES)
+		/* Keep vers equal to the version of the opened policy. */
+		if (fd >= 0 || (errno != ENOENT && errno != EACCES))
 			break;
 	}
 	if (fd < 0) {
