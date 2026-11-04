@@ -2,3 +2,4 @@ test-restorecon-digest
 /test-restorecon-errors
 /test-restorecon-errno
 /test-restorecon-exclude
+/test-restorecon-xdev

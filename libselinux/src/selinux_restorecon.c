@@ -1375,6 +1375,8 @@ static int walk_next(struct rest_state *state, int *ent_fd, int *rd_fd,
 
 		int rdfd = -1;
 		if (S_ISDIR(ent_sb->st_mode) &&
+		    (!state->flags.set_xdev ||
+		     ent_sb->st_dev == state->dev_num) &&
 		    !check_excluded(state->pathbuf)) {
 			rdfd = openat(fd, ".",
 				      O_RDONLY | O_DIRECTORY | O_NOFOLLOW |
