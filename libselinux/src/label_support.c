@@ -256,6 +256,8 @@ int digest_add_specfile(struct selabel_digest *digest, FILE *fp,
 			const char *from_addr, size_t buf_len, const char *path)
 {
 	unsigned char *tmp_buf;
+	char *name;
+	size_t new_size;
 
 	/* If SELABEL_OPT_DIGEST not set then just return */
 	if (!digest)
@@ -265,35 +267,58 @@ int digest_add_specfile(struct selabel_digest *digest, FILE *fp,
 		errno = EOVERFLOW;
 		return -1;
 	}
-	digest->hashbuf_size += buf_len;
+	new_size = digest->hashbuf_size + buf_len;
+	if (digest->specfile_cnt == digest->specfile_capacity) {
+		size_t capacity;
+		char **files;
 
-	tmp_buf = realloc(digest->hashbuf, digest->hashbuf_size);
-	if (!tmp_buf)
+		if (digest->specfile_capacity >
+		    (SIZE_MAX / sizeof(*files) - 1) / 2) {
+			errno = EOVERFLOW;
+			return -1;
+		}
+		capacity = digest->specfile_capacity ?
+				   digest->specfile_capacity * 2 :
+				   DIGEST_FILES_INITIAL;
+		files = realloc(digest->specfile_list,
+				(capacity + 1) * sizeof(*files));
+		if (!files)
+			return -1;
+		files[digest->specfile_cnt] = NULL;
+		digest->specfile_list = files;
+		digest->specfile_capacity = capacity;
+	}
+	name = strdup(path);
+	if (!name)
 		return -1;
+
+	/* Avoid realloc(ptr, 0), which can free ptr while returning NULL. */
+	tmp_buf = realloc(digest->hashbuf, new_size ? new_size : 1);
+	if (!tmp_buf) {
+		free(name);
+		return -1;
+	}
 
 	digest->hashbuf = tmp_buf;
 
 	if (fp) {
 		if (fseek(fp, 0L, SEEK_SET) == -1)
-			return -1;
+			goto err;
 
-		if (fread(digest->hashbuf + (digest->hashbuf_size - buf_len), 1,
-			  buf_len, fp) != buf_len)
-			return -1;
+		if (fread(digest->hashbuf + digest->hashbuf_size, 1, buf_len,
+			  fp) != buf_len)
+			goto err;
 
 	} else if (from_addr)
-		memcpy(digest->hashbuf + (digest->hashbuf_size - buf_len),
-		       from_addr, buf_len);
+		memcpy(digest->hashbuf + digest->hashbuf_size, from_addr,
+		       buf_len);
 
-	/* Now add path to list */
-	if (digest->specfile_cnt >= DIGEST_FILES_MAX) {
-		errno = EOVERFLOW;
-		return -1;
-	}
-	digest->specfile_list[digest->specfile_cnt] = strdup(path);
-	if (!digest->specfile_list[digest->specfile_cnt])
-		return -1;
-
-	digest->specfile_cnt++;
+	/* Publish together so a failed addition can be retried or cleaned up. */
+	digest->hashbuf_size = new_size;
+	digest->specfile_list[digest->specfile_cnt++] = name;
+	digest->specfile_list[digest->specfile_cnt] = NULL;
 	return 0;
+err:
+	free(name);
+	return -1;
 }

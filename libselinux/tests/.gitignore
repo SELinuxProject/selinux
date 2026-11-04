@@ -8,3 +8,4 @@ test-restorecon-digest
 /test-substitution-hash
 /test-substitution-restorecon
 /test-readable-fallback
+/test-digest-inputs

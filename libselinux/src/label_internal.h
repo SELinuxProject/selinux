@@ -48,12 +48,13 @@ int selabel_service_init(struct selabel_handle *rec,
  * used. This is released once the value has been calculated.
  */
 #define DIGEST_SPECFILE_SIZE SHA1_HASH_SIZE
-#define DIGEST_FILES_MAX 8
+#define DIGEST_FILES_INITIAL 8
 struct selabel_digest {
 	unsigned char *digest; /* SHA1 digest of specfiles */
 	unsigned char *hashbuf; /* buffer to hold specfiles */
 	size_t hashbuf_size; /* buffer size */
 	size_t specfile_cnt; /* how many specfiles processed */
+	size_t specfile_capacity; /* allocated entries, excluding the sentinel */
 	char **specfile_list; /* and their names */
 };
 
