@@ -65,12 +65,10 @@ def install(src, dest):
 
 def policy_open(path, mode="r", **kwargs):
     """ Open a policy configuration file for reading, searching fallback configuration roots (see selinux_policy_open(3)). Returns a file object """
-    fd = selinux_policy_open(path, os.O_RDONLY | os.O_CLOEXEC)
-    try:
-        return os.fdopen(fd, mode, **kwargs)
-    except:  # noqa: E722
-        os.close(fd)
-        raise
+    def opener(name, flags):
+        return selinux_policy_open(name, os.O_RDONLY | os.O_CLOEXEC)
+
+    return open(path, mode, opener=opener, **kwargs)
 %}
 
 /* security_get_boolean_names() typemap */
