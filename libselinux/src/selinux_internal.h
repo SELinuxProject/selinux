@@ -37,11 +37,8 @@ extern size_t selinux_page_size;
 			pthread_key_delete(KEY); \
 	} while (0)
 
-#define __selinux_setspecific(KEY, VALUE)                \
-	do {                                             \
-		if (pthread_setspecific != NULL)         \
-			pthread_setspecific(KEY, VALUE); \
-	} while (0)
+#define __selinux_setspecific(KEY, VALUE) \
+	(pthread_setspecific != NULL ? pthread_setspecific(KEY, VALUE) : -1)
 
 #define __selinux_getspecific(KEY) \
 	(pthread_getspecific != NULL ? pthread_getspecific(KEY) : NULL)

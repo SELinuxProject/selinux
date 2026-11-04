@@ -310,7 +310,7 @@ void regex_data_free(struct regex_data *regex)
 int regex_match(struct regex_data *regex, char const *subject, int partial)
 {
 	int rc;
-	bool slow;
+	bool temporary = false;
 	pcre2_match_data *match_data = NULL;
 
 	__selinux_once(match_data_key_once, match_data_key_init);
@@ -320,18 +320,19 @@ int regex_match(struct regex_data *regex, char const *subject, int partial)
 		if (!match_data) {
 			match_data = pcre2_match_data_create(1, NULL);
 			if (match_data) {
-				__selinux_setspecific(match_data_key,
-						      match_data);
+				temporary =
+					__selinux_setspecific(match_data_key,
+							      match_data) != 0;
 			}
 		}
 	}
 
-	slow = (match_data_key_alloc_failed || match_data == NULL);
-	if (slow) {
+	if (!match_data) {
 		match_data = pcre2_match_data_create_from_pattern(regex->regex,
 								  NULL);
 		if (!match_data)
 			return REGEX_ERROR;
+		temporary = true;
 	}
 
 	/* Use pcre2_match() rather than pcre2_jit_match(): pcre2_match()
@@ -343,7 +344,7 @@ int regex_match(struct regex_data *regex, char const *subject, int partial)
 			 partial ? PCRE2_PARTIAL_SOFT : 0, match_data,
 			 match_context);
 
-	if (slow)
+	if (temporary)
 		pcre2_match_data_free(match_data);
 
 	if (rc >= 0)

@@ -13,3 +13,4 @@ test-restorecon-digest
 /test-auxiliary-duplicates
 /test-android-specfiles
 /*.o
+/test-regex-tls
