@@ -17,3 +17,4 @@ test-restorecon-digest
 /test-policy-root-boundary
 /test-match-limit
 /test-avc-lock-failure
+/test-descendant-oom

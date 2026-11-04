@@ -1980,7 +1980,8 @@ FUZZ_EXTERN void free_lookup_result(struct lookup_result *result)
  *             NULL. Mutual exclusive with @find_all.
  *
  * Return: A linked list of all file context definitions if a match was found.
- *         NULL is returned in case of no match found, or an allocation failure.
+ *         NULL is returned with errno set to ENOENT if no match was found, or
+ *         ENOMEM on allocation failure.
  */
 static struct lookup_result *all_node_specs(struct spec_node *node,
 					    uint8_t file_kind, bool find_all,
@@ -2068,8 +2069,11 @@ static struct lookup_result *all_node_specs(struct spec_node *node,
 		struct lookup_result *r, *last;
 
 		r = all_node_specs(child, file_kind, find_all, buf);
-		if (!r)
+		if (!r) {
+			if (errno != ENOENT)
+				goto fail;
 			continue;
+		}
 
 		if (!find_all)
 			return r;
@@ -2082,10 +2086,13 @@ static struct lookup_result *all_node_specs(struct spec_node *node,
 		next = &last->next;
 	}
 
+	if (!result)
+		errno = ENOENT;
 	return result;
 
 fail:
 	free_lookup_result(result);
+	errno = ENOMEM;
 
 	return NULL;
 }
@@ -2507,8 +2514,15 @@ FUZZ_EXTERN struct lookup_result *lookup_all(struct selabel_handle *rec,
 				continue;
 
 			r = all_node_specs(child, file_kind, find_all, buf);
-			if (!r)
+			if (!r) {
+				if (errno != ENOENT) {
+					free_lookup_result(result);
+					result = NULL;
+					errno = ENOMEM;
+					goto finish;
+				}
 				continue;
+			}
 
 			last = r;
 			while (last->next)
