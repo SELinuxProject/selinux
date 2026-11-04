@@ -963,7 +963,9 @@ struct rest_state {
 	long unsigned skipped_errors;
 	long unsigned relabeled_files;
 	int saved_errno;
+	size_t active_relabels;
 	pthread_mutex_t mutex;
+	pthread_cond_t idle;
 };
 
 static int walk_push(struct rest_state *st, int rdfd, dev_t dev, ino_t ino,
@@ -1218,6 +1220,9 @@ static int walk_next(struct rest_state *state, int *ent_fd, int *rd_fd,
 		     struct stat *ent_sb, char *ent_path, size_t ent_path_sz,
 		     size_t *ent_pathlen)
 {
+	if (state->abort)
+		return 0;
+
 	if (state->root_fd >= 0) {
 		int fd = state->root_fd;
 
@@ -1243,6 +1248,9 @@ static int walk_next(struct rest_state *state, int *ent_fd, int *rd_fd,
 	}
 
 	while (state->depth) {
+		if (state->abort)
+			return 0;
+
 		struct walk_level *top = &state->stack[state->depth - 1];
 		int pdfd = dirfd(top->dirp);
 		struct dirent *de;
@@ -1260,10 +1268,15 @@ static int walk_next(struct rest_state *state, int *ent_fd, int *rd_fd,
 					return -1;
 				continue;
 			}
-			/*
-			 * Completed directory traversal; set digest
-			 * if requested and no errors.
-			 */
+			/* Enumeration can finish while another worker is relabeling. */
+			if (top->write_digest && state->setrestorecondigest &&
+			    !state->flags.nochange && state->parallel &&
+			    state->active_relabels) {
+				pthread_cond_wait(&state->idle, &state->mutex);
+				/* Another worker may have popped or grown the stack. */
+				continue;
+			}
+			/* All relabel results are recorded before publishing a digest. */
 			if (top->write_digest && state->setrestorecondigest &&
 			    !state->flags.nochange && !state->error &&
 			    !state->skipped_errors &&
@@ -1476,8 +1489,10 @@ static void *selinux_restorecon_thread(void *arg)
 			}
 		}
 
-		if (state->parallel)
+		if (state->parallel) {
+			state->active_relabels++;
 			__pthread_mutex_unlock(&state->mutex);
+		}
 
 		bool updated = false;
 		error = restorecon_sb(ent_fd, ent_path, &ent_sb, &state->flags,
@@ -1486,6 +1501,9 @@ static void *selinux_restorecon_thread(void *arg)
 
 		if (state->parallel) {
 			__pthread_mutex_lock(&state->mutex);
+			state->active_relabels--;
+			if (!state->active_relabels)
+				pthread_cond_broadcast(&state->idle);
 			if (state->abort)
 				goto unlock;
 		}
@@ -1590,6 +1608,7 @@ static int selinux_restorecon_common(const char *pathname_orig,
 	state.skipped_errors = 0;
 	state.relabeled_files = 0;
 	state.saved_errno = 0;
+	state.active_relabels = 0;
 	state.stack = NULL;
 	state.depth = 0;
 	state.stack_cap = 0;
@@ -1767,14 +1786,29 @@ static int selinux_restorecon_common(const char *pathname_orig,
 		selinux_restorecon_thread(&state);
 	} else {
 		size_t i;
+		int rc;
 		pthread_t self = pthread_self();
 		pthread_t *threads = NULL;
-
-		__pthread_mutex_init(&state.mutex, NULL);
 
 		threads = calloc(nthreads - 1, sizeof(*threads));
 		if (!threads)
 			goto oom;
+
+		rc = pthread_mutex_init(&state.mutex, NULL);
+		if (rc) {
+			free(threads);
+			errno = rc;
+			error = -1;
+			goto cleanup;
+		}
+		rc = pthread_cond_init(&state.idle, NULL);
+		if (rc) {
+			pthread_mutex_destroy(&state.mutex);
+			free(threads);
+			errno = rc;
+			error = -1;
+			goto cleanup;
+		}
 
 		state.parallel = true;
 		/*
@@ -1807,6 +1841,7 @@ static int selinux_restorecon_common(const char *pathname_orig,
 		}
 		free(threads);
 
+		pthread_cond_destroy(&state.idle);
 		__pthread_mutex_destroy(&state.mutex);
 	}
 
