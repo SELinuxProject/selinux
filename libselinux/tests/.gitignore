@@ -10,3 +10,4 @@ test-restorecon-digest
 /test-readable-fallback
 /test-digest-inputs
 /test-load-policy-version
+/test-auxiliary-duplicates

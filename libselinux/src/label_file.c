@@ -1844,6 +1844,17 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 	}
 
 	/*
+	 * Check duplicates within primary inputs only. Historically the
+	 * optional customization files have allowed overlapping entries.
+	 */
+	if (rec->validating) {
+		sort_specs(data);
+		status = nodups_spec_node(rec, data->root);
+		if (status)
+			goto finish;
+	}
+
+	/*
 	 * Process each optional input file.
 	 */
 	for (i = 0; i < num_optional_paths; i++) {
@@ -1855,12 +1866,6 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 	}
 
 	sort_specs(data);
-
-	if (rec->validating) {
-		status = nodups_spec_node(rec, data->root);
-		if (status)
-			goto finish;
-	}
 
 	digest_gen_hash(rec->digest);
 	if (data->subs_num || data->dist_subs_num)
