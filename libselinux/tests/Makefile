@@ -21,6 +21,11 @@ test-restorecon-errno: test_restorecon_errno.c ../src/libselinux.a
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(addprefix -Wl$(COMMA)--wrap=,$(ERRNO_WRAPS)) $(PCRE_LDLIBS) -ldl -pthread
 
 .PHONY: test clean
+test: test-context-level
+
+test-context-level: test_context_level.c ../src/libselinux.a
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $@ $^ -Wl,--wrap=getcon,--wrap=security_check_context,--wrap=context_new,--wrap=context_range_set,--wrap=context_to_str $(PCRE_LDLIBS) -ldl -pthread
+
 test: test-restorecon-digest test-restorecon-errors test-restorecon-errno test-restorecon-exclude test-restorecon-xdev test-label-init-oom test-label-merge test-substitution-hash test-substitution-restorecon test-readable-fallback test-digest-inputs test-load-policy-version test-auxiliary-duplicates test-android-specfiles test-regex-tls test-policy-root-boundary test-match-limit test-avc-lock-failure test-descendant-oom test-regex-context-lifetime
 	./test-restorecon-digest
 	./test-restorecon-errors
@@ -43,8 +48,10 @@ test: test-restorecon-digest test-restorecon-errors test-restorecon-errno test-r
 	./test-avc-lock-failure
 	./test-descendant-oom
 	./test-regex-context-lifetime ../src/libselinux.so.1
+	./test-context-level
 
 clean:
+	rm -f test-context-level
 	rm -f test-restorecon-digest test-restorecon-errors test-restorecon-errno test-restorecon-exclude test-restorecon-xdev test-label-init-oom test-label-merge test-substitution-hash test-substitution-restorecon test-readable-fallback test-digest-inputs
 	rm -f test-load-policy-version
 	rm -f test-auxiliary-duplicates
