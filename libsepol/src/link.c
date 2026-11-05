@@ -167,7 +167,7 @@ static int permission_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 				    "could not insert permission into class");
 				goto err;
 			}
-			new_perm->s.value = dest_class->permissions.nprim + 1;
+			new_perm->s.value = ++(dest_class->permissions.nprim);
 			dest_perm = new_perm;
 		} else {
 			/* this is case c from above */
