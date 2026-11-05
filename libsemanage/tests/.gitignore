@@ -1,3 +1,4 @@
 libsemanage-tests
 *.policy
+test-genhomedircon-parent
 /test-config-empty

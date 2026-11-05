@@ -590,8 +590,6 @@ static int get_home_dirs(genhomedircon_settings_t *s, semanage_list_t **out)
 			break;
 		}
 
-		semanage_rtrim(path, '/');
-
 		{
 			char *canonical = NULL;
 
@@ -603,8 +601,18 @@ static int get_home_dirs(genhomedircon_settings_t *s, semanage_list_t **out)
 			if (canonical) {
 				free(path);
 				path = canonical;
+				if (path[0] != '/' ||
+				    semanage_str_count(path, '/') <= 1 ||
+				    ignore(path)) {
+					free(path);
+					path = NULL;
+					continue;
+				}
 			}
 		}
+
+		/* Substitutions can match the username component of the home. */
+		semanage_rtrim(path, '/');
 
 		if (!semanage_list_find(homedir_list, path)) {
 			/*

@@ -22,15 +22,20 @@ $(EXECUTABLE): $(OBJECTS) ../src/libsemanage.a
 
 clean distclean:
 	rm -rf $(OBJECTS) $(POLICIES) $(EXECUTABLE) test-config-empty
+	rm -f test-genhomedircon-parent
 
-test: all
+test: all test-genhomedircon-parent
 	./$(EXECUTABLE)
 	./test-config-empty
-
+	./test-genhomedircon-parent
 
 test-config-empty: regression/test_config_empty.c ../src/libsemanage.a
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ -Wl,--wrap=strdup $(LDLIBS)
 
+PARENT_WRAPS = semanage_findval sepol_context_check getpwent setpwent endpwent fopen stat semanage_fcontext_iterate asprintf
+COMMA := ,
+test-genhomedircon-parent: regression/test_genhomedircon_parent.c ../src/genhomedircon.c ../src/path_subs.c ../src/libsemanage.a
+	$(CC) $(CPPFLAGS) $(CFLAGS) -D_GNU_SOURCE -ffunction-sections -fdata-sections $(LDFLAGS) -Wl,--gc-sections -o $@ $< ../src/path_subs.c ../src/libsemanage.a $(addprefix -Wl$(COMMA)--wrap=,$(PARENT_WRAPS)) $(LDLIBS)
 
 # Requires SWIG, Python development headers and the built shared library.
 PYTHON ?= python3
