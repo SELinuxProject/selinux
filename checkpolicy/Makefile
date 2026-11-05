@@ -51,9 +51,14 @@ lex.yy.c: policy_scan.l y.tab.c
 	$(LEX) policy_scan.l
 
 .PHONY: test
-test: checkpolicy checkmodule
+test: checkpolicy checkmodule tests/test-type-enabled
 	./tests/test_roundtrip.sh
 	./tests/test_checkmodule_negative.sh
+	./tests/test-type-enabled
+	sh ./tests/test_multiple_decls.sh
+
+tests/test-type-enabled: tests/test_type_enabled.c $(LIBSEPOLA)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -o $@ $^ $(LDFLAGS) $(LDLIBS_LIBSEPOLA)
 
 # helper target for fuzzing
 checkobjects: $(CHECKOBJS)
@@ -80,6 +85,7 @@ relabel: install
 	/sbin/restorecon $(DESTDIR)$(BINDIR)/checkmodule
 
 clean:
+	-rm -f tests/test-type-enabled
 	-rm -f $(TARGETS) $(CHECKPOLOBJS) $(CHECKMODOBJS) y.tab.c y.tab.h lex.yy.c tests/testpol.conf tests/testpol.bin
 	$(MAKE) -C test clean
 	$(MAKE) -C fuzz clean

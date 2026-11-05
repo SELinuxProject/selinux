@@ -164,7 +164,22 @@ int is_id_enabled(const char *id, const policydb_t *p, int symbol_table)
 		return 0;
 	}
 
-	if (symbol_table == SYM_ROLES || symbol_table == SYM_USERS) {
+	if (symbol_table == SYM_TYPES) {
+		const type_datum_t *type = hashtab_search(p->p_types.table, id);
+		uint32_t i;
+
+		if (!type)
+			return 0;
+		/* The scope list can also contain requirements. Only an enabled
+		 * declaration can make a multiply declared type available. */
+		for (i = 0; i < len; i++) {
+			decl = p->decl_val_to_struct[scope->decl_ids[i] - 1];
+			if (decl && decl->enabled &&
+			    ebitmap_get_bit(&decl->declared.scope[SYM_TYPES],
+					    type->s.value - 1))
+				return 1;
+		}
+	} else if (symbol_table == SYM_ROLES || symbol_table == SYM_USERS) {
 		uint32_t i;
 		for (i = 0; i < len; i++) {
 			decl = p->decl_val_to_struct[scope->decl_ids[i] - 1];
