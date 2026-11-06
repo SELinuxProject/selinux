@@ -340,6 +340,9 @@ static PyObject *init(PyObject *self __attribute__((unused)), PyObject *args)
 	if (!PyArg_ParseTuple(args, "|s:policy_init", &init_path))
 		return NULL;
 	result = __policy_init(init_path);
+	if (result)
+		/* __policy_init() set a Python exception */
+		return NULL;
 	return Py_BuildValue("i", result);
 }
 
@@ -364,6 +367,7 @@ static PyObject *analyze(PyObject *self __attribute__((unused)), PyObject *args)
 	sepol_access_vector_t perm, av;
 	struct sepol_av_decision avd;
 	int rc;
+	int nbools;
 	int i = 0;
 
 	if (!PyArg_ParseTuple(args, "sssO!:audit2why", &scon, &tcon, &tclassstr,
@@ -430,7 +434,12 @@ static PyObject *analyze(PyObject *self __attribute__((unused)), PyObject *args)
 		avc->tsid = tsid;
 		avc->tclass = tclass;
 		avc->av = av;
-		if (check_booleans(&bools) == 0) {
+		nbools = check_booleans(&bools);
+		if (PyErr_Occurred()) {
+			free_bools(bools);
+			return NULL;
+		}
+		if (nbools == 0) {
 			if (av & ~avd.auditdeny) {
 				RETURN(DONTAUDIT)
 			} else {
