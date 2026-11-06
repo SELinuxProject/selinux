@@ -3188,12 +3188,16 @@ static int __cil_constrain_expr_datum_to_sepol_expr(policydb_t *pdb,
 		ebitmap_t type_bitmap;
 		ebitmap_node_t *tnode;
 		unsigned int i;
+		int members_as_names = 0;
 
 		rc = __cil_get_sepol_type_datum(pdb, item->data, &sepol_type);
 		if (rc != SEPOL_OK) {
 			if (FLAVOR(item->data) == CIL_TYPEATTRIBUTE) {
 				struct cil_typeattribute *attr = item->data;
 				if (!attr->keep) {
+					/* not in the binary policy, so name
+					 * its member types instead */
+					members_as_names = 1;
 					rc = 0;
 				}
 			}
@@ -3221,6 +3225,13 @@ static int __cil_constrain_expr_datum_to_sepol_expr(policydb_t *pdb,
 			}
 
 			if (ebitmap_set_bit(&expr->names,
+					    sepol_type->s.value - 1, 1)) {
+				ebitmap_destroy(&type_bitmap);
+				goto exit;
+			}
+
+			if (members_as_names &&
+			    ebitmap_set_bit(&expr->type_names->types,
 					    sepol_type->s.value - 1, 1)) {
 				ebitmap_destroy(&type_bitmap);
 				goto exit;
