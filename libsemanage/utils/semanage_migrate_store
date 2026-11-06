@@ -12,9 +12,10 @@ from optparse import OptionParser
 try:
     import selinux
     import semanage
-except ImportError:
-    print("You must install libselinux-python and libsemanage-python before running this tool", file=sys.stderr)
-    exit(1)
+except ImportError as err:
+    print("Unable to import the Python 3 bindings for libselinux and "
+          "libsemanage: %s" % err, file=sys.stderr)
+    sys.exit(1)
 
 
 def copy_file(src, dst):
