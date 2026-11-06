@@ -2541,8 +2541,7 @@ static int filename_trans_read(policydb_t *p, struct policy_file *fp)
 		return -1;
 	nel = le32_to_cpu(buf[0]);
 
-	if (p->target_platform == SEPOL_TARGET_SELINUX &&
-	    p->policyvers < POLICYDB_VERSION_COMP_FTRANS) {
+	if (!policydb_has_comp_ftrans(p)) {
 		for (i = 0; i < nel; i++) {
 			rc = filename_trans_read_one_compat(p, fp);
 			if (rc < 0)

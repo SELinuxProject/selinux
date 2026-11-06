@@ -45,6 +45,15 @@
 
 #define MAX_ALIAS_REPEATS 32
 
+/*
+ * Whether the binary policy stores filename transitions in the compressed
+ * format introduced with POLICYDB_VERSION_COMP_FTRANS. Xen policy versions
+ * have their own numbering and never had that format.
+ */
+#define policydb_has_comp_ftrans(p)                      \
+	((p)->target_platform == SEPOL_TARGET_SELINUX && \
+	 (p)->policyvers >= POLICYDB_VERSION_COMP_FTRANS)
+
 #define PERMISSION_MASK(nprim)                          \
 	((nprim) == PERM_SYMTAB_SIZE ? (~UINT32_C(0)) : \
 				       ((UINT32_C(1) << (nprim)) - 1))

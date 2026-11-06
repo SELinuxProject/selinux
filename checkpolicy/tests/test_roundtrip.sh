@@ -41,3 +41,28 @@ check_policy  policy_allonce_mls.conf  policy_allonce_mls.expected_opt.conf  '-M
 
 check_policy  policy_allonce_xen.conf  policy_allonce_xen.expected.conf      '--target xen -c 30 -E'
 check_policy  policy_allonce_xen.conf  policy_allonce_xen.expected_opt.conf  '--target xen -c 30 -E -S -O'
+
+# Compare against a binary policy written by an earlier release, to catch
+# changes to the binary format of an existing policy version, which a
+# roundtrip through the same implementation cannot detect.
+# policy_allonce_xen.30.bin was written by checkpolicy 3.11 via:
+#   checkpolicy --target xen -c 30 -E policy_allonce_xen.conf
+check_reference() {
+	POLICY=$1
+	REFERENCE=$2
+	EXPECTED=$3
+	OPTS=$4
+
+	echo "==== Testing ${2}"
+
+	${CHECKPOLICY} ${OPTS} -b -F "${BASEDIR}/${REFERENCE}" -o "${BASEDIR}/testpol.conf"
+	diff -u "${BASEDIR}/${EXPECTED}" "${BASEDIR}/testpol.conf"
+
+	${CHECKPOLICY} ${OPTS} "${BASEDIR}/${POLICY}" -o "${BASEDIR}/testpol.bin"
+	cmp "${BASEDIR}/${REFERENCE}" "${BASEDIR}/testpol.bin"
+
+	echo "==== ${2} success"
+	echo ""
+}
+
+check_reference  policy_allonce_xen.conf  policy_allonce_xen.30.bin  policy_allonce_xen.expected.conf  '--target xen -c 30 -E'
