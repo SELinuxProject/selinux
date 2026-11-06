@@ -944,8 +944,13 @@ static int alias_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		 * and inserted into the hashtable as a type, fix it up now */
 
 		if (base_type->flavor == TYPE_ALIAS) {
+			if (base_type->primary != target_type->s.value) {
+				ERR(state->handle,
+				    "%s: Alias %s already aliases a type other than %s.",
+				    state->cur_mod_name, id, target_id);
+				return -1;
+			}
 			/* error checking */
-			assert(base_type->primary == target_type->s.value);
 			assert(base_type->primary ==
 			       mod->map[SYM_TYPES][primval - 1]);
 			assert(mod->map[SYM_TYPES][type->s.value - 1] ==
