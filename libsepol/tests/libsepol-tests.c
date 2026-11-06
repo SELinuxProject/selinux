@@ -25,6 +25,7 @@
 #include "test-deps.h"
 #include "test-downgrade.h"
 #include "test-neverallow.h"
+#include "test-kernel-to-cil.h"
 
 #include <CUnit/Basic.h>
 #include <CUnit/Console.h>
@@ -74,6 +75,7 @@ static bool do_tests(int interactive, int verbose)
 	DECLARE_SUITE(deps);
 	DECLARE_SUITE(downgrade);
 	DECLARE_SUITE(neverallow);
+	DECLARE_SUITE(kernel_to_cil);
 
 	if (verbose)
 		CU_basic_set_mode(CU_BRM_VERBOSE);
