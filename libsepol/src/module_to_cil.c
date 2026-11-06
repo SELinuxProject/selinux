@@ -3885,7 +3885,16 @@ static int declared_scopes_to_cil(int indent, struct policydb *pdb,
 		map = decl->declared.scope[sym];
 		ebitmap_for_each_positive_bit(&map, node, i) {
 			key = pdb->sym_val_to_name[sym][i];
-			datum = hashtab_search(pdb->symtab[sym].table, key);
+			datum = NULL;
+			if (sym == SYM_USERS) {
+				/* a user statement keeps its roles and MLS
+				 * attributes on the declaring decl's datum */
+				datum = hashtab_search(decl->symtab[sym].table,
+						       key);
+			}
+			if (datum == NULL)
+				datum = hashtab_search(pdb->symtab[sym].table,
+						       key);
 			if (datum == NULL) {
 				rc = -1;
 				goto exit;
