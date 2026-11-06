@@ -1,1 +1,2 @@
 libsepol-tests
+/regression/test_conditional_count
