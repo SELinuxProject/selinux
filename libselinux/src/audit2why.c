@@ -446,10 +446,19 @@ static PyObject *analyze(PyObject *self __attribute__((unused)), PyObject *args)
 			}
 			b = bools;
 			outboollist = PyList_New(len);
+			if (!outboollist) {
+				free_bools(bools);
+				return NULL;
+			}
 			len = 0;
 			while (b->name) {
 				PyObject *bool_ = Py_BuildValue("(si)", b->name,
 								b->active);
+				if (!bool_) {
+					Py_DECREF(outboollist);
+					free_bools(bools);
+					return NULL;
+				}
 				PyList_SetItem(outboollist, len++, bool_);
 				b++;
 			}
