@@ -90,6 +90,11 @@ int main(int argc, char **argv)
 		}
 	}
 
+	if (argc >= optind + 3) {
+		log_err("Too many arguments");
+		usage(1);
+	}
+
 	if (argc >= optind + 1 && strcmp(argv[optind], "-") != 0) {
 		ifile = argv[optind];
 		in = fopen(ifile, "rb");
@@ -104,6 +109,16 @@ int main(int argc, char **argv)
 		in = stdin;
 	}
 
+	rc = sepol_ppfile_to_module_package(in, &mod_pkg);
+	if (rc != 0) {
+		goto exit;
+	}
+	fclose(in);
+	in = NULL;
+
+	/* open the output only after reading the input, so a failed read
+	 * leaves an existing output untouched and the output may replace
+	 * the input */
 	if (argc >= optind + 2 && strcmp(argv[optind + 1], "-") != 0) {
 		ofile = argv[optind + 1];
 		out = fopen(ofile, "w");
@@ -116,18 +131,6 @@ int main(int argc, char **argv)
 	} else {
 		out = stdout;
 	}
-
-	if (argc >= optind + 3) {
-		log_err("Too many arguments");
-		usage(1);
-	}
-
-	rc = sepol_ppfile_to_module_package(in, &mod_pkg);
-	if (rc != 0) {
-		goto exit;
-	}
-	fclose(in);
-	in = NULL;
 
 	if (ofile) {
 		char *mod_name = mod_pkg->policy->p.name;
