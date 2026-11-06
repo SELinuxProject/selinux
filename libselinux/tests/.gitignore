@@ -19,3 +19,4 @@ test-restorecon-digest
 /test-avc-lock-failure
 /test-descendant-oom
 /test-regex-context-lifetime
+/test-context-level
