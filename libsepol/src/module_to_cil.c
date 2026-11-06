@@ -4424,6 +4424,7 @@ static int generate_gen_require_attribute(void)
 {
 	cil_println(0, "(typeattribute " GEN_REQUIRE_ATTR ")");
 	cil_println(0, "(roleattribute " GEN_REQUIRE_ATTR ")");
+	cil_println(0, "(userattribute " GEN_REQUIRE_ATTR ")");
 
 	return 0;
 }
