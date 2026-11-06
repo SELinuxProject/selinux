@@ -1096,6 +1096,8 @@ static int __cil_verify_context(struct cil_db *db, struct cil_context *ctx)
 	struct cil_level *ctx_high = ctx->range->high;
 	struct cil_list *sensitivityorder = db->sensitivityorder;
 	struct cil_list_item *curr;
+	const char *range_name =
+		ctx->range_str ? ctx->range_str : "<anonymous>";
 	int found = CIL_FALSE;
 
 	if (user->roles != NULL) {
@@ -1143,7 +1145,7 @@ static int __cil_verify_context(struct cil_db *db, struct cil_context *ctx)
 			} else if (sens == ctx_low->sens) {
 				cil_log(CIL_ERR,
 					"Range %s is invalid for user %s\n",
-					ctx->range_str, ctx->user_str);
+					range_name, ctx->user_str);
 				rc = SEPOL_ERR;
 				goto exit;
 			}
@@ -1155,7 +1157,7 @@ static int __cil_verify_context(struct cil_db *db, struct cil_context *ctx)
 			} else if (sens == user_high->sens) {
 				cil_log(CIL_ERR,
 					"Range %s is invalid for user %s\n",
-					ctx->range_str, ctx->user_str);
+					range_name, ctx->user_str);
 				rc = SEPOL_ERR;
 				goto exit;
 			}
