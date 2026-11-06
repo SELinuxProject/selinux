@@ -809,6 +809,8 @@ def mkargv(line):
             while i < len(l) and dquote not in l[i]:
                 quote.append(l[i])
                 i = i + 1
+            if i == len(l):
+                raise ValueError(_("Unterminated quote in import data: %s") % line)
             quote.append(l[i].strip(dquote))
             ret.append(" ".join(quote))
             i = i + 1
@@ -826,6 +828,8 @@ def mkargv(line):
                 quote.append(l[i])
                 i = i + 1
 
+            if i == len(l):
+                raise ValueError(_("Unterminated quote in import data: %s") % line)
             quote.append(l[i].strip(squote))
             ret.append(" ".join(quote))
             i = i + 1
