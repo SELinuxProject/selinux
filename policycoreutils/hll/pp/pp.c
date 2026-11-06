@@ -155,6 +155,22 @@ int main(int argc, char **argv)
 		goto exit;
 	}
 
+	/* write errors of buffered output only surface when flushing */
+	if (fflush(out) != 0 || ferror(out)) {
+		log_err("Failed to write %s: %s", ofile ? ofile : "stdout",
+			strerror(errno));
+		rc = -1;
+		goto exit;
+	}
+	if (fclose(out) != 0) {
+		out = NULL;
+		log_err("Failed to close %s: %s", ofile ? ofile : "stdout",
+			strerror(errno));
+		rc = -1;
+		goto exit;
+	}
+	out = NULL;
+
 exit:
 	if (in != NULL) {
 		fclose(in);
