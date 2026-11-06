@@ -31,6 +31,8 @@ check_policy  policy_minimal.conf      policy_minimal.conf                   '-E
 check_policy  policy_minimal_mls.conf  policy_minimal_mls.conf               '-M -E'
 check_policy  policy_minimal_mls.conf  policy_minimal_mls.conf               '-M -E -S -O'
 
+check_policy  policy_dupclass.conf     policy_dupclass.expected.conf         ''
+
 check_policy  policy_allonce.conf      policy_allonce.expected.conf          ''
 check_policy  policy_allonce.conf      policy_allonce.expected_opt.conf      '-S -O'
 
