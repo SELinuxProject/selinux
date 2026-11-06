@@ -180,6 +180,17 @@ static int check_booleans(struct boolean_t **bools)
 	return fcnt;
 }
 
+static void free_bools(struct boolean_t *bools)
+{
+	struct boolean_t *b;
+
+	if (!bools)
+		return;
+	for (b = bools; b->name; b++)
+		free(b->name);
+	free(bools);
+}
+
 static PyObject *finish(PyObject *self __attribute__((unused)), PyObject *args)
 {
 	PyObject *result = 0;
@@ -346,7 +357,7 @@ static PyObject *analyze(PyObject *self __attribute__((unused)), PyObject *args)
 	PyObject *listObj;
 	PyObject *strObj;
 	int numlines;
-	struct boolean_t *bools;
+	struct boolean_t *bools = NULL;
 	unsigned int reason;
 	sepol_security_id_t ssid, tsid;
 	sepol_security_class_t tclass;
@@ -442,7 +453,7 @@ static PyObject *analyze(PyObject *self __attribute__((unused)), PyObject *args)
 				PyList_SetItem(outboollist, len++, bool_);
 				b++;
 			}
-			free(bools);
+			free_bools(bools);
 			/* 'N' steals the reference to outboollist */
 			return Py_BuildValue("iN", BOOLEAN, outboollist);
 		}
