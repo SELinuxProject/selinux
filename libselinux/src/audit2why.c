@@ -436,10 +436,12 @@ static PyObject *analyze(PyObject *self __attribute__((unused)), PyObject *args)
 		avc->av = av;
 		nbools = check_booleans(&bools);
 		if (PyErr_Occurred()) {
+			free(reason_buf);
 			free_bools(bools);
 			return NULL;
 		}
 		if (nbools == 0) {
+			free(reason_buf);
 			if (av & ~avd.auditdeny) {
 				RETURN(DONTAUDIT)
 			} else {
@@ -456,6 +458,7 @@ static PyObject *analyze(PyObject *self __attribute__((unused)), PyObject *args)
 			b = bools;
 			outboollist = PyList_New(len);
 			if (!outboollist) {
+				free(reason_buf);
 				free_bools(bools);
 				return NULL;
 			}
@@ -465,12 +468,14 @@ static PyObject *analyze(PyObject *self __attribute__((unused)), PyObject *args)
 								b->active);
 				if (!bool_) {
 					Py_DECREF(outboollist);
+					free(reason_buf);
 					free_bools(bools);
 					return NULL;
 				}
 				PyList_SetItem(outboollist, len++, bool_);
 				b++;
 			}
+			free(reason_buf);
 			free_bools(bools);
 			/* 'N' steals the reference to outboollist */
 			return Py_BuildValue("iN", BOOLEAN, outboollist);
