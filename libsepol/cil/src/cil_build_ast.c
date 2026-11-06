@@ -4824,6 +4824,14 @@ int cil_gen_ibendportcon(__attribute__((unused)) struct cil_db *db,
 	if (rc != SEPOL_OK)
 		goto exit;
 
+	if (strlen(ibendportcon->dev_name_str) > IB_DEVICE_NAME_MAX - 1) {
+		cil_log(CIL_ERR,
+			"ibendportcon device name %s exceeds max length of %d\n",
+			ibendportcon->dev_name_str, IB_DEVICE_NAME_MAX - 1);
+		rc = SEPOL_ERR;
+		goto exit;
+	}
+
 	rc = cil_fill_integer(parse_current->next->next, &ibendportcon->port,
 			      10);
 	if (rc != SEPOL_OK) {
