@@ -1319,6 +1319,11 @@ static int add_aliases_to_type(type_datum_t *type)
 			free(id);
 			return -1;
 		}
+		if (strcmp(id, "self") == 0) {
+			yyerror("\"self\" is a reserved type name.");
+			free(id);
+			return -1;
+		}
 		aliasdatum = calloc(1, sizeof(type_datum_t));
 		if (!aliasdatum) {
 			free(id);

@@ -324,6 +324,10 @@ expect_fail "type_attr_conflict.te" "Duplicate declaration of type" "type_attr_c
 	"${NEGDIR}/type_attr_conflict.te"
 expect_fail "invalid_type_name.te" "syntax error" "invalid_type_name" \
 	"${NEGDIR}/invalid_type_name.te"
+expect_fail "self_typealias.te" "\"self\" is a reserved type name" "self_typealias" \
+	"${NEGDIR}/self_typealias.te"
+expect_fail "self_type_alias.te" "\"self\" is a reserved type name" "self_type_alias" \
+	"${NEGDIR}/self_type_alias.te"
 expect_fail "bad_role.te" "syntax error" "bad_role" "${NEGDIR}/bad_role.te"
 expect_fail "bad_user.te" "garbage_token" "bad_user" "${NEGDIR}/bad_user.te"
 

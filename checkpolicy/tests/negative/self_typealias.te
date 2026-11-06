@@ -1,0 +1,10 @@
+module self_typealias 1.0;
+
+require {
+	class file { read };
+}
+
+type foo_t;
+typealias foo_t alias self;
+
+allow foo_t self:file read;
