@@ -1435,6 +1435,27 @@ exit:
 	return rc;
 }
 
+static int __cil_verify_sidcontext(struct cil_db *db,
+				   struct cil_tree_node *node)
+{
+	int rc = SEPOL_ERR;
+	struct cil_sidcontext *sidcon = node->data;
+	struct cil_context *ctx = sidcon->context;
+
+	/* Verify only when anonymous */
+	if (!ctx->datum.name) {
+		rc = __cil_verify_context(db, ctx);
+		if (rc != SEPOL_OK)
+			goto exit;
+	}
+
+	return SEPOL_OK;
+
+exit:
+	cil_tree_log(node, CIL_ERR, "Invalid sidcontext");
+	return rc;
+}
+
 static int __cil_verify_genfscon(struct cil_db *db, struct cil_tree_node *node)
 {
 	int rc = SEPOL_ERR;
@@ -1917,6 +1938,9 @@ int __cil_verify_helper(struct cil_tree_node *node, uint32_t *finished,
 			break;
 		case CIL_IBENDPORTCON:
 			rc = __cil_verify_ibendportcon(db, node);
+			break;
+		case CIL_SIDCONTEXT:
+			rc = __cil_verify_sidcontext(db, node);
 			break;
 		case CIL_PORTCON:
 			rc = __cil_verify_portcon(db, node);
