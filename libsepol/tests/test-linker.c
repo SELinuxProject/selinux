@@ -133,6 +133,32 @@ static void test_linker_cond(void)
 	module_cond_tests(&linkedbase);
 }
 
+/*
+ * Two modules aliasing one name to different primaries must make linking
+ * fail instead of tripping an assertion.
+ */
+static void test_linker_alias_clash(void)
+{
+	policydb_t base, mod1, mod2;
+	policydb_t *mods[] = { &mod1, &mod2 };
+
+	if (test_load_policy(&base, POLICY_BASE, mls, "test-linker",
+			     "alias-clash-base.conf"))
+		CU_FAIL_FATAL("Failed to load base policy");
+	if (test_load_policy(&mod1, POLICY_MOD, mls, "test-linker",
+			     "alias-clash-module1.conf"))
+		CU_FAIL_FATAL("Failed to load module 1");
+	if (test_load_policy(&mod2, POLICY_MOD, mls, "test-linker",
+			     "alias-clash-module2.conf"))
+		CU_FAIL_FATAL("Failed to load module 2");
+
+	CU_ASSERT(link_modules(NULL, &base, mods, 2, 0) != 0);
+
+	policydb_destroy(&base);
+	policydb_destroy(&mod1);
+	policydb_destroy(&mod2);
+}
+
 int linker_add_tests(CU_pSuite suite)
 {
 	if (NULL == CU_add_test(suite, "linker_indexes", test_linker_indexes)) {
@@ -148,6 +174,11 @@ int linker_add_tests(CU_pSuite suite)
 		return CU_get_error();
 	}
 	if (NULL == CU_add_test(suite, "linker_cond", test_linker_cond)) {
+		CU_cleanup_registry();
+		return CU_get_error();
+	}
+	if (NULL ==
+	    CU_add_test(suite, "linker_alias_clash", test_linker_alias_clash)) {
 		CU_cleanup_registry();
 		return CU_get_error();
 	}
