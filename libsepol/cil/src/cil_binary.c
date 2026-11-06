@@ -4024,6 +4024,7 @@ int cil_ibpkeycon_to_policydb(policydb_t *pdb, struct cil_sort *ibpkeycons)
 {
 	int rc = SEPOL_ERR;
 	uint32_t i = 0;
+	size_t j;
 	ocontext_t *tail = NULL;
 	struct in6_addr subnet_prefix;
 
@@ -4039,6 +4040,16 @@ int cil_ibpkeycon_to_policydb(policydb_t *pdb, struct cil_sort *ibpkeycons)
 				"ibpkeycon subnet prefix not in valid IPV6 format\n");
 			rc = SEPOL_ERR;
 			goto exit;
+		}
+
+		for (j = 8; j < sizeof(subnet_prefix.s6_addr); j++) {
+			if (subnet_prefix.s6_addr[j]) {
+				cil_log(CIL_ERR,
+					"ibpkeycon subnet prefix %s should be 0's in the low order 64 bits\n",
+					cil_ibpkeycon->subnet_prefix_str);
+				rc = SEPOL_ERR;
+				goto exit;
+			}
 		}
 
 		memcpy(&new_ocon->u.ibpkey.subnet_prefix,
