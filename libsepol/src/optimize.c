@@ -379,13 +379,39 @@ static void optimize_cond_av_list(cond_av_list_t **cond, cond_av_list_t **del,
 	}
 }
 
+static int uintptr_cmp(const void *a, const void *b)
+{
+	uintptr_t pa = *(const uintptr_t *)a;
+	uintptr_t pb = *(const uintptr_t *)b;
+
+	return (pa > pb) - (pa < pb);
+}
+
+/* remove the entry for node from the list, returning whether it was found */
+static int cond_av_list_remove(cond_av_list_t **list,
+			       const struct avtab_node *node)
+{
+	for (; *list; list = &(*list)->next) {
+		if ((*list)->node == node) {
+			cond_av_list_t *tmp = *list;
+
+			*list = tmp->next;
+			free(tmp);
+			return 1;
+		}
+	}
+	return 0;
+}
+
 static void optimize_cond_avtab(policydb_t *p, const struct type_vec *type_map)
 {
 	avtab_t *tab = &p->te_cond_avtab;
 	unsigned int i;
 	avtab_ptr_t *cur;
 	cond_node_t **cond;
-	cond_av_list_t **avcond, *del = NULL;
+	cond_av_list_t *item, *del = NULL;
+	uintptr_t *del_nodes;
+	size_t j, ndel = 0;
 
 	/* First go through all conditionals and collect redundant rules. */
 	cond = &p->cond_list;
@@ -410,26 +436,44 @@ static void optimize_cond_avtab(policydb_t *p, const struct type_vec *type_map)
 		return;
 
 	/*
+	 * Sort the addresses of the nodes to delete, so membership of a
+	 * cond_avtab entry can be looked up in logarithmic time; a linear scan
+	 * of 'del' per entry is quadratic and dominates on large policies.
+	 * Fall back to that scan if the allocation fails.
+	 */
+	for (item = del; item; item = item->next)
+		ndel++;
+
+	del_nodes = calloc(ndel, sizeof(*del_nodes));
+	if (del_nodes) {
+		for (j = 0, item = del; item; item = item->next)
+			del_nodes[j++] = (uintptr_t)item->node;
+
+		cond_av_list_destroy(del);
+		del = NULL;
+
+		qsort(del_nodes, ndel, sizeof(*del_nodes), uintptr_cmp);
+	}
+
+	/*
 	 * Now go through the whole cond_avtab and remove all rules that are
 	 * found in the 'del' list.
 	 */
 	for (i = 0; i < tab->nslot; i++) {
 		cur = &tab->htable[i];
 		while (*cur) {
-			int redundant = 0;
-			avcond = &del;
-			while (*avcond) {
-				if ((*avcond)->node == *cur) {
-					cond_av_list_t *cond_tmp = *avcond;
+			int redundant;
 
-					*avcond = cond_tmp->next;
-					free(cond_tmp);
-					redundant = 1;
-					break;
-				} else {
-					avcond = &(*avcond)->next;
-				}
+			if (del_nodes) {
+				uintptr_t key = (uintptr_t)*cur;
+
+				redundant = bsearch(&key, del_nodes, ndel,
+						    sizeof(*del_nodes),
+						    uintptr_cmp) != NULL;
+			} else {
+				redundant = cond_av_list_remove(&del, *cur);
 			}
+
 			if (redundant) {
 				avtab_ptr_t tmp = *cur;
 
@@ -444,6 +488,9 @@ static void optimize_cond_avtab(policydb_t *p, const struct type_vec *type_map)
 			}
 		}
 	}
+
+	free(del_nodes);
+	cond_av_list_destroy(del);
 }
 
 /*
