@@ -478,8 +478,7 @@ static int filename_trans_write(struct policydb *p, void *fp)
 	uint32_t buf[1];
 	int rc;
 
-	if (p->target_platform == SEPOL_TARGET_SELINUX &&
-	    p->policyvers < POLICYDB_VERSION_COMP_FTRANS) {
+	if (!policydb_has_comp_ftrans(p)) {
 		buf[0] = cpu_to_le32(p->filename_trans_count);
 		items = put_entry(buf, sizeof(uint32_t), 1, fp);
 		if (items != 1)
