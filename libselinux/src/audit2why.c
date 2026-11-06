@@ -359,7 +359,7 @@ static PyObject *analyze(PyObject *self __attribute__((unused)), PyObject *args)
 	char *tclassstr;
 	PyObject *listObj;
 	PyObject *strObj;
-	int numlines;
+	Py_ssize_t numlines;
 	struct boolean_t *bools = NULL;
 	unsigned int reason;
 	sepol_security_id_t ssid, tsid;
@@ -368,7 +368,7 @@ static PyObject *analyze(PyObject *self __attribute__((unused)), PyObject *args)
 	struct sepol_av_decision avd;
 	int rc;
 	int nbools;
-	int i = 0;
+	Py_ssize_t i = 0;
 
 	if (!PyArg_ParseTuple(args, "sssO!:audit2why", &scon, &tcon, &tclassstr,
 			      &PyList_Type, &listObj))
@@ -408,7 +408,7 @@ static PyObject *analyze(PyObject *self __attribute__((unused)), PyObject *args)
 		strObj = PyList_GetItem(listObj, i); /* Can't fail */
 
 		/* make it a string */
-		permstr = _PyUnicode_AsString(strObj);
+		permstr = PyUnicode_AsUTF8(strObj);
 		if (!permstr)
 			/* not a string; exception already set */
 			return NULL;
