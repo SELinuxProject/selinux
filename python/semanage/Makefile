@@ -32,6 +32,7 @@ install: all
 	install -m 644 $(BASHCOMPLETIONS) $(DESTDIR)$(BASHCOMPLETIONDIR)/semanage
 
 test:
+	@$(PYTHON) test-permissive-store.py
 	@$(PYTHON) test-semanage.py -a
 clean:
 

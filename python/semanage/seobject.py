@@ -509,7 +509,7 @@ class permissiveRecords(semanageRecords):
         name = "permissive_%s" % type
         modtxt = "(typepermissive %s)" % type
 
-        rc = semanage_module_install(self.sh, modtxt, len(modtxt), name, "cil")
+        rc = semanage_module_install(self.sh, modtxt.encode("utf-8"), name, "cil")
         if rc >= 0:
             self.commit()
 
