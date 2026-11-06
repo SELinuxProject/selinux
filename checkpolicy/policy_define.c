@@ -3793,6 +3793,11 @@ int define_constraint(constraint_expr_t *expr)
 			free(id);
 			goto bad;
 		}
+		/* a class listed twice gets a single constraint */
+		if (ebitmap_get_bit(&classmap, cladatum->s.value - 1)) {
+			free(id);
+			continue;
+		}
 		if (ebitmap_set_bit(&classmap, cladatum->s.value - 1, TRUE)) {
 			yyerror("out of memory");
 			free(id);
@@ -3952,6 +3957,11 @@ int define_validatetrans(constraint_expr_t *expr)
 			yyerror2("class %s is not defined", id);
 			free(id);
 			goto bad;
+		}
+		/* a class listed twice gets a single validatetrans rule */
+		if (ebitmap_get_bit(&classmap, cladatum->s.value - 1)) {
+			free(id);
+			continue;
 		}
 		if (ebitmap_set_bit(&classmap, (cladatum->s.value - 1), TRUE)) {
 			yyerror("out of memory");
