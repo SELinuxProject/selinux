@@ -261,6 +261,62 @@ static void test_expander_negset_bounds(void)
 	free(p.type_val_to_struct);
 }
 
+static uint32_t terule_dup_value(const policydb_t *p, int symtab,
+				 const char *name)
+{
+	const symtab_datum_t *datum =
+		hashtab_search(p->symtab[symtab].table, name);
+
+	CU_ASSERT_PTR_NOT_NULL_FATAL(datum);
+	return datum->value;
+}
+
+/*
+ * A type rule naming several classes must expand every class even when its
+ * mapping for an earlier class duplicates an existing rule in the same scope.
+ */
+static void test_expander_terule_multiclass_duplicate(void)
+{
+	policydb_t dup_basemod, expanded;
+	avtab_key_t key;
+	const avtab_datum_t *datum;
+	uint32_t new_type;
+
+	if (test_load_policy(&dup_basemod, POLICY_BASE, mls, "test-expander",
+			     "terule-dup-base.conf"))
+		CU_FAIL_FATAL("Failed to load policy");
+
+	if (link_modules(NULL, &dup_basemod, NULL, 0, 0))
+		CU_FAIL_FATAL("Failed to link base module");
+
+	if (policydb_init(&expanded))
+		CU_FAIL_FATAL("Failed to initialize policy");
+
+	if (expand_module(NULL, &dup_basemod, &expanded, 0, 0))
+		CU_FAIL_FATAL("Failed to expand policy");
+
+	new_type = terule_dup_value(&expanded, SYM_TYPES, "dup_new_t");
+
+	key.source_type = terule_dup_value(&expanded, SYM_TYPES, "dup_src_t");
+	key.target_type = terule_dup_value(&expanded, SYM_TYPES, "dup_tgt_t");
+	key.specified = AVTAB_TRANSITION;
+
+	key.target_class = terule_dup_value(&expanded, SYM_CLASSES, "dir");
+	datum = avtab_search(&expanded.te_avtab, &key);
+	CU_ASSERT_PTR_NOT_NULL(datum);
+	if (datum)
+		CU_ASSERT_EQUAL(datum->data, new_type);
+
+	key.target_class = terule_dup_value(&expanded, SYM_CLASSES, "file");
+	datum = avtab_search(&expanded.te_avtab, &key);
+	CU_ASSERT_PTR_NOT_NULL(datum);
+	if (datum)
+		CU_ASSERT_EQUAL(datum->data, new_type);
+
+	policydb_destroy(&dup_basemod);
+	policydb_destroy(&expanded);
+}
+
 int expander_add_tests(CU_pSuite suite)
 {
 	if (NULL ==
@@ -291,6 +347,11 @@ int expander_add_tests(CU_pSuite suite)
 	}
 	if (NULL == CU_add_test(suite, "expander_negset_bounds",
 				test_expander_negset_bounds)) {
+		CU_cleanup_registry();
+		return CU_get_error();
+	}
+	if (NULL == CU_add_test(suite, "expander_terule_multiclass_duplicate",
+				test_expander_terule_multiclass_duplicate)) {
 		CU_cleanup_registry();
 		return CU_get_error();
 	}

@@ -2016,8 +2016,10 @@ static int expand_terule_helper(sepol_handle_t *handle, policydb_t *p,
 				/* if the duplicate is inside the same scope (eg., unconditional 
 				 * or in same conditional then ignore it */
 				if ((conflict == 1 && cond == NULL) ||
-				    node->parse_context == cond)
-					return EXPAND_RULE_SUCCESS;
+				    node->parse_context == cond) {
+					cur = cur->next;
+					continue;
+				}
 				ERR(handle, "duplicate TE rule for %s %s:%s %s",
 				    p->p_type_val_to_name[avkey.source_type - 1],
 				    p->p_type_val_to_name[avkey.target_type - 1],
