@@ -957,6 +957,8 @@ static int write_sensitivity_rules_to_cil(FILE *out, struct policydb *pdb)
 	/* sensitivities */
 	for (i = 0; i < pdb->p_levels.nprim; i++) {
 		name = pdb->p_sens_val_to_name[i];
+		if (!name)
+			continue;
 		sepol_printf(out, "(sensitivity %s)\n", name);
 	}
 
@@ -965,6 +967,8 @@ static int write_sensitivity_rules_to_cil(FILE *out, struct policydb *pdb)
 	prev = NULL;
 	for (i = 0; i < pdb->p_levels.nprim; i++) {
 		name = pdb->p_sens_val_to_name[i];
+		if (!name)
+			continue;
 		if (prev) {
 			sepol_printf(out, "%s ", prev);
 		}
@@ -1065,6 +1069,8 @@ static int write_category_rules_to_cil(FILE *out, struct policydb *pdb)
 	/* categories */
 	for (i = 0; i < pdb->p_cats.nprim; i++) {
 		name = pdb->p_cat_val_to_name[i];
+		if (!name)
+			continue;
 		sepol_printf(out, "(category %s)\n", name);
 	}
 
@@ -1073,6 +1079,8 @@ static int write_category_rules_to_cil(FILE *out, struct policydb *pdb)
 	prev = NULL;
 	for (i = 0; i < pdb->p_cats.nprim; i++) {
 		name = pdb->p_cat_val_to_name[i];
+		if (!name)
+			continue;
 		if (prev) {
 			sepol_printf(out, "%s ", prev);
 		}
