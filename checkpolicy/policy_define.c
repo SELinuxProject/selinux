@@ -5568,7 +5568,8 @@ static int insert_ipv4_node(ocontext_t *newc)
 			return -1;
 		}
 
-		if (newc->u.node.mask > c->u.node.mask)
+		/* The addresses and masks are stored in network byte order. */
+		if (be32toh(newc->u.node.mask) > be32toh(c->u.node.mask))
 			break;
 	}
 
