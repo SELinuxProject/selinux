@@ -483,8 +483,8 @@ extern void matchpathcon_fini(void)
 	;
 
 /* Resolve all of the symlinks and relative portions of a pathname, but NOT
- * the final component (same a realpath() unless the final component is a
- * symlink.  Resolved path must be a path of size PATH_MAX + 1 */
+ * the final component (same as realpath() unless the final component is a
+ * symlink).  resolved_path must point to a buffer of at least PATH_MAX bytes. */
 extern int realpath_not_final(const char *name, char *resolved_path);
 
 /* Match the specified pathname and mode against the file contexts
