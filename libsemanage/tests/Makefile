@@ -31,3 +31,9 @@ test: all
 test-config-empty: regression/test_config_empty.c ../src/libsemanage.a
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ -Wl,--wrap=strdup $(LDLIBS)
 
+
+# Requires SWIG, Python development headers and the built shared library.
+PYTHON ?= python3
+.PHONY: test-python-module-buffer
+test-python-module-buffer:
+	$(PYTHON) regression/test_module_buffer.py
