@@ -69,6 +69,7 @@ static int parse_errors;
 %token VERIFY_MOD_START VERIFY_LINKED_START VERIFY_KERNEL_START BLOCK_END
 %token PROG_PATH PROG_ARGS
 %token <s> ARG
+%type <s> scalar_arg
 %type <d> verify_start_tok
 
 %%
@@ -106,7 +107,16 @@ single_opt:     module_store
         |       sort_local_fcontexts
         ;
 
-module_store:   MODULE_STORE '=' ARG {
+scalar_arg: ARG {
+                        if ($1 == NULL) {
+                                yyerror("missing option value or out of memory");
+                                YYABORT;
+                        }
+                        $$ = $1;
+                }
+        ;
+
+module_store:   MODULE_STORE '=' scalar_arg {
                         if (parse_module_store($3) != 0) {
                                 parse_errors++;
                                 YYABORT;
@@ -116,7 +126,7 @@ module_store:   MODULE_STORE '=' ARG {
 
         ;
 
-store_root:     STORE_ROOT '=' ARG  {
+store_root:     STORE_ROOT '=' scalar_arg  {
                         if (parse_store_root_path($3) != 0) {
                                 parse_errors++;
                                 YYABORT;
@@ -125,7 +135,7 @@ store_root:     STORE_ROOT '=' ARG  {
                 }
         ;
 
-ro_store_root:  RO_STORE_ROOT '=' ARG  {
+ro_store_root:  RO_STORE_ROOT '=' scalar_arg  {
                         if (parse_ro_store_root_paths($3) != 0) {
                                 parse_errors++;
                                 YYABORT;
@@ -134,7 +144,7 @@ ro_store_root:  RO_STORE_ROOT '=' ARG  {
                 }
         ;
 
-compiler_dir:       COMPILER_DIR '=' ARG  {
+compiler_dir:       COMPILER_DIR '=' scalar_arg  {
                         if (parse_compiler_path($3) != 0) {
                                 parse_errors++;
                                 YYABORT;
@@ -143,7 +153,7 @@ compiler_dir:       COMPILER_DIR '=' ARG  {
                 }
         ;
 
-ignore_module_cache:	IGNORE_MODULE_CACHE '=' ARG  {
+ignore_module_cache:	IGNORE_MODULE_CACHE '=' scalar_arg  {
 							if (strcasecmp($3, "true") == 0)
 								current_conf->ignore_module_cache = true;
 							else if (strcasecmp($3, "false") == 0)
@@ -155,7 +165,7 @@ ignore_module_cache:	IGNORE_MODULE_CACHE '=' ARG  {
 						}
         ;
 
-version:        VERSION '=' ARG  {
+version:        VERSION '=' scalar_arg  {
                         char *endptr;
                         long value;
                         errno = 0;
@@ -168,7 +178,7 @@ version:        VERSION '=' ARG  {
                 }
         ;
 
-target_platform: TARGET_PLATFORM '=' ARG  {
+target_platform: TARGET_PLATFORM '=' scalar_arg  {
                         if (strcasecmp($3, "selinux") == 0)
                                 current_conf->target_platform = SEPOL_TARGET_SELINUX;
                         else if (strcasecmp($3, "xen") == 0)
@@ -180,7 +190,7 @@ target_platform: TARGET_PLATFORM '=' ARG  {
                 }
         ;
 
-expand_check:   EXPAND_CHECK '=' ARG  {
+expand_check:   EXPAND_CHECK '=' scalar_arg  {
 	                if (strcasecmp($3, "true") == 0)
 		                current_conf->expand_check = true;
 			else if (strcmp($3, "1") == 0)
@@ -196,7 +206,7 @@ expand_check:   EXPAND_CHECK '=' ARG  {
                 }
         ;
 
-file_mode:   FILE_MODE '=' ARG  {
+file_mode:   FILE_MODE '=' scalar_arg  {
                         char *endptr;
                         long value;
                         errno = 0;
@@ -209,7 +219,7 @@ file_mode:   FILE_MODE '=' ARG  {
                 }
         ;
 
-save_previous:    SAVE_PREVIOUS '=' ARG {
+save_previous:    SAVE_PREVIOUS '=' scalar_arg {
 	                if (strcasecmp($3, "true") == 0)
 		                current_conf->save_previous = true;
 			else if (strcasecmp($3, "false") == 0)
@@ -222,7 +232,7 @@ save_previous:    SAVE_PREVIOUS '=' ARG {
         ;
 
 
-save_linked:    SAVE_LINKED '=' ARG {
+save_linked:    SAVE_LINKED '=' scalar_arg {
 	                if (strcasecmp($3, "true") == 0)
 		                current_conf->save_linked = true;
 			else if (strcasecmp($3, "false") == 0)
@@ -234,7 +244,7 @@ save_linked:    SAVE_LINKED '=' ARG {
                 }
         ;
 
-disable_genhomedircon: DISABLE_GENHOMEDIRCON '=' ARG {
+disable_genhomedircon: DISABLE_GENHOMEDIRCON '=' scalar_arg {
 	if (strcasecmp($3, "false") == 0) {
 		current_conf->disable_genhomedircon = false;
 	} else if (strcasecmp($3, "true") == 0) {
@@ -245,7 +255,7 @@ disable_genhomedircon: DISABLE_GENHOMEDIRCON '=' ARG {
 	free($3);
  }
 
-usepasswd: USEPASSWD '=' ARG {
+usepasswd: USEPASSWD '=' scalar_arg {
 	if (strcasecmp($3, "false") == 0) {
 		current_conf->usepasswd = false;
 	} else if (strcasecmp($3, "true") == 0) {
@@ -256,12 +266,12 @@ usepasswd: USEPASSWD '=' ARG {
 	free($3);
  }
 
-ignoredirs: IGNOREDIRS '=' ARG {
+ignoredirs: IGNOREDIRS '=' scalar_arg {
 	current_conf->ignoredirs = strdup($3);
 	free($3);
  }
 
-handle_unknown: HANDLE_UNKNOWN '=' ARG {
+handle_unknown: HANDLE_UNKNOWN '=' scalar_arg {
 	if (strcasecmp($3, "deny") == 0) {
 		current_conf->handle_unknown = SEPOL_DENY_UNKNOWN;
 	} else if (strcasecmp($3, "reject") == 0) {
@@ -274,7 +284,7 @@ handle_unknown: HANDLE_UNKNOWN '=' ARG {
 	free($3);
  }
 
-bzip_blocksize:  BZIP_BLOCKSIZE '=' ARG {
+bzip_blocksize:  BZIP_BLOCKSIZE '=' scalar_arg {
 	char *endptr;
 	long value;
 	errno = 0;
@@ -286,7 +296,7 @@ bzip_blocksize:  BZIP_BLOCKSIZE '=' ARG {
 	free($3);
 }
 
-bzip_small:  BZIP_SMALL '=' ARG {
+bzip_small:  BZIP_SMALL '=' scalar_arg {
 	if (strcasecmp($3, "false") == 0) {
 		current_conf->bzip_small = false;
 	} else if (strcasecmp($3, "true") == 0) {
@@ -297,7 +307,7 @@ bzip_small:  BZIP_SMALL '=' ARG {
 	free($3);
 }
 
-remove_hll:  REMOVE_HLL'=' ARG {
+remove_hll:  REMOVE_HLL'=' scalar_arg {
 	if (strcasecmp($3, "false") == 0) {
 		current_conf->remove_hll = false;
 	} else if (strcasecmp($3, "true") == 0) {
@@ -308,7 +318,7 @@ remove_hll:  REMOVE_HLL'=' ARG {
 	free($3);
 }
 
-relabel_store:  RELABEL_STORE'=' ARG {
+relabel_store:  RELABEL_STORE'=' scalar_arg {
 	if (strcasecmp($3, "false") == 0) {
 		current_conf->relabel_store = false;
 	} else if (strcasecmp($3, "true") == 0) {
@@ -319,7 +329,7 @@ relabel_store:  RELABEL_STORE'=' ARG {
 	free($3);
 }
 
-optimize_policy:  OPTIMIZE_POLICY '=' ARG {
+optimize_policy:  OPTIMIZE_POLICY '=' scalar_arg {
 	if (strcasecmp($3, "false") == 0) {
 		current_conf->optimize_policy = false;
 	} else if (strcasecmp($3, "true") == 0) {
@@ -330,7 +340,7 @@ optimize_policy:  OPTIMIZE_POLICY '=' ARG {
 	free($3);
 }
 
-multiple_decls:  MULTIPLE_DECLS '=' ARG {
+multiple_decls:  MULTIPLE_DECLS '=' scalar_arg {
 	if (strcasecmp($3, "false") == 0) {
 		current_conf->multiple_decls = false;
 	} else if (strcasecmp($3, "true") == 0) {
@@ -341,7 +351,7 @@ multiple_decls:  MULTIPLE_DECLS '=' ARG {
 	free($3);
 }
 
-sort_local_fcontexts: SORT_LOCAL_FCONTEXTS '=' ARG {
+sort_local_fcontexts: SORT_LOCAL_FCONTEXTS '=' scalar_arg {
 	if (strcasecmp($3, "false") == 0) {
 		current_conf->sort_local_fcontexts = false;
 	} else if (strcasecmp($3, "true") == 0) {
