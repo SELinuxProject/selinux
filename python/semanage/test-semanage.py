@@ -219,7 +219,7 @@ class SemanageTests(unittest.TestCase):
 
 def semanage_suite():
     semanage_suite = unittest.TestSuite()
-    semanage_suite.addTest(unittest.makeSuite(SemanageTests))
+    semanage_suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(SemanageTests))
 
     return semanage_suite
 
