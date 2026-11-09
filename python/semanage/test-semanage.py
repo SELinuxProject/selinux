@@ -1,3 +1,5 @@
+import os
+import tempfile
 import unittest
 import sys
 from subprocess import Popen, PIPE
@@ -35,8 +37,11 @@ class SemanageTests(unittest.TestCase):
             self.assertSuccess(p.returncode, err)
 
     def test_input_output(self):
-        print("Verify semanage export -f /tmp/out")
-        p = Popen(['semanage', "export", '-f', '/tmp/out'], stdout=PIPE)
+        fd, out_path = tempfile.mkstemp(prefix="semanage-out-")
+        os.close(fd)
+        self.addCleanup(os.unlink, out_path)
+        print("Verify semanage export -f %s" % out_path)
+        p = Popen(['semanage', "export", '-f', out_path], stdout=PIPE)
         out, err = p.communicate()
         self.assertSuccess(p.returncode, err)
         print("Verify semanage export -S targeted -f -")
@@ -47,16 +52,16 @@ class SemanageTests(unittest.TestCase):
         p = Popen(["semanage", "-S", "targeted", "-o", "-"], stdout=PIPE)
         out, err = p.communicate()
         self.assertSuccess(p.returncode, err)
-        print("Verify semanage import -f /tmp/out")
-        p = Popen(['semanage', "import", '-f', '/tmp/out'], stdout=PIPE)
+        print("Verify semanage import -f %s" % out_path)
+        p = Popen(['semanage', "import", '-f', out_path], stdout=PIPE)
         out, err = p.communicate()
         self.assertSuccess(p.returncode, err)
-        print("Verify semanage import -S targeted -f /tmp/out")
-        p = Popen(["semanage", "import", "-S", "targeted", "-f", "/tmp/out"], stdout=PIPE)
+        print("Verify semanage import -S targeted -f %s" % out_path)
+        p = Popen(["semanage", "import", "-S", "targeted", "-f", out_path], stdout=PIPE)
         out, err = p.communicate()
         self.assertSuccess(p.returncode, err)
-        print("Verify semanage -S targeted -i /tmp/out")
-        p = Popen(["semanage", "-S", "targeted", "-i", "/tmp/out"], stdout=PIPE)
+        print("Verify semanage -S targeted -i %s" % out_path)
+        p = Popen(["semanage", "-S", "targeted", "-i", out_path], stdout=PIPE)
         out, err = p.communicate()
         self.assertSuccess(p.returncode, err)
 
