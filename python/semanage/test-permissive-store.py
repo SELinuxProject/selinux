@@ -7,10 +7,34 @@
 
 import os
 import shutil
+import sys
 import tempfile
+import types
 import unittest
 
 import semanage
+
+# seobject imports sepolicy (which requires setools) at module level, but
+# the permissive record operations exercised here never use it. Provide an
+# empty placeholder when setools is not available, e.g. in CI, so that the
+# bindings themselves are still exercised.
+try:
+    import sepolicy  # noqa: F401
+except ImportError:
+    sys.modules["sepolicy"] = types.ModuleType("sepolicy")
+
+try:
+    import setools  # noqa: F401
+except ImportError:
+    setools = types.ModuleType("setools")
+    setools.policyrep = types.ModuleType("setools.policyrep")
+    setools.policyrep.SELinuxPolicy = type("SELinuxPolicy", (), {})
+    setools.typequery = types.ModuleType("setools.typequery")
+    setools.typequery.TypeQuery = type("TypeQuery", (), {})
+    sys.modules["setools"] = setools
+    sys.modules["setools.policyrep"] = setools.policyrep
+    sys.modules["setools.typequery"] = setools.typequery
+
 import seobject
 
 BASE_CIL = b"""
@@ -45,6 +69,10 @@ class PermissiveStoreTests(unittest.TestCase):
         os.makedirs(os.path.join(self.root, "etc", "selinux"))
         with open(os.path.join(self.root, "etc", "selinux", "semanage.conf"), "w") as f:
             f.write("disable-genhomedircon = true\n")
+            f.write("[sefcontext_compile]\n")
+            f.write("path = /bin/true\n")
+            f.write("args = $@\n")
+            f.write("[end]\n")
         base = os.path.join(self.root, STORE, "active", "modules", "100", "base")
         os.makedirs(base)
         with open(os.path.join(base, "cil"), "wb") as f:
@@ -57,6 +85,10 @@ class PermissiveStoreTests(unittest.TestCase):
         self.assertIsNotNone(self.sh)
         semanage.semanage_set_create_store(self.sh, 1)
         semanage.semanage_set_reload(self.sh, 0)
+        # Do not spawn setfiles to validate file contexts: the test policy
+        # defines none, and the host setfiles may not match the libsepol
+        # this test was built against (or may not exist at all).
+        semanage.semanage_set_check_contexts(self.sh, 0)
         semanage.semanage_set_store_root(self.sh, "")
         semanage.semanage_select_store(self.sh, STORE, semanage.SEMANAGE_CON_DIRECT)
         self.assertGreaterEqual(semanage.semanage_connect(self.sh), 0)

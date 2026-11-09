@@ -35,5 +35,6 @@ test:
 	@$(PYTHON) test-permissive-store.py
 	@$(PYTHON) test-semanage.py -a
 clean:
+	rm -rf __pycache__
 
 relabel:
