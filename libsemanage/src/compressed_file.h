@@ -52,6 +52,10 @@ struct file_contents {
 int map_compressed_file(semanage_handle_t *sh, const char *path,
 			struct file_contents *contents);
 
+/* Also accept an empty regular file, returning zeroed contents. */
+int map_compressed_file_allow_empty(semanage_handle_t *sh, const char *path,
+				    struct file_contents *contents);
+
 /**
  * Destroy a previously mapped possibly-compressed file.
  *

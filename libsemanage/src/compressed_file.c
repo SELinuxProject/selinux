@@ -187,8 +187,8 @@ exit:
 	return ret;
 }
 
-int map_compressed_file(semanage_handle_t *sh, const char *path,
-			struct file_contents *contents)
+static int map_file(semanage_handle_t *sh, const char *path,
+		    struct file_contents *contents, bool allow_empty)
 {
 	ssize_t size = -1;
 	void *uncompress;
@@ -214,9 +214,14 @@ int map_compressed_file(semanage_handle_t *sh, const char *path,
 		contents->compressed = 1;
 	} else {
 		struct stat sb;
-		if (fstat(fd, &sb) == -1 ||
-		    (uncompress = mmap(NULL, sb.st_size, PROT_READ, MAP_PRIVATE,
-				       fd, 0)) == MAP_FAILED) {
+		if (fstat(fd, &sb) == -1) {
+			ret = -1;
+		} else if (allow_empty && S_ISREG(sb.st_mode) &&
+			   sb.st_size == 0 && !ferror(file)) {
+			*contents = (struct file_contents){ 0 };
+		} else if ((uncompress = mmap(NULL, sb.st_size, PROT_READ,
+					      MAP_PRIVATE, fd, 0)) ==
+			   MAP_FAILED) {
 			ret = -1;
 		} else {
 			contents->data = uncompress;
@@ -226,6 +231,18 @@ int map_compressed_file(semanage_handle_t *sh, const char *path,
 	}
 	fclose(file);
 	return ret;
+}
+
+int map_compressed_file(semanage_handle_t *sh, const char *path,
+			struct file_contents *contents)
+{
+	return map_file(sh, path, contents, false);
+}
+
+int map_compressed_file_allow_empty(semanage_handle_t *sh, const char *path,
+				    struct file_contents *contents)
+{
+	return map_file(sh, path, contents, true);
 }
 
 void unmap_compressed_file(struct file_contents *contents)

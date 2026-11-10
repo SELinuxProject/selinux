@@ -1766,7 +1766,7 @@ int semanage_sort_fc_file(semanage_handle_t *sh, const char *src,
 	if (access(src, F_OK) != 0)
 		return (errno == ENOENT) ? 0 : -1;
 
-	if (map_compressed_file(sh, src, &contents) < 0) {
+	if (map_compressed_file_allow_empty(sh, src, &contents) < 0) {
 		ERR(sh, "Could not read %s.", src);
 		return -1;
 	}
