@@ -2847,7 +2847,11 @@ int semanage_fc_sort(semanage_handle_t *sh, const char *buf, size_t buf_len,
 	/* Parse the char buffer into a semanage_file_context_node_t linked list. */
 	line_buf = buf;
 	buf_remainder = buf_len;
-	while ((line_end = semanage_get_line_end(line_buf, buf_remainder))) {
+	while (buf_remainder) {
+		/* Match the LF-delimited records read by getline(). */
+		line_end = memchr(line_buf, '\n', buf_remainder);
+		if (!line_end)
+			line_end = line_buf + (buf_remainder - 1);
 		line_len = line_end - line_buf + 1;
 		sanity_check = buf_remainder - line_len;
 		buf_remainder = buf_remainder - line_len;

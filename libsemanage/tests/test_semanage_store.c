@@ -151,10 +151,48 @@ int semanage_store_test_cleanup(void)
 	return 0;
 }
 
+static void test_fc_sort_final_line(void)
+{
+	static const char rule[] = "/probe/private -- u:r:private_t:s0\n";
+	static const char sorted_rule[] =
+		"/probe/private\t--\tu:r:private_t:s0\n";
+	static const struct {
+		const char *input;
+		const char *expected;
+	} cases[] = {
+		{ rule, sorted_rule },
+		{ "/probe/private -- u:r:private_t:s0", sorted_rule },
+		{ "/probe/private -- u:r:private_t:s0\r\n", sorted_rule },
+		{ "# disabled\r/probe/private -- u:r:private_t:s0", "" },
+		{ "# disabled\r/probe/private -- u:r:private_t:s0\r", "" },
+		{ "# disabled\xff/probe/private -- u:r:private_t:s0", "" },
+		{ "# disabled\n/probe/private -- u:r:private_t:s0",
+		  sorted_rule },
+	};
+
+	for (size_t i = 0; i < sizeof(cases) / sizeof(cases[0]); i++) {
+		char *sorted = NULL;
+		size_t len = 0;
+		int rc = semanage_fc_sort(sh, cases[i].input,
+					  strlen(cases[i].input), &sorted,
+					  &len);
+		CU_ASSERT_EQUAL_FATAL(rc, 0);
+		CU_ASSERT_EQUAL(len, strlen(cases[i].expected) + 1);
+		CU_ASSERT_STRING_EQUAL(sorted, cases[i].expected);
+		free(sorted);
+	}
+}
+
 /* Adds all the tests needed for this suite.
  */
 int semanage_store_add_tests(CU_pSuite suite)
 {
+	if (!CU_add_test(suite, "fc_sort_final_line",
+			 test_fc_sort_final_line)) {
+		CU_cleanup_registry();
+		return CU_get_error();
+	}
+
 	if (NULL == CU_add_test(suite, "semanage_store_access_check",
 				test_semanage_store_access_check)) {
 		CU_cleanup_registry();
