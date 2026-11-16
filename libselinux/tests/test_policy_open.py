@@ -70,6 +70,27 @@ class PolicyOpenTests(unittest.TestCase):
         with self.assertRaises(FileNotFoundError):
             policy_open(self.path + ".missing")
 
+    def test_integer_descriptor_remains_owned_by_caller(self):
+        with open(self.path, "r+b") as owner:
+            with self.assertRaises(TypeError):
+                with policy_open(owner.fileno(), "wb", buffering=0):
+                    pass
+            self.assertEqual(owner.read(), b"policy data\n")
+
+    def test_pathlike_uses_path_not_descriptor(self):
+        with open(self.path, "rb") as owner:
+            class Both:
+                def __index__(self):
+                    return owner.fileno()
+
+                def __fspath__(self):
+                    return owner.name
+
+            with policy_open(Both(), "rb") as stream:
+                self.assertNotEqual(stream.fileno(), owner.fileno())
+                self.assertEqual(stream.read(), b"policy data\n")
+            self.assertEqual(owner.read(), b"policy data\n")
+
     def test_late_failure_does_not_close_reused_fd(self):
         namespace = policy_open.__globals__
         original = namespace["selinux_policy_open"]

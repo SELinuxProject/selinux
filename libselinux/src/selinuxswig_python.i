@@ -68,7 +68,7 @@ def policy_open(path, mode="r", **kwargs):
     def opener(name, flags):
         return selinux_policy_open(name, os.O_RDONLY | os.O_CLOEXEC)
 
-    return open(path, mode, opener=opener, **kwargs)
+    return open(os.fspath(path), mode, opener=opener, **kwargs)
 %}
 
 /* security_get_boolean_names() typemap */
