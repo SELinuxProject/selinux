@@ -106,6 +106,7 @@
 
 typedef struct user_entry {
 	char *name;
+	char *name_re;
 	char *uid;
 	char *gid;
 	char *sename;
@@ -321,6 +322,24 @@ static bool is_fc_safe(const char *str)
 			return false;
 	}
 	return true;
+}
+
+static char *fc_regex_escape(const char *s)
+{
+	static const char meta[] = "\\^$.[]|()*+?{}";
+	size_t len = strlen(s);
+	char *out = malloc(2 * len + 1);
+	char *p = out;
+
+	if (!out)
+		return NULL;
+	for (; *s; s++) {
+		if (strchr(meta, (unsigned char)*s))
+			*p++ = '\\';
+		*p++ = *s;
+	}
+	*p = '\0';
+	return out;
 }
 
 static int prefix_is_homedir_role(const semanage_user_t *user,
@@ -963,7 +982,8 @@ static int write_username_context(genhomedircon_settings_t *s, FILE *out,
 				  const genhomedircon_user_entry_t *user)
 {
 	const replacement_pair_t repl[] = {
-		{ .search_for = TEMPLATE_USERNAME, .replace_with = user->name },
+		{ .search_for = TEMPLATE_USERNAME,
+		  .replace_with = user->name_re },
 		{ .search_for = TEMPLATE_USERID, .replace_with = user->uid },
 		{ .search_for = TEMPLATE_ROLE, .replace_with = user->prefix },
 		{ NULL, NULL }
@@ -977,7 +997,7 @@ static int write_user_context(genhomedircon_settings_t *s, FILE *out,
 			      const genhomedircon_user_entry_t *user)
 {
 	const replacement_pair_t repl[] = {
-		{ .search_for = TEMPLATE_USER, .replace_with = user->name },
+		{ .search_for = TEMPLATE_USER, .replace_with = user->name_re },
 		{ .search_for = TEMPLATE_ROLE, .replace_with = user->prefix },
 		{ NULL, NULL }
 	};
@@ -1022,13 +1042,14 @@ static int name_user_cmp(const void *arg1, const void *arg2)
 	return strcmp(key, semanage_user_get_name(*val));
 }
 
-static int push_user_entry(genhomedircon_user_entry_t **list, const char *n,
-			   const char *u, const char *g, const char *sen,
-			   const char *pre, const char *h, const char *l,
-			   const char *ln, const char *hd_role)
+static int push_user_entry(genhomedircon_user_entry_t **list, bool escape,
+			   const char *n, const char *u, const char *g,
+			   const char *sen, const char *pre, const char *h,
+			   const char *l, const char *ln, const char *hd_role)
 {
 	genhomedircon_user_entry_t *temp = NULL;
 	char *name = NULL;
+	char *name_re = NULL;
 	char *uid = NULL;
 	char *gid = NULL;
 	char *sename = NULL;
@@ -1044,6 +1065,9 @@ static int push_user_entry(genhomedircon_user_entry_t **list, const char *n,
 	name = strdup(n);
 	if (!name)
 		goto cleanup;
+	name_re = escape ? fc_regex_escape(n) : strdup(n);
+	if (!name_re)
+		goto cleanup;
 	uid = strdup(u);
 	if (!uid)
 		goto cleanup;
@@ -1056,7 +1080,7 @@ static int push_user_entry(genhomedircon_user_entry_t **list, const char *n,
 	prefix = strdup(pre);
 	if (!prefix)
 		goto cleanup;
-	home = strdup(h);
+	home = escape ? fc_regex_escape(h) : strdup(h);
 	if (!home)
 		goto cleanup;
 	level = strdup(l);
@@ -1072,6 +1096,7 @@ static int push_user_entry(genhomedircon_user_entry_t **list, const char *n,
 	}
 
 	temp->name = name;
+	temp->name_re = name_re;
 	temp->uid = uid;
 	temp->gid = gid;
 	temp->sename = sename;
@@ -1087,6 +1112,7 @@ static int push_user_entry(genhomedircon_user_entry_t **list, const char *n,
 
 cleanup:
 	free(name);
+	free(name_re);
 	free(uid);
 	free(gid);
 	free(sename);
@@ -1109,6 +1135,7 @@ static void pop_user_entry(genhomedircon_user_entry_t **list)
 	temp = *list;
 	*list = temp->next;
 	free(temp->name);
+	free(temp->name_re);
 	free(temp->uid);
 	free(temp->gid);
 	free(temp->sename);
@@ -1166,10 +1193,11 @@ static int setup_fallback_user(genhomedircon_settings_t *s)
 				homedir_role = prefix;
 			}
 
-			if (push_user_entry(&(s->fallback), FALLBACK_NAME,
-					    FALLBACK_UIDGID, FALLBACK_UIDGID,
-					    seuname, prefix, "", level,
-					    FALLBACK_NAME, homedir_role) != 0)
+			if (push_user_entry(&(s->fallback), false,
+					    FALLBACK_NAME, FALLBACK_UIDGID,
+					    FALLBACK_UIDGID, seuname, prefix,
+					    "", level, FALLBACK_NAME,
+					    homedir_role) != 0)
 				errors = STATUS_ERR;
 			semanage_user_key_free(key);
 			if (u)
@@ -1336,10 +1364,11 @@ retry:
 	}
 
 	retval =
-		push_user_entry(head, name, uid, gid, sename, prefix,
+		push_user_entry(head, true, name, uid, gid, sename, prefix,
 				canonical_home ? canonical_home : pwent->pw_dir,
 				level, selogin, homedir_role);
 	free(canonical_home);
+
 cleanup:
 	free(rbuf);
 	return retval;
@@ -1593,10 +1622,12 @@ static int write_context_file(genhomedircon_settings_t *s, FILE *out)
 		}
 
 		for (h = homedirs; h; h = h->next) {
+			char *hd_re = fc_regex_escape(h->data);
 			char *temp = NULL;
 
-			if (asprintf(&temp, "%s/%s", h->data, FALLBACK_NAME) <
-			    0) {
+			if (!hd_re || asprintf(&temp, "%s/%s", hd_re,
+					       FALLBACK_NAME) < 0) {
+				free(hd_re);
 				retval = STATUS_ERR;
 				goto done;
 			}
@@ -1608,20 +1639,23 @@ static int write_context_file(genhomedircon_settings_t *s, FILE *out)
 						   s->fallback) !=
 			    STATUS_SUCCESS) {
 				free(temp);
+				free(hd_re);
 				s->fallback->home = NULL;
 				retval = STATUS_ERR;
 				goto done;
 			}
-			if (write_home_root_context(
-				    s, out, homeroot_context_tpl, h->data) !=
-			    STATUS_SUCCESS) {
+			if (write_home_root_context(s, out,
+						    homeroot_context_tpl,
+						    hd_re) != STATUS_SUCCESS) {
 				free(temp);
+				free(hd_re);
 				s->fallback->home = NULL;
 				retval = STATUS_ERR;
 				goto done;
 			}
 
 			free(temp);
+			free(hd_re);
 			s->fallback->home = NULL;
 		}
 	}
@@ -1678,11 +1712,13 @@ int semanage_genhomedircon(semanage_handle_t *sh, sepol_policydb_t *policydb,
 	}
 
 	s.fallback->name = strdup(FALLBACK_NAME);
+	s.fallback->name_re = strdup(FALLBACK_NAME);
 	s.fallback->sename = strdup(FALLBACK_SENAME);
 	s.fallback->prefix = strdup(FALLBACK_PREFIX);
 	s.fallback->level = strdup(FALLBACK_LEVEL);
-	if (s.fallback->name == NULL || s.fallback->sename == NULL ||
-	    s.fallback->prefix == NULL || s.fallback->level == NULL) {
+	if (s.fallback->name == NULL || s.fallback->name_re == NULL ||
+	    s.fallback->sename == NULL || s.fallback->prefix == NULL ||
+	    s.fallback->level == NULL) {
 		retval = STATUS_ERR;
 		goto done;
 	}
