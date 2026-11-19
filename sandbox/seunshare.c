@@ -1009,6 +1009,57 @@ int main(int argc, char **argv)
 		int fd_runuserdir_s = -1, fd_runtime_dir = -1;
 		int fd_tmpdir_r = -1, fd_tmp = -1, fd_var_tmp = -1;
 		struct stat sb;
+		pid_t sandbox;
+
+		/*
+		 * Put the sandbox in its own PID namespace so that when its
+		 * init (the sandboxed command) exits, the kernel SIGKILLs
+		 * every remaining descendant regardless of process group,
+		 * and does so before the parent's waitpid() can return.
+		 * This closes the setsid()/setpgid() escape the post-wait
+		 * SIGKILL sweep cannot cover.
+		 *
+		 * unshare(CLONE_NEWPID) affects subsequent children only,
+		 * so fork once more; this intermediate process is what the
+		 * parent waits on and just relays the sandbox exit status.
+		 * Take a new session first so the parent's kill(-child, ...)
+		 * addresses this process group, which the sandbox and its
+		 * well-behaved descendants stay in.
+		 */
+		if (setsid() == (pid_t)-1) {
+			perror(_("setsid"));
+			exit(-1);
+		}
+		if (unshare(CLONE_NEWPID) < 0) {
+			perror(_("Failed to create PID namespace"));
+			exit(-1);
+		}
+		sandbox = fork();
+		if (sandbox == -1) {
+			perror(_("Unable to fork"));
+			exit(-1);
+		}
+		if (sandbox > 0) {
+			int st;
+
+			/*
+			 * Ignore forwarded signals so this process outlives
+			 * the sandbox and the PID namespace guarantee holds;
+			 * the process-group signal reaches the sandbox
+			 * directly.
+			 */
+			signal(SIGINT, SIG_IGN);
+			signal(SIGHUP, SIG_IGN);
+			signal(SIGTERM, SIG_IGN);
+			signal(SIGQUIT, SIG_IGN);
+
+			if (waitpid(sandbox, &st, 0) < 0)
+				exit(-1);
+			status_to_retval(st, st);
+			exit(st);
+		}
+
+		/* PID 1 in the new namespace from here on. */
 
 		if (unshare(CLONE_NEWNS) < 0) {
 			perror(_("Failed to unshare"));
@@ -1225,7 +1276,6 @@ int main(int argc, char **argv)
 			perror(_("Failed to change dir to homedir"));
 			goto childerr;
 		}
-		setsid();
 
 		/* selinux context */
 		if (execcon) {
@@ -1283,8 +1333,10 @@ childerr:
 	 * budget; with the fd-based shred in sandbox(1), timing out here
 	 * only leaves a straggler alongside a race-free cleanup.
 	 *
-	 * This does not cover a descendant that left the process group via
-	 * setsid()/setpgid(); a PID namespace is the complete answer.
+	 * With the PID namespace above, waitpid() returning implies the
+	 * namespace has been torn down and no sandbox descendant is
+	 * running, so this sweep breaks on the first iteration; kept as
+	 * a cheap safety belt.
 	 */
 	for (int i = 0; i < 400; i++) {
 		struct timespec ts = { .tv_sec = 0,
