@@ -7,6 +7,7 @@
 #include <stdbool.h>
 #include <signal.h>
 #include <sys/fsuid.h>
+#include <time.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -1274,8 +1275,25 @@ childerr:
 	waitpid(child, &status, 0);
 	status_to_retval(status, status);
 
-	/* Make sure all child processes exit */
-	kill(-child, SIGTERM);
+	/*
+	 * Make sure the child process group is gone before cleanup runs.
+	 * SIGKILL each iteration so a descendant that fork()s between our
+	 * signal and its own exit is caught on the next pass. Zombies keep
+	 * the pgid alive until init reaps them, so give this a bounded
+	 * budget; with the fd-based shred in sandbox(1), timing out here
+	 * only leaves a straggler alongside a race-free cleanup.
+	 *
+	 * This does not cover a descendant that left the process group via
+	 * setsid()/setpgid(); a PID namespace is the complete answer.
+	 */
+	for (int i = 0; i < 400; i++) {
+		struct timespec ts = { .tv_sec = 0,
+				       .tv_nsec = 5 * 1000 * 1000 };
+
+		if (kill(-child, SIGKILL) < 0 && errno == ESRCH)
+			break;
+		nanosleep(&ts, NULL);
+	}
 
 	if (execcon && kill_all)
 		fprintf(stderr,
