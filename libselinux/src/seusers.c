@@ -293,6 +293,14 @@ int getseuser(const char *username, const char *service, char **r_seuser,
 	char *rec = NULL;
 	char *path = NULL;
 	FILE *fp = NULL;
+
+	/*
+	 * Prevent path traversal via crafted username; no valid username
+	 * should be NULL, start with ".", or contain a '/'.
+	 */
+	if (!username || username[0] == '.' || strchr(username, '/'))
+		goto err;
+
 	if (asprintf(&path, "%s/logins/%s", selinux_policy_root(), username) <
 	    0)
 		goto err;
