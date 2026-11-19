@@ -540,10 +540,26 @@ sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile ] [-
                 shutil.rmtree(self.__runuserdir)
 
     def shred(self, path):
-        for root, dirs, files in os.walk(path):
+        for root, dirs, files, dirfd in os.fwalk(path, follow_symlinks=False):
             for f in files:
-                dest = root + "/" + f
-                subprocess.Popen(["/usr/bin/shred", dest]).wait()
+                try:
+                    fd = os.open(f, os.O_WRONLY | os.O_NOFOLLOW | os.O_NONBLOCK,
+                                 dir_fd=dirfd)
+                except OSError:
+                    continue
+                try:
+                    st = os.fstat(fd)
+                    if not stat.S_ISREG(st.st_mode):
+                        continue
+                    remaining = st.st_size
+                    while remaining > 0:
+                        chunk = b"\x00" * min(remaining, 1 << 20)
+                        remaining -= os.write(fd, chunk)
+                    os.fsync(fd)
+                except OSError:
+                    pass
+                finally:
+                    os.close(fd)
 
     def main(self):
         try:
