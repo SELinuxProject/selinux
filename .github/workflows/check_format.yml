@@ -8,7 +8,7 @@ jobs:
     container:
       image: fedora:latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install tools
         run: dnf install -y make clang-tools-extra
       - name: Check format

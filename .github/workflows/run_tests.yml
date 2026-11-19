@@ -39,7 +39,7 @@ jobs:
             python-ruby-version: {python: '3.13', ruby: '3.3', other: 'sanitizers'}
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
     - name: Build userspace
       uses: ./.github/actions/build-userspace
