@@ -43,6 +43,7 @@
 #include <assert.h>
 #include <ctype.h>
 #include <limits.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -313,6 +314,15 @@ out:
 	return rc;
 }
 
+static bool is_fc_safe(const char *str)
+{
+	for (const unsigned char *p = (const unsigned char *)str; *p; p++) {
+		if (isspace(*p) || iscntrl(*p))
+			return false;
+	}
+	return true;
+}
+
 static int prefix_is_homedir_role(const semanage_user_t *user,
 				  const char *prefix)
 {
@@ -576,6 +586,12 @@ static int get_home_dirs(genhomedircon_settings_t *s, semanage_list_t **out)
 			continue;
 		if (!semanage_list_find(shells, pwbuf->pw_shell))
 			continue;
+		if (pwbuf->pw_dir[0] != '/' || !is_fc_safe(pwbuf->pw_dir)) {
+			WARN(s->h_semanage,
+			     "user %s has an invalid home directory, ignoring",
+			     pwbuf->pw_name);
+			continue;
+		}
 		int len = strlen(pwbuf->pw_dir) - 1;
 		for (; len > 0 && pwbuf->pw_dir[len] == '/'; len--) {
 			pwbuf->pw_dir[len] = '\0';
@@ -1201,6 +1217,17 @@ static int add_user(genhomedircon_settings_t *s,
 		}
 	}
 
+	if (!is_fc_safe(name)) {
+		/*
+		 * On the %group path this is gr_mem[i] or pw_name from NSS
+		 * and reaches a comment line and the USER / %{USERNAME}
+		 * substitutions unquoted; skip rather than let it inject
+		 * file-context lines.
+		 */
+		WARN(s->h_semanage, "invalid user name \"%s\", ignoring", name);
+		return STATUS_SUCCESS;
+	}
+
 	int retval = STATUS_ERR;
 
 	char *rbuf = NULL;
@@ -1263,10 +1290,12 @@ retry:
 		pwent->pw_dir[len] = '\0';
 	}
 
-	if (pwent->pw_dir[0] != '/') {
+	if (pwent->pw_dir[0] != '/' || !is_fc_safe(pwent->pw_dir)) {
 		/* an empty (or otherwise relative) home directory would
 		 * turn the HOME_DIR template into a regex that matches
-		 * everything, e.g. "/.+", so refuse to use it */
+		 * everything, e.g. "/.+", and whitespace or control
+		 * characters would let the passwd entry inject additional
+		 * file-context lines, so refuse to use it */
 		WARN(s->h_semanage,
 		     "user %s has an invalid home directory \"%s\", ignoring",
 		     name, pwent->pw_dir);
