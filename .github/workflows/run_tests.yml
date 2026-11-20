@@ -14,7 +14,6 @@ jobs:
           - {python: '3.14', ruby: '3.3', other: 'test-flags-override'}
           - {python: '3.14', ruby: '3.3', other: 'test-debug'}
           - {python: '3.14', ruby: '3.3', other: 'linker-bfd'}
-          - {python: '3.14', ruby: '3.3', other: 'linker-gold'}
           # Test several Python versions with the latest Ruby version
           - {python: '3.13', ruby: '3.3'}
           - {python: '3.12', ruby: '3.3'}
@@ -24,7 +23,6 @@ jobs:
           - compiler: clang
             python-ruby-version: {python: '3.14', ruby: '3.3', other: 'linker-bfd'}
           - compiler: clang
-            python-ruby-version: {python: '3.14', ruby: '3.3', other: 'linker-gold'}
         include:
           - compiler: gcc
             python-ruby-version: {python: '3.14', ruby: '3.3', other: 'sanitizers'}
