@@ -25,6 +25,8 @@ jobs:
         include:
           - compiler: gcc
             python-ruby-version: {python: '3.14', ruby: '3.3', other: 'sanitizers'}
+          - compiler: gcc
+            python-ruby-version: {python: 'pypy-3.11', ruby: '3.3'}
 
     steps:
     - uses: actions/checkout@v7

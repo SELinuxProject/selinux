@@ -118,10 +118,10 @@ runs:
         echo "PKG_CONFIG_PATH=${PYTHON_SYS_PREFIX}/lib/pkgconfig" >> $GITHUB_ENV
 
         if [[ "${{ inputs.python-version }}" == pypy* ]] ; then
-            # PyPy does not provide a config file for pkg-config
-            # libpypy-c.so is provided in bin/libpypy-c.so for PyPy and bin/libpypy3-c.so for PyPy3
-            echo "PYINC=-I${PYTHON_SYS_PREFIX}/include" >> $GITHUB_ENV
-            echo "PYLIBS=-L${PYTHON_SYS_PREFIX}/bin -lpypy3-c" >> $GITHUB_ENV
+            PYTHON_INCLUDE="$(python -c 'import sysconfig; print(sysconfig.get_path("include"))')"
+            echo "PYINC=-I${PYTHON_INCLUDE}" >> $GITHUB_ENV
+            # Linux extension modules resolve Python symbols from the running intrepter.
+            echo "PYLIBS=" >> $GITHUB_ENV
         fi
 
         # Display the final environment file, for debugging purpose
