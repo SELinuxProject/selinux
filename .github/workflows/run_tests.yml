@@ -22,7 +22,6 @@ jobs:
         exclude:
           - compiler: clang
             python-ruby-version: {python: '3.14', ruby: '3.3', other: 'linker-bfd'}
-          - compiler: clang
         include:
           - compiler: gcc
             python-ruby-version: {python: '3.14', ruby: '3.3', other: 'sanitizers'}
