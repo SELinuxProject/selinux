@@ -171,12 +171,21 @@ filesystems_to_relabel() {
 # Find files newer then the passed in date and fix the label
 #
 newer() {
-    DATE=$1
-    shift
-    LogReadOnly
-    for m in `echo $FILESYSTEMSRW`; do
-	find $m -mount -newermt $DATE -print0 2>/dev/null | ${RESTORECON} ${FORCEFLAG} ${DIGESTFLAG} ${VERBOSE} ${THREADS} $* -i -0 -f -
-    done;
+	DATE=$1
+	shift
+	LogReadOnly
+
+	local -a prune=()
+	local e m
+	for e in ${EXCLUDEDIRS//-e /}; do
+		[ -z "$e" ] && continue
+		prune+=(-path "$e" -prune -o)
+	done
+
+	for m in ${FILESYSTEMSRW}; do
+		find "$m" -mount \( "${prune[@]}" -newermt "$DATE" -print0 \) 2>/dev/null | \
+			${RESTORECON} ${FORCEFLAG} ${DIGESTFLAG} ${VERBOSE} ${THREADS} ${EXCLUDEDIRS} "$@" -i -0 -f -
+	done
 }
 
 #
@@ -258,7 +267,9 @@ shift
 
 # [-B | -N time ]
 if [ -n "$BOOTTIME" ]; then
-	newer $BOOTTIME $*
+	EXCLUDEDIRS="`exclude_dirs_from_relabelling`"
+	LogExcluded
+	newer "$BOOTTIME" "$@"
 	return
 fi
 
